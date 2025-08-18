@@ -183,6 +183,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({
     }
     
     try {
+      console.log('🔐 LoginForm: Starting login process for:', validatedData.email);
+      
       await login(validatedData.email, validatedData.password);
       
       // Clear failed attempts on successful login
@@ -201,36 +203,47 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         'You have been successfully logged in.'
       );
       
+      console.log('✅ LoginForm: Login successful, calling onSuccess');
       onSuccess?.();
+      
     } catch (err) {
-      console.error('Login failed:', err);
+      console.error('❌ LoginForm: Login failed:', err);
       
       // Add failed attempt for rate limiting
       addFailedAttempt(validatedData.email);
       
+      // Get the error message from the caught error or auth context
+      const errorMessage = (err instanceof Error ? err.message : String(err)) || error;
+      
       // Handle specific error types
-      if (error?.includes('Invalid credentials')) {
+      if (errorMessage?.includes('CredentialsSignin') || errorMessage?.includes('Invalid')) {
         showError(
           'Login Failed',
           'Invalid email or password. Please check your credentials and try again.',
           { persistent: true }
         );
-      } else if (error?.includes('Account locked')) {
+      } else if (errorMessage?.includes('Account locked') || errorMessage?.includes('deactivated')) {
         showError(
           'Account Locked',
-          'Your account has been temporarily locked. Please contact support.',
+          'Your account has been temporarily locked or deactivated. Please contact support.',
           { persistent: true }
         );
-      } else if (error?.includes('rate limit')) {
+      } else if (errorMessage?.includes('rate limit') || errorMessage?.includes('Too many')) {
         showError(
           'Too Many Attempts',
           'Please wait before trying again.',
           { persistent: true }
         );
+      } else if (errorMessage?.includes('network') || errorMessage?.includes('Network')) {
+        showError(
+          'Connection Error',
+          'Network error occurred. Please check your connection and try again.',
+          { persistent: true }
+        );
       } else {
         showError(
           'Login Failed',
-          error || 'An unexpected error occurred. Please try again.',
+          errorMessage || 'An unexpected error occurred. Please try again.',
           { persistent: true }
         );
       }
@@ -370,7 +383,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         variant="primary"
         size="lg"
         className="w-full bg-gradient-to-r from-hot-pink to-deep-pink"
-        isLoading={form.isSubmitting}
+        loading={form.isSubmitting}
         disabled={form.isSubmitting || isLocked}
       >
         {isLocked ? `Locked (${formatRemainingTime(remainingTime)})` : 'Sign In'}

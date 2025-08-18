@@ -4,7 +4,7 @@ import React, { createContext, useContext, useReducer, useEffect, ReactNode, use
 import { AuthUser as User } from '@/types/auth';
 import { UserType } from '@prisma/client';
 import { useHydration } from '@/lib/hooks/useHydration';
-import { useSession, getSession } from 'next-auth/react';
+import { useSession, getSession, signOut, signIn } from 'next-auth/react';
 
 // Auth State Types
 interface AuthState {
@@ -185,47 +185,95 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         console.log('🔄 Syncing selectedRole from NextAuth session:', session.user.selectedRole);
         dispatch({ type: 'SET_SELECTED_ROLE', payload: session.user.selectedRole });
       }
+    } else if (!session?.user && state.isAuthenticated) {
+      // NextAuth session is gone but our state still shows authenticated
+      // This can happen during logout - clear our state
+      console.log('🔄 NextAuth session cleared, clearing local state...');
+      dispatch({ type: 'LOGOUT' });
+      if (hasHydrated) {
+        localStorage.removeItem('selectedRole');
+      }
     }
-  }, [session?.user?.selectedRole, state.selectedRole, state.user]);
+  }, [session?.user, state.isAuthenticated, state.selectedRole, state.user, hasHydrated]);
 
   const login = async (email: string, password: string) => {
     try {
       dispatch({ type: 'AUTH_START' });
+      console.log('🔐 Starting login process for:', email);
 
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({ email, password, selectedRole: UserType.CLIENT }),
+      // Use NextAuth credentials provider for login
+      const result = await signIn('credentials', {
+        email,
+        password,
+        selectedRole: UserType.CLIENT,
+        redirect: false, // Handle redirect manually
       });
 
-      const data = await response.json();
+      console.log('🔐 NextAuth signIn result:', result);
 
-      if (response.ok && data.success) {
-        const userRoles = data.data.user.roles?.map((r: any) => r.role) || [];
-        const selectedRole = userRoles[0] || UserType.CLIENT;
-        if (hasHydrated) {
-          localStorage.setItem('selectedRole', selectedRole);
-        }
-        dispatch({ type: 'AUTH_SUCCESS', payload: data.data.user, selectedRole });
+      if (result?.error) {
+        console.error('❌ Login failed:', result.error);
+        dispatch({ type: 'AUTH_ERROR', payload: result.error || 'Login failed' });
+        throw new Error(result.error);
+      }
+
+      if (result?.ok) {
+        console.log('✅ Login successful, fetching session data...');
         
-        // Redirect based on selected role
-        redirectToDashboard(selectedRole);
+        // Wait a moment for session to be established
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
+        // Get the updated session and user data
+        const [sessionData, userResponse] = await Promise.all([
+          getSession(),
+          fetch('/api/auth/me', {
+            method: 'GET',
+            credentials: 'include',
+          })
+        ]);
+
+        const userData = await userResponse.json();
+        
+        if (sessionData?.user && userData.success && userData.data) {
+          const userRoles = userData.data.roles?.map((r: any) => r.role) || [];
+          const selectedRole = sessionData.user.selectedRole || userRoles[0] || UserType.CLIENT;
+          
+          console.log('✅ Setting user data:', { 
+            userId: userData.data.id, 
+            selectedRole,
+            sessionRole: sessionData.user.selectedRole,
+            availableRoles: userRoles 
+          });
+          
+          if (hasHydrated) {
+            localStorage.setItem('selectedRole', selectedRole);
+          }
+          
+          dispatch({ type: 'AUTH_SUCCESS', payload: userData.data, selectedRole });
+          
+          // Redirect based on selected role
+          redirectToDashboard(selectedRole);
+        } else {
+          console.error('❌ Failed to fetch user data after successful login');
+          dispatch({ type: 'AUTH_ERROR', payload: 'Failed to load user data. Please try again.' });
+        }
       } else {
-        dispatch({ type: 'AUTH_ERROR', payload: data.error?.message || 'Login failed' });
+        console.error('❌ Login failed: Unknown error');
+        dispatch({ type: 'AUTH_ERROR', payload: 'Login failed. Please check your credentials.' });
       }
     } catch (error) {
-      console.error('Login error:', error);
+      console.error('❌ Login error:', error);
       dispatch({ type: 'AUTH_ERROR', payload: 'Network error. Please try again.' });
+      throw error; // Re-throw so LoginForm can handle it
     }
   };
 
   const register = async (userData: RegisterData) => {
     try {
       dispatch({ type: 'AUTH_START' });
+      console.log('📝 Starting registration process for:', userData.email);
 
+      // First create the account via the registration endpoint
       const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: {
@@ -238,15 +286,49 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        const userRoles = data.data.user.roles?.map((r: any) => r.role) || [];
-        const selectedRole = userRoles[0] || UserType.CLIENT;
-        if (hasHydrated) {
-          localStorage.setItem('selectedRole', selectedRole);
-        }
-        dispatch({ type: 'AUTH_SUCCESS', payload: data.data.user, selectedRole });
+        console.log('✅ Registration successful, logging in...');
         
-        // Redirect based on selected role
-        redirectToDashboard(selectedRole);
+        // After successful registration, log the user in via NextAuth
+        const loginResult = await signIn('credentials', {
+          email: userData.email,
+          password: userData.password,
+          selectedRole: UserType.CLIENT,
+          redirect: false,
+        });
+
+        if (loginResult?.ok) {
+          // Wait for session establishment
+          await new Promise(resolve => setTimeout(resolve, 100));
+          
+          // Get session and user data
+          const [sessionData, userResponse] = await Promise.all([
+            getSession(),
+            fetch('/api/auth/me', {
+              method: 'GET',
+              credentials: 'include',
+            })
+          ]);
+
+          const updatedUserData = await userResponse.json();
+          
+          if (sessionData?.user && updatedUserData.success && updatedUserData.data) {
+            const userRoles = updatedUserData.data.roles?.map((r: any) => r.role) || [];
+            const selectedRole = sessionData.user.selectedRole || userRoles[0] || UserType.CLIENT;
+            
+            if (hasHydrated) {
+              localStorage.setItem('selectedRole', selectedRole);
+            }
+            
+            dispatch({ type: 'AUTH_SUCCESS', payload: updatedUserData.data, selectedRole });
+            
+            // Redirect based on selected role
+            redirectToDashboard(selectedRole);
+          } else {
+            dispatch({ type: 'AUTH_ERROR', payload: 'Registration successful but login failed. Please log in manually.' });
+          }
+        } else {
+          dispatch({ type: 'AUTH_ERROR', payload: 'Registration successful but login failed. Please log in manually.' });
+        }
       } else {
         dispatch({ type: 'AUTH_ERROR', payload: data.error?.message || 'Registration failed' });
       }
@@ -258,18 +340,45 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = async () => {
     try {
+      console.log('🚪 Starting logout process...');
+      
+      // Step 1: Clear local state first
+      dispatch({ type: 'LOGOUT' });
+      
+      // Step 2: Clear localStorage
+      if (hasHydrated) {
+        localStorage.removeItem('selectedRole');
+        console.log('💾 Cleared localStorage');
+      }
+      
+      // Step 3: Call NextAuth signOut to clear session cookies
+      console.log('🔐 Calling NextAuth signOut...');
+      await signOut({ 
+        redirect: false,  // We'll handle redirect manually
+        callbackUrl: '/' 
+      });
+      console.log('✅ NextAuth signOut completed');
+      
+      // Step 4: Call custom logout endpoint for any additional cleanup
       await fetch('/api/auth/logout', {
         method: 'POST',
         credentials: 'include',
       });
+      console.log('🧹 Custom logout endpoint called');
+      
     } catch (error) {
-      console.error('Logout error:', error);
-    } finally {
+      console.error('❌ Logout error:', error);
+      // Even if there's an error, clear local state
+      dispatch({ type: 'LOGOUT' });
       if (hasHydrated) {
         localStorage.removeItem('selectedRole');
+      }
+    } finally {
+      // Step 5: Redirect to home page
+      if (hasHydrated) {
+        console.log('🏠 Redirecting to home page...');
         window.location.href = '/';
       }
-      dispatch({ type: 'LOGOUT' });
     }
   };
 
@@ -400,16 +509,33 @@ export function withAuth<P extends object>(
           return;
         }
         
-        // If authenticated but doesn't have required role, show access denied
+        // If authenticated but doesn't have required role, redirect to appropriate dashboard
         if (allowedUserTypes && user) {
           const userRoles = user.roles?.map(r => r.role) || [];
           const hasAllowedRole = allowedUserTypes.some(allowedType => 
             userRoles.includes(allowedType)
           );
           
-          if (!hasAllowedRole) {
-            // For unauthorized users, we'll show the access denied message
-            // rather than redirecting to avoid infinite loops
+          if (!hasAllowedRole && hasHydrated) {
+            // Redirect to the appropriate dashboard for user's current selected role
+            const routes: Record<UserType, string> = {
+              [UserType.CLIENT]: '/dashboard/client',
+              [UserType.DRIVER]: '/dashboard/driver', 
+              [UserType.BLOG_EDITOR]: '/dashboard/editor',
+              [UserType.ADMIN]: '/dashboard/admin',
+            };
+            
+            // Get the user's current selected role, fallback to first available role
+            const currentSelectedRole = user.selectedRole || userRoles[0] || UserType.CLIENT;
+            const targetRoute = routes[currentSelectedRole] || '/dashboard/client';
+            
+            console.log('🚫 Unauthorized access attempt.');
+            console.log('🧭 User roles:', userRoles);
+            console.log('🔒 Required roles:', allowedUserTypes);
+            console.log('👤 Current selected role:', currentSelectedRole);
+            console.log('🔄 Redirecting to:', targetRoute);
+            
+            window.location.href = targetRoute;
             return;
           }
         }

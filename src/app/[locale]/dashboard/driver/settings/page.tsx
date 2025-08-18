@@ -1,12 +1,16 @@
+'use client';
+
 import React, { Suspense } from 'react';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import SettingsClient from './components/SettingsClient';
+import { withAuth } from '@/lib/context/AuthContext';
+import { UserType } from '@prisma/client';
 
-// Server Component for fetching settings data
-async function getDriverSettings() {
-  // This would typically fetch from your database
+// Client Component for fetching settings data
+function getDriverSettings() {
+  // This would typically fetch from your API
   return {
     notifications: {
       tripRequests: true,
@@ -70,8 +74,8 @@ function SettingsLoading() {
   );
 }
 
-export default async function SettingsPage() {
-  const settings = await getDriverSettings();
+function SettingsPage() {
+  const settings = getDriverSettings();
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -100,3 +104,6 @@ export default async function SettingsPage() {
     </div>
   );
 }
+
+// Export the protected version of the component
+export default withAuth(SettingsPage, [UserType.DRIVER]);

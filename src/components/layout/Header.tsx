@@ -14,12 +14,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { NAV_ITEMS, USER_TYPE_INFO, LANGUAGES } from '@/lib/constants';
 import { UserMenu } from '@/components/auth/UserMenu';
+import { HeaderRoleSwitcher } from '@/components/auth/HeaderRoleSwitcher';
 import { AuthModal } from '@/components/auth/AuthModal';
 import { MobileMenu } from '@/components/layout/MobileMenu';
 import { locales } from '@/i18n';
 import type { Locale } from '@/i18n';
 import type { AuthUser } from '@/types/auth';
 import { useAuth } from '@/lib/context/AuthContext';
+import { useSession } from 'next-auth/react';
 
 // Memoized constants for performance
 
@@ -40,7 +42,14 @@ const HeaderComponent: React.FC = () => {
   }, [pathname]);
 
   // Real authentication state from AuthContext
-  const { isAuthenticated, user, selectedRole, logout } = useAuth();
+  const { isAuthenticated, user, selectedRole, logout, isLoading } = useAuth();
+  
+  // Also get NextAuth session for additional validation
+  const { data: session, status: sessionStatus } = useSession();
+  
+  // Derived authentication state (both custom auth and NextAuth must agree)
+  const isActuallyAuthenticated = isAuthenticated && !!user && !!session?.user;
+  const isAuthLoading = isLoading || sessionStatus === 'loading';
 
   // Handle scroll effect - disable when mobile menu is open
   useEffect(() => {
@@ -160,7 +169,7 @@ const HeaderComponent: React.FC = () => {
             <nav className="hidden lg:flex items-center space-x-8">
               {NAV_ITEMS.filter(item => 
                 // Filter out Login when authenticated, show Dashboard instead
-                !(isAuthenticated && item.href === '/login')
+                !(isActuallyAuthenticated && item.href === '/login')
               ).map((item) => (
                 <motion.div
                   key={item.href}
@@ -188,7 +197,7 @@ const HeaderComponent: React.FC = () => {
               ))}
               
               {/* Dashboard Link when authenticated */}
-              {isAuthenticated && user && (
+              {isActuallyAuthenticated && user && (
                 <motion.div
                   className="relative"
                   whileHover={{ y: -2 }}
@@ -223,8 +232,13 @@ const HeaderComponent: React.FC = () => {
               </motion.button>
 
 
+              {/* Role Switcher */}
+              {isActuallyAuthenticated && user && (
+                <HeaderRoleSwitcher />
+              )}
+
               {/* Authentication */}
-              {isAuthenticated && user ? (
+              {isActuallyAuthenticated && user ? (
                 <UserMenu user={user} selectedRole={selectedRole} onLogout={handleLogout} />
               ) : (
                 <div className="flex items-center space-x-3">
@@ -332,7 +346,7 @@ const HeaderComponent: React.FC = () => {
           onClose={() => setIsMobileMenuOpen(false)}
           currentLang={currentLocale}
           onLanguageToggle={toggleLanguage}
-          isAuthenticated={isAuthenticated}
+          isAuthenticated={isActuallyAuthenticated}
           user={user}
           onLogin={() => openAuthModal('login')}
           onRegister={() => openAuthModal('register')}

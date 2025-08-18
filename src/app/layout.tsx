@@ -5,6 +5,7 @@ import { Footer } from '@/components/layout/Footer';
 import { AuthProvider } from '@/lib/context/AuthContext';
 import { NotificationProvider } from '@/lib/context/NotificationContext';
 import { ClientSessionProvider } from '@/components/providers/SessionProvider';
+import { RoleAssigner } from '@/components/dev/RoleAssigner';
 import '@/styles/globals.css';
 
 const geist = Geist({ 
@@ -161,6 +162,9 @@ export default function RootLayout({
               <main id="main-content" className="pt-16">
                 {children}
               </main>
+
+              {/* Development tools */}
+              <RoleAssigner />
             </AuthProvider>
           </ClientSessionProvider>
         </NotificationProvider>

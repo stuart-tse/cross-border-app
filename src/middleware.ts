@@ -106,15 +106,23 @@ export default async function middleware(request: NextRequest) {
       }
 
       // Check role-based access
-      if (!hasRoleAccess(pathnameWithoutLocale, session.user.selectedRole)) {
-        // Redirect to appropriate dashboard for user's role
-        const defaultDashboard = getDefaultDashboardForRole(session.user.selectedRole);
+      const userSelectedRole = session.user.selectedRole;
+      if (!userSelectedRole || !hasRoleAccess(pathnameWithoutLocale, userSelectedRole)) {
+        // If no selected role or unauthorized, redirect to appropriate dashboard for user's role
+        const safeSelectedRole = userSelectedRole || 'CLIENT'; // Default to CLIENT if no role
+        const defaultDashboard = getDefaultDashboardForRole(safeSelectedRole);
+        
+        console.log('🚫 Middleware: Unauthorized access attempt');
+        console.log('🛤️  Path:', pathnameWithoutLocale);
+        console.log('👤 User role:', userSelectedRole);
+        console.log('🔄 Redirecting to:', defaultDashboard);
+        
         return NextResponse.redirect(new URL(defaultDashboard, request.url));
       }
 
       // Redirect bare /dashboard to role-specific dashboard
       if (pathnameWithoutLocale === '/dashboard') {
-        const defaultDashboard = getDefaultDashboardForRole(session.user.selectedRole);
+        const defaultDashboard = getDefaultDashboardForRole(userSelectedRole || 'CLIENT');
         return NextResponse.redirect(new URL(defaultDashboard, request.url));
       }
     } catch (error) {
@@ -131,7 +139,7 @@ export default async function middleware(request: NextRequest) {
     try {
       const session = await auth();
       if (session?.user) {
-        const defaultDashboard = getDefaultDashboardForRole(session.user.selectedRole);
+        const defaultDashboard = getDefaultDashboardForRole(session.user.selectedRole || 'CLIENT');
         return NextResponse.redirect(new URL(defaultDashboard, request.url));
       }
     } catch (error) {

@@ -1,105 +1,72 @@
 'use client';
 
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { forwardRef } from 'react';
 import { cn } from '@/lib/utils';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'accent' | 'ghost' | 'destructive';
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'destructive';
   size?: 'sm' | 'md' | 'lg';
-  isLoading?: boolean;
-  leftIcon?: React.ReactNode;
-  rightIcon?: React.ReactNode;
   children: React.ReactNode;
+  loading?: boolean;
 }
 
-export const Button: React.FC<ButtonProps> = ({
-  variant = 'primary',
-  size = 'md',
-  isLoading = false,
-  leftIcon,
-  rightIcon,
-  children,
-  className,
-  disabled,
-  ...props
-}) => {
-  const baseClasses = cn(
-    'inline-flex items-center justify-center gap-2 font-semibold rounded-sm',
-    'transition-all duration-fast ease-primary',
-    'focus:outline-none focus:ring-2 focus:ring-electric-blue focus:ring-offset-2',
-    'disabled:cursor-not-allowed disabled:opacity-50',
-    'relative overflow-hidden',
-    // Minimum touch target for accessibility
-    'min-h-[44px]'
-  );
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ variant = 'primary', size = 'md', children, className, loading = false, disabled, ...props }, ref) => {
+    const variantClasses = {
+      primary: 'bg-hot-pink text-white hover:bg-deep-pink focus:ring-hot-pink transform hover:-translate-y-0.5 transition-all duration-200',
+      secondary: 'bg-gray-600 text-white hover:bg-gray-700 focus:ring-gray-500',
+      outline: 'border-2 border-hot-pink text-hot-pink hover:bg-hot-pink hover:text-white focus:ring-hot-pink',
+      ghost: 'text-charcoal hover:bg-gray-100 hover:border-hot-pink focus:ring-hot-pink border border-transparent',
+      destructive: 'bg-error-red text-white hover:bg-red-700 focus:ring-error-red',
+    };
 
-  const variantClasses = {
-    primary: cn(
-      'bg-primary text-white border-0',
-      'hover:bg-gray-800 hover:translate-y-[-1px] hover:shadow-md',
-      'active:bg-gray-900 active:translate-y-0',
-      'disabled:bg-gray-300 disabled:text-gray-500 disabled:hover:translate-y-0 disabled:hover:shadow-none'
-    ),
-    secondary: cn(
-      'bg-transparent text-primary border border-primary',
-      'hover:bg-light-gray',
-      'active:bg-gray-200',
-      'disabled:border-gray-300 disabled:text-gray-400'
-    ),
-    accent: cn(
-      'bg-hot-pink text-white border-0',
-      'hover:bg-deep-pink hover:translate-y-[-1px] hover:shadow-md',
-      'active:bg-deep-pink active:translate-y-0',
-      'disabled:bg-gray-300 disabled:text-gray-500 disabled:hover:translate-y-0 disabled:hover:shadow-none'
-    ),
-    destructive: cn(
-      'bg-error-red text-white border-0',
-      'hover:bg-red-700 hover:translate-y-[-1px] hover:shadow-md',
-      'active:bg-red-800 active:translate-y-0',
-      'disabled:bg-gray-300 disabled:text-gray-500 disabled:hover:translate-y-0 disabled:hover:shadow-none'
-    ),
-    ghost: cn(
-      'bg-transparent text-charcoal border-0',
-      'hover:bg-light-gray',
-      'active:bg-gray-200'
-    ),
-  };
+    const sizeClasses = {
+      sm: 'px-3 py-1.5 text-sm',
+      md: 'px-4 py-2 text-base',
+      lg: 'px-6 py-3 text-lg',
+    };
 
-  const sizeClasses = {
-    sm: 'px-4 py-2 text-sm',
-    md: 'px-6 py-3 text-sm',
-    lg: 'px-8 py-4 text-base',
-  };
+    return (
+      <button
+        ref={ref}
+        className={cn(
+          'inline-flex items-center justify-center font-semibold rounded-sm transition-all duration-200',
+          'focus:outline-none focus:ring-2 focus:ring-offset-2',
+          'disabled:opacity-50 disabled:cursor-not-allowed',
+          'min-h-[44px]',
+          variantClasses[variant],
+          sizeClasses[size],
+          className
+        )}
+        disabled={disabled || loading}
+        {...props}
+      >
+        {loading && (
+          <svg
+            className="animate-spin -ml-1 mr-2 h-4 w-4"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            />
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            />
+          </svg>
+        )}
+        {children}
+      </button>
+    );
+  }
+);
 
-  return (
-    <motion.button
-      className={cn(
-        baseClasses,
-        variantClasses[variant],
-        sizeClasses[size],
-        isLoading && 'text-transparent',
-        className
-      )}
-      disabled={disabled || isLoading}
-      whileTap={{ scale: 0.98 }}
-      {...(props as any)}
-    >
-      {/* Loading spinner */}
-      {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-4 h-4 border-2 border-transparent border-t-current rounded-full animate-spin" />
-        </div>
-      )}
-
-      {/* Button content */}
-      {!isLoading && (
-        <>
-          {leftIcon && <span className="flex-shrink-0">{leftIcon}</span>}
-          <span>{children}</span>
-          {rightIcon && <span className="flex-shrink-0">{rightIcon}</span>}
-        </>
-      )}
-    </motion.button>
-  );
-};
+Button.displayName = 'Button';

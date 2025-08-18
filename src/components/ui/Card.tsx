@@ -3,7 +3,9 @@
 import React from 'react';
 import { BaseCard } from './cards/BaseCard';
 import { cn } from '@/lib/utils';
-import { Button } from './Button';
+
+// Export BaseCard for direct usage
+export { BaseCard } from './cards/BaseCard';
 
 // Re-export BaseCard as Card for backward compatibility
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -37,14 +39,24 @@ export const Card: React.FC<CardProps> = ({
   );
 };
 
-// Re-export ServiceCard from compositions for backward compatibility
-export { ServiceCard } from './cards/compositions';
-
-// Re-export VehicleCard from compositions for backward compatibility
-export { VehicleCard } from './cards/compositions';
-
-// Export all card components for easy importing
-export { BaseCard } from './cards/BaseCard';
+// Export card components that are expected by the forms
 export { CardHeader, CardBody, CardFooter, CardActions, CardContent } from './cards/CardContent';
-export { ProfileCardSimple } from './cards/compositions';
 
+// Export composed card components
+export { ServiceCard, VehicleCard, ProfileCardSimple } from './cards/compositions';
+
+// Simple CardTitle component
+interface CardTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {
+  children: React.ReactNode;
+}
+
+export const CardTitle: React.FC<CardTitleProps> = ({ children, className, ...props }) => {
+  return (
+    <h3 
+      className={cn('text-title-md font-semibold text-charcoal', className)} 
+      {...props}
+    >
+      {children}
+    </h3>
+  );
+};
