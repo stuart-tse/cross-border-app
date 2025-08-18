@@ -38,7 +38,11 @@
       "mcp__playwright__browser_click",
       "mcp__playwright__browser_console_messages",
       "mcp__playwright__browser_type",
-      "WebFetch(domain:docs.anthropic.com)"
+      "WebFetch(domain:docs.anthropic.com)",
+      "mcp__playwright__browser_take_screenshot",
+      "mcp__playwright__browser_snapshot",
+      "mcp__playwright__browser_wait_for",
+      "mcp__playwright__browser_close"
     ],
     "defaultMode": "acceptEdits",
     "additionalDirectories": [

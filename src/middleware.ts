@@ -30,11 +30,13 @@ const publicRoutes = [
   '/register',
 ];
 
-// Admin routes that require admin role
-const adminRoutes = [
-  '/dashboard/editor',
-  '/dashboard/admin',
-];
+// Role-based route definitions
+const roleRoutes = {
+  ADMIN: ['/dashboard/admin'],
+  DRIVER: ['/dashboard/driver'],
+  BLOG_EDITOR: ['/dashboard/editor'],
+  CLIENT: ['/dashboard/client'],
+};
 
 function isProtectedRoute(pathname: string): boolean {
   return protectedRoutes.some(route => pathname.startsWith(route));
@@ -49,8 +51,24 @@ function isPublicRoute(pathname: string): boolean {
   });
 }
 
-function isAdminRoute(pathname: string): boolean {
-  return adminRoutes.some(route => pathname.startsWith(route));
+function hasRoleAccess(pathname: string, userRole: string): boolean {
+  // Check if user has access to the specific route based on their role
+  for (const [role, routes] of Object.entries(roleRoutes)) {
+    if (routes.some(route => pathname.startsWith(route))) {
+      return userRole === role || userRole === 'ADMIN'; // Admin can access all routes
+    }
+  }
+  return true; // Allow access to general dashboard routes
+}
+
+function getDefaultDashboardForRole(role: string): string {
+  const dashboardMap: Record<string, string> = {
+    ADMIN: '/dashboard/admin',
+    DRIVER: '/dashboard/driver',
+    BLOG_EDITOR: '/dashboard/editor', 
+    CLIENT: '/dashboard/client',
+  };
+  return dashboardMap[role] || '/dashboard/client';
 }
 
 function getPathnameWithoutLocale(pathname: string): string {
@@ -87,11 +105,17 @@ export default async function middleware(request: NextRequest) {
         return NextResponse.redirect(loginUrl);
       }
 
-      // Check admin routes
-      if (isAdminRoute(pathnameWithoutLocale)) {
-        if (session.user.selectedRole !== 'ADMIN' && session.user.selectedRole !== 'DRIVER') {
-          return NextResponse.redirect(new URL('/dashboard', request.url));
-        }
+      // Check role-based access
+      if (!hasRoleAccess(pathnameWithoutLocale, session.user.selectedRole)) {
+        // Redirect to appropriate dashboard for user's role
+        const defaultDashboard = getDefaultDashboardForRole(session.user.selectedRole);
+        return NextResponse.redirect(new URL(defaultDashboard, request.url));
+      }
+
+      // Redirect bare /dashboard to role-specific dashboard
+      if (pathnameWithoutLocale === '/dashboard') {
+        const defaultDashboard = getDefaultDashboardForRole(session.user.selectedRole);
+        return NextResponse.redirect(new URL(defaultDashboard, request.url));
       }
     } catch (error) {
       console.error('Auth middleware error:', error);
@@ -107,7 +131,8 @@ export default async function middleware(request: NextRequest) {
     try {
       const session = await auth();
       if (session?.user) {
-        return NextResponse.redirect(new URL('/dashboard', request.url));
+        const defaultDashboard = getDefaultDashboardForRole(session.user.selectedRole);
+        return NextResponse.redirect(new URL(defaultDashboard, request.url));
       }
     } catch (error) {
       // Continue to login/register page if auth check fails

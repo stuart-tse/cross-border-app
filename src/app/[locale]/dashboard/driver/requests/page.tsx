@@ -7,7 +7,7 @@ import { ArrowLeft } from 'lucide-react';
 import { useAuth, withAuth } from '@/lib/context/AuthContext';
 import { UserType } from '@prisma/client';
 import { Card } from '@/components/ui/Card';
-import { TeslaCard } from '@/components/ui/TeslaCard';
+import { BaseCard } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
 

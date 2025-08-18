@@ -93,9 +93,15 @@ export const authConfig: NextAuthConfig = {
 
       // Handle role switching
       if (trigger === 'update' && session?.selectedRole) {
+        console.log('🔐 NextAuth JWT callback - role switch requested:', session.selectedRole);
         const userRoles = token.roles as UserType[];
+        console.log('🔐 User available roles:', userRoles);
         if (userRoles.includes(session.selectedRole)) {
+          console.log('✅ Role switch approved, updating token');
           token.selectedRole = session.selectedRole;
+          token.userType = session.selectedRole;
+        } else {
+          console.warn('❌ Role switch denied - user does not have role:', session.selectedRole);
         }
       }
 

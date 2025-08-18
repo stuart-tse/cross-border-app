@@ -81,7 +81,7 @@ async function getDriverData() {
         type: 'earning' as const,
         description: 'Trip #TRP-001 (HK → SZ)',
         amount: 1200,
-        status: 'completed',
+        status: 'completed' as const,
       },
       {
         id: '2',
@@ -89,7 +89,7 @@ async function getDriverData() {
         type: 'payout' as const,
         description: 'Weekly earnings payout',
         amount: -8750,
-        status: 'completed',
+        status: 'completed' as const,
       },
       {
         id: '3',
@@ -97,7 +97,7 @@ async function getDriverData() {
         type: 'fee' as const,
         description: 'Platform service fee (5%)',
         amount: -65,
-        status: 'completed',
+        status: 'completed' as const,
       },
     ],
   };

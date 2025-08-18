@@ -67,11 +67,11 @@ export async function GET(request: NextRequest) {
     }
 
     // Get completed trips with earnings
-    const trips = await prisma.trip.findMany({
+    const trips = await prisma.booking.findMany({
       where: {
         driverId: driverProfile.id,
         status: 'COMPLETED',
-        completedAt: {
+        updatedAt: {
           gte: startDate,
           lte: endDate,
         },
@@ -82,15 +82,15 @@ export async function GET(request: NextRequest) {
             name: true,
           },
         },
-        route: true,
+        // route: true,
       },
       orderBy: {
-        completedAt: 'desc',
+        updatedAt: 'desc',
       },
     });
 
     // Calculate earnings statistics
-    const totalEarnings = trips.reduce((sum, trip) => sum + (trip.totalCost || 0), 0);
+    const totalEarnings = trips.reduce((sum, trip) => sum + (trip.totalPrice || 0), 0);
     const totalTrips = trips.length;
     const avgPerTrip = totalTrips > 0 ? totalEarnings / totalTrips : 0;
 

@@ -2,8 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Card } from '@/components/ui/Card';
-import { TeslaCard } from '@/components/ui/TeslaCard';
+import { Card, BaseCard } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { cn } from '@/lib/utils';
@@ -353,7 +352,7 @@ export default function DriverDashboardClient({
               {/* Earnings Overview Cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 {/* Today's Earnings */}
-                <TeslaCard className="hover:scale-105 transition-transform duration-300">
+                <BaseCard className="hover:scale-105 transition-transform duration-300">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-title-md font-semibold text-charcoal">Today&apos;s Earnings</h3>
                     <div className="w-10 h-10 bg-hot-pink bg-opacity-10 rounded-lg flex items-center justify-center">
@@ -366,10 +365,10 @@ export default function DriverDashboardClient({
                     <div className="bg-gradient-to-r from-hot-pink to-deep-pink h-2 rounded-full" style={{width: '75%'}}></div>
                   </div>
                   <div className="text-body-sm text-gray-500 mt-2">Goal: HK$1,600</div>
-                </TeslaCard>
+                </BaseCard>
 
                 {/* This Week */}
-                <TeslaCard className="hover:scale-105 transition-transform duration-300">
+                <BaseCard className="hover:scale-105 transition-transform duration-300">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-title-md font-semibold text-charcoal">This Week</h3>
                     <div className="w-10 h-10 bg-electric-blue bg-opacity-10 rounded-lg flex items-center justify-center">
@@ -379,10 +378,10 @@ export default function DriverDashboardClient({
                   <div className="text-display-sm font-bold text-charcoal mb-2">HK${driverData.weeklyEarnings.toLocaleString()}</div>
                   <div className="text-body-sm text-success-green">+12% from last week</div>
                   <div className="text-body-sm text-gray-600 mt-2">{driverData.dailyEarnings.tripsCompleted} trips completed</div>
-                </TeslaCard>
+                </BaseCard>
 
                 {/* This Month */}
-                <TeslaCard className="hover:scale-105 transition-transform duration-300">
+                <BaseCard className="hover:scale-105 transition-transform duration-300">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-title-md font-semibold text-charcoal">This Month</h3>
                     <div className="w-10 h-10 bg-success-green bg-opacity-10 rounded-lg flex items-center justify-center">
@@ -392,10 +391,10 @@ export default function DriverDashboardClient({
                   <div className="text-display-sm font-bold text-charcoal mb-2">HK${driverData.monthlyEarnings.toLocaleString()}</div>
                   <div className="text-body-sm text-gray-600">Average: HK$965/day</div>
                   <div className="text-body-sm text-gray-600">156 trips completed</div>
-                </TeslaCard>
+                </BaseCard>
 
                 {/* Performance Score */}
-                <TeslaCard className="hover:scale-105 transition-transform duration-300">
+                <BaseCard className="hover:scale-105 transition-transform duration-300">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-title-md font-semibold text-charcoal">Performance</h3>
                     <div className="w-10 h-10 bg-warning-amber bg-opacity-10 rounded-lg flex items-center justify-center">
@@ -405,13 +404,13 @@ export default function DriverDashboardClient({
                   <div className="text-display-sm font-bold text-charcoal mb-2">{driverData.performanceScore}</div>
                   <div className="text-body-sm text-gray-600">Average rating</div>
                   <div className="text-body-sm text-success-green mt-2">{driverData.dailyEarnings.acceptRate}% acceptance rate</div>
-                </TeslaCard>
+                </BaseCard>
               </div>
 
               {/* Charts and Analytics */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
                 {/* Earnings Chart */}
-                <TeslaCard>
+                <BaseCard>
                   <div className="flex items-center justify-between mb-6">
                     <h3 className="text-title-lg font-semibold text-charcoal">Earnings Trend</h3>
                     <div className="flex space-x-2">
@@ -434,10 +433,10 @@ export default function DriverDashboardClient({
                   <div className="h-80">
                     <canvas ref={chartRef}></canvas>
                   </div>
-                </TeslaCard>
+                </BaseCard>
 
                 {/* Trip Types Breakdown */}
-                <TeslaCard>
+                <BaseCard>
                   <div className="flex items-center justify-between mb-6">
                     <h3 className="text-title-lg font-semibold text-charcoal">Trip Types</h3>
                     <span className="text-body-sm text-gray-500">This month</span>
@@ -459,11 +458,11 @@ export default function DriverDashboardClient({
                       );
                     })}
                   </div>
-                </TeslaCard>
+                </BaseCard>
               </div>
 
               {/* Payment History */}
-              <TeslaCard className="mb-8">
+              <BaseCard className="mb-8">
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="text-title-lg font-semibold text-charcoal">Payment History</h3>
                   <div className="flex space-x-3">
@@ -534,10 +533,10 @@ export default function DriverDashboardClient({
                     </tbody>
                   </table>
                 </div>
-              </TeslaCard>
+              </BaseCard>
 
               {/* Tax Information */}
-              <TeslaCard>
+              <BaseCard>
                 <h3 className="text-title-lg font-semibold text-charcoal mb-6">Tax Information</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="bg-gray-50 rounded-lg p-4">
@@ -557,7 +556,7 @@ export default function DriverDashboardClient({
                   </div>
                 </div>
                 <Button variant="secondary" className="mt-6">Download Tax Summary</Button>
-              </TeslaCard>
+              </BaseCard>
             </motion.div>
           )}
 
@@ -578,7 +577,7 @@ export default function DriverDashboardClient({
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Settings Navigation */}
                 <div className="lg:col-span-1">
-                  <TeslaCard>
+                  <BaseCard>
                     <h3 className="text-title-lg font-semibold text-charcoal mb-4">Settings</h3>
                     <nav className="space-y-2">
                       {[
@@ -598,13 +597,13 @@ export default function DriverDashboardClient({
                         </a>
                       ))}
                     </nav>
-                  </TeslaCard>
+                  </BaseCard>
                 </div>
 
                 {/* Settings Content */}
                 <div className="lg:col-span-2 space-y-6">
                   {/* Notification Settings */}
-                  <TeslaCard>
+                  <BaseCard>
                     <h3 className="text-title-lg font-semibold text-charcoal mb-6">Notification Preferences</h3>
                     
                     <div className="space-y-6">
@@ -663,10 +662,10 @@ export default function DriverDashboardClient({
                         </div>
                       </div>
                     </div>
-                  </TeslaCard>
+                  </BaseCard>
 
                   {/* Working Hours */}
-                  <TeslaCard>
+                  <BaseCard>
                     <h3 className="text-title-lg font-semibold text-charcoal mb-6">Working Hours & Availability</h3>
                     
                     <div className="space-y-6">
@@ -792,10 +791,10 @@ export default function DriverDashboardClient({
                         </div>
                       </div>
                     </div>
-                  </TeslaCard>
+                  </BaseCard>
 
                   {/* Security Settings */}
-                  <TeslaCard>
+                  <BaseCard>
                     <h3 className="text-title-lg font-semibold text-charcoal mb-6">Security & Privacy</h3>
                     
                     <div className="space-y-6">
@@ -872,7 +871,7 @@ export default function DriverDashboardClient({
                         </div>
                       </div>
                     </div>
-                  </TeslaCard>
+                  </BaseCard>
 
                   {/* Save Button */}
                   <div className="flex justify-end">
@@ -898,7 +897,7 @@ export default function DriverDashboardClient({
               </div>
 
               {/* Upload Progress Overview */}
-              <TeslaCard className="mb-8">
+              <BaseCard className="mb-8">
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="text-title-lg font-semibold text-charcoal">Document Upload Progress</h3>
                   <span className="text-body-sm text-gray-500">3 of 4 documents uploaded</span>
@@ -911,12 +910,12 @@ export default function DriverDashboardClient({
                 <div className="text-body-sm text-gray-600">
                   You&apos;re almost done! Please upload your vehicle insurance document to complete verification.
                 </div>
-              </TeslaCard>
+              </BaseCard>
 
               {/* Document Categories */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                 {/* Driver's License */}
-                <TeslaCard>
+                <BaseCard>
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-title-md font-semibold text-charcoal">Driver&apos;s License</h3>
                     <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
@@ -941,10 +940,10 @@ export default function DriverDashboardClient({
                   </div>
                   
                   <Button variant="secondary" size="sm" className="w-full">Replace Document</Button>
-                </TeslaCard>
+                </BaseCard>
 
                 {/* Vehicle Registration */}
-                <TeslaCard>
+                <BaseCard>
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-title-md font-semibold text-charcoal">Vehicle Registration</h3>
                     <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
@@ -969,10 +968,10 @@ export default function DriverDashboardClient({
                   </div>
                   
                   <Button variant="secondary" size="sm" className="w-full">Replace Document</Button>
-                </TeslaCard>
+                </BaseCard>
 
                 {/* Vehicle Insurance */}
-                <TeslaCard>
+                <BaseCard>
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-title-md font-semibold text-charcoal">Vehicle Insurance</h3>
                     <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium">
@@ -1011,10 +1010,10 @@ export default function DriverDashboardClient({
                   <div className="text-body-sm text-gray-600">
                     Requirements: Valid comprehensive insurance, cross-border coverage required
                   </div>
-                </TeslaCard>
+                </BaseCard>
 
                 {/* Background Check */}
-                <TeslaCard>
+                <BaseCard>
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-title-md font-semibold text-charcoal">Background Check</h3>
                     <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
@@ -1039,11 +1038,11 @@ export default function DriverDashboardClient({
                   </div>
                   
                   <Button variant="secondary" size="sm" className="w-full">Replace Document</Button>
-                </TeslaCard>
+                </BaseCard>
               </div>
 
               {/* Upload Guidelines */}
-              <TeslaCard className="mb-8">
+              <BaseCard className="mb-8">
                 <h3 className="text-title-lg font-semibold text-charcoal mb-6">Upload Guidelines</h3>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1081,10 +1080,10 @@ export default function DriverDashboardClient({
                     </ul>
                   </div>
                 </div>
-              </TeslaCard>
+              </BaseCard>
 
               {/* Recent Uploads */}
-              <TeslaCard>
+              <BaseCard>
                 <h3 className="text-title-lg font-semibold text-charcoal mb-6">Recent Upload Activity</h3>
                 
                 <div className="space-y-4">
@@ -1107,7 +1106,7 @@ export default function DriverDashboardClient({
                     </div>
                   ))}
                 </div>
-              </TeslaCard>
+              </BaseCard>
             </motion.div>
           )}
 
@@ -1126,7 +1125,7 @@ export default function DriverDashboardClient({
               </div>
 
               {/* Verification Status Overview */}
-              <TeslaCard className="mb-8">
+              <BaseCard className="mb-8">
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="text-title-lg font-semibold text-charcoal">Verification Status</h3>
                   <span className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm font-medium">
@@ -1170,10 +1169,10 @@ export default function DriverDashboardClient({
                     Estimated completion: 1-2 business days
                   </div>
                 </div>
-              </TeslaCard>
+              </BaseCard>
 
               {/* Verification Timeline */}
-              <TeslaCard className="mb-8">
+              <BaseCard className="mb-8">
                 <h3 className="text-title-lg font-semibold text-charcoal mb-6">Verification Timeline</h3>
                 
                 <div className="relative">
@@ -1248,12 +1247,12 @@ export default function DriverDashboardClient({
                     ))}
                   </div>
                 </div>
-              </TeslaCard>
+              </BaseCard>
 
               {/* Document Status Details */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
                 {/* Approved Documents */}
-                <TeslaCard>
+                <BaseCard>
                   <h3 className="text-title-lg font-semibold text-charcoal mb-6">Approved Documents</h3>
                   
                   <div className="space-y-4">
@@ -1276,10 +1275,10 @@ export default function DriverDashboardClient({
                       </div>
                     ))}
                   </div>
-                </TeslaCard>
+                </BaseCard>
 
                 {/* Pending Documents */}
-                <TeslaCard>
+                <BaseCard>
                   <h3 className="text-title-lg font-semibold text-charcoal mb-6">Pending Review</h3>
                   
                   <div className="space-y-4">
@@ -1304,11 +1303,11 @@ export default function DriverDashboardClient({
                       </div>
                     </div>
                   </div>
-                </TeslaCard>
+                </BaseCard>
               </div>
 
               {/* Compliance Checklist */}
-              <TeslaCard className="mb-8">
+              <BaseCard className="mb-8">
                 <h3 className="text-title-lg font-semibold text-charcoal mb-6">Compliance Checklist</h3>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1357,10 +1356,10 @@ export default function DriverDashboardClient({
                     </div>
                   </div>
                 </div>
-              </TeslaCard>
+              </BaseCard>
 
               {/* Next Steps */}
-              <TeslaCard>
+              <BaseCard>
                 <h3 className="text-title-lg font-semibold text-charcoal mb-6">Next Steps</h3>
                 
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
@@ -1384,7 +1383,7 @@ export default function DriverDashboardClient({
                   <Button className="bg-hot-pink hover:bg-deep-pink">Contact Support</Button>
                   <Button variant="secondary">View FAQ</Button>
                 </div>
-              </TeslaCard>
+              </BaseCard>
             </motion.div>
           )}
         </AnimatePresence>

@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { useAuth, withAuth } from '@/lib/context/AuthContext';
 import { UserType } from '@prisma/client';
-import { TeslaCard } from '@/components/ui/TeslaCard';
+import { BaseCard } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { cn } from '@/lib/utils';
@@ -373,7 +373,7 @@ const VehiclePage: React.FC = () => {
             className="space-y-8"
           >
             {/* Vehicle Status Hero Card */}
-            <TeslaCard className="bg-gradient-to-br from-hot-pink/10 to-deep-pink/10 border-hot-pink/20" padding="lg">
+            <BaseCard className="bg-gradient-to-br from-hot-pink/10 to-deep-pink/10 border-hot-pink/20" padding="lg">
               <div className="flex items-center justify-between mb-6">
                 <div>
                   <h1 className="text-display-sm font-bold text-charcoal mb-3">
@@ -436,12 +436,12 @@ const VehiclePage: React.FC = () => {
                   <div className="text-body-sm text-gray-600">Years Old</div>
                 </div>
               </div>
-            </TeslaCard>
+            </BaseCard>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Vehicle Details */}
               <div className="lg:col-span-2">
-                <TeslaCard>
+                <BaseCard>
                   <div className="flex items-center justify-between mb-6">
                     <h3 className="text-title-lg font-semibold text-charcoal">Vehicle Specifications</h3>
                     {isEditing && (
@@ -554,13 +554,13 @@ const VehiclePage: React.FC = () => {
                       ))}
                     </div>
                   </div>
-                </TeslaCard>
+                </BaseCard>
               </div>
 
               {/* Quick Stats & Actions */}
               <div className="space-y-6">
                 {/* Vehicle Photos */}
-                <TeslaCard>
+                <BaseCard>
                   <h4 className="text-title-sm font-semibold text-charcoal mb-4">Vehicle Photos</h4>
                   <div className="grid grid-cols-2 gap-3 mb-4">
                     {/* Placeholder photos */}
@@ -580,10 +580,10 @@ const VehiclePage: React.FC = () => {
                   <Button variant="secondary" size="sm" className="w-full">
                     📷 Upload Photos
                   </Button>
-                </TeslaCard>
+                </BaseCard>
 
                 {/* Quick Actions */}
-                <TeslaCard>
+                <BaseCard>
                   <h4 className="text-title-sm font-semibold text-charcoal mb-4">Quick Actions</h4>
                   <div className="space-y-3">
                     <Button variant="secondary" size="sm" className="w-full justify-start">
@@ -599,10 +599,10 @@ const VehiclePage: React.FC = () => {
                       📊 Vehicle Performance Report
                     </Button>
                   </div>
-                </TeslaCard>
+                </BaseCard>
 
                 {/* Status Summary */}
-                <TeslaCard>
+                <BaseCard>
                   <h4 className="text-title-sm font-semibold text-charcoal mb-4">Status Summary</h4>
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
@@ -624,7 +624,7 @@ const VehiclePage: React.FC = () => {
                       </span>
                     </div>
                   </div>
-                </TeslaCard>
+                </BaseCard>
               </div>
             </div>
           </motion.div>
@@ -645,37 +645,37 @@ const VehiclePage: React.FC = () => {
 
             {/* Maintenance Stats */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              <TeslaCard className="text-center" padding="md">
+              <BaseCard className="text-center" padding="md">
                 <div className="text-headline-md font-bold text-hot-pink">
                   {formatCurrency(maintenanceRecords.reduce((sum, r) => sum + r.cost, 0))}
                 </div>
                 <div className="text-body-sm text-gray-600">Total Maintenance Cost</div>
-              </TeslaCard>
+              </BaseCard>
 
-              <TeslaCard className="text-center" padding="md">
+              <BaseCard className="text-center" padding="md">
                 <div className="text-headline-md font-bold text-electric-blue">
                   {maintenanceRecords.filter(r => r.status === 'completed').length}
                 </div>
                 <div className="text-body-sm text-gray-600">Services Completed</div>
-              </TeslaCard>
+              </BaseCard>
 
-              <TeslaCard className="text-center" padding="md">
+              <BaseCard className="text-center" padding="md">
                 <div className="text-headline-md font-bold text-warning-amber">
                   {maintenanceRecords.filter(r => r.status === 'scheduled').length}
                 </div>
                 <div className="text-body-sm text-gray-600">Scheduled Services</div>
-              </TeslaCard>
+              </BaseCard>
 
-              <TeslaCard className="text-center" padding="md">
+              <BaseCard className="text-center" padding="md">
                 <div className="text-headline-md font-bold text-success-green">
                   {Math.round((vehicleInfo.mileage - 25000) / 3000)}
                 </div>
                 <div className="text-body-sm text-gray-600">Services Since Purchase</div>
-              </TeslaCard>
+              </BaseCard>
             </div>
 
             {/* Maintenance Records */}
-            <TeslaCard>
+            <BaseCard>
               <h3 className="text-title-lg font-semibold text-charcoal mb-6">Maintenance Records</h3>
               
               <div className="space-y-4">
@@ -730,7 +730,7 @@ const VehiclePage: React.FC = () => {
                   </div>
                 ))}
               </div>
-            </TeslaCard>
+            </BaseCard>
           </motion.div>
         )}
 
@@ -749,7 +749,7 @@ const VehiclePage: React.FC = () => {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Current Policy */}
-              <TeslaCard>
+              <BaseCard>
                 <h3 className="text-title-lg font-semibold text-charcoal mb-6">Current Policy</h3>
                 
                 <div className="space-y-4">
@@ -801,10 +801,10 @@ const VehiclePage: React.FC = () => {
                     </div>
                   </div>
                 </div>
-              </TeslaCard>
+              </BaseCard>
 
               {/* Coverage Details */}
-              <TeslaCard>
+              <BaseCard>
                 <h3 className="text-title-lg font-semibold text-charcoal mb-6">Coverage Details</h3>
                 
                 <div className="space-y-4">
@@ -827,11 +827,11 @@ const VehiclePage: React.FC = () => {
                     ))}
                   </div>
                 </div>
-              </TeslaCard>
+              </BaseCard>
             </div>
 
             {/* Claims History */}
-            <TeslaCard>
+            <BaseCard>
               <h3 className="text-title-lg font-semibold text-charcoal mb-6">Claims History</h3>
               
               {insuranceInfo.claimsHistory.length === 0 ? (
@@ -864,7 +864,7 @@ const VehiclePage: React.FC = () => {
                   ))}
                 </div>
               )}
-            </TeslaCard>
+            </BaseCard>
           </motion.div>
         )}
 
@@ -883,39 +883,39 @@ const VehiclePage: React.FC = () => {
 
             {/* Permits Overview */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              <TeslaCard className="text-center bg-gradient-to-br from-success-green/10 to-success-green/20 border-success-green/30" padding="md">
+              <BaseCard className="text-center bg-gradient-to-br from-success-green/10 to-success-green/20 border-success-green/30" padding="md">
                 <div className="text-headline-md font-bold text-success-green">
                   {crossBorderPermits.filter(p => p.status === 'active').length}
                 </div>
                 <div className="text-body-sm text-gray-600">Active Permits</div>
-              </TeslaCard>
+              </BaseCard>
 
-              <TeslaCard className="text-center bg-gradient-to-br from-warning-amber/10 to-warning-amber/20 border-warning-amber/30" padding="md">
+              <BaseCard className="text-center bg-gradient-to-br from-warning-amber/10 to-warning-amber/20 border-warning-amber/30" padding="md">
                 <div className="text-headline-md font-bold text-warning-amber">
                   {crossBorderPermits.filter(p => p.status === 'expiring').length}
                 </div>
                 <div className="text-body-sm text-gray-600">Expiring Soon</div>
-              </TeslaCard>
+              </BaseCard>
 
-              <TeslaCard className="text-center bg-gradient-to-br from-error-red/10 to-error-red/20 border-error-red/30" padding="md">
+              <BaseCard className="text-center bg-gradient-to-br from-error-red/10 to-error-red/20 border-error-red/30" padding="md">
                 <div className="text-headline-md font-bold text-error-red">
                   {crossBorderPermits.filter(p => p.status === 'expired').length}
                 </div>
                 <div className="text-body-sm text-gray-600">Expired</div>
-              </TeslaCard>
+              </BaseCard>
 
-              <TeslaCard className="text-center bg-gradient-to-br from-hot-pink/10 to-deep-pink/10 border-hot-pink/30" padding="md">
+              <BaseCard className="text-center bg-gradient-to-br from-hot-pink/10 to-deep-pink/10 border-hot-pink/30" padding="md">
                 <div className="text-headline-md font-bold text-hot-pink">
                   {crossBorderPermits.filter(p => p.status === 'renewal_required').length}
                 </div>
                 <div className="text-body-sm text-gray-600">Need Renewal</div>
-              </TeslaCard>
+              </BaseCard>
             </div>
 
             {/* Permits List */}
             <div className="space-y-4">
               {crossBorderPermits.map((permit) => (
-                <TeslaCard key={permit.id}>
+                <BaseCard key={permit.id}>
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center space-x-4">
                       <div className="text-3xl">{getPermitTypeIcon(permit.type)}</div>
@@ -1004,7 +1004,7 @@ const VehiclePage: React.FC = () => {
                       </div>
                     </div>
                   )}
-                </TeslaCard>
+                </BaseCard>
               ))}
             </div>
           </motion.div>

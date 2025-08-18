@@ -4,6 +4,7 @@ import React, { createContext, useContext, useReducer, useEffect, ReactNode, use
 import { AuthUser as User } from '@/types/auth';
 import { UserType } from '@prisma/client';
 import { useHydration } from '@/lib/hooks/useHydration';
+import { useSession, getSession } from 'next-auth/react';
 
 // Auth State Types
 interface AuthState {
@@ -116,58 +117,76 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(authReducer, initialState);
   const hasHydrated = useHydration();
+  const { data: session, update } = useSession();
 
   const checkAuthStatus = useCallback(async () => {
     try {
       dispatch({ type: 'AUTH_START' });
       
-      const response = await fetch('/api/auth/me', {
-        method: 'GET',
-        credentials: 'include',
-      });
+      // Get both NextAuth session and user data
+      const [sessionResponse, userResponse] = await Promise.all([
+        fetch('/api/auth/session', {
+          method: 'GET',
+          credentials: 'include',
+        }),
+        fetch('/api/auth/me', {
+          method: 'GET',
+          credentials: 'include',
+        })
+      ]);
 
-      // Always try to parse the response as JSON, regardless of status
-      const data = await response.json();
-      console.log('Auth check response:', { 
-        status: response.status, 
-        ok: response.ok,
-        success: data.success, 
-        hasData: !!data.data,
-        error: data.error
+      const sessionData = await sessionResponse.json();
+      const userData = await userResponse.json();
+      
+      console.log('Auth check - session:', sessionData?.user?.selectedRole);
+      console.log('Auth check - user data:', { 
+        success: userData.success, 
+        hasData: !!userData.data
       });
       
-      if (response.ok && data.success && data.data) {
-        const userRoles = data.data.roles?.map((r: any) => r.role) || [];
-        // Use hydration-safe localStorage access
-        const savedRole = hasHydrated ? localStorage.getItem('selectedRole') as UserType : null;
-        const selectedRole = (savedRole && userRoles.includes(savedRole)) ? savedRole : userRoles[0] || UserType.CLIENT;
+      if (sessionData?.user && userData.success && userData.data) {
+        const userRoles = userData.data.roles?.map((r: any) => r.role) || [];
+        
+        // Use NextAuth session selectedRole if available, otherwise fall back to localStorage/default
+        let selectedRole = sessionData.user.selectedRole;
+        if (!selectedRole || !userRoles.includes(selectedRole)) {
+          const savedRole = hasHydrated ? localStorage.getItem('selectedRole') as UserType : null;
+          selectedRole = (savedRole && userRoles.includes(savedRole)) ? savedRole : userRoles[0] || UserType.CLIENT;
+        }
         
         console.log('Auth success - setting user:', { 
-          userId: data.data.id, 
+          userId: userData.data.id, 
           selectedRole, 
+          sessionRole: sessionData.user.selectedRole,
           availableRoles: userRoles 
         });
         
-        dispatch({ type: 'AUTH_SUCCESS', payload: data.data, selectedRole });
+        dispatch({ type: 'AUTH_SUCCESS', payload: userData.data, selectedRole });
       } else {
-        console.log('Auth check failed - logging out user:', {
-          responseOk: response.ok,
-          dataSuccess: data.success,
-          hasData: !!data.data,
-          errorCode: data.error?.code
-        });
+        console.log('Auth check failed - logging out user');
         dispatch({ type: 'LOGOUT' });
       }
     } catch (error) {
       console.error('Auth check failed:', error);
       dispatch({ type: 'LOGOUT' });
     }
-  }, []); // No dependencies needed
+  }, [hasHydrated]); // Add hasHydrated as dependency
 
   // Check authentication status on mount only once
   useEffect(() => {
     checkAuthStatus();
   }, [checkAuthStatus]); // Include checkAuthStatus in dependencies
+
+  // Sync with NextAuth session changes
+  useEffect(() => {
+    if (session?.user && state.user) {
+      // If the session has a different selectedRole than our state, update it
+      if (session.user.selectedRole && session.user.selectedRole !== state.selectedRole) {
+        console.log('🔄 Syncing selectedRole from NextAuth session:', session.user.selectedRole);
+        dispatch({ type: 'SET_SELECTED_ROLE', payload: session.user.selectedRole });
+      }
+    }
+  }, [session?.user?.selectedRole, state.selectedRole, state.user]);
 
   const login = async (email: string, password: string) => {
     try {
@@ -273,18 +292,38 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     try {
+      console.log('🔄 Starting role switch to:', role);
+      
       // Save selected role to localStorage (client-side only)
       if (hasHydrated) {
         localStorage.setItem('selectedRole', role);
+        console.log('💾 Saved role to localStorage:', role);
       }
       
       // Update the selected role in state
       dispatch({ type: 'SET_SELECTED_ROLE', payload: role });
+      console.log('📝 Updated local state with role:', role);
       
-      // Redirect to appropriate dashboard
-      redirectToDashboard(role);
+      // Update NextAuth session with new role
+      if (update) {
+        console.log('🔐 Updating NextAuth session with role:', role);
+        await update({ selectedRole: role });
+        console.log('✅ NextAuth session updated successfully');
+        
+        // Force a re-check of auth status to get the updated session
+        await new Promise(resolve => setTimeout(resolve, 100));
+        await checkAuthStatus();
+        
+        // Redirect to appropriate dashboard
+        console.log('🚀 Redirecting to dashboard for role:', role);
+        redirectToDashboard(role);
+      } else {
+        console.warn('⚠️ NextAuth update function not available');
+        // Fallback: just redirect based on the role
+        redirectToDashboard(role);
+      }
     } catch (error) {
-      console.error('Role switch failed:', error);
+      console.error('❌ Role switch failed:', error);
       throw error;
     }
   };
@@ -303,7 +342,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         [UserType.ADMIN]: '/dashboard/admin',
       };
       
-      window.location.href = routes[userType] || '/dashboard/client';
+      const targetRoute = routes[userType] || '/dashboard/client';
+      console.log('🧭 Redirecting to:', targetRoute);
+      
+      // Use a full page reload to ensure middleware processes the new session
+      window.location.href = targetRoute;
     }
   };
 

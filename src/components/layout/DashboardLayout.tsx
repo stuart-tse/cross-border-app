@@ -19,13 +19,13 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   title,
   subtitle,
 }) => {
-  const { user } = useAuth();
+  const { user, selectedRole } = useAuth();
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // Get navigation items based on user's primary role
-  const primaryRole = user?.roles?.[0]?.role || 'CLIENT';
-  const userTypeKey = primaryRole.toLowerCase() as keyof typeof DASHBOARD_NAV_ITEMS;
+  // Get navigation items based on user's selected role
+  const currentRole = selectedRole || user?.roles?.[0]?.role || 'CLIENT';
+  const userTypeKey = currentRole.toLowerCase() as keyof typeof DASHBOARD_NAV_ITEMS;
   const navItems = DASHBOARD_NAV_ITEMS[userTypeKey] || DASHBOARD_NAV_ITEMS.client;
 
   // Generate breadcrumbs
@@ -129,7 +129,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                       'BLOG_EDITOR': 'Editor',
                       'ADMIN': 'Administrator',
                     };
-                    return roleMap[primaryRole] || 'User';
+                    return roleMap[currentRole] || 'User';
                   })()}
                 </p>
               </div>

@@ -88,7 +88,7 @@ export async function GET(request: NextRequest) {
     ]);
 
     // Calculate analytics
-    const analytics = await calculateTripAnalytics(user.id, dateFrom, dateTo);
+    const analytics = await calculateTripAnalytics(user.id, dateFrom || undefined, dateTo || undefined);
 
     return NextResponse.json({
       trips: trips.map(trip => ({
