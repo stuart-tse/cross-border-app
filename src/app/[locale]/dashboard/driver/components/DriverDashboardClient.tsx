@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/Button';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { cn } from '@/lib/utils';
 import Chart from 'chart.js/auto';
+import VehicleManagement from '@/components/vehicles/VehicleManagement';
 
 interface TripRequest {
   id: string;
@@ -111,7 +112,7 @@ export default function DriverDashboardClient({
   initialTripRequests, 
   driverData 
 }: DriverDashboardClientProps) {
-  const [activeTab, setActiveTab] = useState<'earnings' | 'settings' | 'upload' | 'verification'>('earnings');
+  const [activeTab, setActiveTab] = useState<'earnings' | 'settings' | 'upload' | 'verification' | 'vehicles'>('earnings');
   const [isOnline, setIsOnline] = useState(driverData.settings.workingHours.isOnline);
   const [tripRequests, setTripRequests] = useState<TripRequest[]>(initialTripRequests);
   const [settings, setSettings] = useState<DriverSettings>(driverData.settings);
@@ -288,7 +289,7 @@ export default function DriverDashboardClient({
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navigation Header */}
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-50">
+      <div className="bg-white border-b border-gray-200 sticky top-0 z-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <h1 className="text-xl font-semibold text-charcoal">Driver Dashboard</h1>
@@ -310,6 +311,7 @@ export default function DriverDashboardClient({
           <div className="flex space-x-8 border-b border-gray-200">
             {[
               { id: 'earnings', label: 'Earnings', icon: '💰' },
+              { id: 'vehicles', label: 'Vehicles', icon: '🚗' },
               { id: 'settings', label: 'Settings', icon: '⚙️' },
               { id: 'upload', label: 'Document Upload', icon: '📋' },
               { id: 'verification', label: 'Verification', icon: '✅' }
@@ -557,6 +559,19 @@ export default function DriverDashboardClient({
                 </div>
                 <Button variant="secondary" className="mt-6">Download Tax Summary</Button>
               </BaseCard>
+            </motion.div>
+          )}
+
+          {/* Vehicle Management Page */}
+          {activeTab === 'vehicles' && (
+            <motion.div
+              key="vehicles"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="space-y-8"
+            >
+              <VehicleManagement />
             </motion.div>
           )}
 

@@ -5,9 +5,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { PhoneInput } from '@/components/ui/inputs';
 import { useNotifications } from '@/lib/context/NotificationContext';
 import { useAuth } from '@/lib/context/AuthContext';
 import { registerSchema, RegisterFormData } from '@/lib/validations/auth';
+import { useFormValidation } from '@/hooks/useFormValidation';
+import { useEmailUniquenessValidation } from '@/hooks/useAsyncValidation';
 import { USER_TYPE_INFO } from '@/lib/constants';
 import { UserType } from '@/types';
 
@@ -61,36 +64,29 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
   const { register, isLoading, error, clearError } = useAuth();
   const { success: showSuccess, error: showError } = useNotifications();
   
-  const [formData, setFormData] = useState<Partial<RegisterFormData>>({
+  // Use new form validation hook
+  const form = useFormValidation(registerSchema, {
     userType: selectedUserType,
     email: '',
     password: '',
     confirmPassword: '',
     fullName: '',
     phone: '',
+  }, {
+    validateOnChange: true,
+    validateOnBlur: true,
   });
   
-  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
-  const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set());
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  // Email uniqueness validation
+  const emailValidation = useEmailUniquenessValidation({
+    debounceMs: 500,
+  });
+  
   const [showPasswordRequirements, setShowPasswordRequirements] = useState(false);
 
-  // Real-time validation
-  const validateField = useCallback((field: string, value: any) => {
-    // Create partial schema validation for individual fields
-    const testData = { ...formData, [field]: value };
-    const result = registerSchema.safeParse(testData);
-    
-    if (!result.success && result.error) {
-      const fieldError = result.error.errors.find(err => err.path[0] === field);
-      return fieldError?.message || '';
-    }
-    return '';
-  }, [formData]);
-
-  // Password strength calculation
+  // Password strength calculation using new form state
   const passwordStrength = useMemo(() => {
-    const password = formData.password || '';
+    const password = form.formData.password || '';
     const satisfiedRequirements = PASSWORD_REQUIREMENTS.filter(req => req.test(password));
     const score = satisfiedRequirements.length;
     
@@ -119,95 +115,60 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
         satisfied: req.test(password)
       }))
     };
-  }, [formData.password]);
+  }, [form.formData.password]);
 
-  // Handle input changes with real-time validation
-  const handleInputChange = useCallback((field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+  // Handle email changes for uniqueness validation
+  const handleEmailChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const email = e.target.value;
+    form.setValue('email', email);
     
     // Clear global auth error
     if (error) {
       clearError();
     }
     
-    // Real-time validation for touched fields
-    if (touchedFields.has(field)) {
-      const error = validateField(field, value);
-      setFieldErrors(prev => ({ ...prev, [field]: error }));
+    // Trigger email uniqueness validation
+    if (email && email.includes('@')) {
+      emailValidation.validate(email);
+    } else {
+      emailValidation.reset();
     }
-  }, [touchedFields, validateField, error, clearError]);
+  }, [form, error, clearError, emailValidation]);
 
-  // Handle field focus and blur
-  const handleFieldBlur = useCallback((field: string) => {
-    setTouchedFields(prev => new Set([...prev, field]));
-    const error = validateField(field, formData[field as keyof typeof formData]);
-    setFieldErrors(prev => ({ ...prev, [field]: error }));
-  }, [validateField, formData]);
-
-  // Handle form submission
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Mark all fields as touched
-    const allFields = ['email', 'password', 'confirmPassword', 'fullName', 'phone'];
-    setTouchedFields(new Set(allFields));
-    
-    // Validate entire form
-    const result = registerSchema.safeParse(formData);
-    
-    if (!result.success && result.error) {
-      const errors: Record<string, string> = {};
-      result.error.errors.forEach(err => {
-        if (err.path[0]) {
-          errors[err.path[0] as string] = err.message;
-        }
-      });
-      setFieldErrors(errors);
-      
-      // Show validation error toast
-      const errorCount = Object.keys(errors).length;
+  // Handle form submission using new validation system
+  const handleSubmit = form.handleSubmit(async (validatedData: RegisterFormData) => {
+    // Check email uniqueness if validation is available
+    if (emailValidation.isValid === false) {
       showError(
         'Registration Failed',
-        `Please fix ${errorCount} error${errorCount > 1 ? 's' : ''} in the form.`,
+        'Please use a different email address.',
         { persistent: true }
       );
       return;
     }
-
-    setIsSubmitting(true);
     
     try {
       // Transform data to match API expectations
       const apiData = {
-        email: result.data.email,
-        password: result.data.password,
-        name: result.data.fullName, // API expects 'name', not 'fullName'
-        phone: result.data.phone,
+        email: validatedData.email,
+        password: validatedData.password,
+        name: validatedData.fullName, // API expects 'name', not 'fullName'
+        phone: validatedData.phone,
         role: selectedUserType.toUpperCase(), // API expects uppercase role
       };
       
       await register(apiData as any); // Temporary type assertion while we fix the interface
       showSuccess(
         'Account Created Successfully!',
-        `Welcome to CrossBorder, ${formData.fullName}!`
+        `Welcome to CrossBorder, ${validatedData.fullName}!`
       );
       onSuccess?.();
     } catch (err) {
       console.error('Registration failed:', err);
       // Error is handled by auth context and will show via global error state
-    } finally {
-      setIsSubmitting(false);
     }
-  };
+  });
 
-  // Clear field error when user starts typing
-  useEffect(() => {
-    Object.keys(fieldErrors).forEach(field => {
-      if (fieldErrors[field] && formData[field as keyof typeof formData]) {
-        setFieldErrors(prev => ({ ...prev, [field]: '' }));
-      }
-    });
-  }, [formData, fieldErrors]);
 
   const userTypeInfo = USER_TYPE_INFO[selectedUserType];
 
@@ -260,10 +221,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
           label="Full Name"
           type="text"
           placeholder="Enter your full name"
-          value={formData.fullName || ''}
-          onChange={(e) => handleInputChange('fullName', e.target.value)}
-          onBlur={() => handleFieldBlur('fullName')}
-          error={fieldErrors.fullName}
+          {...form.getFieldProps('fullName')}
           required
           autoComplete="name"
         />
@@ -272,22 +230,26 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
           label="Email Address"
           type="email"
           placeholder="Enter your email address"
-          value={formData.email || ''}
-          onChange={(e) => handleInputChange('email', e.target.value)}
-          onBlur={() => handleFieldBlur('email')}
-          error={fieldErrors.email}
+          value={form.formData.email || ''}
+          onChange={handleEmailChange}
+          onBlur={() => form.touchField('email')}
+          error={form.errors.email || (emailValidation.isValid === false ? emailValidation.message : undefined)}
+          success={emailValidation.isValid === true ? emailValidation.message : undefined}
           required
           autoComplete="email"
+          rightIcon={
+            emailValidation.isValidating ? (
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600"></div>
+            ) : undefined
+          }
         />
 
-        <Input
+        <PhoneInput
           label="Phone Number"
-          type="tel"
           placeholder="Enter your phone number (optional)"
-          value={formData.phone || ''}
-          onChange={(e) => handleInputChange('phone', e.target.value)}
-          onBlur={() => handleFieldBlur('phone')}
-          error={fieldErrors.phone}
+          {...form.getFieldProps('phone')}
+          validateUniqueness={false}
+          countryCode="+852"
           autoComplete="tel"
         />
 
@@ -297,11 +259,10 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
             label="Password"
             type="password"
             placeholder="Create a strong password"
-            value={formData.password || ''}
-            onChange={(e) => handleInputChange('password', e.target.value)}
+            {...form.getFieldProps('password')}
             onFocus={() => setShowPasswordRequirements(true)}
-            onBlur={() => {
-              handleFieldBlur('password');
+            onBlur={(e) => {
+              form.getFieldProps('password').onBlur();
               // Keep requirements visible if password is not strong enough
               if (passwordStrength.score < 4) {
                 setShowPasswordRequirements(true);
@@ -309,14 +270,13 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
                 setShowPasswordRequirements(false);
               }
             }}
-            error={fieldErrors.password}
             required
             autoComplete="new-password"
           />
 
           {/* Password Strength Meter */}
           <AnimatePresence>
-            {formData.password && (
+            {form.formData.password && (
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
@@ -349,7 +309,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
 
           {/* Password Requirements */}
           <AnimatePresence>
-            {showPasswordRequirements && formData.password && (
+            {showPasswordRequirements && form.formData.password && (
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
@@ -390,10 +350,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
           label="Confirm Password"
           type="password"
           placeholder="Confirm your password"
-          value={formData.confirmPassword || ''}
-          onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-          onBlur={() => handleFieldBlur('confirmPassword')}
-          error={fieldErrors.confirmPassword}
+          {...form.getFieldProps('confirmPassword')}
           required
           autoComplete="new-password"
         />
@@ -406,7 +363,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
           variant="secondary"
           onClick={onBack}
           className="flex-1"
-          disabled={isSubmitting}
+          disabled={form.isSubmitting}
         >
           Back
         </Button>
@@ -415,8 +372,8 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({
           type="submit"
           variant="primary"
           className="flex-1 bg-gradient-to-r from-hot-pink to-deep-pink"
-          isLoading={isSubmitting}
-          disabled={isSubmitting || passwordStrength.score < 4}
+          isLoading={form.isSubmitting}
+          disabled={form.isSubmitting || passwordStrength.score < 4 || emailValidation.isValid === false}
         >
           Create Account
         </Button>

@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/Input';
 import { useNotifications } from '@/lib/context/NotificationContext';
 import { useAuth } from '@/lib/context/AuthContext';
 import { loginSchema, LoginFormData } from '@/lib/validations/auth';
+import { useFormValidation } from '@/hooks/useFormValidation';
 
 interface LoginFormProps {
   onSwitchToRegister: () => void;
@@ -33,14 +34,15 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   const { login, isLoading, error, clearError } = useAuth();
   const { success: showSuccess, error: showError, info: showInfo } = useNotifications();
   
-  const [formData, setFormData] = useState<LoginFormData>({
+  // Use new form validation hook
+  const form = useFormValidation(loginSchema, {
     email: '',
     password: '',
+  }, {
+    validateOnChange: false, // Only validate on blur for better UX
+    validateOnBlur: true,
   });
   
-  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
-  const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set());
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   
@@ -56,7 +58,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
     const savedAttempts = localStorage.getItem('loginAttempts');
     
     if (savedEmail) {
-      setFormData(prev => ({ ...prev, email: savedEmail }));
+      form.setValue('email', savedEmail);
       setRememberMe(true);
     }
     
@@ -70,7 +72,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         localStorage.removeItem('loginAttempts');
       }
     }
-  }, []);
+  }, [form]);
 
   // Timer for lockout countdown
   useEffect(() => {
@@ -150,56 +152,26 @@ export const LoginForm: React.FC<LoginFormProps> = ({
     }
   }, [loginAttempts, checkLockoutStatus, showInfo]);
 
-  // Real-time validation
-  const validateField = useCallback((field: string, value: any) => {
-    const testData = { ...formData, [field]: value };
-    const result = loginSchema.safeParse(testData);
-    
-    if (!result.success && result.error) {
-      const fieldError = result.error.errors.find(err => err.path[0] === field);
-      return fieldError?.message || '';
-    }
-    return '';
-  }, [formData]);
-
-  // Handle input changes
-  const handleInputChange = useCallback((field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    
-    // Clear global auth error
+  // Clear global auth error when form changes
+  useEffect(() => {
     if (error) {
       clearError();
     }
-    
-    // Real-time validation for touched fields
-    if (touchedFields.has(field)) {
-      const error = validateField(field, value);
-      setFieldErrors(prev => ({ ...prev, [field]: error }));
-    }
-  }, [touchedFields, validateField, error, clearError]);
-
-  // Handle field blur
-  const handleFieldBlur = useCallback((field: string) => {
-    setTouchedFields(prev => new Set([...prev, field]));
-    const error = validateField(field, formData[field as keyof typeof formData]);
-    setFieldErrors(prev => ({ ...prev, [field]: error }));
-  }, [validateField, formData]);
+  }, [form.formData, error, clearError]);
 
   // Handle remember me
   const handleRememberMeChange = useCallback((checked: boolean) => {
     setRememberMe(checked);
     
-    if (checked && formData.email) {
-      localStorage.setItem('rememberedEmail', formData.email);
+    if (checked && form.formData.email) {
+      localStorage.setItem('rememberedEmail', form.formData.email);
     } else {
       localStorage.removeItem('rememberedEmail');
     }
-  }, [formData.email]);
+  }, [form.formData.email]);
 
-  // Handle form submission
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
+  // Handle form submission using new validation system
+  const handleSubmit = form.handleSubmit(async (validatedData: LoginFormData) => {
     // Check if locked out
     if (isLocked) {
       showError(
@@ -210,34 +182,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({
       return;
     }
     
-    // Mark all fields as touched
-    const allFields = ['email', 'password'];
-    setTouchedFields(new Set(allFields));
-    
-    // Validate form
-    const result = loginSchema.safeParse(formData);
-    
-    if (!result.success && result.error) {
-      const errors: Record<string, string> = {};
-      result.error.errors.forEach(err => {
-        if (err.path[0]) {
-          errors[err.path[0] as string] = err.message;
-        }
-      });
-      setFieldErrors(errors);
-      
-      showError(
-        'Please Check Your Input',
-        'Email and password are required.',
-        { duration: 5000 }
-      );
-      return;
-    }
-
-    setIsSubmitting(true);
-    
     try {
-      await login(formData.email, formData.password);
+      await login(validatedData.email, validatedData.password);
       
       // Clear failed attempts on successful login
       setLoginAttempts([]);
@@ -245,7 +191,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
       
       // Handle remember me
       if (rememberMe) {
-        localStorage.setItem('rememberedEmail', formData.email);
+        localStorage.setItem('rememberedEmail', validatedData.email);
       } else {
         localStorage.removeItem('rememberedEmail');
       }
@@ -260,7 +206,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
       console.error('Login failed:', err);
       
       // Add failed attempt for rate limiting
-      addFailedAttempt(formData.email);
+      addFailedAttempt(validatedData.email);
       
       // Handle specific error types
       if (error?.includes('Invalid credentials')) {
@@ -288,10 +234,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           { persistent: true }
         );
       }
-    } finally {
-      setIsSubmitting(false);
     }
-  };
+  });
 
   // Format remaining time for display
   const formatRemainingTime = (timeMs: number) => {
@@ -300,14 +244,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
 
-  // Clear field errors when user starts typing
-  useEffect(() => {
-    Object.keys(fieldErrors).forEach(field => {
-      if (fieldErrors[field] && formData[field as keyof typeof formData]) {
-        setFieldErrors(prev => ({ ...prev, [field]: '' }));
-      }
-    });
-  }, [formData, fieldErrors]);
 
   return (
     <motion.form
@@ -365,10 +301,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           label="Email Address"
           type="email"
           placeholder="Enter your email address"
-          value={formData.email}
-          onChange={(e) => handleInputChange('email', e.target.value)}
-          onBlur={() => handleFieldBlur('email')}
-          error={fieldErrors.email}
+          {...form.getFieldProps('email')}
           required
           autoComplete="email"
           disabled={isLocked}
@@ -379,10 +312,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
             label="Password"
             type={showPassword ? 'text' : 'password'}
             placeholder="Enter your password"
-            value={formData.password}
-            onChange={(e) => handleInputChange('password', e.target.value)}
-            onBlur={() => handleFieldBlur('password')}
-            error={fieldErrors.password}
+            {...form.getFieldProps('password')}
             required
             autoComplete="current-password"
             disabled={isLocked}
@@ -440,8 +370,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         variant="primary"
         size="lg"
         className="w-full bg-gradient-to-r from-hot-pink to-deep-pink"
-        isLoading={isSubmitting}
-        disabled={isSubmitting || isLocked}
+        isLoading={form.isSubmitting}
+        disabled={form.isSubmitting || isLocked}
       >
         {isLocked ? `Locked (${formatRemainingTime(remainingTime)})` : 'Sign In'}
       </Button>

@@ -199,10 +199,13 @@ model Vehicle {
   year            Int
   color           String
   plateNumber     String      @unique
+  vin             String?     @unique // Vehicle Identification Number
   vehicleType     VehicleType
   capacity        Int
   isActive        Boolean     @default(true)
   features        String[]    @default([])
+  fuelType        String?     // Gas, Diesel, Electric, Hybrid
+  specialEquipment String[]   @default([])
   insuranceExpiry DateTime
   inspectionExpiry DateTime
   photos          String[]    @default([])
@@ -211,8 +214,54 @@ model Vehicle {
 
   driver          DriverProfile @relation(fields: [driverId], references: [id], onDelete: Cascade)
   bookings        Booking[]
+  permits         VehiclePermit[]
+  licenses        VehicleLicense[]
 
   @@map("vehicles")
+}
+
+// Vehicle Permits (Customs permits, cross-border permits, etc.)
+model VehiclePermit {
+  id            String        @id @default(cuid())
+  vehicleId     String
+  permitType    PermitType
+  permitNumber  String
+  issuingAuthority String
+  startDate     DateTime
+  expiryDate    DateTime
+  fileUrl       String?       // Document file
+  fileName      String?
+  status        DocumentStatus @default(ACTIVE)
+  notes         String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  vehicle       Vehicle       @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@unique([vehicleId, permitType, permitNumber])
+  @@map("vehicle_permits")
+}
+
+// Vehicle Licenses (Commercial license, international driving permit, etc.)
+model VehicleLicense {
+  id            String        @id @default(cuid())
+  vehicleId     String
+  licenseType   LicenseType
+  licenseNumber String
+  issuingAuthority String
+  startDate     DateTime
+  expiryDate    DateTime
+  fileUrl       String?       // Document file
+  fileName      String?
+  status        DocumentStatus @default(ACTIVE)
+  notes         String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  vehicle       Vehicle       @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@unique([vehicleId, licenseType, licenseNumber])
+  @@map("vehicle_licenses")
 }
 
 // Booking System
@@ -676,6 +725,11 @@ enum NotificationType {
   DOCUMENT_APPROVED
   DOCUMENT_REJECTED
   SYSTEM_UPDATE
+  PERMIT_EXPIRING
+  LICENSE_EXPIRING
+  PERMIT_EXPIRED
+  LICENSE_EXPIRED
+  DOCUMENT_RENEWAL_REMINDER
 }
 
 enum PaymentMethodType {
@@ -720,4 +774,39 @@ enum SupportPriority {
 enum SenderType {
   CLIENT
   ADMIN
+}
+
+enum PermitType {
+  CUSTOMS_PERMIT
+  CROSS_BORDER_PERMIT
+  TRANSIT_PERMIT
+  TEMPORARY_IMPORT
+  EXPORT_PERMIT
+  SPECIAL_CARGO
+  OVERSIZE_LOAD
+  HAZMAT_PERMIT
+  PASSENGER_TRANSPORT
+  COMMERCIAL_TRANSPORT
+}
+
+enum LicenseType {
+  COMMERCIAL_DRIVING
+  INTERNATIONAL_DRIVING
+  CHAUFFEUR_LICENSE
+  PASSENGER_ENDORSEMENT
+  HAZMAT_ENDORSEMENT
+  MOTORCYCLE_LICENSE
+  HEAVY_VEHICLE_LICENSE
+  CROSS_BORDER_DRIVING
+  TAXI_LICENSE
+  BUS_LICENSE
+}
+
+enum DocumentStatus {
+  ACTIVE
+  EXPIRED
+  SUSPENDED
+  REVOKED
+  PENDING_RENEWAL
+  UNDER_REVIEW
 }
