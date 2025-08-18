@@ -1,0 +1,197 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "view": "View",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "close": "Close",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "refresh": "Refresh",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No",
+    "success": "Success",
+    "error": "Error",
+    "warning": "Warning",
+    "info": "Information"
+  },
+  "navigation": {
+    "home": "Home",
+    "services": "Services",
+    "booking": "Booking",
+    "blog": "Blog",
+    "about": "About",
+    "contact": "Contact",
+    "login": "Login",
+    "register": "Register",
+    "dashboard": "Dashboard",
+    "profile": "Profile",
+    "settings": "Settings",
+    "logout": "Logout",
+    "bookNow": "Book Now"
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "email": "Email Address",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "fullName": "Full Name",
+    "phone": "Phone Number",
+    "forgotPassword": "Forgot Password?",
+    "rememberMe": "Remember me",
+    "signInWith": "Sign in with",
+    "signUpWith": "Sign up with",
+    "alreadyHaveAccount": "Already have an account?",
+    "dontHaveAccount": "Don't have an account?",
+    "createAccount": "Create Account",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "welcome": "Welcome",
+    "welcomeBack": "Welcome back",
+    "chooseUserType": "Choose Account Type",
+    "userTypes": {
+      "client": {
+        "title": "Client",
+        "description": "Book premium cross-border transportation services",
+        "features": [
+          "Instant booking and real-time tracking",
+          "Trip history and analytics",
+          "24/7 customer support"
+        ]
+      },
+      "driver": {
+        "title": "Driver",
+        "description": "Join our professional driver network",
+        "features": [
+          "Manage trip requests and earnings",
+          "Document verification system",
+          "Performance analytics"
+        ]
+      },
+      "blogEditor": {
+        "title": "Blog Editor",
+        "description": "Create and manage travel content",
+        "features": [
+          "Content management system",
+          "SEO optimization tools",
+          "Analytics dashboard"
+        ]
+      }
+    }
+  },
+  "dashboard": {
+    "welcome": "Welcome back",
+    "quickStats": "Quick Stats",
+    "totalTrips": "Total Trips",
+    "totalSpent": "Total Spent",
+    "onTimeRate": "On-Time Rate",
+    "avgRating": "Average Rating",
+    "recentTrips": "Recent Trips",
+    "viewAll": "View All",
+    "quickBooking": "Quick Booking",
+    "findVehicles": "Find Available Vehicles",
+    "bookAgain": "Book Again",
+    "viewDetails": "View Details",
+    "client": {
+      "readyForJourney": "Ready for your next journey?",
+      "analytics": "Analytics",
+      "notifications": "Notifications",
+      "profile": "Profile"
+    },
+    "driver": {
+      "status": "Driver Status",
+      "online": "Online",
+      "offline": "Offline",
+      "earnings": "Today's Earnings",
+      "tripsCompleted": "trips completed",
+      "avgPerTrip": "Avg per trip",
+      "onlineTime": "Online time",
+      "acceptRate": "Accept rate",
+      "tripRequests": "Active Trip Requests",
+      "acceptTrip": "Accept Trip",
+      "decline": "Decline",
+      "pickup": "Pickup",
+      "destination": "Destination",
+      "passengers": "Passengers",
+      "vehicle": "Vehicle",
+      "estimatedEarnings": "Estimated earnings",
+      "verification": "Verification Status",
+      "documents": "Documents"
+    },
+    "editor": {
+      "contentOverview": "Content Overview",
+      "publishedPosts": "Published Posts",
+      "draftPosts": "Draft Posts",
+      "totalViews": "Total Views",
+      "seoScore": "SEO Score",
+      "recentPosts": "Recent Posts",
+      "newPost": "New Post",
+      "status": "Status",
+      "views": "Views",
+      "lastModified": "Last Modified",
+      "actions": "Actions",
+      "published": "Published",
+      "draft": "Draft"
+    }
+  },
+  "booking": {
+    "title": "Book Your Journey",
+    "steps": {
+      "route": "Route",
+      "vehicle": "Vehicle",
+      "datetime": "Date & Time",
+      "contact": "Contact"
+    },
+    "chooseRoute": "Choose Your Route",
+    "from": "From",
+    "to": "To",
+    "pickupLocation": "Enter pickup location",
+    "destination": "Enter destination",
+    "popularRoutes": "Popular Routes",
+    "selectVehicle": "Select Your Vehicle",
+    "businessClass": "Business Class",
+    "executiveSUV": "Executive SUV",
+    "luxuryPremium": "Luxury Premium",
+    "estimatedPrice": "Estimated price",
+    "selected": "Selected",
+    "professionalChauffeur": "Professional chauffeur",
+    "wifiConnectivity": "Wi-Fi connectivity",
+    "climateControl": "Climate control",
+    "selectDateTime": "Select Date & Time",
+    "date": "Date",
+    "time": "Time",
+    "contactInfo": "Contact Information",
+    "specialRequests": "Special Requests",
+    "bookingConfirmation": "Booking Confirmation",
+    "confirmBooking": "Confirm Booking",
+    "totalAmount": "Total Amount"
+  },
+  "errors": {
+    "required": "This field is required",
+    "invalidEmail": "Please enter a valid email address",
+    "passwordTooShort": "Password must be at least 8 characters",
+    "passwordsNotMatch": "Passwords do not match",
+    "invalidPhone": "Please enter a valid phone number",
+    "genericError": "Something went wrong. Please try again.",
+    "networkError": "Network error. Please check your connection.",
+    "authError": "Authentication failed. Please try again.",
+    "permissionDenied": "Permission denied"
+  },
+  "success": {
+    "accountCreated": "Account created successfully",
+    "loginSuccessful": "Login successful",
+    "profileUpdated": "Profile updated successfully",
+    "bookingCreated": "Booking created successfully",
+    "documentUploaded": "Document uploaded successfully"
+  }
+}

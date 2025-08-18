@@ -1,0 +1,197 @@
+{
+  "common": {
+    "loading": "로딩 중...",
+    "submit": "제출",
+    "cancel": "취소",
+    "save": "저장",
+    "edit": "편집",
+    "delete": "삭제",
+    "view": "보기",
+    "back": "뒤로",
+    "next": "다음",
+    "previous": "이전",
+    "close": "닫기",
+    "search": "검색",
+    "filter": "필터",
+    "sort": "정렬",
+    "refresh": "새로고침",
+    "confirm": "확인",
+    "yes": "예",
+    "no": "아니오",
+    "success": "성공",
+    "error": "오류",
+    "warning": "경고",
+    "info": "정보"
+  },
+  "navigation": {
+    "home": "홈",
+    "services": "서비스",
+    "booking": "예약",
+    "blog": "블로그",
+    "about": "회사 소개",
+    "contact": "문의하기",
+    "login": "로그인",
+    "register": "회원가입",
+    "dashboard": "대시보드",
+    "profile": "프로필",
+    "settings": "설정",
+    "logout": "로그아웃",
+    "bookNow": "지금 예약"
+  },
+  "auth": {
+    "login": "로그인",
+    "register": "회원가입",
+    "logout": "로그아웃",
+    "email": "이메일 주소",
+    "password": "비밀번호",
+    "confirmPassword": "비밀번호 확인",
+    "fullName": "이름",
+    "phone": "전화번호",
+    "forgotPassword": "비밀번호를 잊으셨나요?",
+    "rememberMe": "로그인 상태 유지",
+    "signInWith": "다음으로 로그인",
+    "signUpWith": "다음으로 회원가입",
+    "alreadyHaveAccount": "이미 계정이 있으신가요?",
+    "dontHaveAccount": "계정이 없으신가요?",
+    "createAccount": "계정 만들기",
+    "signIn": "로그인",
+    "signUp": "회원가입",
+    "welcome": "환영합니다",
+    "welcomeBack": "다시 오신 것을 환영합니다",
+    "chooseUserType": "계정 유형 선택",
+    "userTypes": {
+      "client": {
+        "title": "고객",
+        "description": "프리미엄 국경 간 교통 서비스 예약",
+        "features": [
+          "즉시 예약 및 실시간 추적",
+          "여행 기록 및 분석",
+          "24/7 고객 지원"
+        ]
+      },
+      "driver": {
+        "title": "운전자",
+        "description": "전문 운전자 네트워크 가입",
+        "features": [
+          "여행 요청 및 수익 관리",
+          "문서 검증 시스템",
+          "성과 분석"
+        ]
+      },
+      "blogEditor": {
+        "title": "블로그 편집자",
+        "description": "여행 콘텐츠 생성 및 관리",
+        "features": [
+          "콘텐츠 관리 시스템",
+          "SEO 최적화 도구",
+          "분석 대시보드"
+        ]
+      }
+    }
+  },
+  "dashboard": {
+    "welcome": "다시 오신 것을 환영합니다",
+    "quickStats": "빠른 통계",
+    "totalTrips": "총 여행 횟수",
+    "totalSpent": "총 지출",
+    "onTimeRate": "정시 도착률",
+    "avgRating": "평균 평점",
+    "recentTrips": "최근 여행",
+    "viewAll": "모두 보기",
+    "quickBooking": "빠른 예약",
+    "findVehicles": "이용 가능한 차량 찾기",
+    "bookAgain": "다시 예약",
+    "viewDetails": "상세 보기",
+    "client": {
+      "readyForJourney": "다음 여행을 준비하셨나요?",
+      "analytics": "분석",
+      "notifications": "알림",
+      "profile": "프로필"
+    },
+    "driver": {
+      "status": "운전자 상태",
+      "online": "온라인",
+      "offline": "오프라인",
+      "earnings": "오늘의 수익",
+      "tripsCompleted": "완료된 여행",
+      "avgPerTrip": "여행당 평균",
+      "onlineTime": "온라인 시간",
+      "acceptRate": "수락률",
+      "tripRequests": "활성 여행 요청",
+      "acceptTrip": "여행 수락",
+      "decline": "거절",
+      "pickup": "픽업",
+      "destination": "목적지",
+      "passengers": "승객",
+      "vehicle": "차량",
+      "estimatedEarnings": "예상 수익",
+      "verification": "검증 상태",
+      "documents": "문서"
+    },
+    "editor": {
+      "contentOverview": "콘텐츠 개요",
+      "publishedPosts": "게시된 글",
+      "draftPosts": "초안 글",
+      "totalViews": "총 조회수",
+      "seoScore": "SEO 점수",
+      "recentPosts": "최근 글",
+      "newPost": "새 글",
+      "status": "상태",
+      "views": "조회수",
+      "lastModified": "마지막 수정",
+      "actions": "작업",
+      "published": "게시됨",
+      "draft": "초안"
+    }
+  },
+  "booking": {
+    "title": "여행 예약",
+    "steps": {
+      "route": "경로",
+      "vehicle": "차량",
+      "datetime": "날짜 및 시간",
+      "contact": "연락처"
+    },
+    "chooseRoute": "경로 선택",
+    "from": "출발지",
+    "to": "목적지",
+    "pickupLocation": "픽업 장소 입력",
+    "destination": "목적지 입력",
+    "popularRoutes": "인기 경로",
+    "selectVehicle": "차량 선택",
+    "businessClass": "비즈니스 클래스",
+    "executiveSUV": "이그제큐티브 SUV",
+    "luxuryPremium": "럭셔리 프리미엄",
+    "estimatedPrice": "예상 가격",
+    "selected": "선택됨",
+    "professionalChauffeur": "전문 운전자",
+    "wifiConnectivity": "Wi-Fi 연결",
+    "climateControl": "공조 제어",
+    "selectDateTime": "날짜 및 시간 선택",
+    "date": "날짜",
+    "time": "시간",
+    "contactInfo": "연락처 정보",
+    "specialRequests": "특별 요청",
+    "bookingConfirmation": "예약 확인",
+    "confirmBooking": "예약 확인",
+    "totalAmount": "총 금액"
+  },
+  "errors": {
+    "required": "이 필드는 필수입니다",
+    "invalidEmail": "유효한 이메일 주소를 입력하세요",
+    "passwordTooShort": "비밀번호는 최소 8자 이상이어야 합니다",
+    "passwordsNotMatch": "비밀번호가 일치하지 않습니다",
+    "invalidPhone": "유효한 전화번호를 입력하세요",
+    "genericError": "오류가 발생했습니다. 다시 시도하세요.",
+    "networkError": "네트워크 오류. 연결을 확인하세요.",
+    "authError": "인증에 실패했습니다. 다시 시도하세요.",
+    "permissionDenied": "권한이 거부되었습니다"
+  },
+  "success": {
+    "accountCreated": "계정이 성공적으로 생성되었습니다",
+    "loginSuccessful": "로그인에 성공했습니다",
+    "profileUpdated": "프로필이 성공적으로 업데이트되었습니다",
+    "bookingCreated": "예약이 성공적으로 생성되었습니다",
+    "documentUploaded": "문서가 성공적으로 업로드되었습니다"
+  }
+}

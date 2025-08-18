@@ -1,0 +1,723 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User Management
+model User {
+  id          String    @id @default(cuid())
+  email       String    @unique
+  name        String
+  phone       String?
+  avatar      String?
+  isVerified  Boolean   @default(false)
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Multi-role support
+  userRoles   UserRole[]
+
+  // User type specific profiles
+  clientProfile     ClientProfile?
+  driverProfile     DriverProfile?
+  blogEditorProfile BlogEditorProfile?
+
+  // Authentication
+  accounts    Account[]
+  sessions    Session[]
+  passwords   Password[]
+
+  // Relations
+  bookings         Booking[]
+  blogPosts        BlogPost[]
+  comments         Comment[]
+  reviews          Review[]
+  notifications    Notification[]
+
+  @@map("users")
+}
+
+// User Role Junction Table for Multi-Role Support
+model UserRole {
+  id        String   @id @default(cuid())
+  userId    String
+  role      UserType
+  isActive  Boolean  @default(true)
+  assignedAt DateTime @default(now())
+  assignedBy String?  // Admin who assigned the role (for audit trail)
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, role]) // Prevent duplicate role assignments
+  @@map("user_roles")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model Password {
+  id       String @id @default(cuid())
+  hash     String
+  userId   String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("passwords")
+}
+
+// User Profiles
+model ClientProfile {
+  id              String    @id @default(cuid())
+  userId          String    @unique
+  preferredVehicle VehicleType?
+  loyaltyPoints   Int       @default(0)
+  membershipTier  String    @default("BASIC")
+  emergencyContact String?
+  emergencyContactPhone String?
+  emergencyContactRelation String?
+  specialRequests String?
+  dateOfBirth     DateTime?
+  gender          String?
+  nationality     String?
+  passportNumber  String?
+  documentVerified Boolean   @default(false)
+  profileCompletion Int      @default(0) // Percentage completion
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  paymentMethods  PaymentMethod[]
+  settings        ClientSettings?
+  supportTickets  SupportTicket[]
+
+  @@map("client_profiles")
+}
+
+model DriverProfile {
+  id                    String                 @id @default(cuid())
+  userId                String                 @unique
+  licenseNumber         String                 @unique
+  licenseExpiry         DateTime
+  isApproved            Boolean                @default(false)
+  rating                Float                  @default(0.0)
+  totalTrips            Int                    @default(0)
+  languages             String[]               @default([])
+  isAvailable           Boolean                @default(true)
+  currentLocation       Json?
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+
+  // Verification documents
+  verificationDocs      DriverVerificationDoc[]
+  
+  // Vehicles
+  vehicles              Vehicle[]
+  
+  // Bookings
+  driverBookings        Booking[]
+  
+  user                  User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("driver_profiles")
+}
+
+model BlogEditorProfile {
+  id          String    @id @default(cuid())
+  userId      String    @unique
+  bio         String?
+  socialLinks Json?
+  isApproved  Boolean   @default(false)
+  permissions String[]  @default([])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("blog_editor_profiles")
+}
+
+// Driver Verification System
+model DriverVerificationDoc {
+  id            String                @id @default(cuid())
+  driverId      String
+  documentType  VerificationDocType
+  fileUrl       String
+  fileName      String
+  fileSize      Int
+  mimeType      String
+  status        VerificationStatus    @default(PENDING)
+  adminNotes    String?
+  uploadedAt    DateTime              @default(now())
+  reviewedAt    DateTime?
+  expiryDate    DateTime?
+
+  driver        DriverProfile         @relation(fields: [driverId], references: [id], onDelete: Cascade)
+
+  @@map("driver_verification_docs")
+}
+
+// Vehicle Management
+model Vehicle {
+  id              String      @id @default(cuid())
+  driverId        String
+  make            String
+  model           String
+  year            Int
+  color           String
+  plateNumber     String      @unique
+  vehicleType     VehicleType
+  capacity        Int
+  isActive        Boolean     @default(true)
+  features        String[]    @default([])
+  insuranceExpiry DateTime
+  inspectionExpiry DateTime
+  photos          String[]    @default([])
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  driver          DriverProfile @relation(fields: [driverId], references: [id], onDelete: Cascade)
+  bookings        Booking[]
+
+  @@map("vehicles")
+}
+
+// Booking System
+model Booking {
+  id                String            @id @default(cuid())
+  clientId          String
+  driverId          String?
+  vehicleId         String?
+  
+  // Trip details
+  pickupLocation    Json              // { address, lat, lng, type }
+  dropoffLocation   Json              // { address, lat, lng, type }
+  scheduledDate     DateTime
+  estimatedDuration Int               // minutes
+  distance          Float             // kilometers
+  
+  // Pricing
+  basePrice         Float
+  surcharges        Json?             // { borderFee, peakHour, etc }
+  totalPrice        Float
+  currency          String            @default("HKD")
+  
+  // Status and tracking
+  status            BookingStatus     @default(PENDING)
+  paymentStatus     PaymentStatus     @default(PENDING)
+  actualPickupTime  DateTime?
+  actualDropoffTime DateTime?
+  currentLocation   Json?
+  
+  // Additional info
+  passengerCount    Int               @default(1)
+  luggage           String?
+  specialRequests   String?
+  notes             String?
+  cancellationReason String?
+  
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  // Relations
+  client            User              @relation(fields: [clientId], references: [id])
+  driver            DriverProfile?    @relation(fields: [driverId], references: [id])
+  vehicle           Vehicle?          @relation(fields: [vehicleId], references: [id])
+  payments          Payment[]
+  reviews           Review[]
+  trackingHistory   TrackingHistory[]
+
+  @@map("bookings")
+}
+
+model TrackingHistory {
+  id          String    @id @default(cuid())
+  bookingId   String
+  location    Json      // { lat, lng, address }
+  timestamp   DateTime  @default(now())
+  status      String
+  notes       String?
+
+  booking     Booking   @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@map("tracking_history")
+}
+
+// Payment System
+model Payment {
+  id              String                @id @default(cuid())
+  bookingId       String
+  amount          Float
+  currency        String                @default("HKD")
+  method          BookingPaymentMethod
+  status          PaymentStatus         @default(PENDING)
+  transactionId   String?
+  gatewayResponse Json?
+  refundAmount    Float?
+  refundReason    String?
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+
+  booking         Booking               @relation(fields: [bookingId], references: [id])
+
+  @@map("payments")
+}
+
+// Review System
+model Review {
+  id          String    @id @default(cuid())
+  bookingId   String
+  reviewerId  String
+  rating      Int       // 1-5
+  title       String?
+  comment     String?
+  isPublic    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  booking     Booking   @relation(fields: [bookingId], references: [id])
+  reviewer    User      @relation(fields: [reviewerId], references: [id])
+
+  @@unique([bookingId, reviewerId])
+  @@map("reviews")
+}
+
+// Blog/CMS System
+model BlogPost {
+  id            String        @id @default(cuid())
+  title         String
+  slug          String        @unique
+  excerpt       String?
+  content       String        @db.Text
+  featuredImage String?
+  
+  // SEO
+  metaTitle     String?
+  metaDescription String?
+  keywords      String[]      @default([])
+  
+  // Publishing
+  status        PostStatus    @default(DRAFT)
+  publishedAt   DateTime?
+  scheduledAt   DateTime?
+  
+  // Analytics
+  viewCount     Int           @default(0)
+  shareCount    Int           @default(0)
+  
+  // Author
+  authorId      String
+  
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  // Relations
+  author        User          @relation(fields: [authorId], references: [id])
+  categories    BlogCategory[]
+  tags          BlogTag[]
+  comments      Comment[]
+  analytics     BlogAnalytics[]
+
+  @@map("blog_posts")
+}
+
+model BlogCategory {
+  id          String     @id @default(cuid())
+  name        String     @unique
+  slug        String     @unique
+  description String?
+  color       String?
+  isActive    Boolean    @default(true)
+  createdAt   DateTime   @default(now())
+
+  posts       BlogPost[]
+
+  @@map("blog_categories")
+}
+
+model BlogTag {
+  id        String     @id @default(cuid())
+  name      String     @unique
+  slug      String     @unique
+  color     String?
+  createdAt DateTime   @default(now())
+
+  posts     BlogPost[]
+
+  @@map("blog_tags")
+}
+
+model Comment {
+  id        String      @id @default(cuid())
+  postId    String
+  authorId  String
+  content   String      @db.Text
+  parentId  String?     // For nested comments
+  isApproved Boolean    @default(false)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  post      BlogPost    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  author    User        @relation(fields: [authorId], references: [id])
+  parent    Comment?    @relation("CommentReplies", fields: [parentId], references: [id])
+  replies   Comment[]   @relation("CommentReplies")
+
+  @@map("comments")
+}
+
+model BlogAnalytics {
+  id          String    @id @default(cuid())
+  postId      String
+  date        DateTime  @default(now())
+  views       Int       @default(0)
+  uniqueViews Int       @default(0)
+  shares      Json?     // { facebook, twitter, wechat, etc }
+  referrer    String?
+  country     String?
+  device      String?
+
+  post        BlogPost  @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, date])
+  @@map("blog_analytics")
+}
+
+// Notification System
+model Notification {
+  id          String           @id @default(cuid())
+  userId      String
+  type        NotificationType
+  title       String
+  message     String
+  data        Json?            // Additional data for the notification
+  isRead      Boolean          @default(false)
+  createdAt   DateTime         @default(now())
+
+  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+
+// System Configuration
+model SystemConfig {
+  id          String    @id @default(cuid())
+  key         String    @unique
+  value       String
+  description String?
+  isActive    Boolean   @default(true)
+  updatedAt   DateTime  @updatedAt
+
+  @@map("system_config")
+}
+
+// Client Payment Methods
+model PaymentMethod {
+  id                String      @id @default(cuid())
+  clientId          String
+  type              PaymentMethodType
+  
+  // Card details (encrypted)
+  last4Digits       String?
+  cardBrand         String?     // Visa, Mastercard, etc.
+  expiryMonth       Int?
+  expiryYear        Int?
+  cardholderName    String?
+  
+  // Digital wallet details
+  walletType        String?     // WeChat, Alipay, Apple Pay, etc.
+  walletAccount     String?
+  
+  // Billing address
+  billingAddress    Json?       // { street, city, state, zipCode, country }
+  
+  isDefault         Boolean     @default(false)
+  isActive          Boolean     @default(true)
+  
+  // Security and metadata
+  tokenId           String?     // Payment gateway token
+  fingerprint       String?     // Unique card fingerprint
+  
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  client            ClientProfile @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@map("payment_methods")
+}
+
+// Client Settings and Preferences
+model ClientSettings {
+  id                String      @id @default(cuid())
+  clientId          String      @unique
+  
+  // Notification preferences
+  emailNotifications    Boolean   @default(true)
+  smsNotifications      Boolean   @default(true)
+  pushNotifications     Boolean   @default(true)
+  
+  // Notification types
+  bookingNotifications  Boolean   @default(true)
+  paymentNotifications  Boolean   @default(true)
+  promoNotifications    Boolean   @default(false)
+  tripNotifications     Boolean   @default(true)
+  
+  // Privacy settings
+  shareDataForMarketing Boolean   @default(false)
+  shareLocationData     Boolean   @default(true)
+  profileVisibility     PrivacyLevel @default(PRIVATE)
+  
+  // App preferences
+  language          String      @default("en")
+  timezone          String      @default("Asia/Hong_Kong")
+  currency          String      @default("HKD")
+  distanceUnit      String      @default("km")
+  
+  // Security settings
+  twoFactorEnabled  Boolean     @default(false)
+  biometricEnabled  Boolean     @default(false)
+  autoLogout        Int         @default(30) // minutes
+  
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  client            ClientProfile @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@map("client_settings")
+}
+
+// Support System
+model SupportTicket {
+  id                String          @id @default(cuid())
+  clientId          String
+  type              SupportTicketType
+  status            SupportTicketStatus @default(OPEN)
+  priority          SupportPriority     @default(NORMAL)
+  
+  subject           String
+  description       String          @db.Text
+  category          String?         // General, Booking, Payment, Technical, etc.
+  
+  // For call support
+  preferredCallTime DateTime?
+  phoneNumber       String?
+  callbackRequested Boolean         @default(false)
+  callCompletedAt   DateTime?
+  
+  // Attachments and files
+  attachments       Json?           // Array of file URLs
+  
+  // Assignment and handling
+  assignedTo        String?         // Admin/support user ID
+  resolvedAt        DateTime?
+  resolution        String?         @db.Text
+  
+  // Communication history (for chat)
+  messages          SupportMessage[]
+  
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  client            ClientProfile   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@map("support_tickets")
+}
+
+model SupportMessage {
+  id                String          @id @default(cuid())
+  ticketId          String
+  senderId          String          // User ID (client or admin)
+  senderType        SenderType      // CLIENT or ADMIN
+  
+  message           String          @db.Text
+  attachments       Json?           // Array of file URLs
+  isRead            Boolean         @default(false)
+  
+  createdAt         DateTime        @default(now())
+
+  ticket            SupportTicket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  @@map("support_messages")
+}
+
+// Trip Analytics and Insights
+model TripAnalytics {
+  id                String      @id @default(cuid())
+  clientId          String
+  month             Int         // 1-12
+  year              Int
+  
+  totalTrips        Int         @default(0)
+  totalDistance     Float       @default(0) // km
+  totalAmount       Float       @default(0)
+  avgTripRating     Float       @default(0)
+  
+  mostUsedRoute     Json?       // { from, to, count }
+  preferredVehicle  VehicleType?
+  peakTravelTime    String?     // Morning, Afternoon, Evening, Night
+  
+  // Monthly insights
+  onTimePercentage  Float       @default(0)
+  cancelationRate   Float       @default(0)
+  
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  @@unique([clientId, month, year])
+  @@map("trip_analytics")
+}
+
+// Enums
+enum UserType {
+  CLIENT
+  DRIVER
+  BLOG_EDITOR
+  ADMIN
+}
+
+enum VehicleType {
+  BUSINESS
+  EXECUTIVE
+  LUXURY
+  SUV
+  VAN
+}
+
+enum VerificationDocType {
+  DRIVING_LICENSE
+  VEHICLE_REGISTRATION
+  INSURANCE_HK
+  INSURANCE_CHINA
+  PASSPORT
+  ID_CARD
+  BUSINESS_LICENSE
+}
+
+enum VerificationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  EXPIRED
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+  PARTIAL_REFUND
+}
+
+enum BookingPaymentMethod {
+  CREDIT_CARD
+  DEBIT_CARD
+  WECHAT_PAY
+  ALIPAY
+  CASH
+  BANK_TRANSFER
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+  SCHEDULED
+  ARCHIVED
+}
+
+enum NotificationType {
+  BOOKING_CONFIRMED
+  BOOKING_CANCELLED
+  PAYMENT_RECEIVED
+  DRIVER_ASSIGNED
+  TRIP_STARTED
+  TRIP_COMPLETED
+  REVIEW_REQUEST
+  DOCUMENT_APPROVED
+  DOCUMENT_REJECTED
+  SYSTEM_UPDATE
+}
+
+enum PaymentMethodType {
+  CREDIT_CARD
+  DEBIT_CARD
+  DIGITAL_WALLET
+  BANK_ACCOUNT
+}
+
+enum PrivacyLevel {
+  PUBLIC
+  FRIENDS
+  PRIVATE
+}
+
+enum SupportTicketType {
+  GENERAL_INQUIRY
+  BOOKING_ISSUE
+  PAYMENT_PROBLEM
+  TECHNICAL_SUPPORT
+  COMPLAINT
+  FEATURE_REQUEST
+  LIVE_CHAT
+  CALLBACK_REQUEST
+}
+
+enum SupportTicketStatus {
+  OPEN
+  IN_PROGRESS
+  WAITING_FOR_CLIENT
+  RESOLVED
+  CLOSED
+}
+
+enum SupportPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+enum SenderType {
+  CLIENT
+  ADMIN
+}

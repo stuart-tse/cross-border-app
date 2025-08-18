@@ -1,0 +1,197 @@
+{
+  "common": {
+    "loading": "読み込み中...",
+    "submit": "送信",
+    "cancel": "キャンセル",
+    "save": "保存",
+    "edit": "編集",
+    "delete": "削除",
+    "view": "表示",
+    "back": "戻る",
+    "next": "次へ",
+    "previous": "前へ",
+    "close": "閉じる",
+    "search": "検索",
+    "filter": "フィルター",
+    "sort": "並び替え",
+    "refresh": "更新",
+    "confirm": "確認",
+    "yes": "はい",
+    "no": "いいえ",
+    "success": "成功",
+    "error": "エラー",
+    "warning": "警告",
+    "info": "情報"
+  },
+  "navigation": {
+    "home": "ホーム",
+    "services": "サービス",
+    "booking": "予約",
+    "blog": "ブログ",
+    "about": "会社概要",
+    "contact": "お問い合わせ",
+    "login": "ログイン",
+    "register": "登録",
+    "dashboard": "ダッシュボード",
+    "profile": "プロフィール",
+    "settings": "設定",
+    "logout": "ログアウト",
+    "bookNow": "今すぐ予約"
+  },
+  "auth": {
+    "login": "ログイン",
+    "register": "登録",
+    "logout": "ログアウト",
+    "email": "メールアドレス",
+    "password": "パスワード",
+    "confirmPassword": "パスワード確認",
+    "fullName": "氏名",
+    "phone": "電話番号",
+    "forgotPassword": "パスワードを忘れましたか？",
+    "rememberMe": "ログイン状態を保持",
+    "signInWith": "以下でログイン",
+    "signUpWith": "以下で登録",
+    "alreadyHaveAccount": "アカウントをお持ちですか？",
+    "dontHaveAccount": "アカウントをお持ちでない場合",
+    "createAccount": "アカウント作成",
+    "signIn": "ログイン",
+    "signUp": "登録",
+    "welcome": "ようこそ",
+    "welcomeBack": "おかえりなさい",
+    "chooseUserType": "アカウントタイプを選択",
+    "userTypes": {
+      "client": {
+        "title": "利用者",
+        "description": "プレミアム国境越え輸送サービスの予約",
+        "features": [
+          "即時予約とリアルタイム追跡",
+          "旅行履歴と分析",
+          "24時間365日カスタマーサポート"
+        ]
+      },
+      "driver": {
+        "title": "ドライバー",
+        "description": "プロフェッショナルドライバーネットワークへの参加",
+        "features": [
+          "旅行リクエストと収益の管理",
+          "書類認証システム",
+          "パフォーマンス分析"
+        ]
+      },
+      "blogEditor": {
+        "title": "ブログエディター",
+        "description": "旅行コンテンツの作成と管理",
+        "features": [
+          "コンテンツ管理システム",
+          "SEO最適化ツール",
+          "分析ダッシュボード"
+        ]
+      }
+    }
+  },
+  "dashboard": {
+    "welcome": "おかえりなさい",
+    "quickStats": "クイック統計",
+    "totalTrips": "総旅行回数",
+    "totalSpent": "総支出",
+    "onTimeRate": "定時率",
+    "avgRating": "平均評価",
+    "recentTrips": "最近の旅行",
+    "viewAll": "すべて表示",
+    "quickBooking": "クイック予約",
+    "findVehicles": "利用可能な車両を検索",
+    "bookAgain": "再度予約",
+    "viewDetails": "詳細表示",
+    "client": {
+      "readyForJourney": "次の旅行の準備はできていますか？",
+      "analytics": "分析",
+      "notifications": "通知",
+      "profile": "プロフィール"
+    },
+    "driver": {
+      "status": "ドライバーステータス",
+      "online": "オンライン",
+      "offline": "オフライン",
+      "earnings": "本日の収益",
+      "tripsCompleted": "完了した旅行",
+      "avgPerTrip": "1回あたりの平均",
+      "onlineTime": "オンライン時間",
+      "acceptRate": "受諾率",
+      "tripRequests": "アクティブな旅行リクエスト",
+      "acceptTrip": "旅行を受諾",
+      "decline": "拒否",
+      "pickup": "お迎え",
+      "destination": "目的地",
+      "passengers": "乗客",
+      "vehicle": "車両",
+      "estimatedEarnings": "予想収益",
+      "verification": "認証ステータス",
+      "documents": "書類"
+    },
+    "editor": {
+      "contentOverview": "コンテンツ概要",
+      "publishedPosts": "公開投稿",
+      "draftPosts": "下書き投稿",
+      "totalViews": "総閲覧数",
+      "seoScore": "SEOスコア",
+      "recentPosts": "最近の投稿",
+      "newPost": "新しい投稿",
+      "status": "ステータス",
+      "views": "閲覧数",
+      "lastModified": "最終更新",
+      "actions": "アクション",
+      "published": "公開済み",
+      "draft": "下書き"
+    }
+  },
+  "booking": {
+    "title": "旅行を予約",
+    "steps": {
+      "route": "ルート",
+      "vehicle": "車両",
+      "datetime": "日時",
+      "contact": "連絡先"
+    },
+    "chooseRoute": "ルートを選択",
+    "from": "出発地",
+    "to": "目的地",
+    "pickupLocation": "お迎え場所を入力",
+    "destination": "目的地を入力",
+    "popularRoutes": "人気ルート",
+    "selectVehicle": "車両を選択",
+    "businessClass": "ビジネスクラス",
+    "executiveSUV": "エグゼクティブSUV",
+    "luxuryPremium": "ラグジュアリープレミアム",
+    "estimatedPrice": "予想価格",
+    "selected": "選択済み",
+    "professionalChauffeur": "プロフェッショナル運転手",
+    "wifiConnectivity": "Wi-Fi接続",
+    "climateControl": "空調制御",
+    "selectDateTime": "日時を選択",
+    "date": "日付",
+    "time": "時刻",
+    "contactInfo": "連絡先情報",
+    "specialRequests": "特別なリクエスト",
+    "bookingConfirmation": "予約確認",
+    "confirmBooking": "予約確認",
+    "totalAmount": "合計金額"
+  },
+  "errors": {
+    "required": "このフィールドは必須です",
+    "invalidEmail": "有効なメールアドレスを入力してください",
+    "passwordTooShort": "パスワードは8文字以上である必要があります",
+    "passwordsNotMatch": "パスワードが一致しません",
+    "invalidPhone": "有効な電話番号を入力してください",
+    "genericError": "エラーが発生しました。再試行してください。",
+    "networkError": "ネットワークエラー。接続を確認してください。",
+    "authError": "認証に失敗しました。再試行してください。",
+    "permissionDenied": "権限が拒否されました"
+  },
+  "success": {
+    "accountCreated": "アカウントが正常に作成されました",
+    "loginSuccessful": "ログインに成功しました",
+    "profileUpdated": "プロフィールが正常に更新されました",
+    "bookingCreated": "予約が正常に作成されました",
+    "documentUploaded": "書類が正常にアップロードされました"
+  }
+}

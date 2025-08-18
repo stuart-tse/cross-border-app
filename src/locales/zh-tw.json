@@ -1,0 +1,197 @@
+{
+  "common": {
+    "loading": "載入中...",
+    "submit": "提交",
+    "cancel": "取消",
+    "save": "儲存",
+    "edit": "編輯",
+    "delete": "刪除",
+    "view": "檢視",
+    "back": "返回",
+    "next": "下一步",
+    "previous": "上一步",
+    "close": "關閉",
+    "search": "搜尋",
+    "filter": "篩選",
+    "sort": "排序",
+    "refresh": "重新整理",
+    "confirm": "確認",
+    "yes": "是",
+    "no": "否",
+    "success": "成功",
+    "error": "錯誤",
+    "warning": "警告",
+    "info": "資訊"
+  },
+  "navigation": {
+    "home": "首頁",
+    "services": "服務",
+    "booking": "預約",
+    "blog": "部落格",
+    "about": "關於我們",
+    "contact": "聯絡我們",
+    "login": "登入",
+    "register": "註冊",
+    "dashboard": "儀表板",
+    "profile": "個人資料",
+    "settings": "設定",
+    "logout": "登出",
+    "bookNow": "立即預約"
+  },
+  "auth": {
+    "login": "登入",
+    "register": "註冊",
+    "logout": "登出",
+    "email": "電子郵件地址",
+    "password": "密碼",
+    "confirmPassword": "確認密碼",
+    "fullName": "姓名",
+    "phone": "電話號碼",
+    "forgotPassword": "忘記密碼？",
+    "rememberMe": "記住我",
+    "signInWith": "使用以下方式登入",
+    "signUpWith": "使用以下方式註冊",
+    "alreadyHaveAccount": "已有帳戶？",
+    "dontHaveAccount": "還沒有帳戶？",
+    "createAccount": "建立帳戶",
+    "signIn": "登入",
+    "signUp": "註冊",
+    "welcome": "歡迎",
+    "welcomeBack": "歡迎回來",
+    "chooseUserType": "選擇帳戶類型",
+    "userTypes": {
+      "client": {
+        "title": "客戶",
+        "description": "預約優質跨境交通服務",
+        "features": [
+          "即時預約和實時追蹤",
+          "行程歷史和分析",
+          "24/7 客戶支援"
+        ]
+      },
+      "driver": {
+        "title": "司機",
+        "description": "加入我們的專業司機網絡",
+        "features": [
+          "管理行程請求和收入",
+          "文件驗證系統",
+          "表現分析"
+        ]
+      },
+      "blogEditor": {
+        "title": "部落格編輯",
+        "description": "創建和管理旅遊內容",
+        "features": [
+          "內容管理系統",
+          "SEO 優化工具",
+          "分析儀表板"
+        ]
+      }
+    }
+  },
+  "dashboard": {
+    "welcome": "歡迎回來",
+    "quickStats": "快速統計",
+    "totalTrips": "總行程數",
+    "totalSpent": "總消費",
+    "onTimeRate": "準時率",
+    "avgRating": "平均評分",
+    "recentTrips": "最近行程",
+    "viewAll": "檢視全部",
+    "quickBooking": "快速預約",
+    "findVehicles": "尋找可用車輛",
+    "bookAgain": "再次預約",
+    "viewDetails": "檢視詳情",
+    "client": {
+      "readyForJourney": "準備好開始下一次旅程了嗎？",
+      "analytics": "分析",
+      "notifications": "通知",
+      "profile": "個人資料"
+    },
+    "driver": {
+      "status": "司機狀態",
+      "online": "在線",
+      "offline": "離線",
+      "earnings": "今日收入",
+      "tripsCompleted": "已完成行程",
+      "avgPerTrip": "每趟平均",
+      "onlineTime": "在線時間",
+      "acceptRate": "接受率",
+      "tripRequests": "活躍行程請求",
+      "acceptTrip": "接受行程",
+      "decline": "拒絕",
+      "pickup": "接載",
+      "destination": "目的地",
+      "passengers": "乘客",
+      "vehicle": "車輛",
+      "estimatedEarnings": "預計收入",
+      "verification": "驗證狀態",
+      "documents": "文件"
+    },
+    "editor": {
+      "contentOverview": "內容概覽",
+      "publishedPosts": "已發布文章",
+      "draftPosts": "草稿文章",
+      "totalViews": "總瀏覽量",
+      "seoScore": "SEO 分數",
+      "recentPosts": "最近文章",
+      "newPost": "新文章",
+      "status": "狀態",
+      "views": "瀏覽量",
+      "lastModified": "最後修改",
+      "actions": "操作",
+      "published": "已發布",
+      "draft": "草稿"
+    }
+  },
+  "booking": {
+    "title": "預約您的旅程",
+    "steps": {
+      "route": "路線",
+      "vehicle": "車輛",
+      "datetime": "日期時間",
+      "contact": "聯絡資訊"
+    },
+    "chooseRoute": "選擇您的路線",
+    "from": "出發地",
+    "to": "目的地",
+    "pickupLocation": "輸入接載地點",
+    "destination": "輸入目的地",
+    "popularRoutes": "熱門路線",
+    "selectVehicle": "選擇您的車輛",
+    "businessClass": "商務級",
+    "executiveSUV": "行政級 SUV",
+    "luxuryPremium": "豪華級",
+    "estimatedPrice": "預計價格",
+    "selected": "已選擇",
+    "professionalChauffeur": "專業司機",
+    "wifiConnectivity": "Wi-Fi 連接",
+    "climateControl": "空調控制",
+    "selectDateTime": "選擇日期和時間",
+    "date": "日期",
+    "time": "時間",
+    "contactInfo": "聯絡資訊",
+    "specialRequests": "特殊要求",
+    "bookingConfirmation": "預約確認",
+    "confirmBooking": "確認預約",
+    "totalAmount": "總金額"
+  },
+  "errors": {
+    "required": "此欄位為必填",
+    "invalidEmail": "請輸入有效的電子郵件地址",
+    "passwordTooShort": "密碼至少需要8個字元",
+    "passwordsNotMatch": "密碼不一致",
+    "invalidPhone": "請輸入有效的電話號碼",
+    "genericError": "發生錯誤，請重試。",
+    "networkError": "網絡錯誤，請檢查您的連接。",
+    "authError": "驗證失敗，請重試。",
+    "permissionDenied": "權限被拒絕"
+  },
+  "success": {
+    "accountCreated": "帳戶建立成功",
+    "loginSuccessful": "登入成功",
+    "profileUpdated": "個人資料更新成功",
+    "bookingCreated": "預約建立成功",
+    "documentUploaded": "文件上傳成功"
+  }
+}
