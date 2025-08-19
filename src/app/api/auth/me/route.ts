@@ -3,7 +3,6 @@ import { prisma } from '@/lib/database/client';
 import { UserType } from '@prisma/client';
 import { z } from 'zod';
 import {
-  getAuthUser,
   findUserByEmail,
   sanitizeUserData,
   getActiveRoles,
@@ -12,6 +11,7 @@ import {
   verifyPassword,
   validatePasswordStrength,
 } from '@/lib/auth/utils';
+import { auth } from '@/lib/auth/config';
 import { 
   AuthResponse, 
   APIResponse,
@@ -42,9 +42,14 @@ export async function GET(request: NextRequest): Promise<NextResponse<APIRespons
   const requestId = `req_${startTime}_${Math.random().toString(36).substr(2, 9)}`;
 
   try {
-    // Use NextAuth session instead of custom JWT
-    const { auth } = await import('@/lib/auth/config');
-    const session = await auth();
+    // Use NextAuth session from the session endpoint
+    const sessionResponse = await fetch(`${request.nextUrl.origin}/api/auth/session`, {
+      headers: {
+        cookie: request.headers.get('cookie') || '',
+      },
+    });
+    
+    const session = await sessionResponse.json();
     
     if (!session?.user) {
       // Clear potentially invalid auth cookies
@@ -125,9 +130,9 @@ export async function PATCH(request: NextRequest): Promise<NextResponse<APIRespo
   const requestId = `req_${startTime}_${Math.random().toString(36).substr(2, 9)}`;
 
   try {
-    const user = await getAuthUser(request);
+    const session = await auth();
     
-    if (!user) {
+    if (!session?.user) {
       return NextResponse.json({
         success: false,
         error: {
@@ -140,6 +145,25 @@ export async function PATCH(request: NextRequest): Promise<NextResponse<APIRespo
         },
       }, { status: 401 });
     }
+
+    const userEmail = session.user.email!;
+    const dbUser = await findUserByEmail(userEmail);
+    
+    if (!dbUser) {
+      return NextResponse.json({
+        success: false,
+        error: {
+          code: 'USER_NOT_FOUND',
+          message: 'User not found',
+        },
+        meta: {
+          timestamp: new Date().toISOString(),
+          requestId,
+        },
+      }, { status: 404 });
+    }
+
+    const user = sanitizeUserData(dbUser);
 
     const body = await request.json();
     const { name, phone, avatar } = body;
@@ -229,9 +253,9 @@ export async function PUT(request: NextRequest): Promise<NextResponse<APIRespons
   const requestId = `req_${startTime}_${Math.random().toString(36).substr(2, 9)}`;
 
   try {
-    const user = await getAuthUser(request);
+    const session = await auth();
     
-    if (!user) {
+    if (!session?.user) {
       return NextResponse.json({
         success: false,
         error: {
@@ -370,9 +394,9 @@ export async function DELETE(request: NextRequest): Promise<NextResponse<APIResp
   const requestId = `req_${startTime}_${Math.random().toString(36).substr(2, 9)}`;
 
   try {
-    const user = await getAuthUser(request);
+    const session = await auth();
     
-    if (!user) {
+    if (!session?.user) {
       return NextResponse.json({
         success: false,
         error: {

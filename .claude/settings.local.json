@@ -45,7 +45,10 @@
       "mcp__playwright__browser_close",
       "Bash(touch:*)",
       "Bash(/bashes)",
-      "mcp__playwright__browser_install"
+      "mcp__playwright__browser_install",
+      "mcp__playwright__browser_evaluate",
+      "Bash(chmod:*)",
+      "Bash(git checkout:*)"
     ],
     "defaultMode": "acceptEdits",
     "additionalDirectories": [

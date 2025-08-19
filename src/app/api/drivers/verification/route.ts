@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/database/client';
-import { getAuthUser } from '@/lib/auth/utils';
+import { auth } from '@/lib/auth/config';
+import { findUserByEmail, sanitizeUserData, hasRole } from '@/lib/auth/utils';
+import { UserType } from '@prisma/client';
 import { z } from 'zod';
 
 const uploadDocumentSchema = z.object({
@@ -23,12 +25,22 @@ const uploadDocumentSchema = z.object({
 // Get driver verification documents
 export async function GET(request: NextRequest) {
   try {
-    const user = await getAuthUser(request);
-    if (!user) {
+    const session = await auth();
+    
+    if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    if (user.userType !== 'DRIVER') {
+    const userEmail = session.user.email!;
+    const dbUser = await findUserByEmail(userEmail);
+    
+    if (!dbUser) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    const user = sanitizeUserData(dbUser);
+
+    if (!hasRole(user, UserType.DRIVER)) {
       return NextResponse.json(
         { error: 'Only drivers can access verification documents' },
         { status: 403 }
@@ -130,12 +142,22 @@ export async function GET(request: NextRequest) {
 // Upload verification document
 export async function POST(request: NextRequest) {
   try {
-    const user = await getAuthUser(request);
-    if (!user) {
+    const session = await auth();
+    
+    if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    if (user.userType !== 'DRIVER') {
+    const userEmail = session.user.email!;
+    const dbUser = await findUserByEmail(userEmail);
+    
+    if (!dbUser) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    const user = sanitizeUserData(dbUser);
+
+    if (!hasRole(user, UserType.DRIVER)) {
       return NextResponse.json(
         { error: 'Only drivers can upload verification documents' },
         { status: 403 }

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAuthUser } from '@/lib/auth/utils';
+import { auth } from '@/lib/auth/config';
 import { prisma } from '@/lib/database/client';
 import { writeFile, mkdir } from 'fs/promises';
 import { existsSync } from 'fs';
@@ -8,11 +8,13 @@ import path from 'path';
 // POST /api/client/upload - Handle file uploads
 export async function POST(request: NextRequest) {
   try {
-    const user = await getAuthUser(request);
+    const session = await auth();
     
-    if (!user) {
+    if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+    
+    const user = session.user;
 
     const formData = await request.formData();
     const file = formData.get('file') as File;
@@ -87,11 +89,13 @@ export async function POST(request: NextRequest) {
 // DELETE /api/client/upload - Delete uploaded files
 export async function DELETE(request: NextRequest) {
   try {
-    const user = await getAuthUser(request);
+    const session = await auth();
     
-    if (!user) {
+    if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+    
+    const user = session.user;
 
     const body = await request.json();
     const { fileUrl, type } = body;

@@ -288,6 +288,7 @@ export function useFormValidation<T extends Record<string, any>>(
   // Helper to get field props for easy input binding
   const getFieldProps = useCallback((field: keyof T) => {
     return {
+      name: field as string,
       value: formData[field] || '',
       onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         setValue(field, e.target.value);

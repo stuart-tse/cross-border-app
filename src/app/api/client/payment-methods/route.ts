@@ -1,16 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAuthUser } from '@/lib/auth/utils';
+import { auth } from '@/lib/auth/config';
 import { prisma } from '@/lib/database/client';
 import { PaymentMethodType } from '@prisma/client';
 
 // GET /api/client/payment-methods - Get all payment methods
 export async function GET(request: NextRequest) {
   try {
-    const user = await getAuthUser(request);
+    const session = await auth();
     
-    if (!user) {
+    if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+    
+    const user = session.user;
 
     // Get client profile ID
     const clientProfile = await prisma.clientProfile.findUnique({
@@ -63,11 +65,13 @@ export async function GET(request: NextRequest) {
 // POST /api/client/payment-methods - Add new payment method
 export async function POST(request: NextRequest) {
   try {
-    const user = await getAuthUser(request);
+    const session = await auth();
     
-    if (!user) {
+    if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+    
+    const user = session.user;
 
     const body = await request.json();
     const {

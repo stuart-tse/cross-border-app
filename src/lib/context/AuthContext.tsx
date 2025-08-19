@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useReducer, useEffect, ReactNode, useState, useCallback } from 'react';
+import React, { createContext, useContext, useReducer, useEffect, ReactNode, useState, useCallback, useRef } from 'react';
 import { AuthUser as User } from '@/types/auth';
 import { UserType } from '@prisma/client';
 import { useHydration } from '@/lib/hooks/useHydration';
@@ -150,7 +150,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // Use NextAuth session selectedRole if available, otherwise fall back to localStorage/default
         let selectedRole = sessionData.user.selectedRole;
         if (!selectedRole || !userRoles.includes(selectedRole)) {
-          const savedRole = hasHydrated ? localStorage.getItem('selectedRole') as UserType : null;
+          const savedRole = localStorage.getItem('selectedRole') as UserType;
           selectedRole = (savedRole && userRoles.includes(savedRole)) ? savedRole : userRoles[0] || UserType.CLIENT;
         }
         
@@ -170,15 +170,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       console.error('Auth check failed:', error);
       dispatch({ type: 'LOGOUT' });
     }
-  }, [hasHydrated]); // Add hasHydrated as dependency
+  }, []); // Remove all dependencies to prevent infinite loop
 
   // Check authentication status on mount only once
   useEffect(() => {
-    checkAuthStatus();
-  }, [checkAuthStatus]); // Include checkAuthStatus in dependencies
+    if (hasHydrated) {
+      checkAuthStatus();
+    }
+  }, [hasHydrated]); // Only run when hydrated to prevent SSR issues
 
-  // Sync with NextAuth session changes
-  useEffect(() => {
+  // Sync with NextAuth session changes - Use useRef to avoid infinite loops
+  const lastSyncRef = useRef({ sessionUserId: '', selectedRole: '', isAuthenticated: false });
+  
+  const syncWithSession = useCallback(() => {
+    if (!hasHydrated || !session) return; // Prevent SSR and empty session issues
+    
+    const currentSessionUserId = session?.user?.id || '';
+    const currentSelectedRole = session?.user?.selectedRole || '';
+    const currentIsAuthenticated = state.isAuthenticated;
+    
+    // Only sync if something actually changed
+    const hasChanges = 
+      lastSyncRef.current.sessionUserId !== currentSessionUserId ||
+      lastSyncRef.current.selectedRole !== currentSelectedRole ||
+      lastSyncRef.current.isAuthenticated !== currentIsAuthenticated;
+    
+    if (!hasChanges) return;
+    
     if (session?.user && state.user) {
       // If the session has a different selectedRole than our state, update it
       if (session.user.selectedRole && session.user.selectedRole !== state.selectedRole) {
@@ -194,7 +212,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         localStorage.removeItem('selectedRole');
       }
     }
-  }, [session?.user, state.isAuthenticated, state.selectedRole, state.user, hasHydrated]);
+    
+    // Update ref to prevent future unnecessary syncs
+    lastSyncRef.current = {
+      sessionUserId: currentSessionUserId,
+      selectedRole: currentSelectedRole,
+      isAuthenticated: currentIsAuthenticated,
+    };
+  }, [session?.user?.id, session?.user?.selectedRole, state.isAuthenticated, state.selectedRole, state.user?.id, hasHydrated]);
+
+  useEffect(() => {
+    syncWithSession();
+  }, [syncWithSession]);
 
   const login = async (email: string, password: string) => {
     try {
@@ -419,9 +448,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         await update({ selectedRole: role });
         console.log('✅ NextAuth session updated successfully');
         
-        // Force a re-check of auth status to get the updated session
+        // Force a brief wait for session to update, but don't re-check auth status as it causes loops
         await new Promise(resolve => setTimeout(resolve, 100));
-        await checkAuthStatus();
         
         // Redirect to appropriate dashboard
         console.log('🚀 Redirecting to dashboard for role:', role);
@@ -494,53 +522,51 @@ export function withAuth<P extends object>(
 
     // Handle initialization and redirects in useEffect with proper dependencies
     useEffect(() => {
-      if (isLoading) {
-        return; // Still loading, don't do anything
+      if (isLoading || hasInitialized) {
+        return; // Still loading or already initialized, don't do anything
       }
 
-      if (!hasInitialized) {
-        setHasInitialized(true);
+      setHasInitialized(true);
+      
+      // If not authenticated, redirect to login
+      if (!isAuthenticated) {
+        if (hasHydrated) {
+          window.location.href = '/login';
+        }
+        return;
+      }
+      
+      // If authenticated but doesn't have required role, redirect to appropriate dashboard
+      if (allowedUserTypes && user) {
+        const userRoles = user.roles?.map(r => r.role) || [];
+        const hasAllowedRole = allowedUserTypes.some(allowedType => 
+          userRoles.includes(allowedType)
+        );
         
-        // If not authenticated, redirect to login
-        if (!isAuthenticated) {
-          if (hasHydrated) {
-            window.location.href = '/login';
-          }
+        if (!hasAllowedRole && hasHydrated) {
+          // Redirect to the appropriate dashboard for user's current selected role
+          const routes: Record<UserType, string> = {
+            [UserType.CLIENT]: '/dashboard/client',
+            [UserType.DRIVER]: '/dashboard/driver', 
+            [UserType.BLOG_EDITOR]: '/dashboard/editor',
+            [UserType.ADMIN]: '/dashboard/admin',
+          };
+          
+          // Get the user's current selected role, fallback to first available role
+          const currentSelectedRole = user.selectedRole || userRoles[0] || UserType.CLIENT;
+          const targetRoute = routes[currentSelectedRole] || '/dashboard/client';
+          
+          console.log('🚫 Unauthorized access attempt.');
+          console.log('🧭 User roles:', userRoles);
+          console.log('🔒 Required roles:', allowedUserTypes);
+          console.log('👤 Current selected role:', currentSelectedRole);
+          console.log('🔄 Redirecting to:', targetRoute);
+          
+          window.location.href = targetRoute;
           return;
         }
-        
-        // If authenticated but doesn't have required role, redirect to appropriate dashboard
-        if (allowedUserTypes && user) {
-          const userRoles = user.roles?.map(r => r.role) || [];
-          const hasAllowedRole = allowedUserTypes.some(allowedType => 
-            userRoles.includes(allowedType)
-          );
-          
-          if (!hasAllowedRole && hasHydrated) {
-            // Redirect to the appropriate dashboard for user's current selected role
-            const routes: Record<UserType, string> = {
-              [UserType.CLIENT]: '/dashboard/client',
-              [UserType.DRIVER]: '/dashboard/driver', 
-              [UserType.BLOG_EDITOR]: '/dashboard/editor',
-              [UserType.ADMIN]: '/dashboard/admin',
-            };
-            
-            // Get the user's current selected role, fallback to first available role
-            const currentSelectedRole = user.selectedRole || userRoles[0] || UserType.CLIENT;
-            const targetRoute = routes[currentSelectedRole] || '/dashboard/client';
-            
-            console.log('🚫 Unauthorized access attempt.');
-            console.log('🧭 User roles:', userRoles);
-            console.log('🔒 Required roles:', allowedUserTypes);
-            console.log('👤 Current selected role:', currentSelectedRole);
-            console.log('🔄 Redirecting to:', targetRoute);
-            
-            window.location.href = targetRoute;
-            return;
-          }
-        }
       }
-    }, [isLoading, isAuthenticated, user?.id, allowedUserTypes, hasInitialized]);
+    }, [isLoading, isAuthenticated, user?.id, hasInitialized, hasHydrated]); // Removed allowedUserTypes to prevent re-running on prop changes
 
     // Show loading spinner while checking authentication or initializing
     if (isLoading || !hasInitialized) {

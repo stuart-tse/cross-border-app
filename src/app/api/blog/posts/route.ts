@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/database/client';
-import { getAuthUser } from '@/lib/auth/utils';
+import { auth } from '@/lib/auth/config';
+import { findUserByEmail, sanitizeUserData, hasRole } from '@/lib/auth/utils';
+import { UserType } from '@prisma/client';
 import { z } from 'zod';
 
 const createPostSchema = z.object({
@@ -33,8 +35,17 @@ export async function GET(request: NextRequest) {
     const where: any = {};
 
     // Public posts only unless user is authenticated
-    const user = await getAuthUser(request);
-    if (!user || (user.userType !== 'BLOG_EDITOR' && user.userType !== 'ADMIN')) {
+    const session = await auth();
+    let user = null;
+    
+    if (session?.user) {
+      const dbUser = await findUserByEmail(session.user.email!);
+      if (dbUser) {
+        user = sanitizeUserData(dbUser);
+      }
+    }
+    
+    if (!user || (!hasRole(user, UserType.BLOG_EDITOR) && !hasRole(user, UserType.ADMIN))) {
       where.status = 'PUBLISHED';
       where.publishedAt = { lte: new Date() };
     } else if (status) {
@@ -116,12 +127,22 @@ export async function GET(request: NextRequest) {
 // Create blog post
 export async function POST(request: NextRequest) {
   try {
-    const user = await getAuthUser(request);
-    if (!user) {
+    const session = await auth();
+    
+    if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    if (user.userType !== 'BLOG_EDITOR' && user.userType !== 'ADMIN') {
+    const userEmail = session.user.email!;
+    const dbUser = await findUserByEmail(userEmail);
+    
+    if (!dbUser) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    const user = sanitizeUserData(dbUser);
+
+    if (!hasRole(user, UserType.BLOG_EDITOR) && !hasRole(user, UserType.ADMIN)) {
       return NextResponse.json(
         { error: 'Only blog editors can create posts' },
         { status: 403 }

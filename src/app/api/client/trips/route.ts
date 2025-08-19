@@ -1,16 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAuthUser } from '@/lib/auth/utils';
+import { auth } from '@/lib/auth/config';
 import { prisma } from '@/lib/database/client';
 import { BookingStatus } from '@prisma/client';
 
 // GET /api/client/trips - Get client trip history with filters
 export async function GET(request: NextRequest) {
   try {
-    const user = await getAuthUser(request);
+    const session = await auth();
     
-    if (!user) {
+    if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+    
+    const user = session.user;
 
     const url = new URL(request.url);
     const page = parseInt(url.searchParams.get('page') || '1');

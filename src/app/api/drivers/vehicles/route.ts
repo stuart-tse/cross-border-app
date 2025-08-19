@@ -1,19 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/database/client';
 import { UserType, VehicleType } from '@prisma/client';
-import { getAuthUser } from '@/lib/auth/utils';
+import { auth } from '@/lib/auth/config';
+import { findUserByEmail, hasRole, sanitizeUserData } from '@/lib/auth/utils';
 
 // GET /api/drivers/vehicles - Get all vehicles for the authenticated driver
 export async function GET(request: NextRequest) {
   try {
-    const user = await getAuthUser(request);
+    const session = await auth();
     
-    if (!user) {
+    if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const userEmail = session.user.email!;
+    const dbUser = await findUserByEmail(userEmail);
+    
+    if (!dbUser) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    const user = sanitizeUserData(dbUser);
+
     // Check if user is a driver
-    if (!user.roles.includes(UserType.DRIVER)) {
+    if (!hasRole(user, UserType.DRIVER)) {
       return NextResponse.json({ error: 'Driver access required' }, { status: 403 });
     }
 
@@ -74,14 +84,23 @@ export async function GET(request: NextRequest) {
 // POST /api/drivers/vehicles - Create a new vehicle
 export async function POST(request: NextRequest) {
   try {
-    const user = await getAuthUser(request);
+    const session = await auth();
     
-    if (!user) {
+    if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const userEmail = session.user.email!;
+    const dbUser = await findUserByEmail(userEmail);
+    
+    if (!dbUser) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    const user = sanitizeUserData(dbUser);
+
     // Check if user is a driver
-    if (!user.roles.includes(UserType.DRIVER)) {
+    if (!hasRole(user, UserType.DRIVER)) {
       return NextResponse.json({ error: 'Driver access required' }, { status: 403 });
     }
 

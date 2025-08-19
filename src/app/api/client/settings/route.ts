@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAuthUser } from '@/lib/auth/utils';
+import { auth } from '@/lib/auth/config';
 import { prisma } from '@/lib/database/client';
 import { PrivacyLevel } from '@prisma/client';
 import bcrypt from 'bcryptjs';
@@ -7,11 +7,13 @@ import bcrypt from 'bcryptjs';
 // GET /api/client/settings - Get client settings
 export async function GET(request: NextRequest) {
   try {
-    const user = await getAuthUser(request);
+    const session = await auth();
     
-    if (!user) {
+    if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+    
+    const user = session.user;
 
     // Get client profile with settings
     const clientProfile = await prisma.clientProfile.findUnique({
@@ -50,11 +52,13 @@ export async function GET(request: NextRequest) {
 // PUT /api/client/settings - Update client settings
 export async function PUT(request: NextRequest) {
   try {
-    const user = await getAuthUser(request);
+    const session = await auth();
     
-    if (!user) {
+    if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+    
+    const user = session.user;
 
     const body = await request.json();
     const {

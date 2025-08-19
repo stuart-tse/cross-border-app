@@ -399,6 +399,9 @@ export async function createUserWithRole(
 
 // Security utilities
 export function sanitizeUserData(user: any): AuthUser {
+  const roles = user.userRoles || [];
+  const userType = roles.length > 0 ? roles[0].role : 'CLIENT'; // Default to CLIENT if no roles
+  
   return {
     id: user.id,
     email: user.email,
@@ -407,7 +410,8 @@ export function sanitizeUserData(user: any): AuthUser {
     avatar: user.avatar,
     isVerified: user.isVerified,
     isActive: user.isActive,
-    roles: user.userRoles || [],
+    roles: roles,
+    userType: userType,
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
   };

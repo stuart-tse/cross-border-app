@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
@@ -52,7 +52,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   const [lockoutEnd, setLockoutEnd] = useState<number | null>(null);
   const [remainingTime, setRemainingTime] = useState<number>(0);
 
-  // Load saved email and login attempts from localStorage
+  // Load saved email and login attempts from localStorage - run only once on mount
   useEffect(() => {
     const savedEmail = localStorage.getItem('rememberedEmail');
     const savedAttempts = localStorage.getItem('loginAttempts');
@@ -72,7 +72,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         localStorage.removeItem('loginAttempts');
       }
     }
-  }, [form]);
+  }, []); // Remove form dependency to prevent infinite loops
 
   // Timer for lockout countdown
   useEffect(() => {
@@ -152,12 +152,21 @@ export const LoginForm: React.FC<LoginFormProps> = ({
     }
   }, [loginAttempts, checkLockoutStatus, showInfo]);
 
-  // Clear global auth error when form changes
+  // Clear global auth error when form data changes - use ref to prevent infinite loops
+  const lastErrorRef = useRef<string | null>(null);
+  
   useEffect(() => {
-    if (error) {
-      clearError();
+    // Only clear error if it changed and is not null
+    if (error && error !== lastErrorRef.current) {
+      const timeoutId = setTimeout(() => {
+        clearError();
+      }, 100); // Small delay to prevent immediate re-triggering
+      
+      lastErrorRef.current = error;
+      
+      return () => clearTimeout(timeoutId);
     }
-  }, [form.formData, error, clearError]);
+  }, [error, clearError]);
 
   // Handle remember me
   const handleRememberMeChange = useCallback((checked: boolean) => {

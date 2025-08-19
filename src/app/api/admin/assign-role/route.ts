@@ -1,14 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/database/client';
 import { UserType } from '@prisma/client';
-import { getAuthUser } from '@/lib/auth/utils';
+import { auth } from '@/lib/auth/config';
+import { findUserByEmail, sanitizeUserData } from '@/lib/auth/utils';
 
 export async function POST(request: NextRequest) {
   try {
-    const user = await getAuthUser(request);
-    if (!user) {
+    const session = await auth();
+    
+    if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const userEmail = session.user.email!;
+    const dbUser = await findUserByEmail(userEmail);
+    
+    if (!dbUser) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    const user = sanitizeUserData(dbUser);
 
     const body = await request.json();
     const { userId, role } = body;
