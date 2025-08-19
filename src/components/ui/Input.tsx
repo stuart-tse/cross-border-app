@@ -138,3 +138,6 @@ export {
   SelectContent, 
   SelectItem 
 } from './select';
+
+// Re-export Textarea component for backward compatibility
+export { Textarea } from './textarea';

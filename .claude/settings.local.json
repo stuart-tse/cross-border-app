@@ -1,59 +1,12 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm run build:*)",
-      "Bash(rm:*)",
       "Bash(npm install:*)",
-      "Bash(grep:*)",
-      "Bash(sed:*)",
-      "Bash(mkdir:*)",
-      "Bash(npx prisma:*)",
-      "Bash(npm run dev:*)",
-      "Bash(brew install:*)",
-      "Bash(brew services start:*)",
-      "Bash(export:*)",
-      "Bash(createdb:*)",
-      "Bash(pg_ctl:*)",
-      "Bash(psql:*)",
-      "Bash(curl:*)",
-      "Bash(cp placeholder.svg business-sedan.jpg)",
-      "Bash(cp placeholder.svg executive-suv.jpg)",
-      "Bash(cp placeholder.svg luxury-sedan.jpg)",
-      "Bash(mv:*)",
-      "Bash(timeout 5 curl -v http://localhost:3000/en)",
-      "Bash(npm ls:*)",
-      "Bash(npx:*)",
-      "Bash(node:*)",
-      "Bash(npm run type-check:*)",
-      "Bash(npm run lint)",
-      "Bash(pkill:*)",
-      "Bash(npm run:*)",
-      "Bash(timeout:*)",
-      "mcp__context7__resolve-library-id",
-      "mcp__context7__get-library-docs",
-      "Bash(lsof:*)",
-      "Bash(kill:*)",
-      "Bash(find:*)",
-      "mcp__playwright__browser_navigate",
-      "mcp__playwright__browser_click",
-      "mcp__playwright__browser_console_messages",
-      "mcp__playwright__browser_type",
-      "WebFetch(domain:docs.anthropic.com)",
-      "mcp__playwright__browser_take_screenshot",
-      "mcp__playwright__browser_snapshot",
-      "mcp__playwright__browser_wait_for",
-      "mcp__playwright__browser_close",
-      "Bash(touch:*)",
-      "Bash(/bashes)",
-      "mcp__playwright__browser_install",
-      "mcp__playwright__browser_evaluate",
-      "Bash(chmod:*)",
-      "Bash(git checkout:*)"
+      "Bash(npm run build:*)",
+      "Bash(npm run start:*)",
+      "Bash(curl:*)"
     ],
-    "defaultMode": "acceptEdits",
-    "additionalDirectories": [
-      "/Users/stuarttse/claude-code"
-    ]
-  },
-  "outputStyle": "default"
+    "deny": [],
+    "ask": []
+  }
 }

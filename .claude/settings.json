@@ -1,0 +1,90 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run dev*)",
+      "Bash(npm run build*)",
+      "Bash(npm run start*)",
+      "Bash(npm run lint*)",
+      "Bash(npm run test*)",
+      "Bash(npm run type-check*)",
+      "Bash(npm install*)",
+      "Bash(npm init*)",
+      "Bash(npx create-next-app*)",
+      "Bash(npx next*)",
+      "Bash(npx @next/codemod*)",
+      "Bash(npx turbo*)",
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git add*)",
+      "Bash(git commit*)",
+      "Read(**/*)",
+      "Write(app/**/*)",
+      "Write(src/**/*)",
+      "Write(components/**/*)",
+      "Write(lib/**/*)",
+      "Write(utils/**/*)",
+      "Write(styles/**/*)",
+      "Write(public/**/*)",
+      "Write(*.config.{js,ts,mjs})",
+      "Write(*.json)",
+      "Write(.env.local)",
+      "Write(.env.development)",
+      "Write(.env.test)",
+      "MultiEdit(**/*)",
+      "Grep(**/*)",
+      "Glob(**/*)"
+    ],
+    "deny": [
+      "Read(.env)",
+      "Read(.env.production)",
+      "Read(**/*.key)",
+      "Read(**/*.pem)",
+      "Read(**/*.cert)",
+      "Write(.env)",
+      "Write(.env.production)",
+      "Write(**/*.key)",
+      "Write(**/*.pem)",
+      "Write(**/*.cert)",
+      "Bash(rm -rf /)",
+      "Bash(curl*)",
+      "Bash(wget*)"
+    ],
+    "additionalDirectories": []
+  },
+  "env": {
+    "NEXT_TELEMETRY_DISABLED": "1",
+    "NODE_ENV": "development"
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r 'if .tool_input.file_path | test(\"app/.*/page\\\\.(tsx|jsx|ts|js)$\") then \"📄 Creating Next.js page - Remember: params and searchParams are Promises in Next.js 15\" else empty end'"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r 'if .tool_input.file_path | test(\"\\\\.(tsx|ts|jsx|js)$\") then \"prettier --write \" + .tool_input.file_path + \" 2>/dev/null || true\" else empty end' | sh"
+          }
+        ]
+      }
+    ]
+  },
+  "model": "claude-opus-4-1-20250805",
+  "includeCoAuthoredBy": true,
+  "statusLine": {
+    "type": "command",
+    "command": "echo \"🚀 Next.js 15 | Node $(node -v 2>/dev/null | cut -c2-)\"",
+    "padding": 0
+  }
+}

@@ -5,7 +5,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { 
@@ -21,7 +20,7 @@ import {
 } from 'lucide-react';
 import { VehicleType } from '@prisma/client';
 import VehicleCard from './VehicleCard';
-import VehicleRegistrationForm from '@/components/forms/VehicleRegistrationForm';
+import AddVehicleModal from './AddVehicleModal';
 
 interface Vehicle {
   id: string;
@@ -193,20 +192,15 @@ export default function VehicleManagement() {
             <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
             Refresh
           </Button>
-          <Dialog open={showAddForm} onOpenChange={setShowAddForm}>
-            <DialogTrigger asChild>
-              <Button>
-                <Plus className="h-4 w-4 mr-2" />
-                Add Vehicle
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle>Register New Vehicle</DialogTitle>
-              </DialogHeader>
-              <VehicleRegistrationForm onSuccess={handleVehicleAdded} />
-            </DialogContent>
-          </Dialog>
+          <Button onClick={() => setShowAddForm(true)}>
+            <Plus className="h-4 w-4 mr-2" />
+            Add Vehicle
+          </Button>
+          <AddVehicleModal 
+            isOpen={showAddForm}
+            onClose={() => setShowAddForm(false)}
+            onSuccess={handleVehicleAdded}
+          />
         </div>
       </div>
 
