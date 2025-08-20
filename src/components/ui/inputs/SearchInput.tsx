@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Input, type InputProps } from '../Input';
 import { cn } from '@/lib/utils';
 
-interface SearchResult {
+export interface SearchResult {
   id: string;
   title: string;
   subtitle?: string;
@@ -15,7 +15,7 @@ interface SearchResult {
   data?: any;
 }
 
-interface SearchInputProps extends Omit<InputProps, 'leftIcon' | 'rightIcon'> {
+interface SearchInputProps extends Omit<InputProps, 'icon' | 'iconPosition' | 'rightIcon' | 'results' | 'onSelect'> {
   onSearch?: (query: string) => void;
   onSelect?: (result: SearchResult) => void;
   results?: SearchResult[];
@@ -31,7 +31,7 @@ interface SearchInputProps extends Omit<InputProps, 'leftIcon' | 'rightIcon'> {
   loadingMessage?: string;
 }
 
-export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
+const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
   ({ 
     onSearch,
     onSelect,
@@ -50,17 +50,19 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
     onChange,
     onFocus,
     onBlur,
+    onKeyDown: originalOnKeyDown,
     className,
     ...props 
   }, ref) => {
     const [query, setQuery] = useState('');
     const [isOpen, setIsOpen] = useState(false);
     const [focusedIndex, setFocusedIndex] = useState(-1);
+    // Track input focus state for better UX
     const [isInputFocused, setIsInputFocused] = useState(false);
     
-    const searchTimeoutRef = useRef<NodeJS.Timeout>();
-    const resultsRef = useRef<HTMLDivElement>(null);
-    const inputRef = useRef<HTMLInputElement>(null);
+    const searchTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
+    const resultsRef = useRef<HTMLDivElement | null>(null);
+    const inputRef = useRef<HTMLInputElement | null>(null);
 
     // Combine refs
     const combinedRef = useCallback((node: HTMLInputElement) => {
@@ -77,7 +79,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
       let filtered = results.slice(0, maxResults);
       
       if (groupByCategory) {
-        const grouped = filtered.reduce((acc, result) => {
+        const grouped = filtered.reduce((acc: Record<string, SearchResult[]>, result: SearchResult) => {
           const category = result.category || 'Other';
           if (!acc[category]) acc[category] = [];
           acc[category].push(result);
@@ -155,7 +157,8 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
       
       // Trigger onChange with empty value
       onChange?.({
-        target: { value: '' }
+        target: { value: '' },
+        currentTarget: { value: '' }
       } as React.ChangeEvent<HTMLInputElement>);
     }, [onSearch, onChange]);
 
@@ -200,8 +203,13 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
           break;
       }
       
-      props.onKeyDown?.(e);
-    }, [isOpen, processedResults, focusedIndex, handleSelect, props.onKeyDown]);
+      originalOnKeyDown?.(e);
+    }, [isOpen, processedResults, focusedIndex, handleSelect, originalOnKeyDown]);
+
+  // Use the input focus state for potential future enhancements
+  React.useEffect(() => {
+    // Could be used for analytics or other focus-related features
+  }, [isInputFocused]);
 
     // Handle focus
     const handleFocus = useCallback((e: React.FocusEvent<HTMLInputElement>) => {
@@ -259,13 +267,14 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
           className={className}
-          leftIcon={
+          icon={
             showSearchIcon ? (
               <svg className="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
               </svg>
             ) : undefined
           }
+          iconPosition="left"
           rightIcon={
             <div className="flex items-center space-x-1">
               {isLoading && (
@@ -313,7 +322,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
                         </div>
                       )}
                       
-                      {group.items.map((result, itemIndex) => {
+                      {group.items.map((result: SearchResult, itemIndex: number) => {
                         const globalIndex = processedResults
                           .slice(0, groupIndex)
                           .reduce((acc, g) => acc + g.items.length, 0) + itemIndex;
@@ -376,3 +385,6 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
 );
 
 SearchInput.displayName = 'SearchInput';
+
+export default SearchInput;
+export type { SearchInputProps };

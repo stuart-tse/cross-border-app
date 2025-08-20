@@ -94,14 +94,57 @@ export const authConfig: NextAuthConfig = {
       // Handle role switching
       if (trigger === 'update' && session?.selectedRole) {
         console.log('🔐 NextAuth JWT callback - role switch requested:', session.selectedRole);
-        const userRoles = token.roles as UserType[];
-        console.log('🔐 User available roles:', userRoles);
-        if (userRoles.includes(session.selectedRole)) {
-          console.log('✅ Role switch approved, updating token');
-          token.selectedRole = session.selectedRole;
-          token.userType = session.selectedRole;
-        } else {
-          console.warn('❌ Role switch denied - user does not have role:', session.selectedRole);
+        
+        // Fetch fresh roles from database to ensure we have the latest data
+        try {
+          const freshUser = await prisma.user.findUnique({
+            where: { id: token.id as string },
+            include: {
+              userRoles: {
+                where: { isActive: true },
+                select: { role: true }
+              }
+            }
+          });
+          
+          if (freshUser) {
+            const freshRoles = freshUser.userRoles.map(r => r.role);
+            console.log('🔐 Fresh user roles from DB:', freshRoles);
+            
+            // Update token with latest roles
+            token.roles = freshRoles;
+            
+            if (freshRoles.includes(session.selectedRole)) {
+              console.log('✅ Role switch approved with fresh data, updating token');
+              token.selectedRole = session.selectedRole;
+              token.userType = session.selectedRole;
+            } else {
+              console.warn('❌ Role switch denied - user does not have role:', session.selectedRole);
+            }
+          } else {
+            console.error('❌ User not found during role switch, using cached roles');
+            const userRoles = token.roles as UserType[];
+            console.log('🔐 Cached user available roles:', userRoles);
+            if (userRoles.includes(session.selectedRole)) {
+              console.log('✅ Role switch approved with cached data, updating token');
+              token.selectedRole = session.selectedRole;
+              token.userType = session.selectedRole;
+            } else {
+              console.warn('❌ Role switch denied - user does not have role:', session.selectedRole);
+            }
+          }
+        } catch (error) {
+          console.error('❌ Error fetching fresh roles during JWT callback:', error);
+          // Fallback to cached roles
+          const userRoles = token.roles as UserType[];
+          console.log('🔐 Fallback to cached roles:', userRoles);
+          if (userRoles.includes(session.selectedRole)) {
+            console.log('✅ Role switch approved with fallback data, updating token');
+            token.selectedRole = session.selectedRole;
+            token.userType = session.selectedRole;
+          } else {
+            console.warn('❌ Role switch denied - user does not have role:', session.selectedRole);
+          }
         }
       }
 

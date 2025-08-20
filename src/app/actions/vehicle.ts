@@ -2,8 +2,7 @@
 
 import { z } from 'zod';
 import { VehicleType } from '@prisma/client';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth/config';
+import { auth } from '@/lib/auth/config';
 import { prisma } from '@/lib/database/client';
 import { revalidatePath } from 'next/cache';
 
@@ -58,7 +57,7 @@ export async function addVehicleAction(
 ): Promise<AddVehicleState> {
   try {
     // Check authentication
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     
     if (!session?.user?.id) {
       return {

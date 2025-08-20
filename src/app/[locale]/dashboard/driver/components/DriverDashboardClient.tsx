@@ -8,6 +8,7 @@ import { ProgressBar } from '@/components/ui/ProgressBar';
 import { cn } from '@/lib/utils';
 import Chart from 'chart.js/auto';
 import VehicleManagement from '@/components/vehicles/VehicleManagement';
+import PaymentActions from '@/components/driver/PaymentActions';
 
 interface TripRequest {
   id: string;
@@ -467,10 +468,10 @@ export default function DriverDashboardClient({
               <BaseCard className="mb-8">
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="text-title-lg font-semibold text-charcoal">Payment History</h3>
-                  <div className="flex space-x-3">
-                    <Button className="bg-hot-pink hover:bg-deep-pink">Request Withdrawal</Button>
-                    <Button variant="secondary">Export Statement</Button>
-                  </div>
+                  <PaymentActions 
+                    availableBalance={3450}
+                    currency="HK$"
+                  />
                 </div>
                 
                 {/* Available Balance */}
@@ -687,17 +688,17 @@ export default function DriverDashboardClient({
                       {/* Availability Status */}
                       <div className={cn(
                         'rounded-lg p-4 text-white',
-                        isOnline ? 'bg-gradient-to-r from-success-green to-green-600' : 'bg-gradient-to-r from-gray-500 to-gray-600'
+                        optimisticOnlineStatus ? 'bg-gradient-to-r from-success-green to-green-600' : 'bg-gradient-to-r from-gray-500 to-gray-600'
                       )}>
                         <div className="flex items-center justify-between">
                           <div>
                             <h4 className="text-title-md font-semibold mb-1">Current Status</h4>
-                            <div className="text-body-md">{isOnline ? 'Online and available for trips' : 'Currently offline'}</div>
+                            <div className="text-body-md">{optimisticOnlineStatus ? 'Online and available for trips' : 'Currently offline'}</div>
                           </div>
                           <label className="relative inline-flex items-center cursor-pointer">
                             <input 
                               type="checkbox" 
-                              checked={isOnline}
+                              checked={optimisticOnlineStatus}
                               onChange={handleToggleOnline}
                               className="sr-only peer"
                             />

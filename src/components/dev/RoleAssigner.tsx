@@ -10,6 +10,10 @@ export const RoleAssigner: React.FC = () => {
   const [isAssigning, setIsAssigning] = useState(false);
   const [message, setMessage] = useState('');
 
+  // Debug logging
+  console.log('🛠️ RoleAssigner - NODE_ENV:', process.env.NODE_ENV);
+  console.log('🛠️ RoleAssigner - user:', user);
+
   // Only show in development
   if (process.env.NODE_ENV !== 'development') {
     return null;

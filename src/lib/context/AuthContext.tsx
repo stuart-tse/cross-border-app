@@ -448,8 +448,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         await update({ selectedRole: role });
         console.log('✅ NextAuth session updated successfully');
         
-        // Force a brief wait for session to update, but don't re-check auth status as it causes loops
-        await new Promise(resolve => setTimeout(resolve, 100));
+        // Wait longer and verify session is actually updated before redirecting
+        console.log('⏳ Waiting for session to fully propagate...');
+        let attempts = 0;
+        const maxAttempts = 10; // Maximum 5 seconds
+        
+        while (attempts < maxAttempts) {
+          await new Promise(resolve => setTimeout(resolve, 500)); // Wait 500ms each attempt
+          
+          // Check if the session has been updated
+          const currentSession = await getSession();
+          if (currentSession?.user?.selectedRole === role) {
+            console.log('✅ Session verification successful, proceeding with redirect');
+            break;
+          }
+          
+          attempts++;
+          console.log(`🔄 Session not yet updated (attempt ${attempts}/${maxAttempts}), waiting...`);
+        }
+        
+        if (attempts >= maxAttempts) {
+          console.warn('⚠️ Session update verification timed out, proceeding with redirect anyway');
+        }
         
         // Redirect to appropriate dashboard
         console.log('🚀 Redirecting to dashboard for role:', role);

@@ -1,6 +1,6 @@
 export { PhoneInput } from './PhoneInput';
 export { CurrencyInput } from './CurrencyInput';
-export { SearchInput, type SearchResult } from './SearchInput';
+export { default as SearchInput, type SearchResult, type SearchInputProps } from './SearchInput';
 export { DateRangeInput } from './DateRangeInput';
 
 export interface DateRange {

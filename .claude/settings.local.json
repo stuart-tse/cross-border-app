@@ -4,7 +4,20 @@
       "Bash(npm install:*)",
       "Bash(npm run build:*)",
       "Bash(npm run start:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npm run type-check:*)",
+      "Bash(pkill:*)",
+      "Bash(true)",
+      "Bash(npm run dev:*)",
+      "Bash(rm:*)",
+      "Bash(claude mcp add:*)",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_click",
+      "mcp__playwright__browser_snapshot",
+      "mcp__playwright__browser_evaluate",
+      "Bash(npx tsx:*)",
+      "Bash(mkdir:*)"
     ],
     "deny": [],
     "ask": []
