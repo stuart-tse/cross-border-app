@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Management Interface Design - Cross-Border Transportation App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #171A20;
+            background: #FAFAFA;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        h1, h2, h3, h4 {
+            margin-bottom: 1rem;
+            color: #171A20;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 2rem;
+            background: linear-gradient(45deg, #FF69B4, #FF1493);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h2 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            border-bottom: 2px solid #FF69B4;
+            padding-bottom: 0.5rem;
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #FF1493;
+            margin-top: 1.5rem;
+        }
+
+        .wireframe {
+            background: white;
+            border: 1px solid #E0E0E0;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        }
+
+        .wireframe-header {
+            text-align: center;
+            font-weight: 600;
+            color: #FF1493;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .layout-grid {
+            display: grid;
+            gap: 1rem;
+            border: 2px dashed #BDBDBD;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .layout-2col {
+            grid-template-columns: 2fr 1fr;
+        }
+
+        .layout-3col {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        .layout-4col {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .component {
+            background: #F5F5F5;
+            border: 1px solid #BDBDBD;
+            border-radius: 6px;
+            padding: 1rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #616161;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .component.primary {
+            background: #FFB6C1;
+            border-color: #FF69B4;
+            color: #FF1493;
+            font-weight: 500;
+        }
+
+        .component.secondary {
+            background: #E3F2FD;
+            border-color: #0066CC;
+            color: #0066CC;
+        }
+
+        .component.form {
+            background: #FFF;
+            border: 2px solid #E0E0E0;
+            min-height: 100px;
+            flex-direction: column;
+            justify-content: flex-start;
+            text-align: left;
+            padding: 1.5rem;
+        }
+
+        .component.card {
+            background: #FFF;
+            border: 1px solid #E0E0E0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            min-height: 120px;
+        }
+
+        .form-field {
+            background: #F9F9F9;
+            border: 1px solid #E0E0E0;
+            border-radius: 4px;
+            padding: 0.5rem;
+            margin: 0.25rem 0;
+            font-size: 0.8rem;
+        }
+
+        .user-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #E0E0E0;
+        }
+
+        .flow-step {
+            background: #FF69B4;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            text-align: center;
+            flex: 1;
+            margin: 0 0.5rem;
+        }
+
+        .flow-arrow {
+            color: #FF69B4;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .specs-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .specs-table th,
+        .specs-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #E0E0E0;
+        }
+
+        .specs-table th {
+            background: #FF69B4;
+            color: white;
+            font-weight: 600;
+        }
+
+        .specs-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .notification-example {
+            background: linear-gradient(135deg, #FFF0F5, #FFE4E1);
+            border-left: 4px solid #FF69B4;
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin: 0.25rem;
+        }
+
+        .status-active { background: #E8F5E8; color: #2E7D2E; }
+        .status-expiring { background: #FFF3CD; color: #856404; }
+        .status-expired { background: #F8D7DA; color: #721C24; }
+
+        .mobile-mockup {
+            max-width: 375px;
+            margin: 0 auto;
+            background: white;
+            border: 2px solid #E0E0E0;
+            border-radius: 20px;
+            padding: 1rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+        }
+
+        .accessibility-note {
+            background: #E3F2FD;
+            border-left: 4px solid #0066CC;
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+
+        .code-snippet {
+            background: #F5F5F5;
+            border: 1px solid #E0E0E0;
+            border-radius: 6px;
+            padding: 1rem;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.8rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .layout-2col,
+            .layout-3col,
+            .layout-4col {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚗 Car Management Interface Design</h1>
+        <p style="text-align: center; font-size: 1.1rem; color: #616161; margin-bottom: 3rem;">
+            Comprehensive interface design for cross-border transportation app vehicle management
+        </p>
+
+        <h2>📋 1. System Overview & Information Architecture</h2>
+        
+        <div class="wireframe">
+            <div class="wireframe-header">Car Management System Architecture</div>
+            
+            <h3>Core Sections:</h3>
+            <div class="layout-4col">
+                <div class="component primary">Car List Overview</div>
+                <div class="component primary">Add New Vehicle</div>
+                <div class="component primary">Edit Vehicle</div>
+                <div class="component primary">Document Management</div>
+            </div>
+
+            <h3>Supporting Features:</h3>
+            <div class="layout-3col">
+                <div class="component secondary">Notification System</div>
+                <div class="component secondary">Document Scanner</div>
+                <div class="component secondary">Compliance Checker</div>
+            </div>
+        </div>
+
+        <h2>🔄 2. User Flow Diagrams</h2>
+
+        <h3>2.1 Vehicle Registration Flow</h3>
+        <div class="user-flow">
+            <div class="flow-step">Dashboard</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">Add Vehicle</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">Basic Info</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">Features</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">Photos</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">Documents</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">Review</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">Complete</div>
+        </div>
+
+        <h3>2.2 Document Management Flow</h3>
+        <div class="user-flow">
+            <div class="flow-step">Car List</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">Select Vehicle</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">Documents Tab</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">Upload/Edit</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">Set Expiry</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">Save</div>
+        </div>
+
+        <h3>2.3 Notification Setup Flow</h3>
+        <div class="user-flow">
+            <div class="flow-step">Settings</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">Notifications</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">Configure Alerts</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">Test Notification</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">Activate</div>
+        </div>
+
+        <h2>📱 3. Key Screen Wireframes</h2>
+
+        <h3>3.1 Vehicle List Overview</h3>
+        <div class="wireframe">
+            <div class="wireframe-header">Driver Dashboard - Vehicle Management</div>
+            
+            <div class="component primary" style="margin-bottom: 1rem;">
+                <strong>🚗 My Vehicles (3)</strong> | Add New Vehicle [+] | Filter & Search
+            </div>
+
+            <div class="layout-grid" style="gap: 1rem;">
+                <div class="component card">
+                    <strong>2023 BMW X5</strong><br>
+                    License: HK-BC-1234<br>
+                    <span class="status-badge status-active">✅ Active</span>
+                    <span class="status-badge status-expiring">⚠️ Permit Expiring</span><br>
+                    <small>Last service: Jan 10, 2024</small>
+                </div>
+                
+                <div class="component card">
+                    <strong>2022 Mercedes E-Class</strong><br>
+                    License: HK-DE-5678<br>
+                    <span class="status-badge status-active">✅ Active</span><br>
+                    <small>Next service: Mar 15, 2024</small>
+                </div>
+                
+                <div class="component card">
+                    <strong>2021 Toyota Alphard</strong><br>
+                    License: HK-FG-9012<br>
+                    <span class="status-badge status-expired">❌ Documents Expired</span><br>
+                    <small>Action Required</small>
+                </div>
+            </div>
+        </div>
+
+        <h3>3.2 Add New Vehicle - Step 1 (Basic Information)</h3>
+        <div class="wireframe">
+            <div class="wireframe-header">Add New Vehicle - Basic Information (Step 1 of 4)</div>
+            
+            <div class="component primary" style="margin-bottom: 1rem;">
+                Progress: ●●○○ | Back | Next | Save Draft
+            </div>
+
+            <div class="layout-2col">
+                <div class="component form">
+                    <strong>Vehicle Details</strong>
+                    <div class="form-field">Make: [BMW ▼]</div>
+                    <div class="form-field">Model: [X5]</div>
+                    <div class="form-field">Year: [2023 ▼]</div>
+                    <div class="form-field">Color: [Space Gray ▼]</div>
+                    <div class="form-field">License Plate: [HK-BC-1234]</div>
+                    <div class="form-field">VIN: [WBAFR9C55BC123456]</div>
+                </div>
+                
+                <div class="component form">
+                    <strong>Classification</strong>
+                    <div class="form-field">Category: [Executive ▼]</div>
+                    <div class="form-field">Fuel Type: [Hybrid ▼]</div>
+                    <div class="form-field">Max Passengers: [6]</div>
+                    <div class="form-field">Luggage Capacity: [5 bags]</div>
+                    <div class="form-field">Current Mileage: [28,450 km]</div>
+                </div>
+            </div>
+        </div>
+
+        <h3>3.3 Add New Vehicle - Step 2 (Features & Specifications)</h3>
+        <div class="wireframe">
+            <div class="wireframe-header">Add New Vehicle - Features & Specifications (Step 2 of 4)</div>
+            
+            <div class="component primary" style="margin-bottom: 1rem;">
+                Progress: ●●●○ | Back | Next | Save Draft
+            </div>
+
+            <div class="layout-2col">
+                <div class="component form">
+                    <strong>Standard Features</strong>
+                    <div class="form-field">☑ Air Conditioning</div>
+                    <div class="form-field">☑ GPS Navigation</div>
+                    <div class="form-field">☑ Wi-Fi Hotspot</div>
+                    <div class="form-field">☑ USB Charging Ports</div>
+                    <div class="form-field">☑ Bluetooth Audio</div>
+                    <div class="form-field">☐ Rear Entertainment System</div>
+                </div>
+                
+                <div class="component form">
+                    <strong>Premium Features</strong>
+                    <div class="form-field">☑ Leather Interior</div>
+                    <div class="form-field">☑ Premium Sound System</div>
+                    <div class="form-field">☑ Tinted Windows</div>
+                    <div class="form-field">☑ Child Safety Locks</div>
+                    <div class="form-field">☐ Massage Seats</div>
+                    <div class="form-field">☐ Panoramic Sunroof</div>
+                </div>
+            </div>
+
+            <div class="component form" style="margin-top: 1rem;">
+                <strong>Special Equipment</strong>
+                <div class="form-field">☑ Cross-border navigation system</div>
+                <div class="form-field">☑ Dual-currency payment terminal</div>
+                <div class="form-field">☐ Language translation device</div>
+                <div class="form-field">☐ Emergency medical kit</div>
+            </div>
+        </div>
+
+        <h3>3.4 Add New Vehicle - Step 3 (Photo Upload)</h3>
+        <div class="wireframe">
+            <div class="wireframe-header">Add New Vehicle - Photo Upload (Step 3 of 4)</div>
+            
+            <div class="component primary" style="margin-bottom: 1rem;">
+                Progress: ●●●● | Back | Next | Save Draft
+            </div>
+
+            <div class="layout-2col">
+                <div class="component form">
+                    <strong>Required Photos</strong>
+                    <div class="form-field">📷 Front View [Upload] ✅</div>
+                    <div class="form-field">📷 Rear View [Upload] ✅</div>
+                    <div class="form-field">📷 Side View (Driver) [Upload] ✅</div>
+                    <div class="form-field">📷 Side View (Passenger) [Upload] ⏳</div>
+                    <div class="form-field">📷 Interior Front [Upload] ⏳</div>
+                    <div class="form-field">📷 Interior Rear [Upload] ⏳</div>
+                </div>
+                
+                <div class="component form">
+                    <strong>Upload Zone</strong><br>
+                    <div style="border: 2px dashed #FF69B4; padding: 2rem; text-align: center; border-radius: 8px; background: #FFF0F5;">
+                        📸 Drag & Drop Photos Here<br>
+                        or<br>
+                        <button style="background: #FF69B4; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px;">Browse Files</button>
+                    </div>
+                    <small>Supported: JPG, PNG (Max 5MB each)</small>
+                </div>
+            </div>
+
+            <div class="component secondary" style="margin-top: 1rem;">
+                💡 Tips: Take photos in good lighting. Include license plate clearly. Show interior condition.
+            </div>
+        </div>
+
+        <h3>3.5 Document Management Interface</h3>
+        <div class="wireframe">
+            <div class="wireframe-header">BMW X5 - Document Management</div>
+            
+            <div class="component primary" style="margin-bottom: 1rem;">
+                Vehicle: 2023 BMW X5 | Documents: 8/10 Complete | Upload New Document [+]
+            </div>
+
+            <div class="layout-3col">
+                <div class="component card">
+                    <strong>🌏 Mainland Permit</strong><br>
+                    <span class="status-badge status-active">Active</span><br>
+                    Expires: Nov 30, 2025<br>
+                    <small>365 days remaining</small><br>
+                    <button style="background: #0066CC; color: white; border: none; padding: 0.25rem 0.5rem; border-radius: 4px; margin-top: 0.5rem;">View</button>
+                    <button style="background: #FF69B4; color: white; border: none; padding: 0.25rem 0.5rem; border-radius: 4px; margin-top: 0.5rem;">Edit</button>
+                </div>
+
+                <div class="component card">
+                    <strong>🌍 International Permit</strong><br>
+                    <span class="status-badge status-active">Active</span><br>
+                    Expires: Dec 31, 2024<br>
+                    <small>145 days remaining</small><br>
+                    <button style="background: #0066CC; color: white; border: none; padding: 0.25rem 0.5rem; border-radius: 4px; margin-top: 0.5rem;">View</button>
+                    <button style="background: #FF69B4; color: white; border: none; padding: 0.25rem 0.5rem; border-radius: 4px; margin-top: 0.5rem;">Edit</button>
+                </div>
+
+                <div class="component card">
+                    <strong>📋 Customs Permit</strong><br>
+                    <span class="status-badge status-expiring">Expiring Soon</span><br>
+                    Expires: Jul 15, 2024<br>
+                    <small>12 days remaining</small><br>
+                    <button style="background: #FF4B4B; color: white; border: none; padding: 0.25rem 0.5rem; border-radius: 4px; margin-top: 0.5rem;">Renew Now</button>
+                </div>
+            </div>
+
+            <div class="component form" style="margin-top: 1rem;">
+                <strong>Add New Document</strong>
+                <div class="layout-2col" style="gap: 1rem;">
+                    <div>
+                        <div class="form-field">Document Type: [Select ▼]</div>
+                        <div class="form-field">Document Number: [Enter number]</div>
+                        <div class="form-field">Issuing Authority: [Enter authority]</div>
+                    </div>
+                    <div>
+                        <div class="form-field">Issue Date: [Select date]</div>
+                        <div class="form-field">Expiry Date: [Select date]</div>
+                        <div class="form-field">📎 Upload Document [Browse]</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h3>3.6 Notification Dashboard</h3>
+        <div class="wireframe">
+            <div class="wireframe-header">Notification Center - Document Alerts</div>
+            
+            <div class="component primary" style="margin-bottom: 1rem;">
+                🔔 Active Alerts: 3 | Mark All Read | Settings ⚙️
+            </div>
+
+            <div class="notification-example">
+                <strong>⚠️ Document Expiring Soon</strong><br>
+                Your Customs Permit for BMW X5 (HK-BC-1234) expires in 12 days.<br>
+                <small>Posted: 2 hours ago</small><br>
+                <button style="background: #FF69B4; color: white; border: none; padding: 0.25rem 0.5rem; border-radius: 4px; margin-top: 0.5rem;">Start Renewal</button>
+                <button style="background: transparent; border: 1px solid #FF69B4; color: #FF69B4; padding: 0.25rem 0.5rem; border-radius: 4px; margin-top: 0.5rem;">Dismiss</button>
+            </div>
+
+            <div class="notification-example">
+                <strong>📅 Maintenance Reminder</strong><br>
+                Mercedes E-Class (HK-DE-5678) is due for service in 5 days.<br>
+                <small>Posted: 1 day ago</small><br>
+                <button style="background: #0066CC; color: white; border: none; padding: 0.25rem 0.5rem; border-radius: 4px; margin-top: 0.5rem;">Schedule Service</button>
+            </div>
+
+            <div class="notification-example">
+                <strong>✅ Document Renewed</strong><br>
+                International Permit for Toyota Alphard has been successfully renewed.<br>
+                <small>Posted: 3 days ago</small>
+            </div>
+        </div>
+
+        <h2>📱 4. Mobile-Responsive Design</h2>
+
+        <h3>4.1 Mobile Vehicle List</h3>
+        <div class="mobile-mockup">
+            <div class="component primary" style="margin-bottom: 1rem; font-size: 0.9rem;">
+                🚗 My Vehicles | + | ⚙️
+            </div>
+
+            <div style="space-y: 0.5rem;">
+                <div class="component card" style="padding: 1rem; text-align: left; font-size: 0.8rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                        <strong>BMW X5</strong>
+                        <span class="status-badge status-active" style="font-size: 0.7rem;">Active</span>
+                    </div>
+                    <div>HK-BC-1234 • Executive Class</div>
+                    <div style="margin-top: 0.5rem;">
+                        <span class="status-badge status-expiring" style="font-size: 0.6rem;">Permit Expiring</span>
+                    </div>
+                </div>
+
+                <div class="component card" style="padding: 1rem; text-align: left; font-size: 0.8rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                        <strong>Mercedes E-Class</strong>
+                        <span class="status-badge status-active" style="font-size: 0.7rem;">Active</span>
+                    </div>
+                    <div>HK-DE-5678 • Business Class</div>
+                </div>
+            </div>
+        </div>
+
+        <h3>4.2 Mobile Add Vehicle Form</h3>
+        <div class="mobile-mockup">
+            <div class="component primary" style="margin-bottom: 1rem; font-size: 0.9rem;">
+                ← Add Vehicle (1/4) | Save Draft
+            </div>
+
+            <div class="component form" style="padding: 1rem; font-size: 0.8rem;">
+                <strong>Basic Information</strong>
+                <div class="form-field" style="margin: 0.5rem 0;">Make: BMW</div>
+                <div class="form-field" style="margin: 0.5rem 0;">Model: X5</div>
+                <div class="form-field" style="margin: 0.5rem 0;">Year: 2023</div>
+                <div class="form-field" style="margin: 0.5rem 0;">License Plate: HK-BC-1234</div>
+                
+                <button style="background: #FF69B4; color: white; border: none; padding: 0.75rem; border-radius: 6px; width: 100%; margin-top: 1rem;">Continue</button>
+            </div>
+        </div>
+
+        <h2>⚙️ 5. Component Specifications</h2>
+
+        <h3>5.1 Vehicle Card Component</h3>
+        <table class="specs-table">
+            <thead>
+                <tr>
+                    <th>Property</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                    <th>Required</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>vehicle</td>
+                    <td>VehicleInfo</td>
+                    <td>Vehicle data object</td>
+                    <td>Yes</td>
+                </tr>
+                <tr>
+                    <td>showActions</td>
+                    <td>boolean</td>
+                    <td>Display action buttons</td>
+                    <td>No</td>
+                </tr>
+                <tr>
+                    <td>onClick</td>
+                    <td>function</td>
+                    <td>Card click handler</td>
+                    <td>No</td>
+                </tr>
+                <tr>
+                    <td>compact</td>
+                    <td>boolean</td>
+                    <td>Compact mobile layout</td>
+                    <td>No</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="code-snippet">
+// VehicleCard Component Usage
+&lt;VehicleCard 
+  vehicle={vehicleData}
+  showActions={true}
+  compact={isMobile}
+  onClick={handleVehicleSelect}
+/&gt;
+        </div>
+
+        <h3>5.2 Document Status Component</h3>
+        <table class="specs-table">
+            <thead>
+                <tr>
+                    <th>Property</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                    <th>Values</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>status</td>
+                    <td>string</td>
+                    <td>Document status</td>
+                    <td>'active', 'expiring', 'expired'</td>
+                </tr>
+                <tr>
+                    <td>expiryDate</td>
+                    <td>Date</td>
+                    <td>Document expiry date</td>
+                    <td>ISO date string</td>
+                </tr>
+                <tr>
+                    <td>showDaysRemaining</td>
+                    <td>boolean</td>
+                    <td>Show countdown</td>
+                    <td>true, false</td>
+                </tr>
+                <tr>
+                    <td>size</td>
+                    <td>string</td>
+                    <td>Badge size</td>
+                    <td>'sm', 'md', 'lg'</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>5.3 File Upload Component</h3>
+        <table class="specs-table">
+            <thead>
+                <tr>
+                    <th>Property</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                    <th>Default</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>acceptedTypes</td>
+                    <td>string[]</td>
+                    <td>Allowed file types</td>
+                    <td>['jpg', 'jpeg', 'png', 'pdf']</td>
+                </tr>
+                <tr>
+                    <td>maxSize</td>
+                    <td>number</td>
+                    <td>Max file size (MB)</td>
+                    <td>5</td>
+                </tr>
+                <tr>
+                    <td>multiple</td>
+                    <td>boolean</td>
+                    <td>Allow multiple files</td>
+                    <td>false</td>
+                </tr>
+                <tr>
+                    <td>onUpload</td>
+                    <td>function</td>
+                    <td>Upload handler</td>
+                    <td>Required</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>🔔 6. Notification System Design</h2>
+
+        <h3>6.1 Notification Types</h3>
+        <div class="layout-2col">
+            <div class="component form">
+                <strong>Document Notifications</strong>
+                <div class="form-field">📋 Permit expiring (30 days)</div>
+                <div class="form-field">📋 Permit expiring (7 days)</div>
+                <div class="form-field">📋 Permit expired</div>
+                <div class="form-field">📋 Renewal reminder</div>
+                <div class="form-field">✅ Document approved</div>
+                <div class="form-field">❌ Document rejected</div>
+            </div>
+            
+            <div class="component form">
+                <strong>Maintenance Notifications</strong>
+                <div class="form-field">🔧 Service due (2 weeks)</div>
+                <div class="form-field">🔧 Service overdue</div>
+                <div class="form-field">🛡️ Insurance expiring</div>
+                <div class="form-field">📊 Mileage milestone</div>
+                <div class="form-field">⚠️ Vehicle inactive</div>
+            </div>
+        </div>
+
+        <h3>6.2 Notification Preferences</h3>
+        <div class="wireframe">
+            <div class="wireframe-header">Notification Settings</div>
+            
+            <div class="component form">
+                <strong>Delivery Methods</strong>
+                <div class="form-field">📱 Push Notifications: [ON/OFF]</div>
+                <div class="form-field">📧 Email Alerts: [ON/OFF]</div>
+                <div class="form-field">💬 SMS Notifications: [ON/OFF]</div>
+                <div class="form-field">📊 Dashboard Alerts: [ON/OFF]</div>
+            </div>
+
+            <div class="component form">
+                <strong>Timing Preferences</strong>
+                <div class="form-field">Document Expiry Warning: [30 days ▼]</div>
+                <div class="form-field">Maintenance Reminder: [14 days ▼]</div>
+                <div class="form-field">Insurance Alert: [45 days ▼]</div>
+                <div class="form-field">Quiet Hours: [22:00 - 08:00]</div>
+            </div>
+        </div>
+
+        <h2>♿ 7. Accessibility Specifications</h2>
+
+        <div class="accessibility-note">
+            <strong>WCAG 2.1 AA Compliance Requirements:</strong>
+            <ul style="margin-top: 0.5rem;">
+                <li>✅ All interactive elements have focus indicators</li>
+                <li>✅ Color contrast ratio minimum 4.5:1 for normal text</li>
+                <li>✅ All images have descriptive alt text</li>
+                <li>✅ Form fields have proper labels and error messages</li>
+                <li>✅ Keyboard navigation support for all functions</li>
+                <li>✅ Screen reader compatibility with ARIA labels</li>
+                <li>✅ Text can be zoomed to 200% without horizontal scroll</li>
+            </ul>
+        </div>
+
+        <h3>7.1 Keyboard Navigation Flow</h3>
+        <div class="user-flow">
+            <div class="flow-step">Tab 1: Add Vehicle</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">Tab 2: Vehicle Cards</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">Tab 3: Actions Menu</div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-step">Enter: Select</div>
+        </div>
+
+        <h3>7.2 Screen Reader Announcements</h3>
+        <div class="code-snippet">
+// Example ARIA labels and announcements
+aria-label="Vehicle management dashboard"
+aria-describedby="vehicle-count-summary"
+role="alert" // For urgent notifications
+aria-live="polite" // For status updates
+        </div>
+
+        <h2>📊 8. Implementation Roadmap</h2>
+
+        <h3>8.1 Phase 1: Core Vehicle Management (Week 1-2)</h3>
+        <div class="layout-3col">
+            <div class="component secondary">✅ Vehicle List View</div>
+            <div class="component secondary">✅ Add Vehicle Form</div>
+            <div class="component secondary">✅ Basic Photo Upload</div>
+        </div>
+
+        <h3>8.2 Phase 2: Document System (Week 3-4)</h3>
+        <div class="layout-3col">
+            <div class="component secondary">📋 Document Management</div>
+            <div class="component secondary">📅 Expiry Tracking</div>
+            <div class="component secondary">📤 Document Upload</div>
+        </div>
+
+        <h3>8.3 Phase 3: Notifications & Alerts (Week 5-6)</h3>
+        <div class="layout-3col">
+            <div class="component secondary">🔔 Push Notifications</div>
+            <div class="component secondary">📧 Email Alerts</div>
+            <div class="component secondary">📱 Dashboard Notifications</div>
+        </div>
+
+        <h3>8.4 Phase 4: Mobile Optimization (Week 7-8)</h3>
+        <div class="layout-3col">
+            <div class="component secondary">📱 Responsive Design</div>
+            <div class="component secondary">📷 Camera Integration</div>
+            <div class="component secondary">♿ Accessibility</div>
+        </div>
+
+        <h2>🎯 9. Success Metrics & KPIs</h2>
+
+        <table class="specs-table">
+            <thead>
+                <tr>
+                    <th>Metric</th>
+                    <th>Target</th>
+                    <th>Measurement</th>
+                    <th>Timeline</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Document Compliance Rate</td>
+                    <td>95%</td>
+                    <td>% of vehicles with valid documents</td>
+                    <td>Monthly</td>
+                </tr>
+                <tr>
+                    <td>Time to Add Vehicle</td>
+                    <td>&lt; 5 minutes</td>
+                    <td>Average completion time</td>
+                    <td>Weekly</td>
+                </tr>
+                <tr>
+                    <td>Mobile Usage Rate</td>
+                    <td>&gt; 60%</td>
+                    <td>% of mobile vs desktop usage</td>
+                    <td>Monthly</td>
+                </tr>
+                <tr>
+                    <td>Notification Response Rate</td>
+                    <td>&gt; 80%</td>
+                    <td>% of alerts acted upon</td>
+                    <td>Weekly</td>
+                </tr>
+                <tr>
+                    <td>User Satisfaction Score</td>
+                    <td>&gt; 4.5/5</td>
+                    <td>Post-task survey rating</td>
+                    <td>Quarterly</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>🔧 10. Technical Implementation Notes</h2>
+
+        <h3>10.1 Next.js Integration Points</h3>
+        <div class="code-snippet">
+// File structure for car management
+src/
+├── app/[locale]/dashboard/driver/vehicles/
+│   ├── page.tsx                 // Vehicle list page
+│   ├── add/
+│   │   └── page.tsx            // Add vehicle flow
+│   ├── [id]/
+│   │   ├── page.tsx            // Vehicle details
+│   │   ├── edit/page.tsx       // Edit vehicle
+│   │   └── documents/page.tsx  // Document management
+│   └── components/
+│       ├── VehicleCard.tsx
+│       ├── VehicleForm.tsx
+│       ├── DocumentUpload.tsx
+│       └── NotificationCenter.tsx
+        </div>
+
+        <h3>10.2 State Management</h3>
+        <div class="code-snippet">
+// Vehicle management context structure
+interface VehicleContextType {
+  vehicles: Vehicle[];
+  selectedVehicle: Vehicle | null;
+  notifications: Notification[];
+  addVehicle: (vehicle: Vehicle) => Promise&lt;void&gt;;
+  updateVehicle: (id: string, updates: Partial&lt;Vehicle&gt;) => Promise&lt;void&gt;;
+  deleteVehicle: (id: string) => Promise&lt;void&gt;;
+  uploadDocument: (vehicleId: string, document: Document) => Promise&lt;void&gt;;
+  markNotificationRead: (id: string) => void;
+}
+        </div>
+
+        <h3>10.3 API Endpoints</h3>
+        <table class="specs-table">
+            <thead>
+                <tr>
+                    <th>Endpoint</th>
+                    <th>Method</th>
+                    <th>Description</th>
+                    <th>Auth Required</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>/api/vehicles</td>
+                    <td>GET, POST</td>
+                    <td>List and create vehicles</td>
+                    <td>Yes</td>
+                </tr>
+                <tr>
+                    <td>/api/vehicles/[id]</td>
+                    <td>GET, PUT, DELETE</td>
+                    <td>Vehicle CRUD operations</td>
+                    <td>Yes</td>
+                </tr>
+                <tr>
+                    <td>/api/vehicles/[id]/documents</td>
+                    <td>GET, POST</td>
+                    <td>Document management</td>
+                    <td>Yes</td>
+                </tr>
+                <tr>
+                    <td>/api/notifications</td>
+                    <td>GET, PUT</td>
+                    <td>Notification handling</td>
+                    <td>Yes</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div style="text-align: center; margin: 3rem 0; color: #616161;">
+            <p>📋 This comprehensive design specification provides the foundation for implementing a complete car management interface that meets all cross-border transportation compliance requirements while maintaining excellent user experience and accessibility standards.</p>
+        </div>
+    </div>
+</body>
+</html>

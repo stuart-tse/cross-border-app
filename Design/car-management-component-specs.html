@@ -1,0 +1,1502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Management Component Specifications - Cross-Border Transportation App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #171A20;
+            background: #FAFAFA;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        h1, h2, h3, h4 {
+            margin-bottom: 1rem;
+            color: #171A20;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 2rem;
+            background: linear-gradient(45deg, #FF69B4, #FF1493);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h2 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-top: 3rem;
+            border-bottom: 2px solid #FF69B4;
+            padding-bottom: 0.5rem;
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #FF1493;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .component-section {
+            background: white;
+            border: 1px solid #E0E0E0;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        }
+
+        .component-preview {
+            background: #F8F9FA;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 1rem 0;
+            position: relative;
+        }
+
+        .component-label {
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background: #FF69B4;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .spec-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .spec-table th,
+        .spec-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid #E0E0E0;
+            vertical-align: top;
+        }
+
+        .spec-table th {
+            background: #FF69B4;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .spec-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .spec-table td:first-child {
+            font-weight: 500;
+            color: #FF1493;
+        }
+
+        .code-block {
+            background: #1F2937;
+            color: #F3F4F6;
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            overflow-x: auto;
+            margin: 1rem 0;
+            position: relative;
+        }
+
+        .code-block .comment {
+            color: #9CA3AF;
+        }
+
+        .code-block .keyword {
+            color: #EAB308;
+        }
+
+        .code-block .string {
+            color: #10B981;
+        }
+
+        .code-block .function {
+            color: #3B82F6;
+        }
+
+        .code-block .property {
+            color: #F59E0B;
+        }
+
+        .copy-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #374151;
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .api-endpoint {
+            background: #E8F5E8;
+            border-left: 4px solid #10B981;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 6px;
+        }
+
+        .api-endpoint .method {
+            background: #10B981;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        .api-endpoint .method.post { background: #F59E0B; }
+        .api-endpoint .method.put { background: #3B82F6; }
+        .api-endpoint .method.delete { background: #EF4444; }
+
+        .variant-demo {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .variant-item {
+            background: white;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .accessibility-note {
+            background: #E3F2FD;
+            border-left: 4px solid #0066CC;
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+
+        .implementation-note {
+            background: #FFF3E0;
+            border-left: 4px solid #FFB800;
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+
+        .file-tree {
+            background: #F8F9FA;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+        }
+
+        .file-tree .folder {
+            color: #FF69B4;
+            font-weight: 600;
+        }
+
+        .file-tree .file {
+            color: #0066CC;
+        }
+
+        .state-diagram {
+            background: white;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .state-box {
+            display: inline-block;
+            background: #FF69B4;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin: 5px;
+            font-weight: 500;
+        }
+
+        .state-arrow {
+            color: #666;
+            font-size: 18px;
+            margin: 0 10px;
+        }
+
+        .responsive-demo {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .responsive-demo .device {
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .responsive-demo .screen {
+            background: #333;
+            border-radius: 8px;
+            padding: 10px;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .responsive-demo {
+                grid-template-columns: 1fr;
+            }
+
+            .variant-demo {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚙️ Car Management Component Specifications</h1>
+        <p style="text-align: center; font-size: 1.1rem; color: #616161; margin-bottom: 3rem;">
+            Comprehensive technical specifications for Next.js implementation of vehicle management components
+        </p>
+
+        <h2>📁 1. File Structure & Organization</h2>
+
+        <div class="component-section">
+            <h3>1.1 Recommended Directory Structure</h3>
+            
+            <div class="file-tree">
+                <div class="folder">src/</div>
+                <div style="margin-left: 20px;">
+                    <div class="folder">app/[locale]/dashboard/driver/vehicles/</div>
+                    <div style="margin-left: 20px;">
+                        <div class="file">page.tsx</div>
+                        <div class="file">loading.tsx</div>
+                        <div class="file">error.tsx</div>
+                        <div class="folder">add/</div>
+                        <div style="margin-left: 20px;">
+                            <div class="file">page.tsx</div>
+                            <div class="folder">components/</div>
+                            <div style="margin-left: 20px;">
+                                <div class="file">VehicleFormWizard.tsx</div>
+                                <div class="file">StepIndicator.tsx</div>
+                            </div>
+                        </div>
+                        <div class="folder">[id]/</div>
+                        <div style="margin-left: 20px;">
+                            <div class="file">page.tsx</div>
+                            <div class="folder">edit/</div>
+                            <div style="margin-left: 20px;">
+                                <div class="file">page.tsx</div>
+                            </div>
+                            <div class="folder">documents/</div>
+                            <div style="margin-left: 20px;">
+                                <div class="file">page.tsx</div>
+                                <div class="file">DocumentUpload.tsx</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="folder">components/vehicles/</div>
+                    <div style="margin-left: 20px;">
+                        <div class="file">VehicleCard.tsx</div>
+                        <div class="file">VehicleList.tsx</div>
+                        <div class="file">VehicleForm.tsx</div>
+                        <div class="file">DocumentManager.tsx</div>
+                        <div class="file">NotificationCenter.tsx</div>
+                        <div class="file">PhotoUpload.tsx</div>
+                        <div class="file">StatusIndicator.tsx</div>
+                    </div>
+                    <div class="folder">hooks/vehicles/</div>
+                    <div style="margin-left: 20px;">
+                        <div class="file">useVehicles.ts</div>
+                        <div class="file">useDocuments.ts</div>
+                        <div class="file">useNotifications.ts</div>
+                        <div class="file">useFileUpload.ts</div>
+                    </div>
+                    <div class="folder">types/</div>
+                    <div style="margin-left: 20px;">
+                        <div class="file">vehicle.ts</div>
+                        <div class="file">document.ts</div>
+                        <div class="file">notification.ts</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2>🚗 2. Core Vehicle Components</h2>
+
+        <div class="component-section">
+            <h3>2.1 VehicleCard Component</h3>
+            
+            <div class="component-preview">
+                <div class="component-label">VehicleCard</div>
+                <div style="background: white; border: 1px solid #E0E0E0; border-radius: 12px; padding: 20px; max-width: 400px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                        <div>
+                            <div style="font-size: 18px; font-weight: 600; color: #171A20; margin-bottom: 4px;">2023 BMW X5</div>
+                            <div style="font-size: 14px; color: #666; margin-bottom: 8px;">HK-BC-1234 • Executive Class</div>
+                            <div>
+                                <span style="background: #E8F5E8; color: #2E7D2E; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 500; margin-right: 6px;">✅ Active</span>
+                                <span style="background: #FFF3CD; color: #856404; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 500;">⚠️ Permit Expiring</span>
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 12px; color: #666;">Last Service</div>
+                            <div style="font-size: 14px; font-weight: 500;">Jan 10, 2024</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button style="background: #0066CC; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px;">View</button>
+                        <button style="background: #FF69B4; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px;">Manage</button>
+                    </div>
+                </div>
+            </div>
+
+            <table class="spec-table">
+                <thead>
+                    <tr>
+                        <th>Property</th>
+                        <th>Type</th>
+                        <th>Default</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>vehicle</td>
+                        <td>VehicleInfo</td>
+                        <td>Required</td>
+                        <td>Vehicle data object containing all vehicle information</td>
+                    </tr>
+                    <tr>
+                        <td>variant</td>
+                        <td>'default' | 'compact' | 'detailed'</td>
+                        <td>'default'</td>
+                        <td>Card display variant for different contexts</td>
+                    </tr>
+                    <tr>
+                        <td>showActions</td>
+                        <td>boolean</td>
+                        <td>true</td>
+                        <td>Whether to display action buttons</td>
+                    </tr>
+                    <tr>
+                        <td>onClick</td>
+                        <td>(vehicle: VehicleInfo) => void</td>
+                        <td>undefined</td>
+                        <td>Click handler for card interaction</td>
+                    </tr>
+                    <tr>
+                        <td>className</td>
+                        <td>string</td>
+                        <td>''</td>
+                        <td>Additional CSS classes</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="code-block">
+                <button class="copy-button">Copy</button>
+<span class="comment">// VehicleCard.tsx</span>
+<span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">'react'</span>;
+<span class="keyword">import</span> { <span class="property">VehicleInfo</span> } <span class="keyword">from</span> <span class="string">'@/types/vehicle'</span>;
+<span class="keyword">import</span> { <span class="function">cn</span> } <span class="keyword">from</span> <span class="string">'@/lib/utils'</span>;
+<span class="keyword">import</span> { <span class="property">StatusIndicator</span> } <span class="keyword">from</span> <span class="string">'./StatusIndicator'</span>;
+
+<span class="keyword">interface</span> <span class="property">VehicleCardProps</span> {
+  vehicle: <span class="property">VehicleInfo</span>;
+  variant?: <span class="string">'default'</span> | <span class="string">'compact'</span> | <span class="string">'detailed'</span>;
+  showActions?: boolean;
+  onClick?: (vehicle: <span class="property">VehicleInfo</span>) => <span class="keyword">void</span>;
+  className?: string;
+}
+
+<span class="keyword">export</span> <span class="keyword">const</span> <span class="function">VehicleCard</span>: React.<span class="property">FC</span>&lt;<span class="property">VehicleCardProps</span>&gt; = ({
+  vehicle,
+  variant = <span class="string">'default'</span>,
+  showActions = <span class="keyword">true</span>,
+  onClick,
+  className
+}) => {
+  <span class="keyword">return</span> (
+    &lt;div 
+      className={<span class="function">cn</span>(
+        <span class="string">'bg-white border border-gray-200 rounded-lg p-4 transition-all hover:shadow-md'</span>,
+        variant === <span class="string">'compact'</span> && <span class="string">'p-3'</span>,
+        onClick && <span class="string">'cursor-pointer hover:border-hot-pink/30'</span>,
+        className
+      )}
+      onClick={() => onClick?.(vehicle)}
+      role={onClick ? <span class="string">'button'</span> : <span class="keyword">undefined</span>}
+      tabIndex={onClick ? <span class="keyword">0</span> : <span class="keyword">undefined</span>}
+      onKeyDown={(e) => {
+        <span class="keyword">if</span> (onClick && (e.key === <span class="string">'Enter'</span> || e.key === <span class="string">' '</span>)) {
+          e.preventDefault();
+          onClick(vehicle);
+        }
+      }}
+    &gt;
+      &lt;div className="<span class="string">flex justify-between items-start mb-3</span>"&gt;
+        &lt;div&gt;
+          &lt;h3 className="<span class="string">text-title-md font-semibold text-charcoal mb-1</span>"&gt;
+            {vehicle.year} {vehicle.make} {vehicle.model}
+          &lt;/h3&gt;
+          &lt;p className="<span class="string">text-body-sm text-gray-600 mb-2</span>"&gt;
+            {vehicle.licensePlate} • {vehicle.category} Class
+          &lt;/p&gt;
+          &lt;div className="<span class="string">flex flex-wrap gap-2</span>"&gt;
+            &lt;<span class="property">StatusIndicator</span> status={vehicle.status} /&gt;
+            {vehicle.documentStatus?.expiring && (
+              &lt;<span class="property">StatusIndicator</span> status="<span class="string">expiring</span>" text="<span class="string">Permit Expiring</span>" /&gt;
+            )}
+          &lt;/div&gt;
+        &lt;/div&gt;
+        
+        {variant !== <span class="string">'compact'</span> && (
+          &lt;div className="<span class="string">text-right</span>"&gt;
+            &lt;p className="<span class="string">text-caption text-gray-500</span>"&gt;
+              {vehicle.lastService ? <span class="string">'Last Service'</span> : <span class="string">'Next Service'</span>}
+            &lt;/p&gt;
+            &lt;p className="<span class="string">text-body-sm font-medium text-charcoal</span>"&gt;
+              {<span class="function">formatDate</span>(vehicle.lastService || vehicle.nextService)}
+            &lt;/p&gt;
+          &lt;/div&gt;
+        )}
+      &lt;/div&gt;
+      
+      {showActions && (
+        &lt;div className="<span class="string">flex gap-2</span>"&gt;
+          &lt;button 
+            className="<span class="string">px-3 py-1 bg-electric-blue text-white rounded-md text-caption font-medium hover:bg-electric-blue/90 transition-colors</span>"
+            onClick={(e) => {
+              e.stopPropagation();
+              <span class="comment">// Handle view action</span>
+            }}
+          &gt;
+            View
+          &lt;/button&gt;
+          &lt;button 
+            className="<span class="string">px-3 py-1 bg-hot-pink text-white rounded-md text-caption font-medium hover:bg-deep-pink transition-colors</span>"
+            onClick={(e) => {
+              e.stopPropagation();
+              <span class="comment">// Handle manage action</span>
+            }}
+          &gt;
+            Manage
+          &lt;/button&gt;
+        &lt;/div&gt;
+      )}
+    &lt;/div&gt;
+  );
+};
+            </div>
+
+            <div class="accessibility-note">
+                <strong>♿ Accessibility Features:</strong>
+                <ul style="margin-top: 0.5rem;">
+                    <li>Full keyboard navigation support with focus management</li>
+                    <li>ARIA roles and labels for screen readers</li>
+                    <li>Color-blind friendly status indicators with icons</li>
+                    <li>Sufficient color contrast ratios (4.5:1 minimum)</li>
+                    <li>Focus visible indicators with clear outlines</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="component-section">
+            <h3>2.2 VehicleForm Component</h3>
+            
+            <div class="component-preview">
+                <div class="component-label">VehicleForm - Multi-Step</div>
+                
+                <div style="background: white; border: 1px solid #E0E0E0; border-radius: 12px; padding: 20px; max-width: 600px;">
+                    <!-- Progress Indicator -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <div style="display: flex; align-items: center;">
+                            <div style="width: 30px; height: 30px; background: #FF69B4; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600;">1</div>
+                            <div style="width: 40px; height: 2px; background: #E0E0E0; margin: 0 5px;"></div>
+                            <div style="width: 30px; height: 30px; background: #E0E0E0; color: #666; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600;">2</div>
+                            <div style="width: 40px; height: 2px; background: #E0E0E0; margin: 0 5px;"></div>
+                            <div style="width: 30px; height: 30px; background: #E0E0E0; color: #666; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600;">3</div>
+                            <div style="width: 40px; height: 2px; background: #E0E0E0; margin: 0 5px;"></div>
+                            <div style="width: 30px; height: 30px; background: #E0E0E0; color: #666; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600;">4</div>
+                        </div>
+                        <button style="background: transparent; border: 1px solid #FF69B4; color: #FF69B4; padding: 6px 12px; border-radius: 6px; font-size: 12px;">Save Draft</button>
+                    </div>
+
+                    <!-- Form Content -->
+                    <h3 style="color: #171A20; margin-bottom: 15px;">Basic Vehicle Information</h3>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div>
+                            <label style="display: block; font-size: 14px; font-weight: 500; color: #333; margin-bottom: 6px;">Make</label>
+                            <select style="width: 100%; padding: 10px; border: 1px solid #D0D0D0; border-radius: 6px; font-size: 14px;">
+                                <option>BMW</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 14px; font-weight: 500; color: #333; margin-bottom: 6px;">Model</label>
+                            <input type="text" value="X5" style="width: 100%; padding: 10px; border: 1px solid #D0D0D0; border-radius: 6px; font-size: 14px;" />
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 20px; display: flex; gap: 10px;">
+                        <button style="background: #E0E0E0; color: #666; border: none; padding: 12px 20px; border-radius: 6px; font-size: 14px; flex: 1;">Back</button>
+                        <button style="background: #FF69B4; color: white; border: none; padding: 12px 20px; border-radius: 6px; font-size: 14px; flex: 2;">Continue</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <button class="copy-button">Copy</button>
+<span class="comment">// VehicleForm.tsx - Multi-step form with validation</span>
+<span class="keyword">import</span> React, { useState } <span class="keyword">from</span> <span class="string">'react'</span>;
+<span class="keyword">import</span> { <span class="function">useForm</span> } <span class="keyword">from</span> <span class="string">'react-hook-form'</span>;
+<span class="keyword">import</span> { <span class="function">zodResolver</span> } <span class="keyword">from</span> <span class="string">'@hookform/resolvers/zod'</span>;
+<span class="keyword">import</span> { vehicleSchema } <span class="keyword">from</span> <span class="string">'@/lib/validations/vehicle'</span>;
+<span class="keyword">import</span> { <span class="property">StepIndicator</span> } <span class="keyword">from</span> <span class="string">'./StepIndicator'</span>;
+
+<span class="keyword">export</span> <span class="keyword">const</span> <span class="function">VehicleForm</span> = () => {
+  <span class="keyword">const</span> [currentStep, setCurrentStep] = <span class="function">useState</span>(<span class="keyword">1</span>);
+  <span class="keyword">const</span> [draftData, setDraftData] = <span class="function">useState</span>({});
+  
+  <span class="keyword">const</span> form = <span class="function">useForm</span>({
+    resolver: <span class="function">zodResolver</span>(vehicleSchema),
+    defaultValues: draftData,
+    mode: <span class="string">'onChange'</span>
+  });
+
+  <span class="keyword">const</span> <span class="function">handleNext</span> = <span class="keyword">async</span> () => {
+    <span class="keyword">const</span> isValid = <span class="keyword">await</span> form.<span class="function">trigger</span>(<span class="function">getStepFields</span>(currentStep));
+    <span class="keyword">if</span> (isValid) {
+      <span class="function">saveDraft</span>(form.<span class="function">getValues</span>());
+      <span class="function">setCurrentStep</span>(currentStep + <span class="keyword">1</span>);
+    }
+  };
+
+  <span class="keyword">const</span> <span class="function">saveDraft</span> = (data: any) => {
+    <span class="function">setDraftData</span>(data);
+    localStorage.<span class="function">setItem</span>(<span class="string">'vehicleFormDraft'</span>, JSON.<span class="function">stringify</span>(data));
+  };
+
+  <span class="keyword">return</span> (
+    &lt;div className="<span class="string">max-w-4xl mx-auto p-6</span>"&gt;
+      &lt;<span class="property">StepIndicator</span> 
+        currentStep={currentStep} 
+        totalSteps={<span class="keyword">4</span>}
+        onStepClick={<span class="function">setCurrentStep</span>}
+      /&gt;
+      
+      &lt;form onSubmit={form.<span class="function">handleSubmit</span>(<span class="function">onSubmit</span>)}&gt;
+        {<span class="function">renderStepContent</span>(currentStep, form)}
+        
+        &lt;div className="<span class="string">flex gap-4 mt-8</span>"&gt;
+          {currentStep > <span class="keyword">1</span> && (
+            &lt;button 
+              type="<span class="string">button</span>"
+              onClick={() => <span class="function">setCurrentStep</span>(currentStep - <span class="keyword">1</span>)}
+              className="<span class="string">btn-secondary</span>"
+            &gt;
+              Back
+            &lt;/button&gt;
+          )}
+          
+          &lt;button 
+            type="<span class="string">button</span>"
+            onClick={<span class="function">handleNext</span>}
+            className="<span class="string">btn-primary flex-1</span>"
+            disabled={!form.<span class="property">formState</span>.<span class="property">isValid</span>}
+          &gt;
+            {currentStep === <span class="keyword">4</span> ? <span class="string">'Complete Setup'</span> : <span class="string">'Continue'</span>}
+          &lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/form&gt;
+    &lt;/div&gt;
+  );
+};
+            </div>
+
+            <div class="implementation-note">
+                <strong>📝 Implementation Notes:</strong>
+                <ul style="margin-top: 0.5rem;">
+                    <li>Uses React Hook Form for optimized form state management</li>
+                    <li>Zod schema validation for type safety and error handling</li>
+                    <li>Auto-save draft functionality with localStorage</li>
+                    <li>Progressive validation - validates current step before proceeding</li>
+                    <li>Mobile-responsive design with touch-friendly interactions</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2>📄 3. Document Management Components</h2>
+
+        <div class="component-section">
+            <h3>3.1 DocumentManager Component</h3>
+            
+            <div class="component-preview">
+                <div class="component-label">DocumentManager</div>
+                
+                <div style="background: white; border: 1px solid #E0E0E0; border-radius: 12px; padding: 20px; max-width: 800px;">
+                    <!-- Header -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3 style="color: #171A20; font-size: 18px; font-weight: 600;">BMW X5 Documents</h3>
+                        <button style="background: #FF69B4; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-size: 14px;">+ Add Document</button>
+                    </div>
+
+                    <!-- Status Summary -->
+                    <div style="background: linear-gradient(135deg, #FF69B4, #FF1493); color: white; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                        <div style="font-size: 16px; font-weight: 600; margin-bottom: 10px;">Document Status Overview</div>
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; text-align: center;">
+                            <div>
+                                <div style="font-size: 20px; font-weight: 700;">6</div>
+                                <div style="font-size: 11px; opacity: 0.9;">Active</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 20px; font-weight: 700;">1</div>
+                                <div style="font-size: 11px; opacity: 0.9;">Expiring</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 20px; font-weight: 700;">0</div>
+                                <div style="font-size: 11px; opacity: 0.9;">Expired</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 20px; font-weight: 700;">85%</div>
+                                <div style="font-size: 11px; opacity: 0.9;">Complete</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Document Items -->
+                    <div style="space-y: 12px;">
+                        <div style="border: 1px solid #E0E0E0; border-radius: 8px; padding: 15px; margin-bottom: 12px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                <div style="display: flex; align-items: center;">
+                                    <span style="font-size: 20px; margin-right: 10px;">🌏</span>
+                                    <div>
+                                        <div style="font-size: 15px; font-weight: 600;">Mainland Permit</div>
+                                        <div style="font-size: 12px; color: #666;">GD-HK-2024-001234</div>
+                                    </div>
+                                </div>
+                                <span style="background: #E8F5E8; color: #2E7D2E; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 500;">Active</span>
+                            </div>
+                            <div style="font-size: 12px; color: #666; margin-bottom: 10px;">
+                                Expires: Nov 30, 2025 (365 days remaining)
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <button style="background: #0066CC; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 11px;">View</button>
+                                <button style="background: #FF69B4; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 11px;">Edit</button>
+                            </div>
+                        </div>
+
+                        <div style="border: 2px solid #FFB800; border-radius: 8px; padding: 15px; background: #FFF9E6;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                <div style="display: flex; align-items: center;">
+                                    <span style="font-size: 20px; margin-right: 10px;">📋</span>
+                                    <div>
+                                        <div style="font-size: 15px; font-weight: 600;">Customs Permit</div>
+                                        <div style="font-size: 12px; color: #666;">CP-HK-2024-345</div>
+                                    </div>
+                                </div>
+                                <span style="background: #FFF3CD; color: #856404; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 500;">⚠️ Expiring Soon</span>
+                            </div>
+                            <div style="font-size: 12px; color: #856404; margin-bottom: 10px;">
+                                <strong>Expires in 12 days!</strong> Renewal required immediately.
+                            </div>
+                            <button style="background: #FFB800; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: 500;">Start Renewal Process</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <table class="spec-table">
+                <thead>
+                    <tr>
+                        <th>Property</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>vehicleId</td>
+                        <td>string</td>
+                        <td>ID of the vehicle to manage documents for</td>
+                    </tr>
+                    <tr>
+                        <td>documents</td>
+                        <td>Document[]</td>
+                        <td>Array of document objects</td>
+                    </tr>
+                    <tr>
+                        <td>onDocumentAdd</td>
+                        <td>(document: Document) => Promise&lt;void&gt;</td>
+                        <td>Handler for adding new documents</td>
+                    </tr>
+                    <tr>
+                        <td>onDocumentUpdate</td>
+                        <td>(id: string, updates: Partial&lt;Document&gt;) => Promise&lt;void&gt;</td>
+                        <td>Handler for updating existing documents</td>
+                    </tr>
+                    <tr>
+                        <td>onDocumentDelete</td>
+                        <td>(id: string) => Promise&lt;void&gt;</td>
+                        <td>Handler for deleting documents</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>3.2 DocumentUpload Component</h3>
+            
+            <div class="code-block">
+                <button class="copy-button">Copy</button>
+<span class="comment">// DocumentUpload.tsx - Advanced file upload with OCR</span>
+<span class="keyword">import</span> React, { useState, useCallback } <span class="keyword">from</span> <span class="string">'react'</span>;
+<span class="keyword">import</span> { <span class="function">useDropzone</span> } <span class="keyword">from</span> <span class="string">'react-dropzone'</span>;
+<span class="keyword">import</span> { <span class="function">useFileUpload</span> } <span class="keyword">from</span> <span class="string">'@/hooks/useFileUpload'</span>;
+
+<span class="keyword">interface</span> <span class="property">DocumentUploadProps</span> {
+  onUpload: (file: <span class="property">File</span>, ocrData?: <span class="property">OCRResult</span>) => <span class="keyword">void</span>;
+  acceptedTypes?: string[];
+  maxSize?: number;
+  enableOCR?: boolean;
+}
+
+<span class="keyword">export</span> <span class="keyword">const</span> <span class="function">DocumentUpload</span>: React.<span class="property">FC</span>&lt;<span class="property">DocumentUploadProps</span>&gt; = ({
+  onUpload,
+  acceptedTypes = [<span class="string">'image/*'</span>, <span class="string">'application/pdf'</span>],
+  maxSize = <span class="keyword">10</span> * <span class="keyword">1024</span> * <span class="keyword">1024</span>, <span class="comment">// 10MB</span>
+  enableOCR = <span class="keyword">true</span>
+}) => {
+  <span class="keyword">const</span> [uploadProgress, setUploadProgress] = <span class="function">useState</span>(<span class="keyword">0</span>);
+  <span class="keyword">const</span> [ocrProcessing, setOCRProcessing] = <span class="function">useState</span>(<span class="keyword">false</span>);
+  
+  <span class="keyword">const</span> { <span class="function">uploadFile</span>, <span class="function">extractTextFromImage</span> } = <span class="function">useFileUpload</span>();
+
+  <span class="keyword">const</span> <span class="function">processFile</span> = <span class="keyword">async</span> (file: <span class="property">File</span>) => {
+    <span class="keyword">try</span> {
+      <span class="comment">// Upload file</span>
+      <span class="keyword">const</span> uploadResult = <span class="keyword">await</span> <span class="function">uploadFile</span>(file, {
+        onProgress: <span class="function">setUploadProgress</span>
+      });
+
+      <span class="comment">// Extract text if OCR enabled and file is image</span>
+      <span class="keyword">let</span> ocrResult;
+      <span class="keyword">if</span> (enableOCR && file.type.<span class="function">startsWith</span>(<span class="string">'image/'</span>)) {
+        <span class="function">setOCRProcessing</span>(<span class="keyword">true</span>);
+        ocrResult = <span class="keyword">await</span> <span class="function">extractTextFromImage</span>(file);
+        <span class="function">setOCRProcessing</span>(<span class="keyword">false</span>);
+      }
+
+      <span class="function">onUpload</span>(file, ocrResult);
+    } <span class="keyword">catch</span> (error) {
+      console.<span class="function">error</span>(<span class="string">'Upload failed:'</span>, error);
+    }
+  };
+
+  <span class="keyword">const</span> { getRootProps, getInputProps, isDragActive } = <span class="function">useDropzone</span>({
+    onDrop: <span class="function">useCallback</span>(<span class="keyword">async</span> (acceptedFiles) => {
+      <span class="keyword">for</span> (<span class="keyword">const</span> file <span class="keyword">of</span> acceptedFiles) {
+        <span class="keyword">await</span> <span class="function">processFile</span>(file);
+      }
+    }, []),
+    accept: acceptedTypes.<span class="function">reduce</span>((acc, type) => ({ ...acc, [type]: [] }), {}),
+    maxSize,
+    multiple: <span class="keyword">false</span>
+  });
+
+  <span class="keyword">return</span> (
+    &lt;div className="<span class="string">space-y-4</span>"&gt;
+      &lt;div 
+        {...<span class="function">getRootProps</span>()}
+        className={<span class="function">cn</span>(
+          <span class="string">'border-2 border-dashed rounded-lg p-8 text-center transition-colors'</span>,
+          isDragActive ? <span class="string">'border-hot-pink bg-pink-tint'</span> : <span class="string">'border-gray-300 hover:border-hot-pink'</span>
+        )}
+      &gt;
+        &lt;input {...<span class="function">getInputProps</span>()} /&gt;
+        
+        &lt;div className="<span class="string">text-6xl mb-4</span>"&gt;
+          {ocrProcessing ? <span class="string">'🔍'</span> : isDragActive ? <span class="string">'📄'</span> : <span class="string">'📁'</span>}
+        &lt;/div&gt;
+        
+        &lt;p className="<span class="string">text-title-sm font-semibold mb-2</span>"&gt;
+          {ocrProcessing ? <span class="string">'Processing Document...'</span> : 
+           isDragActive ? <span class="string">'Drop document here'</span> : 
+           <span class="string">'Drag & drop or click to upload'</span>}
+        &lt;/p&gt;
+        
+        &lt;p className="<span class="string">text-body-sm text-gray-600 mb-4</span>"&gt;
+          Supports PDF, JPG, PNG (Max {<span class="function">formatFileSize</span>(maxSize)})
+        &lt;/p&gt;
+        
+        {enableOCR && (
+          &lt;p className="<span class="string">text-caption text-hot-pink</span>"&gt;
+            ✨ AI-powered text extraction included
+          &lt;/p&gt;
+        )}
+      &lt;/div&gt;
+
+      {uploadProgress > <span class="keyword">0</span> && uploadProgress < <span class="keyword">100</span> && (
+        &lt;<span class="property">UploadProgress</span> progress={uploadProgress} /&gt;
+      )}
+    &lt;/div&gt;
+  );
+};
+            </div>
+        </div>
+
+        <h2>🔔 4. Notification Components</h2>
+
+        <div class="component-section">
+            <h3>4.1 NotificationCenter Component</h3>
+            
+            <div class="variant-demo">
+                <div class="variant-item">
+                    <div style="background: #FFF5F5; border-left: 4px solid #FF4B4B; padding: 12px; margin-bottom: 10px; border-radius: 6px;">
+                        <div style="font-size: 14px; font-weight: 600; color: #FF4B4B; margin-bottom: 4px;">⚠️ Urgent: Document Expiring</div>
+                        <div style="font-size: 12px; color: #666;">Customs Permit expires in 12 days</div>
+                        <button style="background: #FF4B4B; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 11px; margin-top: 6px;">Renew Now</button>
+                    </div>
+                    <div style="text-align: center; font-weight: 600; color: #FF4B4B;">Urgent Alert</div>
+                </div>
+
+                <div class="variant-item">
+                    <div style="background: #FFF3E0; border-left: 4px solid #FFB800; padding: 12px; margin-bottom: 10px; border-radius: 6px;">
+                        <div style="font-size: 14px; font-weight: 600; color: #FFB800; margin-bottom: 4px;">📅 Maintenance Reminder</div>
+                        <div style="font-size: 12px; color: #666;">Service due in 5 days</div>
+                        <button style="background: #0066CC; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 11px; margin-top: 6px;">Schedule</button>
+                    </div>
+                    <div style="text-align: center; font-weight: 600; color: #FFB800;">Warning Alert</div>
+                </div>
+
+                <div class="variant-item">
+                    <div style="background: #F0F9FF; border-left: 4px solid #0066CC; padding: 12px; margin-bottom: 10px; border-radius: 6px;">
+                        <div style="font-size: 14px; font-weight: 600; color: #0066CC; margin-bottom: 4px;">ℹ️ System Update</div>
+                        <div style="font-size: 12px; color: #666;">New features available</div>
+                        <button style="background: #0066CC; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 11px; margin-top: 6px;">Learn More</button>
+                    </div>
+                    <div style="text-align: center; font-weight: 600; color: #0066CC;">Info Alert</div>
+                </div>
+
+                <div class="variant-item">
+                    <div style="background: #F0FDF4; border-left: 4px solid #00D563; padding: 12px; margin-bottom: 10px; border-radius: 6px;">
+                        <div style="font-size: 14px; font-weight: 600; color: #00D563; margin-bottom: 4px;">✅ Success</div>
+                        <div style="font-size: 12px; color: #666;">Document renewed successfully</div>
+                    </div>
+                    <div style="text-align: center; font-weight: 600; color: #00D563;">Success Alert</div>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <button class="copy-button">Copy</button>
+<span class="comment">// NotificationCenter.tsx</span>
+<span class="keyword">import</span> React, { useState, useEffect } <span class="keyword">from</span> <span class="string">'react'</span>;
+<span class="keyword">import</span> { <span class="function">useNotifications</span> } <span class="keyword">from</span> <span class="string">'@/hooks/useNotifications'</span>;
+<span class="keyword">import</span> { <span class="property">Notification</span>, <span class="property">NotificationType</span> } <span class="keyword">from</span> <span class="string">'@/types/notification'</span>;
+
+<span class="keyword">export</span> <span class="keyword">const</span> <span class="function">NotificationCenter</span> = () => {
+  <span class="keyword">const</span> { 
+    notifications, 
+    markAsRead, 
+    markAllAsRead, 
+    deleteNotification,
+    filter,
+    setFilter
+  } = <span class="function">useNotifications</span>();
+  
+  <span class="keyword">const</span> [selectedType, setSelectedType] = <span class="function">useState</span>&lt;<span class="property">NotificationType</span> | <span class="string">'all'</span>&gt;(<span class="string">'all'</span>);
+
+  <span class="keyword">const</span> filteredNotifications = notifications.<span class="function">filter</span>(notification => 
+    selectedType === <span class="string">'all'</span> || notification.type === selectedType
+  );
+
+  <span class="keyword">const</span> unreadCount = notifications.<span class="function">filter</span>(n => !n.read).<span class="property">length</span>;
+
+  <span class="keyword">return</span> (
+    &lt;div className="<span class="string">bg-white rounded-lg border border-gray-200 overflow-hidden</span>"&gt;
+      &lt;div className="<span class="string">flex items-center justify-between p-4 border-b border-gray-200</span>"&gt;
+        &lt;h3 className="<span class="string">text-title-lg font-semibold text-charcoal</span>"&gt;
+          Notifications {unreadCount > <span class="keyword">0</span> && (
+            &lt;span className="<span class="string">ml-2 px-2 py-1 bg-hot-pink text-white rounded-full text-caption font-medium</span>"&gt;
+              {unreadCount}
+            &lt;/span&gt;
+          )}
+        &lt;/h3&gt;
+        
+        &lt;div className="<span class="string">flex gap-2</span>"&gt;
+          &lt;button 
+            onClick={<span class="function">markAllAsRead</span>}
+            className="<span class="string">px-3 py-1 text-caption text-gray-600 hover:text-hot-pink transition-colors</span>"
+            disabled={unreadCount === <span class="keyword">0</span>}
+          &gt;
+            Mark All Read
+          &lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;<span class="property">NotificationFilters</span> 
+        selectedType={selectedType}
+        onTypeChange={<span class="function">setSelectedType</span>}
+        counts={<span class="function">getNotificationCounts</span>(notifications)}
+      /&gt;
+
+      &lt;div className="<span class="string">max-h-96 overflow-y-auto</span>"&gt;
+        {filteredNotifications.<span class="property">length</span> === <span class="keyword">0</span> ? (
+          &lt;<span class="property">EmptyState</span> type={selectedType} /&gt;
+        ) : (
+          filteredNotifications.<span class="function">map</span>(notification => (
+            &lt;<span class="property">NotificationItem</span>
+              key={notification.id}
+              notification={notification}
+              onRead={() => <span class="function">markAsRead</span>(notification.id)}
+              onDelete={() => <span class="function">deleteNotification</span>(notification.id)}
+            /&gt;
+          ))
+        )}
+      &lt;/div&gt;
+    &lt;/div&gt;
+  );
+};
+
+<span class="keyword">const</span> <span class="function">NotificationItem</span> = ({ notification, onRead, onDelete }) => (
+  &lt;div className={<span class="function">cn</span>(
+    <span class="string">'p-4 border-b border-gray-100 transition-colors hover:bg-gray-50'</span>,
+    !notification.read && <span class="string">'bg-blue-50 border-l-4 border-l-hot-pink'</span>
+  )}&gt;
+    &lt;div className="<span class="string">flex items-start justify-between</span>"&gt;
+      &lt;div className="<span class="string">flex-1</span>"&gt;
+        &lt;div className="<span class="string">flex items-center gap-2 mb-1</span>"&gt;
+          &lt;span className="<span class="string">text-lg</span>"&gt;{<span class="function">getNotificationIcon</span>(notification.type)}&lt;/span&gt;
+          &lt;h4 className="<span class="string">text-body-md font-semibold text-charcoal</span>"&gt;
+            {notification.title}
+          &lt;/h4&gt;
+          {!notification.read && (
+            &lt;div className="<span class="string">w-2 h-2 bg-hot-pink rounded-full</span>" /&gt;
+          )}
+        &lt;/div&gt;
+        
+        &lt;p className="<span class="string">text-body-sm text-gray-600 mb-2</span>"&gt;
+          {notification.message}
+        &lt;/p&gt;
+        
+        &lt;div className="<span class="string">flex items-center gap-4</span>"&gt;
+          &lt;span className="<span class="string">text-caption text-gray-500</span>"&gt;
+            {<span class="function">formatRelativeTime</span>(notification.createdAt)}
+          &lt;/span&gt;
+          
+          {notification.actions?.length > <span class="keyword">0</span> && (
+            &lt;div className="<span class="string">flex gap-2</span>"&gt;
+              {notification.actions.<span class="function">map</span>((action, index) => (
+                &lt;button
+                  key={index}
+                  onClick={action.handler}
+                  className={<span class="function">cn</span>(
+                    <span class="string">'px-2 py-1 rounded text-caption font-medium transition-colors'</span>,
+                    action.variant === <span class="string">'primary'</span> 
+                      ? <span class="string">'bg-hot-pink text-white hover:bg-deep-pink'</span>
+                      : <span class="string">'bg-gray-100 text-gray-600 hover:bg-gray-200'</span>
+                  )}
+                &gt;
+                  {action.label}
+                &lt;/button&gt;
+              ))}
+            &lt;/div&gt;
+          )}
+        &lt;/div&gt;
+      &lt;/div&gt;
+      
+      &lt;div className="<span class="string">flex gap-1 ml-4</span>"&gt;
+        {!notification.read && (
+          &lt;button
+            onClick={<span class="function">onRead</span>}
+            className="<span class="string">p-1 text-gray-400 hover:text-hot-pink transition-colors</span>"
+            title="<span class="string">Mark as read</span>"
+          &gt;
+            ✓
+          &lt;/button&gt;
+        )}
+        &lt;button
+          onClick={<span class="function">onDelete</span>}
+          className="<span class="string">p-1 text-gray-400 hover:text-error-red transition-colors</span>"
+          title="<span class="string">Delete notification</span>"
+        &gt;
+          ×
+        &lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+);
+            </div>
+        </div>
+
+        <h2>📊 5. Data Types & Interfaces</h2>
+
+        <div class="component-section">
+            <h3>5.1 Core Type Definitions</h3>
+            
+            <div class="code-block">
+                <button class="copy-button">Copy</button>
+<span class="comment">// types/vehicle.ts</span>
+<span class="keyword">export interface</span> <span class="property">VehicleInfo</span> {
+  id: string;
+  make: string;
+  model: string;
+  year: number;
+  color: string;
+  licensePlate: string;
+  vin: string;
+  category: <span class="property">VehicleCategory</span>;
+  capacity: {
+    passengers: number;
+    luggage: number;
+  };
+  features: string[];
+  photos: <span class="property">VehiclePhoto</span>[];
+  status: <span class="property">VehicleStatus</span>;
+  mileage: number;
+  fuelType: <span class="property">FuelType</span>;
+  documents: <span class="property">Document</span>[];
+  maintenanceRecords: <span class="property">MaintenanceRecord</span>[];
+  createdAt: <span class="property">Date</span>;
+  updatedAt: <span class="property">Date</span>;
+}
+
+<span class="keyword">export type</span> <span class="property">VehicleCategory</span> = <span class="string">'economy'</span> | <span class="string">'business'</span> | <span class="string">'executive'</span> | <span class="string">'luxury'</span>;
+<span class="keyword">export type</span> <span class="property">VehicleStatus</span> = <span class="string">'active'</span> | <span class="string">'maintenance'</span> | <span class="string">'inactive'</span>;
+<span class="keyword">export type</span> <span class="property">FuelType</span> = <span class="string">'petrol'</span> | <span class="string">'hybrid'</span> | <span class="string">'electric'</span>;
+
+<span class="keyword">export interface</span> <span class="property">VehiclePhoto</span> {
+  id: string;
+  url: string;
+  type: <span class="property">PhotoType</span>;
+  caption?: string;
+  uploadedAt: <span class="property">Date</span>;
+}
+
+<span class="keyword">export type</span> <span class="property">PhotoType</span> = <span class="string">'front'</span> | <span class="string">'rear'</span> | <span class="string">'side_driver'</span> | <span class="string">'side_passenger'</span> | <span class="string">'interior'</span> | <span class="string">'other'</span>;
+
+<span class="comment">// types/document.ts</span>
+<span class="keyword">export interface</span> <span class="property">Document</span> {
+  id: string;
+  vehicleId: string;
+  type: <span class="property">DocumentType</span>;
+  number: string;
+  issuer: string;
+  issueDate: <span class="property">Date</span>;
+  expiryDate: <span class="property">Date</span>;
+  status: <span class="property">DocumentStatus</span>;
+  fileUrl: string;
+  validRoutes?: string[];
+  renewalInfo?: <span class="property">RenewalInfo</span>;
+  ocrData?: <span class="property">OCRResult</span>;
+  createdAt: <span class="property">Date</span>;
+  updatedAt: <span class="property">Date</span>;
+}
+
+<span class="keyword">export type</span> <span class="property">DocumentType</span> = 
+  | <span class="string">'mainland_permit'</span> 
+  | <span class="string">'international_permit'</span> 
+  | <span class="string">'commercial_license'</span> 
+  | <span class="string">'customs_permit'</span>
+  | <span class="string">'insurance_certificate'</span>
+  | <span class="string">'registration'</span>
+  | <span class="string">'inspection_certificate'</span>;
+
+<span class="keyword">export type</span> <span class="property">DocumentStatus</span> = <span class="string">'active'</span> | <span class="string">'expiring'</span> | <span class="string">'expired'</span> | <span class="string">'renewal_required'</span>;
+
+<span class="keyword">export interface</span> <span class="property">RenewalInfo</span> {
+  documentsRequired: string[];
+  estimatedCost: number;
+  processingTime: string;
+  renewalUrl?: string;
+}
+
+<span class="keyword">export interface</span> <span class="property">OCRResult</span> {
+  extractedText: string;
+  confidence: number;
+  detectedFields: Record&lt;string, string&gt;;
+  suggestions: <span class="property">FieldSuggestion</span>[];
+}
+
+<span class="comment">// types/notification.ts</span>
+<span class="keyword">export interface</span> <span class="property">Notification</span> {
+  id: string;
+  userId: string;
+  type: <span class="property">NotificationType</span>;
+  priority: <span class="property">NotificationPriority</span>;
+  title: string;
+  message: string;
+  data?: Record&lt;string, <span class="keyword">any</span>&gt;;
+  actions?: <span class="property">NotificationAction</span>[];
+  read: boolean;
+  channels: <span class="property">NotificationChannel</span>[];
+  scheduledFor?: <span class="property">Date</span>;
+  expiresAt?: <span class="property">Date</span>;
+  createdAt: <span class="property">Date</span>;
+  readAt?: <span class="property">Date</span>;
+}
+
+<span class="keyword">export type</span> <span class="property">NotificationType</span> = 
+  | <span class="string">'document_expiring'</span> 
+  | <span class="string">'document_expired'</span>
+  | <span class="string">'maintenance_due'</span> 
+  | <span class="string">'insurance_expiring'</span>
+  | <span class="string">'system_update'</span>
+  | <span class="string">'feature_announcement'</span>;
+
+<span class="keyword">export type</span> <span class="property">NotificationPriority</span> = <span class="string">'low'</span> | <span class="string">'medium'</span> | <span class="string">'high'</span> | <span class="string">'urgent'</span>;
+<span class="keyword">export type</span> <span class="property">NotificationChannel</span> = <span class="string">'push'</span> | <span class="string">'email'</span> | <span class="string">'sms'</span> | <span class="string">'dashboard'</span>;
+
+<span class="keyword">export interface</span> <span class="property">NotificationAction</span> {
+  id: string;
+  label: string;
+  variant: <span class="string">'primary'</span> | <span class="string">'secondary'</span>;
+  handler: () => <span class="keyword">void</span>;
+}
+            </div>
+        </div>
+
+        <h2>🔗 6. API Endpoints Specification</h2>
+
+        <div class="component-section">
+            <h3>6.1 Vehicle Management APIs</h3>
+
+            <div class="api-endpoint">
+                <div><span class="method">GET</span><code>/api/vehicles</code></div>
+                <p>Get all vehicles for the authenticated driver</p>
+                <strong>Query Parameters:</strong>
+                <ul>
+                    <li><code>status</code> - Filter by vehicle status</li>
+                    <li><code>search</code> - Search by make, model, or license plate</li>
+                    <li><code>limit</code> - Number of results per page</li>
+                    <li><code>offset</code> - Pagination offset</li>
+                </ul>
+            </div>
+
+            <div class="api-endpoint">
+                <div><span class="method post">POST</span><code>/api/vehicles</code></div>
+                <p>Create a new vehicle</p>
+                <strong>Request Body:</strong>
+                <pre style="background: #F8F9FA; padding: 10px; border-radius: 4px; margin-top: 8px;">
+{
+  "make": "BMW",
+  "model": "X5",
+  "year": 2023,
+  "color": "Space Gray",
+  "licensePlate": "HK-BC-1234",
+  "vin": "WBAFR9C55BC123456",
+  "category": "executive",
+  "capacity": {
+    "passengers": 6,
+    "luggage": 5
+  },
+  "features": ["leather_interior", "gps_navigation"],
+  "fuelType": "hybrid"
+}
+                </pre>
+            </div>
+
+            <div class="api-endpoint">
+                <div><span class="method put">PUT</span><code>/api/vehicles/[id]</code></div>
+                <p>Update vehicle information</p>
+            </div>
+
+            <div class="api-endpoint">
+                <div><span class="method delete">DELETE</span><code>/api/vehicles/[id]</code></div>
+                <p>Delete a vehicle (soft delete)</p>
+            </div>
+
+            <h3>6.2 Document Management APIs</h3>
+
+            <div class="api-endpoint">
+                <div><span class="method">GET</span><code>/api/vehicles/[id]/documents</code></div>
+                <p>Get all documents for a specific vehicle</p>
+            </div>
+
+            <div class="api-endpoint">
+                <div><span class="method post">POST</span><code>/api/vehicles/[id]/documents</code></div>
+                <p>Add a new document to a vehicle</p>
+                <strong>Content-Type:</strong> <code>multipart/form-data</code>
+            </div>
+
+            <div class="api-endpoint">
+                <div><span class="method post">POST</span><code>/api/documents/ocr</code></div>
+                <p>Extract text from document image using OCR</p>
+                <strong>Features:</strong>
+                <ul>
+                    <li>Automatic field detection (permit numbers, dates, etc.)</li>
+                    <li>Confidence scoring for extracted data</li>
+                    <li>Support for multiple languages</li>
+                    <li>Document type classification</li>
+                </ul>
+            </div>
+
+            <h3>6.3 Notification APIs</h3>
+
+            <div class="api-endpoint">
+                <div><span class="method">GET</span><code>/api/notifications</code></div>
+                <p>Get notifications for the authenticated user</p>
+                <strong>Query Parameters:</strong>
+                <ul>
+                    <li><code>type</code> - Filter by notification type</li>
+                    <li><code>read</code> - Filter by read status</li>
+                    <li><code>priority</code> - Filter by priority level</li>
+                </ul>
+            </div>
+
+            <div class="api-endpoint">
+                <div><span class="method put">PUT</span><code>/api/notifications/[id]/read</code></div>
+                <p>Mark a notification as read</p>
+            </div>
+
+            <div class="api-endpoint">
+                <div><span class="method post">POST</span><code>/api/notifications/preferences</code></div>
+                <p>Update notification preferences</p>
+                <strong>Request Body:</strong>
+                <pre style="background: #F8F9FA; padding: 10px; border-radius: 4px; margin-top: 8px;">
+{
+  "channels": {
+    "push": true,
+    "email": true,
+    "sms": false,
+    "dashboard": true
+  },
+  "timing": {
+    "documentExpiry": 30,
+    "maintenanceReminder": 14,
+    "insuranceAlert": 45,
+    "quietHours": {
+      "start": "22:00",
+      "end": "08:00"
+    }
+  }
+}
+                </pre>
+            </div>
+        </div>
+
+        <h2>📱 7. Responsive Design Specifications</h2>
+
+        <div class="component-section">
+            <h3>7.1 Breakpoint System</h3>
+            
+            <div class="responsive-demo">
+                <div class="device">
+                    <div class="screen">📱 Mobile</div>
+                    <div><strong>320px - 767px</strong></div>
+                    <ul style="font-size: 12px; text-align: left;">
+                        <li>Single column layouts</li>
+                        <li>Stack form fields vertically</li>
+                        <li>Collapsible navigation</li>
+                        <li>Touch-optimized buttons (44px min)</li>
+                        <li>Bottom sheet modals</li>
+                    </ul>
+                </div>
+                
+                <div class="device">
+                    <div class="screen">💻 Tablet</div>
+                    <div><strong>768px - 1023px</strong></div>
+                    <ul style="font-size: 12px; text-align: left;">
+                        <li>Two column layouts</li>
+                        <li>Side-by-side form fields</li>
+                        <li>Sidebar navigation</li>
+                        <li>Modal dialogs</li>
+                        <li>Grid-based vehicle cards</li>
+                    </ul>
+                </div>
+                
+                <div class="device">
+                    <div class="screen">🖥️ Desktop</div>
+                    <div><strong>1024px+</strong></div>
+                    <ul style="font-size: 12px; text-align: left;">
+                        <li>Multi-column layouts</li>
+                        <li>Horizontal form sections</li>
+                        <li>Persistent navigation</li>
+                        <li>Large modal dialogs</li>
+                        <li>Data-dense tables</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <button class="copy-button">Copy</button>
+<span class="comment">// Responsive component example</span>
+<span class="keyword">const</span> <span class="function">VehicleList</span> = () => {
+  <span class="keyword">const</span> [isMobile, setIsMobile] = <span class="function">useState</span>(<span class="keyword">false</span>);
+  
+  <span class="function">useEffect</span>(() => {
+    <span class="keyword">const</span> <span class="function">checkMobile</span> = () => {
+      <span class="function">setIsMobile</span>(window.innerWidth < <span class="keyword">768</span>);
+    };
+    
+    <span class="function">checkMobile</span>();
+    window.<span class="function">addEventListener</span>(<span class="string">'resize'</span>, <span class="function">checkMobile</span>);
+    <span class="keyword">return</span> () => window.<span class="function">removeEventListener</span>(<span class="string">'resize'</span>, <span class="function">checkMobile</span>);
+  }, []);
+
+  <span class="keyword">return</span> (
+    &lt;div className={<span class="function">cn</span>(
+      <span class="string">'grid gap-4'</span>,
+      isMobile 
+        ? <span class="string">'grid-cols-1'</span> 
+        : <span class="string">'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'</span>
+    )}&gt;
+      {vehicles.<span class="function">map</span>(vehicle => (
+        &lt;<span class="property">VehicleCard</span> 
+          key={vehicle.id}
+          vehicle={vehicle}
+          variant={isMobile ? <span class="string">'compact'</span> : <span class="string">'default'</span>}
+        /&gt;
+      ))}
+    &lt;/div&gt;
+  );
+};
+            </div>
+        </div>
+
+        <h2>♿ 8. Accessibility Implementation</h2>
+
+        <div class="component-section">
+            <h3>8.1 WCAG 2.1 AA Compliance Checklist</h3>
+            
+            <table class="spec-table">
+                <thead>
+                    <tr>
+                        <th>Requirement</th>
+                        <th>Implementation</th>
+                        <th>Testing Method</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Keyboard Navigation</td>
+                        <td>All interactive elements have tabIndex, onKeyDown handlers</td>
+                        <td>Navigate entire interface using only keyboard</td>
+                    </tr>
+                    <tr>
+                        <td>Screen Reader Support</td>
+                        <td>Comprehensive ARIA labels, roles, and descriptions</td>
+                        <td>Test with NVDA, JAWS, or VoiceOver</td>
+                    </tr>
+                    <tr>
+                        <td>Color Contrast</td>
+                        <td>Minimum 4.5:1 ratio for normal text, 3:1 for large text</td>
+                        <td>Use WebAIM Contrast Checker tool</td>
+                    </tr>
+                    <tr>
+                        <td>Focus Management</td>
+                        <td>Visible focus indicators, logical focus flow</td>
+                        <td>Tab through interface, verify focus visibility</td>
+                    </tr>
+                    <tr>
+                        <td>Alternative Text</td>
+                        <td>Descriptive alt text for images, icons with labels</td>
+                        <td>Screen reader announces image content</td>
+                    </tr>
+                    <tr>
+                        <td>Form Labels</td>
+                        <td>All form controls have associated labels</td>
+                        <td>Click labels to focus corresponding inputs</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="accessibility-note">
+                <strong>🔍 Accessibility Testing Tools:</strong>
+                <ul style="margin-top: 0.5rem;">
+                    <li><strong>Automated:</strong> axe-core, Lighthouse accessibility audit</li>
+                    <li><strong>Manual:</strong> Keyboard navigation, screen reader testing</li>
+                    <li><strong>Color:</strong> Colour Contrast Analyser, WebAIM tools</li>
+                    <li><strong>User Testing:</strong> Real users with disabilities</li>
+                </ul>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin: 3rem 0; color: #616161; background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.08);">
+            <h3 style="color: #FF1493; margin-bottom: 1rem;">🚀 Next Steps for Implementation</h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
+                <div style="background: #E8F5E8; padding: 1.5rem; border-radius: 8px; text-align: left;">
+                    <h4 style="color: #2E7D2E; margin-bottom: 0.5rem;">Phase 1: Foundation</h4>
+                    <ul style="font-size: 14px; color: #2E7D2E;">
+                        <li>Set up component structure</li>
+                        <li>Implement basic vehicle CRUD</li>
+                        <li>Create form validation schemas</li>
+                        <li>Build responsive layouts</li>
+                    </ul>
+                </div>
+                
+                <div style="background: #E3F2FD; padding: 1.5rem; border-radius: 8px; text-align: left;">
+                    <h4 style="color: #1565C0; margin-bottom: 0.5rem;">Phase 2: Advanced Features</h4>
+                    <ul style="font-size: 14px; color: #1565C0;">
+                        <li>Document management system</li>
+                        <li>File upload with OCR</li>
+                        <li>Real-time notifications</li>
+                        <li>Mobile camera integration</li>
+                    </ul>
+                </div>
+                
+                <div style="background: #F3E5F5; padding: 1.5rem; border-radius: 8px; text-align: left;">
+                    <h4 style="color: #7B1FA2; margin-bottom: 0.5rem;">Phase 3: Polish</h4>
+                    <ul style="font-size: 14px; color: #7B1FA2;">
+                        <li>Accessibility improvements</li>
+                        <li>Performance optimization</li>
+                        <li>User experience testing</li>
+                        <li>Analytics integration</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <p style="margin-top: 1.5rem; font-style: italic;">
+                These detailed component specifications provide everything needed to implement a production-ready vehicle management system with excellent user experience, accessibility compliance, and maintainable code architecture.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

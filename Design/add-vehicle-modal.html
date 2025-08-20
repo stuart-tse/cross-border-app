@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Vehicle Modal - Cross Border Transportation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'charcoal': '#171A20',
+                        'chinese-red': '#DC143C',
+                        'success-green': '#10B981',
+                        'electric-blue': '#0070F3',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .text-charcoal { color: #171A20; }
+        .bg-charcoal { background-color: #171A20; }
+        .text-chinese-red { color: #DC143C; }
+        .bg-chinese-red { background-color: #DC143C; }
+        .text-success-green { color: #10B981; }
+        .bg-success-green { background-color: #10B981; }
+        .text-electric-blue { color: #0070F3; }
+        .bg-electric-blue { background-color: #0070F3; }
+    </style>
+</head>
+<body class="bg-gray-100 p-8">
+
+<!-- Add Vehicle Modal -->
+<div class="fixed inset-0 z-50 flex items-center justify-center">
+  <!-- Backdrop -->
+  <div class="fixed inset-0 bg-black/50 backdrop-blur-sm"></div>
+  
+  <!-- Modal Container -->
+  <div class="relative z-50 w-full max-w-4xl mx-4 bg-white rounded-lg shadow-xl max-h-[90vh] overflow-hidden">
+    <!-- Close Button -->
+    <button class="absolute top-4 right-4 z-10 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-[#FF69B4] focus:ring-offset-2">
+      <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+      <span class="sr-only">Close</span>
+    </button>
+
+    <!-- Modal Content -->
+    <div class="overflow-y-auto max-h-[90vh]">
+      <!-- Header -->
+      <div class="px-6 pt-6 pb-0">
+        <div class="flex flex-col space-y-1.5">
+          <h2 class="text-2xl font-semibold text-charcoal leading-none tracking-tight">Add New Vehicle</h2>
+          <p class="text-sm text-gray-600">Register a new vehicle for cross-border transportation</p>
+        </div>
+        
+        <!-- Progress Indicator -->
+        <div class="mt-6 mb-4">
+          <div class="flex items-center justify-between text-sm">
+            <span class="text-[#FF69B4] font-medium">Step 1 of 5</span>
+            <span class="text-gray-500">Basic Information</span>
+          </div>
+          <div class="mt-2 w-full bg-gray-200 rounded-full h-2">
+            <div class="bg-[#FF69B4] h-2 rounded-full transition-all duration-300" style="width: 20%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form Content -->
+      <form class="px-6 pb-6 space-y-8">
+        <!-- Step 1: Basic Vehicle Information -->
+        <div class="space-y-6" id="step-1">
+          <div class="bg-gray-50 rounded-lg p-4">
+            <h3 class="text-lg font-semibold text-charcoal mb-4 flex items-center">
+              <svg class="h-5 w-5 mr-2 text-[#FF69B4]" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+              </svg>
+              Basic Vehicle Information
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <!-- Make -->
+              <div class="space-y-2">
+                <label class="block text-sm font-medium text-charcoal">Vehicle Make *</label>
+                <input 
+                  type="text" 
+                  name="make" 
+                  required
+                  placeholder="e.g., Toyota, Ford, BMW"
+                  class="flex h-10 w-full rounded-sm border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#FF69B4] focus:border-[#FF69B4] disabled:cursor-not-allowed disabled:opacity-50 placeholder:text-gray-400 min-h-[44px]"
+                />
+              </div>
+
+              <!-- Model -->
+              <div class="space-y-2">
+                <label class="block text-sm font-medium text-charcoal">Vehicle Model *</label>
+                <input 
+                  type="text" 
+                  name="model" 
+                  required
+                  placeholder="e.g., Camry, F-150, X3"
+                  class="flex h-10 w-full rounded-sm border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#FF69B4] focus:border-[#FF69B4] disabled:cursor-not-allowed disabled:opacity-50 placeholder:text-gray-400 min-h-[44px]"
+                />
+              </div>
+
+              <!-- Year -->
+              <div class="space-y-2">
+                <label class="block text-sm font-medium text-charcoal">Year *</label>
+                <input 
+                  type="number" 
+                  name="year" 
+                  required
+                  min="1900" 
+                  max="2030"
+                  placeholder="2024"
+                  class="flex h-10 w-full rounded-sm border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#FF69B4] focus:border-[#FF69B4] disabled:cursor-not-allowed disabled:opacity-50 placeholder:text-gray-400 min-h-[44px]"
+                />
+              </div>
+
+              <!-- Color -->
+              <div class="space-y-2">
+                <label class="block text-sm font-medium text-charcoal">Color *</label>
+                <div class="relative">
+                  <select 
+                    name="color" 
+                    required
+                    class="flex h-10 w-full rounded-sm border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#FF69B4] focus:border-[#FF69B4] disabled:cursor-not-allowed disabled:opacity-50 min-h-[44px] appearance-none"
+                  >
+                    <option value="">Select color</option>
+                    <option value="Black">Black</option>
+                    <option value="White">White</option>
+                    <option value="Silver">Silver</option>
+                    <option value="Gray">Gray</option>
+                    <option value="Blue">Blue</option>
+                    <option value="Red">Red</option>
+                    <option value="Green">Green</option>
+                    <option value="Gold">Gold</option>
+                    <option value="Brown">Brown</option>
+                    <option value="Other">Other</option>
+                  </select>
+                  <svg class="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
+
+              <!-- License Plate -->
+              <div class="space-y-2">
+                <label class="block text-sm font-medium text-charcoal">License Plate *</label>
+                <input 
+                  type="text" 
+                  name="plateNumber" 
+                  required
+                  placeholder="ABC-1234"
+                  class="flex h-10 w-full rounded-sm border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#FF69B4] focus:border-[#FF69B4] disabled:cursor-not-allowed disabled:opacity-50 placeholder:text-gray-400 min-h-[44px] uppercase"
+                />
+              </div>
+
+              <!-- VIN -->
+              <div class="space-y-2">
+                <label class="block text-sm font-medium text-charcoal">VIN (Optional)</label>
+                <input 
+                  type="text" 
+                  name="vin" 
+                  placeholder="17-character VIN"
+                  maxlength="17"
+                  class="flex h-10 w-full rounded-sm border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#FF69B4] focus:border-[#FF69B4] disabled:cursor-not-allowed disabled:opacity-50 placeholder:text-gray-400 min-h-[44px] uppercase"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Vehicle Type and Capacity -->
+          <div class="bg-gray-50 rounded-lg p-4">
+            <h3 class="text-lg font-semibold text-charcoal mb-4 flex items-center">
+              <svg class="h-5 w-5 mr-2 text-[#FF69B4]" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M2 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 002 2H4a2 2 0 01-2-2V5zm3 1h6v4H5V6zm6 6H5v2h6v-2z" clip-rule="evenodd"/>
+              </svg>
+              Vehicle Classification
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <!-- Vehicle Type -->
+              <div class="space-y-2">
+                <label class="block text-sm font-medium text-charcoal">Vehicle Type *</label>
+                <div class="relative">
+                  <select 
+                    name="vehicleType" 
+                    required
+                    class="flex h-10 w-full rounded-sm border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#FF69B4] focus:border-[#FF69B4] disabled:cursor-not-allowed disabled:opacity-50 min-h-[44px] appearance-none"
+                  >
+                    <option value="">Select type</option>
+                    <option value="BUSINESS">Business</option>
+                    <option value="EXECUTIVE">Executive</option>
+                    <option value="LUXURY">Luxury</option>
+                    <option value="SUV">SUV</option>
+                    <option value="VAN">Van</option>
+                  </select>
+                  <svg class="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
+
+              <!-- Capacity -->
+              <div class="space-y-2">
+                <label class="block text-sm font-medium text-charcoal">Passenger Capacity *</label>
+                <input 
+                  type="number" 
+                  name="capacity" 
+                  required
+                  min="1" 
+                  max="50"
+                  placeholder="4"
+                  class="flex h-10 w-full rounded-sm border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#FF69B4] focus:border-[#FF69B4] disabled:cursor-not-allowed disabled:opacity-50 placeholder:text-gray-400 min-h-[44px]"
+                />
+              </div>
+
+              <!-- Fuel Type -->
+              <div class="space-y-2">
+                <label class="block text-sm font-medium text-charcoal">Fuel Type</label>
+                <div class="relative">
+                  <select 
+                    name="fuelType"
+                    class="flex h-10 w-full rounded-sm border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#FF69B4] focus:border-[#FF69B4] disabled:cursor-not-allowed disabled:opacity-50 min-h-[44px] appearance-none"
+                  >
+                    <option value="">Select fuel type</option>
+                    <option value="Gasoline">Gasoline</option>
+                    <option value="Diesel">Diesel</option>
+                    <option value="Hybrid">Hybrid</option>
+                    <option value="Electric">Electric</option>
+                    <option value="CNG">CNG</option>
+                    <option value="LPG">LPG</option>
+                  </select>
+                  <svg class="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Features and Equipment -->
+          <div class="bg-gray-50 rounded-lg p-4">
+            <h3 class="text-lg font-semibold text-charcoal mb-4 flex items-center">
+              <svg class="h-5 w-5 mr-2 text-[#FF69B4]" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+              </svg>
+              Features & Equipment
+            </h3>
+
+            <!-- Vehicle Features -->
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-charcoal mb-2">Vehicle Features</label>
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                  <label class="flex items-center space-x-2 text-sm">
+                    <input type="checkbox" name="features" value="Air Conditioning" class="w-4 h-4 text-[#FF69B4] border-gray-300 rounded focus:ring-[#FF69B4]" />
+                    <span>Air Conditioning</span>
+                  </label>
+                  <label class="flex items-center space-x-2 text-sm">
+                    <input type="checkbox" name="features" value="WiFi" class="w-4 h-4 text-[#FF69B4] border-gray-300 rounded focus:ring-[#FF69B4]" />
+                    <span>WiFi</span>
+                  </label>
+                  <label class="flex items-center space-x-2 text-sm">
+                    <input type="checkbox" name="features" value="GPS Navigation" class="w-4 h-4 text-[#FF69B4] border-gray-300 rounded focus:ring-[#FF69B4]" />
+                    <span>GPS Navigation</span>
+                  </label>
+                  <label class="flex items-center space-x-2 text-sm">
+                    <input type="checkbox" name="features" value="Bluetooth" class="w-4 h-4 text-[#FF69B4] border-gray-300 rounded focus:ring-[#FF69B4]" />
+                    <span>Bluetooth</span>
+                  </label>
+                  <label class="flex items-center space-x-2 text-sm">
+                    <input type="checkbox" name="features" value="USB Charging" class="w-4 h-4 text-[#FF69B4] border-gray-300 rounded focus:ring-[#FF69B4]" />
+                    <span>USB Charging</span>
+                  </label>
+                  <label class="flex items-center space-x-2 text-sm">
+                    <input type="checkbox" name="features" value="Premium Sound" class="w-4 h-4 text-[#FF69B4] border-gray-300 rounded focus:ring-[#FF69B4]" />
+                    <span>Premium Sound</span>
+                  </label>
+                  <label class="flex items-center space-x-2 text-sm">
+                    <input type="checkbox" name="features" value="Leather Seats" class="w-4 h-4 text-[#FF69B4] border-gray-300 rounded focus:ring-[#FF69B4]" />
+                    <span>Leather Seats</span>
+                  </label>
+                  <label class="flex items-center space-x-2 text-sm">
+                    <input type="checkbox" name="features" value="Tinted Windows" class="w-4 h-4 text-[#FF69B4] border-gray-300 rounded focus:ring-[#FF69B4]" />
+                    <span>Tinted Windows</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Special Equipment -->
+              <div>
+                <label class="block text-sm font-medium text-charcoal mb-2">Special Equipment</label>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                  <label class="flex items-center space-x-2 text-sm">
+                    <input type="checkbox" name="specialEquipment" value="Child Safety Seats" class="w-4 h-4 text-[#FF69B4] border-gray-300 rounded focus:ring-[#FF69B4]" />
+                    <span>Child Safety Seats</span>
+                  </label>
+                  <label class="flex items-center space-x-2 text-sm">
+                    <input type="checkbox" name="specialEquipment" value="Wheelchair Access" class="w-4 h-4 text-[#FF69B4] border-gray-300 rounded focus:ring-[#FF69B4]" />
+                    <span>Wheelchair Access</span>
+                  </label>
+                  <label class="flex items-center space-x-2 text-sm">
+                    <input type="checkbox" name="specialEquipment" value="Cargo Barrier" class="w-4 h-4 text-[#FF69B4] border-gray-300 rounded focus:ring-[#FF69B4]" />
+                    <span>Cargo Barrier</span>
+                  </label>
+                  <label class="flex items-center space-x-2 text-sm">
+                    <input type="checkbox" name="specialEquipment" value="Security Camera" class="w-4 h-4 text-[#FF69B4] border-gray-300 rounded focus:ring-[#FF69B4]" />
+                    <span>Security Camera</span>
+                  </label>
+                  <label class="flex items-center space-x-2 text-sm">
+                    <input type="checkbox" name="specialEquipment" value="First Aid Kit" class="w-4 h-4 text-[#FF69B4] border-gray-300 rounded focus:ring-[#FF69B4]" />
+                    <span>First Aid Kit</span>
+                  </label>
+                  <label class="flex items-center space-x-2 text-sm">
+                    <input type="checkbox" name="specialEquipment" value="Fire Extinguisher" class="w-4 h-4 text-[#FF69B4] border-gray-300 rounded focus:ring-[#FF69B4]" />
+                    <span>Fire Extinguisher</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Documentation Dates -->
+          <div class="bg-gray-50 rounded-lg p-4">
+            <h3 class="text-lg font-semibold text-charcoal mb-4 flex items-center">
+              <svg class="h-5 w-5 mr-2 text-[#FF69B4]" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+              </svg>
+              Required Documentation
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Insurance Expiry -->
+              <div class="space-y-2">
+                <label class="block text-sm font-medium text-charcoal">Insurance Expiry Date *</label>
+                <input 
+                  type="date" 
+                  name="insuranceExpiry" 
+                  required
+                  class="flex h-10 w-full rounded-sm border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#FF69B4] focus:border-[#FF69B4] disabled:cursor-not-allowed disabled:opacity-50 min-h-[44px]"
+                />
+              </div>
+
+              <!-- Inspection Expiry -->
+              <div class="space-y-2">
+                <label class="block text-sm font-medium text-charcoal">Inspection Expiry Date *</label>
+                <input 
+                  type="date" 
+                  name="inspectionExpiry" 
+                  required
+                  class="flex h-10 w-full rounded-sm border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#FF69B4] focus:border-[#FF69B4] disabled:cursor-not-allowed disabled:opacity-50 min-h-[44px]"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Vehicle Photos -->
+          <div class="bg-gray-50 rounded-lg p-4">
+            <h3 class="text-lg font-semibold text-charcoal mb-4 flex items-center">
+              <svg class="h-5 w-5 mr-2 text-[#FF69B4]" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"/>
+              </svg>
+              Vehicle Photos
+            </h3>
+            
+            <!-- Photo Upload Area -->
+            <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-[#FF69B4] transition-colors">
+              <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <div class="mt-4">
+                <label for="photos" class="cursor-pointer">
+                  <span class="mt-2 block text-sm font-medium text-charcoal">Upload vehicle photos</span>
+                  <span class="mt-1 block text-xs text-gray-500">PNG, JPG, GIF up to 10MB each</span>
+                  <input id="photos" name="photos" type="file" multiple accept="image/*" class="sr-only" />
+                </label>
+              </div>
+              <p class="mt-2 text-xs text-gray-500">Recommended: Front, Back, Sides, Interior</p>
+            </div>
+
+            <!-- Photo Preview Area -->
+            <div id="photo-previews" class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4 hidden">
+              <!-- Photo previews will be inserted here via JavaScript -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="flex items-center justify-between pt-6 border-t border-gray-200">
+          <button 
+            type="button" 
+            class="inline-flex items-center justify-center font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed border border-[#FF69B4] text-[#FF69B4] rounded-lg hover:bg-[#FF69B4] hover:text-white focus:ring-[#FF69B4] px-6 py-3 text-lg h-12"
+          >
+            Save as Draft
+          </button>
+          
+          <div class="flex items-center gap-3">
+            <button 
+              type="button" 
+              class="inline-flex items-center justify-center font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed text-charcoal hover:bg-gray-100 focus:ring-gray-300 px-6 py-3 text-lg h-12"
+            >
+              Cancel
+            </button>
+            
+            <button 
+              type="submit" 
+              class="inline-flex items-center justify-center font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed bg-[#FF69B4] text-white rounded-lg hover:bg-[#FF1493] focus:ring-[#FF69B4] shadow-sm px-8 py-3 text-lg h-12"
+            >
+              <svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+              Add Vehicle
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Loading Overlay (hidden by default) -->
+<div class="hidden fixed inset-0 z-60 bg-black/50 backdrop-blur-sm">
+  <div class="flex items-center justify-center h-full">
+    <div class="bg-white rounded-lg p-6 flex items-center space-x-3">
+      <svg class="animate-spin h-6 w-6 text-[#FF69B4]" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" class="opacity-25" />
+        <path fill="currentColor" class="opacity-75" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+      </svg>
+      <span class="text-charcoal font-medium">Adding vehicle...</span>
+    </div>
+  </div>
+</div>
+
+<script>
+// Basic JavaScript for demonstration
+document.addEventListener('DOMContentLoaded', function() {
+    // Close modal functionality
+    const closeButton = document.querySelector('button[type="button"]');
+    const modal = document.querySelector('.fixed.inset-0');
+    
+    closeButton.addEventListener('click', function() {
+        modal.style.display = 'none';
+    });
+    
+    // File upload preview
+    const fileInput = document.getElementById('photos');
+    const previewContainer = document.getElementById('photo-previews');
+    
+    fileInput.addEventListener('change', function(e) {
+        const files = e.target.files;
+        previewContainer.innerHTML = '';
+        
+        if (files.length > 0) {
+            previewContainer.classList.remove('hidden');
+            
+            Array.from(files).forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const div = document.createElement('div');
+                        div.className = 'relative';
+                        div.innerHTML = `
+                            <img src="${e.target.result}" alt="Vehicle photo" class="w-full h-24 object-cover rounded-lg">
+                            <button type="button" class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">×</button>
+                        `;
+                        previewContainer.appendChild(div);
+                        
+                        // Remove photo functionality
+                        div.querySelector('button').addEventListener('click', function() {
+                            div.remove();
+                            if (previewContainer.children.length === 0) {
+                                previewContainer.classList.add('hidden');
+                            }
+                        });
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+    });
+    
+    // Form submission
+    const form = document.querySelector('form');
+    const loadingOverlay = document.querySelector('.hidden.fixed.inset-0.z-60');
+    
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        loadingOverlay.classList.remove('hidden');
+        
+        // Simulate form submission
+        setTimeout(() => {
+            loadingOverlay.classList.add('hidden');
+            alert('Vehicle added successfully!');
+        }, 2000);
+    });
+});
+</script>
+
+</body>
+</html>

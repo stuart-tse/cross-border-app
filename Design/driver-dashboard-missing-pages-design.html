@@ -1,0 +1,1737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver Dashboard - Missing Pages Design Specifications</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'hot-pink': '#FF69B4',
+                        'light-pink': '#FFB6C1',
+                        'deep-pink': '#FF1493',
+                        'pink-tint': '#FFF0F5',
+                        'rose-gold': '#F7C6C7',
+                        'charcoal': '#171A20',
+                        'light-gray': '#F4F4F4',
+                        'electric-blue': '#0066CC',
+                        'success-green': '#00D563',
+                        'warning-amber': '#FFB800',
+                        'error-red': '#FF4B4B'
+                    },
+                    fontSize: {
+                        'display-lg': ['72px', { lineHeight: '1.1', letterSpacing: '-2px' }],
+                        'display-md': ['48px', { lineHeight: '1.1', letterSpacing: '-1px' }],
+                        'display-sm': ['36px', { lineHeight: '1.2', letterSpacing: '-0.5px' }],
+                        'headline-lg': ['40px', { lineHeight: '1.2', letterSpacing: '-0.5px' }],
+                        'title-lg': ['24px', { lineHeight: '1.3', letterSpacing: '0px' }],
+                        'title-md': ['20px', { lineHeight: '1.3', letterSpacing: '0px' }],
+                        'title-sm': ['16px', { lineHeight: '1.4', letterSpacing: '0.1px' }],
+                        'body-lg': ['16px', { lineHeight: '1.6', letterSpacing: '0.15px' }],
+                        'body-md': ['14px', { lineHeight: '1.5', letterSpacing: '0.1px' }],
+                        'body-sm': ['12px', { lineHeight: '1.4', letterSpacing: '0.4px' }]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .spec-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            transition: all 0.3s ease;
+        }
+        
+        .spec-card:hover {
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        
+        .code-block {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            margin: 16px 0;
+        }
+        
+        .wireframe-container {
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 24px;
+            background: #fafafa;
+            margin: 20px 0;
+        }
+        
+        .mobile-wireframe {
+            max-width: 320px;
+            margin: 0 auto;
+        }
+        
+        .tablet-wireframe {
+            max-width: 768px;
+            margin: 0 auto;
+        }
+        
+        .desktop-wireframe {
+            width: 100%;
+        }
+        
+        .component-box {
+            border: 1px dashed #d1d5db;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 8px 0;
+            background: rgba(255, 105, 180, 0.05);
+            text-align: center;
+            font-size: 12px;
+            color: #6b7280;
+        }
+        
+        .interaction-note {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin: 12px 0;
+        }
+        
+        .accessibility-badge {
+            display: inline-block;
+            background: #10b981;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            margin: 2px;
+        }
+        
+        .data-model {
+            background: #f1f5f9;
+            border-left: 4px solid #FF69B4;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        
+        .user-flow-step {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 8px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .user-flow-step::after {
+            content: '→';
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+            color: #FF69B4;
+        }
+        
+        .user-flow-step:last-child::after {
+            display: none;
+        }
+        
+        .toc-link {
+            color: #6366f1;
+            text-decoration: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        
+        .toc-link:hover {
+            background-color: #e0e7ff;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <h1 class="text-2xl font-bold text-charcoal">Driver Dashboard - Missing Pages Design</h1>
+                <div class="text-sm text-gray-600">Cross-Border Vehicle Services • Tesla-Inspired Design</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Table of Contents -->
+        <div class="spec-card">
+            <h2 class="text-2xl font-bold text-charcoal mb-6">Table of Contents</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div>
+                    <h3 class="font-semibold text-gray-900 mb-2">Overview</h3>
+                    <ul class="space-y-1 text-sm">
+                        <li><a href="#project-summary" class="toc-link">Project Summary</a></li>
+                        <li><a href="#design-principles" class="toc-link">Design Principles</a></li>
+                        <li><a href="#user-personas" class="toc-link">User Personas</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-900 mb-2">Page Designs</h3>
+                    <ul class="space-y-1 text-sm">
+                        <li><a href="#driver-profile" class="toc-link">Driver Profile Page</a></li>
+                        <li><a href="#trip-requests" class="toc-link">Trip Request Page</a></li>
+                        <li><a href="#vehicle-page" class="toc-link">Vehicle Page</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-900 mb-2">Implementation</h3>
+                    <ul class="space-y-1 text-sm">
+                        <li><a href="#responsive-specs" class="toc-link">Responsive Specifications</a></li>
+                        <li><a href="#accessibility" class="toc-link">Accessibility Guidelines</a></li>
+                        <li><a href="#user-flows" class="toc-link">User Flow Diagrams</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project Summary -->
+        <div id="project-summary" class="spec-card">
+            <h2 class="text-2xl font-bold text-charcoal mb-6">Project Summary</h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-xl font-semibold text-charcoal mb-4">Missing Pages Overview</h3>
+                    <p class="text-gray-700 mb-4">
+                        This document provides comprehensive design specifications for three critical missing pages 
+                        in the driver dashboard: Driver Profile, Trip Requests, and Vehicle Management. These pages 
+                        are essential for completing the driver onboarding and operational workflow.
+                    </p>
+                    
+                    <div class="space-y-3">
+                        <div class="p-4 bg-hot-pink bg-opacity-10 rounded-lg border border-hot-pink border-opacity-20">
+                            <h4 class="font-semibold text-charcoal">Driver Profile Page</h4>
+                            <p class="text-sm text-gray-600">Personal information management, verification status, and emergency contacts</p>
+                        </div>
+                        <div class="p-4 bg-electric-blue bg-opacity-10 rounded-lg border border-electric-blue border-opacity-20">
+                            <h4 class="font-semibold text-charcoal">Trip Request Page</h4>
+                            <p class="text-sm text-gray-600">Real-time trip requests, accept/decline actions, and trip management</p>
+                        </div>
+                        <div class="p-4 bg-success-green bg-opacity-10 rounded-lg border border-success-green border-opacity-20">
+                            <h4 class="font-semibold text-charcoal">Vehicle Page</h4>
+                            <p class="text-sm text-gray-600">Vehicle information, maintenance tracking, and insurance management</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-semibold text-charcoal mb-4">Design Requirements</h3>
+                    <ul class="space-y-2 text-gray-700">
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-hot-pink rounded-full mr-3"></span>
+                            Tesla-inspired design system consistency
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-hot-pink rounded-full mr-3"></span>
+                            Hot pink (#FF69B4) accent color integration
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-hot-pink rounded-full mr-3"></span>
+                            Mobile-first responsive design approach
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-hot-pink rounded-full mr-3"></span>
+                            WCAG 2.1 AA accessibility compliance
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-hot-pink rounded-full mr-3"></span>
+                            Real-time data integration capabilities
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-2 h-2 bg-hot-pink rounded-full mr-3"></span>
+                            Cross-border transportation context awareness
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Design Principles -->
+        <div id="design-principles" class="spec-card">
+            <h2 class="text-2xl font-bold text-charcoal mb-6">Design Principles</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="text-center p-6 bg-gradient-to-br from-hot-pink to-deep-pink text-white rounded-lg">
+                    <div class="text-3xl mb-3">⚡</div>
+                    <h3 class="font-semibold mb-2">Efficiency First</h3>
+                    <p class="text-sm opacity-90">Streamlined workflows for time-sensitive driver operations</p>
+                </div>
+                <div class="text-center p-6 bg-gradient-to-br from-electric-blue to-blue-600 text-white rounded-lg">
+                    <div class="text-3xl mb-3">🎯</div>
+                    <h3 class="font-semibold mb-2">Context Aware</h3>
+                    <p class="text-sm opacity-90">Intelligent information hierarchy based on driver needs</p>
+                </div>
+                <div class="text-center p-6 bg-gradient-to-br from-success-green to-green-600 text-white rounded-lg">
+                    <div class="text-3xl mb-3">♿</div>
+                    <h3 class="font-semibold mb-2">Accessible</h3>
+                    <p class="text-sm opacity-90">Inclusive design for drivers of all abilities</p>
+                </div>
+                <div class="text-center p-6 bg-gradient-to-br from-warning-amber to-yellow-600 text-white rounded-lg">
+                    <div class="text-3xl mb-3">📱</div>
+                    <h3 class="font-semibold mb-2">Mobile Native</h3>
+                    <p class="text-sm opacity-90">Touch-optimized for on-the-go usage</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Personas -->
+        <div id="user-personas" class="spec-card">
+            <h2 class="text-2xl font-bold text-charcoal mb-6">User Personas</h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="p-6 border border-gray-200 rounded-lg">
+                    <div class="w-16 h-16 bg-hot-pink rounded-full flex items-center justify-center text-white text-2xl mb-4">👨‍💼</div>
+                    <h3 class="text-title-lg font-semibold text-charcoal mb-2">Professional Driver</h3>
+                    <div class="text-body-sm text-gray-600 space-y-2">
+                        <p><strong>Age:</strong> 35-50</p>
+                        <p><strong>Experience:</strong> 5+ years</p>
+                        <p><strong>Goals:</strong> Maximize earnings, maintain high ratings</p>
+                        <p><strong>Pain Points:</strong> Time management, document tracking</p>
+                        <p><strong>Tech Comfort:</strong> Medium to High</p>
+                    </div>
+                </div>
+                
+                <div class="p-6 border border-gray-200 rounded-lg">
+                    <div class="w-16 h-16 bg-electric-blue rounded-full flex items-center justify-center text-white text-2xl mb-4">🚗</div>
+                    <h3 class="text-title-lg font-semibold text-charcoal mb-2">Fleet Manager</h3>
+                    <div class="text-body-sm text-gray-600 space-y-2">
+                        <p><strong>Age:</strong> 28-45</p>
+                        <p><strong>Experience:</strong> Business operations</p>
+                        <p><strong>Goals:</strong> Efficient fleet management, compliance</p>
+                        <p><strong>Pain Points:</strong> Vehicle tracking, maintenance schedules</p>
+                        <p><strong>Tech Comfort:</strong> High</p>
+                    </div>
+                </div>
+                
+                <div class="p-6 border border-gray-200 rounded-lg">
+                    <div class="w-16 h-16 bg-success-green rounded-full flex items-center justify-center text-white text-2xl mb-4">🆕</div>
+                    <h3 class="text-title-lg font-semibold text-charcoal mb-2">New Driver</h3>
+                    <div class="text-body-sm text-gray-600 space-y-2">
+                        <p><strong>Age:</strong> 25-40</p>
+                        <p><strong>Experience:</strong> 0-2 years</p>
+                        <p><strong>Goals:</strong> Learn platform, build reputation</p>
+                        <p><strong>Pain Points:</strong> Navigation, verification process</p>
+                        <p><strong>Tech Comfort:</strong> Low to Medium</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Driver Profile Page Design -->
+        <div id="driver-profile" class="spec-card">
+            <h2 class="text-2xl font-bold text-charcoal mb-6">Driver Profile Page Design</h2>
+            
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold text-charcoal mb-4">Page Overview</h3>
+                <p class="text-gray-700 mb-4">
+                    The Driver Profile page serves as the central hub for personal information management, 
+                    verification status tracking, and account preferences. It provides drivers with complete 
+                    control over their professional profile and compliance requirements.
+                </p>
+            </div>
+
+            <!-- Mobile Wireframe -->
+            <div class="wireframe-container">
+                <h4 class="text-title-md font-semibold text-charcoal mb-4">Mobile Layout (320px - 768px)</h4>
+                <div class="mobile-wireframe">
+                    <div class="space-y-4">
+                        <!-- Header -->
+                        <div class="component-box">
+                            <strong>Profile Header</strong><br>
+                            Profile photo, name, verification badge
+                        </div>
+                        
+                        <!-- Status Cards -->
+                        <div class="grid grid-cols-2 gap-2">
+                            <div class="component-box">Rating<br>4.9 ⭐</div>
+                            <div class="component-box">Status<br>✅ Verified</div>
+                        </div>
+                        
+                        <!-- Personal Info Section -->
+                        <div class="component-box">
+                            <strong>Personal Information</strong><br>
+                            Name, email, phone, address
+                        </div>
+                        
+                        <!-- Driver License Section -->
+                        <div class="component-box">
+                            <strong>Driver License</strong><br>
+                            License #, expiry, class
+                        </div>
+                        
+                        <!-- Emergency Contact -->
+                        <div class="component-box">
+                            <strong>Emergency Contact</strong><br>
+                            Contact details
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="component-box">
+                            Edit Profile | View Documents
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Desktop Layout -->
+            <div class="wireframe-container">
+                <h4 class="text-title-md font-semibold text-charcoal mb-4">Desktop Layout (1024px+)</h4>
+                <div class="desktop-wireframe">
+                    <div class="grid grid-cols-3 gap-6">
+                        <!-- Left Column -->
+                        <div class="space-y-4">
+                            <div class="component-box">
+                                <strong>Profile Photo & Basic Info</strong><br>
+                                Large photo, name, rating, status
+                            </div>
+                            <div class="component-box">
+                                <strong>Quick Stats</strong><br>
+                                Total trips, earnings, rating
+                            </div>
+                            <div class="component-box">
+                                <strong>Verification Status</strong><br>
+                                Document status overview
+                            </div>
+                        </div>
+                        
+                        <!-- Center Column -->
+                        <div class="space-y-4">
+                            <div class="component-box">
+                                <strong>Personal Information Form</strong><br>
+                                Editable fields with validation
+                            </div>
+                            <div class="component-box">
+                                <strong>Driver License Details</strong><br>
+                                License info with expiry tracking
+                            </div>
+                        </div>
+                        
+                        <!-- Right Column -->
+                        <div class="space-y-4">
+                            <div class="component-box">
+                                <strong>Emergency Contacts</strong><br>
+                                Primary & secondary contacts
+                            </div>
+                            <div class="component-box">
+                                <strong>Account Preferences</strong><br>
+                                Language, notifications, privacy
+                            </div>
+                            <div class="component-box">
+                                <strong>Professional Badges</strong><br>
+                                Certifications & achievements
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Component Specifications -->
+            <div class="mt-8">
+                <h3 class="text-xl font-semibold text-charcoal mb-4">Component Specifications</h3>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Profile Header Component -->
+                    <div class="p-6 border border-gray-200 rounded-lg">
+                        <h4 class="text-title-md font-semibold text-charcoal mb-3">Profile Header Component</h4>
+                        <div class="space-y-3">
+                            <div class="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
+                                <div class="w-16 h-16 bg-hot-pink rounded-full flex items-center justify-center text-white text-xl">
+                                    JD
+                                </div>
+                                <div>
+                                    <h5 class="text-title-sm font-semibold">John Doe</h5>
+                                    <div class="flex items-center space-x-2">
+                                        <span class="text-body-sm text-gray-600">Driver ID: DR-2024-001</span>
+                                        <span class="px-2 py-1 bg-success-green text-white rounded-full text-xs">✓ Verified</span>
+                                    </div>
+                                    <div class="flex items-center mt-1">
+                                        <span class="text-body-sm font-medium">4.9</span>
+                                        <div class="flex ml-1">⭐⭐⭐⭐⭐</div>
+                                        <span class="text-body-sm text-gray-500 ml-2">(234 trips)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <h5 class="text-body-md font-semibold mb-2">Interactive Elements:</h5>
+                            <ul class="text-body-sm text-gray-600 space-y-1">
+                                <li>• Photo upload on click/tap</li>
+                                <li>• Verification badge tooltip</li>
+                                <li>• Rating breakdown modal</li>
+                                <li>• Edit profile button</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Information Cards -->
+                    <div class="p-6 border border-gray-200 rounded-lg">
+                        <h4 class="text-title-md font-semibold text-charcoal mb-3">Information Cards</h4>
+                        <div class="space-y-3">
+                            <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+                                <div class="flex items-center justify-between mb-2">
+                                    <h5 class="text-body-md font-semibold">Personal Information</h5>
+                                    <button class="text-hot-pink text-body-sm">Edit</button>
+                                </div>
+                                <div class="space-y-2 text-body-sm">
+                                    <div><span class="text-gray-500">Email:</span> john.doe@email.com</div>
+                                    <div><span class="text-gray-500">Phone:</span> +852 9123 4567</div>
+                                    <div><span class="text-gray-500">Address:</span> Central, Hong Kong</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <h5 class="text-body-md font-semibold mb-2">Card Features:</h5>
+                            <ul class="text-body-sm text-gray-600 space-y-1">
+                                <li>• Inline editing capabilities</li>
+                                <li>• Real-time validation</li>
+                                <li>• Auto-save functionality</li>
+                                <li>• Change history tracking</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Model -->
+            <div class="data-model mt-6">
+                <h4 class="text-title-md font-semibold text-charcoal mb-3">Driver Profile Data Model</h4>
+                <div class="code-block">
+interface DriverProfile {
+  // Basic Information
+  id: string;
+  userId: string;
+  driverId: string;
+  profilePhoto?: string;
+  
+  // Personal Details
+  personalInfo: {
+    firstName: string;
+    lastName: string;
+    dateOfBirth: string;
+    nationality: string;
+    email: string;
+    phone: string;
+    address: {
+      street: string;
+      city: string;
+      region: string;
+      postalCode: string;
+      country: string;
+    };
+  };
+  
+  // Driver License Information
+  driverLicense: {
+    number: string;
+    class: string;
+    issueDate: string;
+    expiryDate: string;
+    issuingAuthority: string;
+    restrictions?: string[];
+    endorsements?: string[];
+  };
+  
+  // Emergency Contacts
+  emergencyContacts: Array<{
+    id: string;
+    name: string;
+    relationship: string;
+    phone: string;
+    email?: string;
+    isPrimary: boolean;
+  }>;
+  
+  // Professional Information
+  professional: {
+    startDate: string;
+    totalTrips: number;
+    totalEarnings: number;
+    avgRating: number;
+    reviewCount: number;
+    languages: string[];
+    specializations: string[];
+  };
+  
+  // Verification Status
+  verification: {
+    isVerified: boolean;
+    verificationDate?: string;
+    badges: Array<{
+      type: string;
+      name: string;
+      earnedDate: string;
+      isActive: boolean;
+    }>;
+  };
+  
+  // Account Preferences
+  preferences: {
+    language: string;
+    currency: string;
+    timezone: string;
+    notifications: {
+      email: boolean;
+      sms: boolean;
+      push: boolean;
+    };
+    privacy: {
+      showFullName: boolean;
+      showPhone: boolean;
+      shareLocation: boolean;
+    };
+  };
+  
+  // Metadata
+  createdAt: string;
+  updatedAt: string;
+  lastLoginAt: string;
+}
+                </div>
+            </div>
+
+            <!-- Accessibility Considerations -->
+            <div class="mt-6">
+                <h3 class="text-xl font-semibold text-charcoal mb-4">Accessibility Considerations</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="text-title-md font-semibold text-charcoal mb-3">WCAG 2.1 AA Compliance</h4>
+                        <div class="space-y-2">
+                            <div class="accessibility-badge">Keyboard Navigation</div>
+                            <div class="accessibility-badge">Screen Reader Support</div>
+                            <div class="accessibility-badge">High Contrast Mode</div>
+                            <div class="accessibility-badge">Text Scaling</div>
+                            <div class="accessibility-badge">Focus Indicators</div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-title-md font-semibold text-charcoal mb-3">Implementation Notes</h4>
+                        <ul class="text-body-sm text-gray-600 space-y-1">
+                            <li>• ARIA labels for all interactive elements</li>
+                            <li>• Semantic HTML structure</li>
+                            <li>• Color contrast ratio minimum 4.5:1</li>
+                            <li>• Touch targets minimum 44px</li>
+                            <li>• Error message announcements</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trip Request Page Design -->
+        <div id="trip-requests" class="spec-card">
+            <h2 class="text-2xl font-bold text-charcoal mb-6">Trip Request Page Design</h2>
+            
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold text-charcoal mb-4">Page Overview</h3>
+                <p class="text-gray-700 mb-4">
+                    The Trip Request page is the operational heart of the driver dashboard, providing real-time 
+                    trip requests with all necessary information for quick decision-making. It includes map 
+                    integration, request filtering, and comprehensive trip management capabilities.
+                </p>
+            </div>
+
+            <!-- Mobile Wireframe -->
+            <div class="wireframe-container">
+                <h4 class="text-title-md font-semibold text-charcoal mb-4">Mobile Layout (320px - 768px)</h4>
+                <div class="mobile-wireframe">
+                    <div class="space-y-4">
+                        <!-- Status Bar -->
+                        <div class="component-box">
+                            <strong>Driver Status Toggle</strong><br>
+                            Online/Offline • Available/Busy
+                        </div>
+                        
+                        <!-- Active Request Alert -->
+                        <div class="component-box bg-hot-pink bg-opacity-20">
+                            <strong>🚨 Incoming Request</strong><br>
+                            HK Central → Shenzhen<br>
+                            Accept (30s) | Decline
+                        </div>
+                        
+                        <!-- Map Preview -->
+                        <div class="component-box">
+                            <strong>Map View</strong><br>
+                            Route preview, pickup/dropoff pins
+                        </div>
+                        
+                        <!-- Request Details -->
+                        <div class="component-box">
+                            <strong>Trip Details</strong><br>
+                            Distance: 45km | Duration: 1.5h<br>
+                            Fare: HK$680 | Passengers: 2
+                        </div>
+                        
+                        <!-- Recent Requests List -->
+                        <div class="component-box">
+                            <strong>Recent Requests</strong><br>
+                            Filtered list with quick actions
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Desktop Layout -->
+            <div class="wireframe-container">
+                <h4 class="text-title-md font-semibold text-charcoal mb-4">Desktop Layout (1024px+)</h4>
+                <div class="desktop-wireframe">
+                    <div class="grid grid-cols-4 gap-4 h-96">
+                        <!-- Left Sidebar -->
+                        <div class="space-y-4">
+                            <div class="component-box">
+                                <strong>Driver Status</strong><br>
+                                Online controls & availability
+                            </div>
+                            <div class="component-box">
+                                <strong>Request Filters</strong><br>
+                                Distance, fare, route type
+                            </div>
+                            <div class="component-box">
+                                <strong>Today's Summary</strong><br>
+                                Trips accepted, earnings
+                            </div>
+                        </div>
+                        
+                        <!-- Center Map Area -->
+                        <div class="col-span-2">
+                            <div class="component-box h-full">
+                                <strong>Interactive Map</strong><br>
+                                Real-time requests overlay<br>
+                                Route visualization<br>
+                                Traffic information
+                            </div>
+                        </div>
+                        
+                        <!-- Right Panel -->
+                        <div class="space-y-4">
+                            <div class="component-box bg-warning-amber bg-opacity-20">
+                                <strong>Active Request</strong><br>
+                                Request details<br>
+                                Timer & actions
+                            </div>
+                            <div class="component-box">
+                                <strong>Request Queue</strong><br>
+                                Pending requests list
+                            </div>
+                            <div class="component-box">
+                                <strong>Trip History</strong><br>
+                                Recent completed trips
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Request Card Component -->
+            <div class="mt-8">
+                <h3 class="text-xl font-semibold text-charcoal mb-4">Trip Request Card Component</h3>
+                
+                <div class="max-w-md mx-auto">
+                    <!-- High Priority Request -->
+                    <div class="bg-white border-2 border-error-red rounded-lg p-4 mb-4 shadow-lg">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="px-2 py-1 bg-error-red text-white rounded-full text-xs font-bold">🔥 HIGH PRIORITY</span>
+                            <div class="text-right">
+                                <div class="text-title-sm font-bold text-error-red">30s</div>
+                                <div class="text-body-sm text-gray-500">to respond</div>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-2 mb-4">
+                            <div class="flex items-center text-body-md">
+                                <span class="w-3 h-3 bg-success-green rounded-full mr-2"></span>
+                                <span class="font-medium">From:</span> Central, Hong Kong
+                            </div>
+                            <div class="flex items-center text-body-md">
+                                <span class="w-3 h-3 bg-error-red rounded-full mr-2"></span>
+                                <span class="font-medium">To:</span> Futian CBD, Shenzhen
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4 mb-4 text-center">
+                            <div class="bg-gray-50 rounded-lg p-2">
+                                <div class="text-title-sm font-bold text-hot-pink">HK$680</div>
+                                <div class="text-body-sm text-gray-600">Estimated Fare</div>
+                            </div>
+                            <div class="bg-gray-50 rounded-lg p-2">
+                                <div class="text-title-sm font-bold">45km</div>
+                                <div class="text-body-sm text-gray-600">Distance</div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex space-x-2">
+                            <button class="flex-1 bg-success-green hover:bg-green-600 text-white py-3 rounded-lg font-semibold transition-colors">
+                                ACCEPT
+                            </button>
+                            <button class="flex-1 bg-gray-400 hover:bg-gray-500 text-white py-3 rounded-lg font-semibold transition-colors">
+                                DECLINE
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interactive Features -->
+            <div class="interaction-note">
+                <strong>Real-time Features:</strong> WebSocket connection for instant request updates • 
+                GPS integration for accurate positioning • Push notifications for urgent requests • 
+                Auto-refresh request queue every 30 seconds
+            </div>
+
+            <!-- Data Model -->
+            <div class="data-model mt-6">
+                <h4 class="text-title-md font-semibold text-charcoal mb-3">Trip Request Data Model</h4>
+                <div class="code-block">
+interface TripRequest {
+  // Request Identification
+  id: string;
+  requestedAt: string;
+  expiresAt: string;
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+  
+  // Route Information
+  route: {
+    pickup: {
+      address: string;
+      coordinates: {
+        latitude: number;
+        longitude: number;
+      };
+      landmark?: string;
+      instructions?: string;
+    };
+    dropoff: {
+      address: string;
+      coordinates: {
+        latitude: number;
+        longitude: number;
+      };
+      landmark?: string;
+      instructions?: string;
+    };
+    distance: number; // in kilometers
+    estimatedDuration: number; // in minutes
+    routeType: 'local' | 'cross_border' | 'long_distance';
+  };
+  
+  // Passenger Information
+  passenger: {
+    name: string;
+    phone: string;
+    passengerCount: number;
+    specialRequests?: string[];
+    rating?: number;
+    isVip?: boolean;
+  };
+  
+  // Vehicle Requirements
+  vehicleRequirements: {
+    category: 'business' | 'executive' | 'luxury';
+    features?: string[];
+    accessibilityRequired?: boolean;
+  };
+  
+  // Fare Information
+  fare: {
+    baseFare: number;
+    distanceFare: number;
+    timeFare: number;
+    surcharges: Array<{
+      type: string;
+      amount: number;
+      description: string;
+    }>;
+    totalEstimated: number;
+    currency: 'HKD' | 'CNY';
+  };
+  
+  // Request Status
+  status: 'pending' | 'accepted' | 'declined' | 'expired' | 'cancelled';
+  acceptedBy?: string; // driver ID
+  responseDeadline: string;
+  
+  // Metadata
+  createdBy: string; // client/dispatcher ID
+  notes?: string;
+  tags?: string[];
+}
+
+interface TripRequestFilters {
+  minFare?: number;
+  maxDistance?: number;
+  routeTypes?: ('local' | 'cross_border' | 'long_distance')[];
+  vehicleCategories?: ('business' | 'executive' | 'luxury')[];
+  timeRange?: {
+    start: string;
+    end: string;
+  };
+  passengerCount?: {
+    min: number;
+    max: number;
+  };
+}
+                </div>
+            </div>
+        </div>
+
+        <!-- Vehicle Page Design -->
+        <div id="vehicle-page" class="spec-card">
+            <h2 class="text-2xl font-bold text-charcoal mb-6">Vehicle Page Design</h2>
+            
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold text-charcoal mb-4">Page Overview</h3>
+                <p class="text-gray-700 mb-4">
+                    The Vehicle page provides comprehensive vehicle management including registration details, 
+                    insurance tracking, maintenance schedules, and operational status. It ensures drivers 
+                    maintain compliance with all regulatory requirements for cross-border operations.
+                </p>
+            </div>
+
+            <!-- Mobile Wireframe -->
+            <div class="wireframe-container">
+                <h4 class="text-title-md font-semibold text-charcoal mb-4">Mobile Layout (320px - 768px)</h4>
+                <div class="mobile-wireframe">
+                    <div class="space-y-4">
+                        <!-- Vehicle Header -->
+                        <div class="component-box">
+                            <strong>Vehicle Header</strong><br>
+                            BMW X5 2023 | ABC-1234<br>
+                            Status: Active 🟢
+                        </div>
+                        
+                        <!-- Quick Actions -->
+                        <div class="grid grid-cols-2 gap-2">
+                            <div class="component-box">Set Offline</div>
+                            <div class="component-box">Report Issue</div>
+                        </div>
+                        
+                        <!-- Vehicle Photos -->
+                        <div class="component-box">
+                            <strong>Vehicle Photos</strong><br>
+                            Gallery with upload option
+                        </div>
+                        
+                        <!-- Registration Details -->
+                        <div class="component-box">
+                            <strong>Registration</strong><br>
+                            License plate, expiry, docs
+                        </div>
+                        
+                        <!-- Insurance Information */}
+                        <div class="component-box">
+                            <strong>Insurance</strong><br>
+                            Policy details, coverage
+                        </div>
+                        
+                        <!-- Maintenance Status -->
+                        <div class="component-box">
+                            <strong>Maintenance</strong><br>
+                            Last service, next due
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Desktop Layout -->
+            <div class="wireframe-container">
+                <h4 class="text-title-md font-semibold text-charcoal mb-4">Desktop Layout (1024px+)</h4>
+                <div class="desktop-wireframe">
+                    <div class="grid grid-cols-3 gap-6">
+                        <!-- Left Column -->
+                        <div class="space-y-4">
+                            <div class="component-box">
+                                <strong>Vehicle Overview</strong><br>
+                                Photo, basic specs, status
+                            </div>
+                            <div class="component-box">
+                                <strong>Quick Actions</strong><br>
+                                Status controls, emergency
+                            </div>
+                            <div class="component-box">
+                                <strong>Usage Statistics</strong><br>
+                                Mileage, trips, efficiency
+                            </div>
+                        </div>
+                        
+                        <!-- Center Column */}
+                        <div class="space-y-4">
+                            <div class="component-box">
+                                <strong>Vehicle Information</strong><br>
+                                Detailed specifications
+                            </div>
+                            <div class="component-box">
+                                <strong>Registration Details</strong><br>
+                                License, permits, documents
+                            </div>
+                            <div class="component-box">
+                                <strong>Insurance Coverage</strong><br>
+                                Policy details, claims
+                            </div>
+                        </div>
+                        
+                        <!-- Right Column */
+                        <div class="space-y-4">
+                            <div class="component-box">
+                                <strong>Maintenance Schedule</strong><br>
+                                Upcoming services, history
+                            </div>
+                            <div class="component-box">
+                                <strong>Inspection Status</strong><br>
+                                Required checks, deadlines
+                            </div>
+                            <div class="component-box">
+                                <strong>Fuel/Charging</strong><br>
+                                Current level, history
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vehicle Status Card -->
+            <div class="mt-8">
+                <h3 class="text-xl font-semibold text-charcoal mb-4">Vehicle Status Component</h3>
+                
+                <div class="max-w-2xl mx-auto">
+                    <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center">
+                                    <span class="text-2xl">🚗</span>
+                                </div>
+                                <div>
+                                    <h4 class="text-title-lg font-semibold text-charcoal">BMW X5 2023</h4>
+                                    <div class="text-body-md text-gray-600">License: ABC-1234</div>
+                                    <div class="text-body-md text-gray-600">Executive SUV • 6 seats</div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span class="inline-flex items-center px-3 py-1 bg-success-green text-white rounded-full text-sm">
+                                    🟢 Active
+                                </span>
+                                <div class="text-body-sm text-gray-500 mt-1">Last used: 2 hours ago</div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-3 gap-4 mb-6">
+                            <div class="text-center p-3 bg-gray-50 rounded-lg">
+                                <div class="text-title-sm font-bold text-charcoal">45,230</div>
+                                <div class="text-body-sm text-gray-600">Total KM</div>
+                            </div>
+                            <div class="text-center p-3 bg-gray-50 rounded-lg">
+                                <div class="text-title-sm font-bold text-charcoal">234</div>
+                                <div class="text-body-sm text-gray-600">Total Trips</div>
+                            </div>
+                            <div class="text-center p-3 bg-gray-50 rounded-lg">
+                                <div class="text-title-sm font-bold text-charcoal">4.9</div>
+                                <div class="text-body-sm text-gray-600">Rating</div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex space-x-3">
+                            <button class="flex-1 bg-hot-pink hover:bg-deep-pink text-white py-2 rounded-lg font-medium transition-colors">
+                                Set Offline
+                            </button>
+                            <button class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 py-2 rounded-lg font-medium transition-colors">
+                                View Details
+                            </button>
+                            <button class="flex-1 bg-warning-amber hover:bg-yellow-500 text-white py-2 rounded-lg font-medium transition-colors">
+                                Report Issue
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Maintenance Tracking -->
+            <div class="mt-8">
+                <h3 class="text-xl font-semibold text-charcoal mb-4">Maintenance Tracking Component</h3>
+                
+                <div class="bg-white border border-gray-200 rounded-lg p-6">
+                    <h4 class="text-title-md font-semibold text-charcoal mb-4">Maintenance Schedule</h4>
+                    
+                    <div class="space-y-4">
+                        <!-- Due Soon -->
+                        <div class="flex items-center justify-between p-4 bg-warning-amber bg-opacity-10 border border-warning-amber border-opacity-30 rounded-lg">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-warning-amber rounded-lg flex items-center justify-center mr-3">
+                                    <span class="text-white">⚠️</span>
+                                </div>
+                                <div>
+                                    <div class="font-medium text-charcoal">Oil Change</div>
+                                    <div class="text-body-sm text-gray-600">Due in 500 km or 5 days</div>
+                                </div>
+                            </div>
+                            <button class="px-4 py-2 bg-warning-amber text-white rounded-lg text-sm font-medium">
+                                Schedule
+                            </button>
+                        </div>
+                        
+                        <!-- Upcoming -->
+                        <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-electric-blue rounded-lg flex items-center justify-center mr-3">
+                                    <span class="text-white">🔧</span>
+                                </div>
+                                <div>
+                                    <div class="font-medium text-charcoal">Annual Inspection</div>
+                                    <div class="text-body-sm text-gray-600">Due: March 15, 2024</div>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm">
+                                45 days
+                            </span>
+                        </div>
+                        
+                        <!-- Completed */}
+                        <div class="flex items-center justify-between p-4 bg-success-green bg-opacity-10 border border-success-green border-opacity-30 rounded-lg">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-success-green rounded-lg flex items-center justify-center mr-3">
+                                    <span class="text-white">✅</span>
+                                </div>
+                                <div>
+                                    <div class="font-medium text-charcoal">Tire Rotation</div>
+                                    <div class="text-body-sm text-gray-600">Completed: Jan 10, 2024</div>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 bg-success-green text-white rounded-full text-sm">
+                                Done
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Model -->
+            <div class="data-model mt-6">
+                <h4 class="text-title-md font-semibold text-charcoal mb-3">Vehicle Data Model</h4>
+                <div class="code-block">
+interface Vehicle {
+  // Basic Information
+  id: string;
+  driverId: string;
+  licensePlate: string;
+  
+  // Vehicle Specifications
+  specifications: {
+    make: string;
+    model: string;
+    year: number;
+    category: 'business' | 'executive' | 'luxury';
+    fuelType: 'gasoline' | 'diesel' | 'hybrid' | 'electric';
+    capacity: {
+      passengers: number;
+      luggage: number; // liters
+    };
+    features: string[];
+    color: string;
+    vin: string;
+  };
+  
+  // Registration Information
+  registration: {
+    number: string;
+    issueDate: string;
+    expiryDate: string;
+    issuingAuthority: string;
+    registeredOwner: string;
+    crossBorderPermit?: {
+      number: string;
+      validFrom: string;
+      validUntil: string;
+      coverageAreas: string[];
+    };
+  };
+  
+  // Insurance Information
+  insurance: {
+    policyNumber: string;
+    provider: string;
+    coverageType: string;
+    validFrom: string;
+    validUntil: string;
+    coverageAmount: number;
+    deductible: number;
+    isCrossBorderCovered: boolean;
+    claimsHistory: Array<{
+      id: string;
+      date: string;
+      type: string;
+      amount: number;
+      status: string;
+    }>;
+  };
+  
+  // Operational Status
+  status: {
+    current: 'active' | 'inactive' | 'maintenance' | 'inspection' | 'suspended';
+    availability: 'available' | 'in_use' | 'offline';
+    lastUsed: string;
+    currentLocation?: {
+      latitude: number;
+      longitude: number;
+      address: string;
+    };
+  };
+  
+  // Maintenance Records
+  maintenance: {
+    lastService: {
+      date: string;
+      type: string;
+      mileage: number;
+      cost: number;
+      provider: string;
+    };
+    schedule: Array<{
+      id: string;
+      type: string;
+      dueDate?: string;
+      dueMileage?: number;
+      description: string;
+      priority: 'low' | 'medium' | 'high' | 'critical';
+      isCompleted: boolean;
+      completedDate?: string;
+    }>;
+    history: Array<{
+      date: string;
+      type: string;
+      description: string;
+      cost: number;
+      mileage: number;
+      provider: string;
+    }>;
+  };
+  
+  // Usage Statistics
+  usage: {
+    totalMileage: number;
+    totalTrips: number;
+    totalEarnings: number;
+    fuelEfficiency: number;
+    averageRating: number;
+    monthlyStats: Array<{
+      month: string;
+      trips: number;
+      mileage: number;
+      earnings: number;
+      fuelCost: number;
+    }>;
+  };
+  
+  // Photos and Documents
+  media: {
+    photos: Array<{
+      id: string;
+      url: string;
+      type: 'exterior' | 'interior' | 'documents';
+      uploadedAt: string;
+    }>;
+    documents: Array<{
+      id: string;
+      type: string;
+      url: string;
+      uploadedAt: string;
+      expiryDate?: string;
+    }>;
+  };
+  
+  // Metadata
+  createdAt: string;
+  updatedAt: string;
+}
+                </div>
+            </div>
+        </div>
+
+        <!-- Responsive Design Specifications -->
+        <div id="responsive-specs" class="spec-card">
+            <h2 class="text-2xl font-bold text-charcoal mb-6">Responsive Design Specifications</h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Mobile Specifications -->
+                <div>
+                    <h3 class="text-xl font-semibold text-charcoal mb-4">Mobile (320px - 768px)</h3>
+                    <div class="space-y-4">
+                        <div class="p-4 bg-hot-pink bg-opacity-10 rounded-lg">
+                            <h4 class="font-semibold text-charcoal mb-2">Layout Strategy</h4>
+                            <ul class="text-body-sm text-gray-700 space-y-1">
+                                <li>• Single column layout</li>
+                                <li>• Stack cards vertically</li>
+                                <li>• Full-width components</li>
+                                <li>• Bottom tab navigation</li>
+                                <li>• Swipe gestures enabled</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="p-4 bg-electric-blue bg-opacity-10 rounded-lg">
+                            <h4 class="font-semibold text-charcoal mb-2">Interaction Design</h4>
+                            <ul class="text-body-sm text-gray-700 space-y-1">
+                                <li>• Touch targets 44px minimum</li>
+                                <li>• Haptic feedback for actions</li>
+                                <li>• Pull-to-refresh capability</li>
+                                <li>• Large, clear buttons</li>
+                                <li>• Voice input support</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tablet Specifications -->
+                <div>
+                    <h3 class="text-xl font-semibold text-charcoal mb-4">Tablet (768px - 1024px)</h3>
+                    <div class="space-y-4">
+                        <div class="p-4 bg-success-green bg-opacity-10 rounded-lg">
+                            <h4 class="font-semibold text-charcoal mb-2">Layout Strategy</h4>
+                            <ul class="text-body-sm text-gray-700 space-y-1">
+                                <li>• Two-column layout</li>
+                                <li>• Side-by-side cards</li>
+                                <li>• Expanded content areas</li>
+                                <li>• Sidebar navigation</li>
+                                <li>• Modal dialogs for details</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="p-4 bg-warning-amber bg-opacity-10 rounded-lg">
+                            <h4 class="font-semibold text-charcoal mb-2">Enhanced Features</h4>
+                            <ul class="text-body-sm text-gray-700 space-y-1">
+                                <li>• Split-view map and list</li>
+                                <li>• Drag and drop functionality</li>
+                                <li>• Multi-select capabilities</li>
+                                <li>• Advanced filtering UI</li>
+                                <li>• Landscape optimization</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Desktop Specifications -->
+                <div>
+                    <h3 class="text-xl font-semibold text-charcoal mb-4">Desktop (1024px+)</h3>
+                    <div class="space-y-4">
+                        <div class="p-4 bg-gray-100 rounded-lg">
+                            <h4 class="font-semibold text-charcoal mb-2">Layout Strategy</h4>
+                            <ul class="text-body-sm text-gray-700 space-y-1">
+                                <li>• Multi-column layouts</li>
+                                <li>• Fixed sidebar navigation</li>
+                                <li>• Dashboard-style overview</li>
+                                <li>• Multiple data views</li>
+                                <li>• Extensive keyboard shortcuts</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="p-4 bg-purple-100 rounded-lg">
+                            <h4 class="font-semibold text-charcoal mb-2">Advanced Features</h4>
+                            <ul class="text-body-sm text-gray-700 space-y-1">
+                                <li>• Hover states and tooltips</li>
+                                <li>• Right-click context menus</li>
+                                <li>• Bulk operations</li>
+                                <li>• Advanced search and filtering</li>
+                                <li>• Data export capabilities</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Breakpoint Table -->
+            <div class="mt-8">
+                <h3 class="text-xl font-semibold text-charcoal mb-4">Breakpoint Reference</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse border border-gray-300">
+                        <thead>
+                            <tr class="bg-gray-50">
+                                <th class="border border-gray-300 px-4 py-3 text-left font-semibold">Device</th>
+                                <th class="border border-gray-300 px-4 py-3 text-left font-semibold">Breakpoint</th>
+                                <th class="border border-gray-300 px-4 py-3 text-left font-semibold">Grid Columns</th>
+                                <th class="border border-gray-300 px-4 py-3 text-left font-semibold">Navigation</th>
+                                <th class="border border-gray-300 px-4 py-3 text-left font-semibold">Key Features</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="border border-gray-300 px-4 py-3">Mobile Small</td>
+                                <td class="border border-gray-300 px-4 py-3">320px - 480px</td>
+                                <td class="border border-gray-300 px-4 py-3">1 column</td>
+                                <td class="border border-gray-300 px-4 py-3">Bottom tabs</td>
+                                <td class="border border-gray-300 px-4 py-3">Stacked layout, large buttons</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-300 px-4 py-3">Mobile Large</td>
+                                <td class="border border-gray-300 px-4 py-3">480px - 768px</td>
+                                <td class="border border-gray-300 px-4 py-3">1-2 columns</td>
+                                <td class="border border-gray-300 px-4 py-3">Bottom tabs</td>
+                                <td class="border border-gray-300 px-4 py-3">Slightly wider cards, 2-col grids</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-300 px-4 py-3">Tablet</td>
+                                <td class="border border-gray-300 px-4 py-3">768px - 1024px</td>
+                                <td class="border border-gray-300 px-4 py-3">2-3 columns</td>
+                                <td class="border border-gray-300 px-4 py-3">Side drawer</td>
+                                <td class="border border-gray-300 px-4 py-3">Split views, enhanced interactions</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-gray-300 px-4 py-3">Desktop</td>
+                                <td class="border border-gray-300 px-4 py-3">1024px+</td>
+                                <td class="border border-gray-300 px-4 py-3">3-4 columns</td>
+                                <td class="border border-gray-300 px-4 py-3">Fixed sidebar</td>
+                                <td class="border border-gray-300 px-4 py-3">Full dashboard, advanced features</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Accessibility Guidelines -->
+        <div id="accessibility" class="spec-card">
+            <h2 class="text-2xl font-bold text-charcoal mb-6">Accessibility Guidelines</h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-xl font-semibold text-charcoal mb-4">WCAG 2.1 AA Compliance</h3>
+                    
+                    <div class="space-y-4">
+                        <div class="p-4 border border-gray-200 rounded-lg">
+                            <h4 class="font-semibold text-charcoal mb-2">Color and Contrast</h4>
+                            <ul class="text-body-sm text-gray-700 space-y-1">
+                                <li>• Minimum contrast ratio 4.5:1 for normal text</li>
+                                <li>• Minimum contrast ratio 3:1 for large text</li>
+                                <li>• Color not used as sole means of communication</li>
+                                <li>• High contrast mode support</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="p-4 border border-gray-200 rounded-lg">
+                            <h4 class="font-semibold text-charcoal mb-2">Keyboard Navigation</h4>
+                            <ul class="text-body-sm text-gray-700 space-y-1">
+                                <li>• All interactive elements keyboard accessible</li>
+                                <li>• Logical tab order throughout pages</li>
+                                <li>• Visible focus indicators</li>
+                                <li>• Keyboard shortcuts for common actions</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="p-4 border border-gray-200 rounded-lg">
+                            <h4 class="font-semibold text-charcoal mb-2">Screen Reader Support</h4>
+                            <ul class="text-body-sm text-gray-700 space-y-1">
+                                <li>• Semantic HTML structure</li>
+                                <li>• ARIA labels and descriptions</li>
+                                <li>• Live regions for dynamic content</li>
+                                <li>• Alternative text for images</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-semibold text-charcoal mb-4">Implementation Checklist</h3>
+                    
+                    <div class="space-y-3">
+                        <label class="flex items-center">
+                            <input type="checkbox" class="mr-3 text-hot-pink" checked>
+                            <span class="text-body-sm">Semantic HTML5 elements used</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" class="mr-3 text-hot-pink" checked>
+                            <span class="text-body-sm">ARIA roles and properties defined</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" class="mr-3 text-hot-pink" checked>
+                            <span class="text-body-sm">Focus management implemented</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" class="mr-3 text-hot-pink" checked>
+                            <span class="text-body-sm">Color contrast validated</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" class="mr-3 text-hot-pink" checked>
+                            <span class="text-body-sm">Touch targets minimum 44px</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" class="mr-3 text-hot-pink">
+                            <span class="text-body-sm">Screen reader testing completed</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" class="mr-3 text-hot-pink">
+                            <span class="text-body-sm">Keyboard navigation testing done</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" class="mr-3 text-hot-pink">
+                            <span class="text-body-sm">Voice control compatibility verified</span>
+                        </label>
+                    </div>
+                    
+                    <div class="mt-6 p-4 bg-hot-pink bg-opacity-10 rounded-lg">
+                        <h4 class="font-semibold text-charcoal mb-2">Testing Tools</h4>
+                        <ul class="text-body-sm text-gray-700 space-y-1">
+                            <li>• WAVE Web Accessibility Evaluator</li>
+                            <li>• axe DevTools browser extension</li>
+                            <li>• Lighthouse accessibility audit</li>
+                            <li>• NVDA/JAWS screen reader testing</li>
+                            <li>• Color contrast analyzers</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Flow Diagrams -->
+        <div id="user-flows" class="spec-card">
+            <h2 class="text-2xl font-bold text-charcoal mb-6">User Flow Diagrams</h2>
+            
+            <!-- Driver Profile Flow -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold text-charcoal mb-4">Driver Profile Management Flow</h3>
+                <div class="flex flex-wrap items-center justify-center">
+                    <div class="user-flow-step">
+                        <h4 class="font-semibold">Dashboard</h4>
+                        <p class="text-body-sm">Navigate to Profile</p>
+                    </div>
+                    <div class="user-flow-step">
+                        <h4 class="font-semibold">Profile Overview</h4>
+                        <p class="text-body-sm">View current info</p>
+                    </div>
+                    <div class="user-flow-step">
+                        <h4 class="font-semibold">Edit Mode</h4>
+                        <p class="text-body-sm">Modify information</p>
+                    </div>
+                    <div class="user-flow-step">
+                        <h4 class="font-semibold">Validation</h4>
+                        <p class="text-body-sm">Check requirements</p>
+                    </div>
+                    <div class="user-flow-step">
+                        <h4 class="font-semibold">Save Changes</h4>
+                        <p class="text-body-sm">Update profile</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Trip Request Flow -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold text-charcoal mb-4">Trip Request Handling Flow</h3>
+                <div class="flex flex-wrap items-center justify-center">
+                    <div class="user-flow-step">
+                        <h4 class="font-semibold">Request Received</h4>
+                        <p class="text-body-sm">Real-time notification</p>
+                    </div>
+                    <div class="user-flow-step">
+                        <h4 class="font-semibold">Review Details</h4>
+                        <p class="text-body-sm">Route, fare, passenger</p>
+                    </div>
+                    <div class="user-flow-step">
+                        <h4 class="font-semibold">Decision Point</h4>
+                        <p class="text-body-sm">Accept or Decline</p>
+                    </div>
+                    <div class="user-flow-step">
+                        <h4 class="font-semibold">If Accepted</h4>
+                        <p class="text-body-sm">Navigate to pickup</p>
+                    </div>
+                    <div class="user-flow-step">
+                        <h4 class="font-semibold">Trip Execution</h4>
+                        <p class="text-body-sm">Start, drive, complete</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Vehicle Management Flow -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold text-charcoal mb-4">Vehicle Status Update Flow</h3>
+                <div class="flex flex-wrap items-center justify-center">
+                    <div class="user-flow-step">
+                        <h4 class="font-semibold">Vehicle Page</h4>
+                        <p class="text-body-sm">View current status</p>
+                    </div>
+                    <div class="user-flow-step">
+                        <h4 class="font-semibold">Status Change</h4>
+                        <p class="text-body-sm">Select new status</p>
+                    </div>
+                    <div class="user-flow-step">
+                        <h4 class="font-semibold">Reason Selection</h4>
+                        <p class="text-body-sm">Why changing status</p>
+                    </div>
+                    <div class="user-flow-step">
+                        <h4 class="font-semibold">Documentation</h4>
+                        <p class="text-body-sm">Upload if required</p>
+                    </div>
+                    <div class="user-flow-step">
+                        <h4 class="font-semibold">Confirmation</h4>
+                        <p class="text-body-sm">Status updated</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Implementation Notes -->
+        <div class="spec-card">
+            <h2 class="text-2xl font-bold text-charcoal mb-6">Implementation Notes</h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-xl font-semibold text-charcoal mb-4">Technical Requirements</h3>
+                    <div class="space-y-4">
+                        <div class="p-4 bg-electric-blue bg-opacity-10 rounded-lg">
+                            <h4 class="font-semibold text-charcoal mb-2">Frontend Technologies</h4>
+                            <ul class="text-body-sm text-gray-700 space-y-1">
+                                <li>• Next.js 14+ with TypeScript</li>
+                                <li>• Tailwind CSS for styling</li>
+                                <li>• Framer Motion for animations</li>
+                                <li>• React Hook Form for forms</li>
+                                <li>• SWR for data fetching</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="p-4 bg-success-green bg-opacity-10 rounded-lg">
+                            <h4 class="font-semibold text-charcoal mb-2">Backend Integration</h4>
+                            <ul class="text-body-sm text-gray-700 space-y-1">
+                                <li>• RESTful API endpoints</li>
+                                <li>• WebSocket for real-time updates</li>
+                                <li>• File upload handling</li>
+                                <li>• Authentication middleware</li>
+                                <li>• Rate limiting for API calls</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-semibold text-charcoal mb-4">Performance Considerations</h3>
+                    <div class="space-y-4">
+                        <div class="p-4 bg-warning-amber bg-opacity-10 rounded-lg">
+                            <h4 class="font-semibold text-charcoal mb-2">Optimization Strategies</h4>
+                            <ul class="text-body-sm text-gray-700 space-y-1">
+                                <li>• Image lazy loading and optimization</li>
+                                <li>• Code splitting by page/feature</li>
+                                <li>• Debounced search inputs</li>
+                                <li>• Virtualized lists for large datasets</li>
+                                <li>• Service worker for offline functionality</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="p-4 bg-hot-pink bg-opacity-10 rounded-lg">
+                            <h4 class="font-semibold text-charcoal mb-2">Mobile Performance</h4>
+                            <ul class="text-body-sm text-gray-700 space-y-1">
+                                <li>• Progressive Web App (PWA) features</li>
+                                <li>• Touch gesture optimization</li>
+                                <li>• Reduced animation on low-end devices</li>
+                                <li>• Efficient data caching strategies</li>
+                                <li>• Battery usage optimization</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8 p-6 bg-gray-100 rounded-lg">
+                <h3 class="text-xl font-semibold text-charcoal mb-4">Next Steps</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <h4 class="font-semibold text-charcoal mb-2">Phase 1: Foundation</h4>
+                        <ul class="text-body-sm text-gray-700 space-y-1">
+                            <li>• Create component library</li>
+                            <li>• Set up responsive grid system</li>
+                            <li>• Implement accessibility features</li>
+                            <li>• Basic page structures</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-charcoal mb-2">Phase 2: Features</h4>
+                        <ul class="text-body-sm text-gray-700 space-y-1">
+                            <li>• Real-time functionality</li>
+                            <li>• Form validation and submission</li>
+                            <li>• File upload capabilities</li>
+                            <li>• Map integration</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-charcoal mb-2">Phase 3: Polish</h4>
+                        <ul class="text-body-sm text-gray-700 space-y-1">
+                            <li>• Performance optimization</li>
+                            <li>• User testing and feedback</li>
+                            <li>• Animation and micro-interactions</li>
+                            <li>• Cross-browser testing</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Smooth scrolling for table of contents links
+        document.querySelectorAll('.toc-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add interactive hover effects to wireframe components
+        document.querySelectorAll('.component-box').forEach(box => {
+            box.addEventListener('mouseenter', function() {
+                this.style.backgroundColor = 'rgba(255, 105, 180, 0.1)';
+                this.style.borderColor = '#FF69B4';
+                this.style.transform = 'scale(1.02)';
+            });
+            
+            box.addEventListener('mouseleave', function() {
+                this.style.backgroundColor = 'rgba(255, 105, 180, 0.05)';
+                this.style.borderColor = '#d1d5db';
+                this.style.transform = 'scale(1)';
+            });
+        });
+
+        // Highlight current section in TOC
+        function updateTOCHighlight() {
+            const sections = document.querySelectorAll('[id]');
+            const scrollPosition = window.scrollY + 100;
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.offsetHeight;
+                const tocLink = document.querySelector(`a[href="#${section.id}"]`);
+                
+                if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                    document.querySelectorAll('.toc-link').forEach(link => {
+                        link.classList.remove('bg-indigo-100');
+                    });
+                    if (tocLink) {
+                        tocLink.classList.add('bg-indigo-100');
+                    }
+                }
+            });
+        }
+
+        window.addEventListener('scroll', updateTOCHighlight);
+        updateTOCHighlight(); // Initial call
+    </script>
+</body>
+</html>

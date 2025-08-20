@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver Dashboard - Comprehensive Design Specifications</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'hot-pink': '#FF69B4',
+                        'light-pink': '#FFB6C1',
+                        'deep-pink': '#FF1493',
+                        'pink-tint': '#FFF0F5',
+                        'rose-gold': '#F7C6C7',
+                        'charcoal': '#171A20',
+                        'light-gray': '#F4F4F4',
+                        'electric-blue': '#0066CC',
+                        'success-green': '#00D563',
+                        'warning-amber': '#FFB800',
+                        'error-red': '#FF4B4B'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .spec-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        
+        .code-block {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 16px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            margin: 16px 0;
+        }
+        
+        .api-endpoint {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 14px;
+            display: inline-block;
+            margin: 4px 0;
+        }
+        
+        .component-preview {
+            border: 2px dashed #d1d5db;
+            border-radius: 8px;
+            padding: 16px;
+            background: #f9fafb;
+            margin: 16px 0;
+        }
+        
+        .toc-link {
+            color: #6366f1;
+            text-decoration: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        
+        .toc-link:hover {
+            background-color: #e0e7ff;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <h1 class="text-2xl font-bold text-charcoal">Driver Dashboard Design Specifications</h1>
+                <div class="text-sm text-gray-600">Cross-Border Vehicle Services • Tesla-Inspired Design</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Table of Contents -->
+        <div class="spec-card">
+            <h2 class="text-2xl font-bold text-charcoal mb-6">Table of Contents</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div>
+                    <h3 class="font-semibold text-gray-900 mb-2">Overview</h3>
+                    <ul class="space-y-1 text-sm">
+                        <li><a href="#project-overview" class="toc-link">Project Overview</a></li>
+                        <li><a href="#design-system" class="toc-link">Design System</a></li>
+                        <li><a href="#color-palette" class="toc-link">Color Palette</a></li>
+                        <li><a href="#typography" class="toc-link">Typography</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-900 mb-2">Pages</h3>
+                    <ul class="space-y-1 text-sm">
+                        <li><a href="#earnings-page" class="toc-link">Earnings Page</a></li>
+                        <li><a href="#settings-page" class="toc-link">Settings Page</a></li>
+                        <li><a href="#upload-page" class="toc-link">Document Upload</a></li>
+                        <li><a href="#verification-page" class="toc-link">Document Verification</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-900 mb-2">Implementation</h3>
+                    <ul class="space-y-1 text-sm">
+                        <li><a href="#api-endpoints" class="toc-link">API Endpoints</a></li>
+                        <li><a href="#data-models" class="toc-link">Data Models</a></li>
+                        <li><a href="#components" class="toc-link">Components</a></li>
+                        <li><a href="#responsive-design" class="toc-link">Responsive Design</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project Overview -->
+        <div id="project-overview" class="spec-card">
+            <h2 class="text-2xl font-bold text-charcoal mb-6">Project Overview</h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-xl font-semibold text-charcoal mb-4">Purpose</h3>
+                    <p class="text-gray-700 mb-4">
+                        Design and implement comprehensive driver dashboard pages for a cross-border vehicle service platform 
+                        connecting Hong Kong and Mainland China. The interface follows Tesla-inspired design principles with 
+                        pink accent colors and focuses on clarity, efficiency, and real-time functionality.
+                    </p>
+                    
+                    <h3 class="text-xl font-semibold text-charcoal mb-4">Key Features</h3>
+                    <ul class="space-y-2 text-gray-700">
+                        <li class="flex items-center"><span class="w-2 h-2 bg-hot-pink rounded-full mr-3"></span>Real-time earnings tracking and analytics</li>
+                        <li class="flex items-center"><span class="w-2 h-2 bg-hot-pink rounded-full mr-3"></span>Comprehensive settings management</li>
+                        <li class="flex items-center"><span class="w-2 h-2 bg-hot-pink rounded-full mr-3"></span>Document upload with drag-and-drop</li>
+                        <li class="flex items-center"><span class="w-2 h-2 bg-hot-pink rounded-full mr-3"></span>Verification status tracking</li>
+                        <li class="flex items-center"><span class="w-2 h-2 bg-hot-pink rounded-full mr-3"></span>Mobile-first responsive design</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-semibold text-charcoal mb-4">Target Users</h3>
+                    <div class="space-y-4">
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <h4 class="font-semibold text-gray-900">Professional Drivers</h4>
+                            <p class="text-sm text-gray-600">Licensed drivers operating cross-border transport services</p>
+                        </div>
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <h4 class="font-semibold text-gray-900">Fleet Operators</h4>
+                            <p class="text-sm text-gray-600">Companies managing multiple vehicles and drivers</p>
+                        </div>
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <h4 class="font-semibold text-gray-900">Independent Contractors</h4>
+                            <p class="text-sm text-gray-600">Individual drivers providing premium transport services</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Design System -->
+        <div id="design-system" class="spec-card">
+            <h2 class="text-2xl font-bold text-charcoal mb-6">Design System</h2>
+            
+            <!-- Color Palette -->
+            <div id="color-palette" class="mb-8">
+                <h3 class="text-xl font-semibold text-charcoal mb-4">Color Palette</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                    <div class="text-center">
+                        <div class="w-full h-16 bg-hot-pink rounded-lg mb-2"></div>
+                        <div class="text-sm font-medium">Hot Pink</div>
+                        <div class="text-xs text-gray-600">#FF69B4</div>
+                        <div class="text-xs text-gray-500">Primary</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-full h-16 bg-charcoal rounded-lg mb-2"></div>
+                        <div class="text-sm font-medium">Charcoal</div>
+                        <div class="text-xs text-gray-600">#171A20</div>
+                        <div class="text-xs text-gray-500">Text</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-full h-16 bg-electric-blue rounded-lg mb-2"></div>
+                        <div class="text-sm font-medium">Electric Blue</div>
+                        <div class="text-xs text-gray-600">#0066CC</div>
+                        <div class="text-xs text-gray-500">Secondary</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-full h-16 bg-success-green rounded-lg mb-2"></div>
+                        <div class="text-sm font-medium">Success Green</div>
+                        <div class="text-xs text-gray-600">#00D563</div>
+                        <div class="text-xs text-gray-500">Success</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-full h-16 bg-warning-amber rounded-lg mb-2"></div>
+                        <div class="text-sm font-medium">Warning Amber</div>
+                        <div class="text-xs text-gray-600">#FFB800</div>
+                        <div class="text-xs text-gray-500">Warning</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-full h-16 bg-error-red rounded-lg mb-2"></div>
+                        <div class="text-sm font-medium">Error Red</div>
+                        <div class="text-xs text-gray-600">#FF4B4B</div>
+                        <div class="text-xs text-gray-500">Error</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Typography -->
+            <div id="typography" class="mb-8">
+                <h3 class="text-xl font-semibold text-charcoal mb-4">Typography Scale</h3>
+                <div class="space-y-4">
+                    <div class="p-4 border border-gray-200 rounded-lg">
+                        <div class="text-display-lg font-bold text-charcoal">Display Large</div>
+                        <div class="text-sm text-gray-600">72px, Line height: 1.1, Letter spacing: -2px</div>
+                    </div>
+                    <div class="p-4 border border-gray-200 rounded-lg">
+                        <div class="text-headline-lg font-semibold text-charcoal">Headline Large</div>
+                        <div class="text-sm text-gray-600">40px, Line height: 1.2, Letter spacing: -0.5px</div>
+                    </div>
+                    <div class="p-4 border border-gray-200 rounded-lg">
+                        <div class="text-title-lg font-semibold text-charcoal">Title Large</div>
+                        <div class="text-sm text-gray-600">24px, Line height: 1.3, Letter spacing: 0px</div>
+                    </div>
+                    <div class="p-4 border border-gray-200 rounded-lg">
+                        <div class="text-body-lg text-charcoal">Body Large - Regular paragraph text for reading</div>
+                        <div class="text-sm text-gray-600">16px, Line height: 1.6, Letter spacing: 0.15px</div>
+                    </div>
+                    <div class="p-4 border border-gray-200 rounded-lg">
+                        <div class="text-body-sm text-gray-600">Body Small - Secondary information and captions</div>
+                        <div class="text-sm text-gray-600">12px, Line height: 1.4, Letter spacing: 0.4px</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Component Spacing -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold text-charcoal mb-4">Spacing System</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="p-4 border border-gray-200 rounded-lg text-center">
+                        <div class="w-4 h-4 bg-hot-pink rounded mx-auto mb-2"></div>
+                        <div class="text-sm font-medium">XS - 4px</div>
+                    </div>
+                    <div class="p-4 border border-gray-200 rounded-lg text-center">
+                        <div class="w-8 h-8 bg-hot-pink rounded mx-auto mb-2"></div>
+                        <div class="text-sm font-medium">SM - 8px</div>
+                    </div>
+                    <div class="p-4 border border-gray-200 rounded-lg text-center">
+                        <div class="w-16 h-16 bg-hot-pink rounded mx-auto mb-2"></div>
+                        <div class="text-sm font-medium">MD - 16px</div>
+                    </div>
+                    <div class="p-4 border border-gray-200 rounded-lg text-center">
+                        <div class="w-24 h-24 bg-hot-pink rounded mx-auto mb-2"></div>
+                        <div class="text-sm font-medium">LG - 24px</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page Specifications -->
+        
+        <!-- Earnings Page -->
+        <div id="earnings-page" class="spec-card">
+            <h2 class="text-2xl font-bold text-charcoal mb-6">Driver Earnings Page Specifications</h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <div>
+                    <h3 class="text-xl font-semibold text-charcoal mb-4">Key Components</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <span class="w-6 h-6 bg-hot-pink rounded-full flex items-center justify-center text-white text-xs font-bold mr-3 mt-0.5">1</span>
+                            <div>
+                                <div class="font-semibold">Earnings Overview Cards</div>
+                                <div class="text-sm text-gray-600">Today, week, month earnings with progress indicators</div>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="w-6 h-6 bg-hot-pink rounded-full flex items-center justify-center text-white text-xs font-bold mr-3 mt-0.5">2</span>
+                            <div>
+                                <div class="font-semibold">Interactive Charts</div>
+                                <div class="text-sm text-gray-600">Earnings trends and trip type breakdown visualizations</div>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="w-6 h-6 bg-hot-pink rounded-full flex items-center justify-center text-white text-xs font-bold mr-3 mt-0.5">3</span>
+                            <div>
+                                <div class="font-semibold">Payment History</div>
+                                <div class="text-sm text-gray-600">Transaction list with filtering and export capabilities</div>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="w-6 h-6 bg-hot-pink rounded-full flex items-center justify-center text-white text-xs font-bold mr-3 mt-0.5">4</span>
+                            <div>
+                                <div class="font-semibold">Tax Information</div>
+                                <div class="text-sm text-gray-600">YTD summary and downloadable tax documents</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-semibold text-charcoal mb-4">Data Requirements</h3>
+                    <div class="code-block">
+interface EarningsData {
+  dailyEarnings: {
+    total: number;
+    tripsCompleted: number;
+    avgPerTrip: number;
+    onlineTime: string;
+    acceptRate: number;
+  };
+  weeklyEarnings: number;
+  monthlyEarnings: number;
+  performanceScore: number;
+  earningsTrend: Array<{
+    date: string;
+    amount: number;
+  }>;
+  tripTypes: Array<{
+    type: string;
+    percentage: number;
+    count: number;
+  }>;
+}
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="text-xl font-semibold text-charcoal mb-4">API Endpoints</h3>
+            <div class="space-y-2">
+                <div class="api-endpoint">GET /api/drivers/earnings/overview</div>
+                <div class="api-endpoint">GET /api/drivers/earnings/history?period={7d|30d|90d}</div>
+                <div class="api-endpoint">GET /api/drivers/payments/history?page={number}</div>
+                <div class="api-endpoint">POST /api/drivers/payments/withdrawal</div>
+                <div class="api-endpoint">GET /api/drivers/tax/summary?year={year}</div>
+            </div>
+
+            <h3 class="text-xl font-semibold text-charcoal mb-4 mt-6">User Interactions</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                    <h4 class="font-semibold text-blue-900 mb-2">Chart Interactions</h4>
+                    <ul class="text-sm text-blue-800 space-y-1">
+                        <li>• Hover to see detailed values</li>
+                        <li>• Click time period buttons (7D, 30D, 90D)</li>
+                        <li>• Responsive chart resizing</li>
+                    </ul>
+                </div>
+                <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                    <h4 class="font-semibold text-green-900 mb-2">Payment Actions</h4>
+                    <ul class="text-sm text-green-800 space-y-1">
+                        <li>• Request withdrawal button</li>
+                        <li>• Export payment statement</li>
+                        <li>• Filter by date range</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Page -->
+        <div id="settings-page" class="spec-card">
+            <h2 class="text-2xl font-bold text-charcoal mb-6">Driver Settings Page Specifications</h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <div>
+                    <h3 class="text-xl font-semibold text-charcoal mb-4">Settings Categories</h3>
+                    <div class="space-y-4">
+                        <div class="p-4 border border-gray-200 rounded-lg">
+                            <h4 class="font-semibold text-gray-900 mb-2">🔔 Notifications</h4>
+                            <p class="text-sm text-gray-600">Trip alerts, earnings updates, sound preferences</p>
+                        </div>
+                        <div class="p-4 border border-gray-200 rounded-lg">
+                            <h4 class="font-semibold text-gray-900 mb-2">⏰ Working Hours</h4>
+                            <p class="text-sm text-gray-600">Weekly schedule, auto-offline settings, break reminders</p>
+                        </div>
+                        <div class="p-4 border border-gray-200 rounded-lg">
+                            <h4 class="font-semibold text-gray-900 mb-2">🔒 Security</h4>
+                            <p class="text-sm text-gray-600">Password, 2FA, privacy settings, data management</p>
+                        </div>
+                        <div class="p-4 border border-gray-200 rounded-lg">
+                            <h4 class="font-semibold text-gray-900 mb-2">💳 Payment Methods</h4>
+                            <p class="text-sm text-gray-600">Bank accounts, payout schedule, tax settings</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-semibold text-charcoal mb-4">Toggle Components</h3>
+                    <div class="component-preview">
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm">New trip requests</span>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" checked class="sr-only peer">
+                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-hot-pink"></div>
+                                </label>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm">Sound alerts</span>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" class="sr-only peer">
+                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-hot-pink"></div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="text-xl font-semibold text-charcoal mb-4">Data Models</h3>
+            <div class="code-block">
+interface DriverSettings {
+  notifications: {
+    tripRequests: boolean;
+    tripUpdates: boolean;
+    soundAlerts: boolean;
+    paymentConfirmations: boolean;
+    weeklySummary: boolean;
+  };
+  workingHours: {
+    isOnline: boolean;
+    schedule: Array<{
+      day: string;
+      enabled: boolean;
+      startTime: string;
+      endTime: string;
+    }>;
+    autoOffline: boolean;
+    breakReminders: boolean;
+  };
+  security: {
+    twoFactorEnabled: boolean;
+    locationTracking: boolean;
+    shareProfile: boolean;
+  };
+}
+            </div>
+
+            <h3 class="text-xl font-semibold text-charcoal mb-4 mt-6">API Endpoints</h3>
+            <div class="space-y-2">
+                <div class="api-endpoint">GET /api/drivers/settings</div>
+                <div class="api-endpoint">PUT /api/drivers/settings/notifications</div>
+                <div class="api-endpoint">PUT /api/drivers/settings/working-hours</div>
+                <div class="api-endpoint">PUT /api/drivers/settings/security</div>
+                <div class="api-endpoint">POST /api/drivers/settings/enable-2fa</div>
+            </div>
+        </div>
+
+        <!-- Document Upload Page -->
+        <div id="upload-page" class="spec-card">
+            <h2 class="text-2xl font-bold text-charcoal mb-6">Document Upload Page Specifications</h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <div>
+                    <h3 class="text-xl font-semibold text-charcoal mb-4">Upload Features</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <span class="w-6 h-6 bg-electric-blue rounded-full flex items-center justify-center text-white text-xs font-bold mr-3 mt-0.5">1</span>
+                            <div>
+                                <div class="font-semibold">Drag & Drop Interface</div>
+                                <div class="text-sm text-gray-600">Visual feedback for file dragging states</div>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="w-6 h-6 bg-electric-blue rounded-full flex items-center justify-center text-white text-xs font-bold mr-3 mt-0.5">2</span>
+                            <div>
+                                <div class="font-semibold">File Validation</div>
+                                <div class="text-sm text-gray-600">Size, format, and quality checks</div>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="w-6 h-6 bg-electric-blue rounded-full flex items-center justify-center text-white text-xs font-bold mr-3 mt-0.5">3</span>
+                            <div>
+                                <div class="font-semibold">Progress Tracking</div>
+                                <div class="text-sm text-gray-600">Overall completion and individual document status</div>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="w-6 h-6 bg-electric-blue rounded-full flex items-center justify-center text-white text-xs font-bold mr-3 mt-0.5">4</span>
+                            <div>
+                                <div class="font-semibold">Document Categories</div>
+                                <div class="text-sm text-gray-600">License, registration, insurance, background check</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-semibold text-charcoal mb-4">File Requirements</h3>
+                    <div class="space-y-3">
+                        <div class="p-3 bg-gray-50 rounded-lg">
+                            <div class="font-semibold text-sm">Supported Formats</div>
+                            <div class="text-sm text-gray-600">PDF, JPG, JPEG, PNG</div>
+                        </div>
+                        <div class="p-3 bg-gray-50 rounded-lg">
+                            <div class="font-semibold text-sm">Maximum Size</div>
+                            <div class="text-sm text-gray-600">10MB per file</div>
+                        </div>
+                        <div class="p-3 bg-gray-50 rounded-lg">
+                            <div class="font-semibold text-sm">Quality Standards</div>
+                            <div class="text-sm text-gray-600">High resolution, clear text, no blur/crop</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="text-xl font-semibold text-charcoal mb-4">Document Upload Flow</h3>
+            <div class="component-preview">
+                <div class="space-y-4">
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+                        <div class="w-16 h-16 bg-hot-pink bg-opacity-10 rounded-lg flex items-center justify-center mx-auto mb-4">
+                            <span class="text-hot-pink text-2xl">📋</span>
+                        </div>
+                        <h4 class="text-lg font-semibold text-charcoal mb-2">Upload Document</h4>
+                        <p class="text-sm text-gray-600 mb-4">Drag and drop your file here, or click to browse</p>
+                        <button class="px-4 py-2 bg-hot-pink text-white rounded-md text-sm">Browse Files</button>
+                    </div>
+                    
+                    <div class="text-xs text-gray-500 text-center">
+                        Upload states: default → hover → dragover → uploading → success/error
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="text-xl font-semibold text-charcoal mb-4 mt-6">API Endpoints</h3>
+            <div class="space-y-2">
+                <div class="api-endpoint">GET /api/drivers/documents/status</div>
+                <div class="api-endpoint">POST /api/drivers/documents/upload</div>
+                <div class="api-endpoint">DELETE /api/drivers/documents/{documentId}</div>
+                <div class="api-endpoint">GET /api/drivers/documents/requirements</div>
+            </div>
+
+            <h3 class="text-xl font-semibold text-charcoal mb-4 mt-6">Upload States</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-center">
+                    <div class="text-warning-amber text-2xl mb-2">⏳</div>
+                    <div class="font-semibold text-sm">Required</div>
+                    <div class="text-xs text-gray-600">Not yet uploaded</div>
+                </div>
+                <div class="p-4 bg-blue-50 border border-blue-200 rounded-lg text-center">
+                    <div class="text-electric-blue text-2xl mb-2">📤</div>
+                    <div class="font-semibold text-sm">Uploading</div>
+                    <div class="text-xs text-gray-600">File transfer in progress</div>
+                </div>
+                <div class="p-4 bg-green-50 border border-green-200 rounded-lg text-center">
+                    <div class="text-success-green text-2xl mb-2">✅</div>
+                    <div class="font-semibold text-sm">Uploaded</div>
+                    <div class="text-xs text-gray-600">Ready for review</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Document Verification Page -->
+        <div id="verification-page" class="spec-card">
+            <h2 class="text-2xl font-bold text-charcoal mb-6">Document Verification Page Specifications</h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <div>
+                    <h3 class="text-xl font-semibold text-charcoal mb-4">Verification Components</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <span class="w-6 h-6 bg-success-green rounded-full flex items-center justify-center text-white text-xs font-bold mr-3 mt-0.5">1</span>
+                            <div>
+                                <div class="font-semibold">Status Overview</div>
+                                <div class="text-sm text-gray-600">Overall progress with visual indicators</div>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="w-6 h-6 bg-success-green rounded-full flex items-center justify-center text-white text-xs font-bold mr-3 mt-0.5">2</span>
+                            <div>
+                                <div class="font-semibold">Timeline Tracker</div>
+                                <div class="text-sm text-gray-600">Step-by-step verification process</div>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="w-6 h-6 bg-success-green rounded-full flex items-center justify-center text-white text-xs font-bold mr-3 mt-0.5">3</span>
+                            <div>
+                                <div class="font-semibold">Document Status</div>
+                                <div class="text-sm text-gray-600">Individual document approval states</div>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="w-6 h-6 bg-success-green rounded-full flex items-center justify-center text-white text-xs font-bold mr-3 mt-0.5">4</span>
+                            <div>
+                                <div class="font-semibold">Compliance Checklist</div>
+                                <div class="text-sm text-gray-600">Requirements validation and next steps</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-semibold text-charcoal mb-4">Verification States</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center p-3 bg-green-50 border border-green-200 rounded-lg">
+                            <span class="w-8 h-8 bg-success-green rounded-full flex items-center justify-center text-white text-sm mr-3">✓</span>
+                            <div>
+                                <div class="font-semibold text-sm">Approved</div>
+                                <div class="text-xs text-gray-600">Document verified and accepted</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                            <span class="w-8 h-8 bg-warning-amber rounded-full flex items-center justify-center text-white text-sm mr-3">⏳</span>
+                            <div>
+                                <div class="font-semibold text-sm">Under Review</div>
+                                <div class="text-xs text-gray-600">Being processed by verification team</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center p-3 bg-red-50 border border-red-200 rounded-lg">
+                            <span class="w-8 h-8 bg-error-red rounded-full flex items-center justify-center text-white text-sm mr-3">✗</span>
+                            <div>
+                                <div class="font-semibold text-sm">Rejected</div>
+                                <div class="text-xs text-gray-600">Requires resubmission with corrections</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="text-xl font-semibold text-charcoal mb-4">Verification Timeline</h3>
+            <div class="component-preview">
+                <div class="relative">
+                    <div class="absolute left-6 top-0 bottom-0 w-0.5 bg-gray-300"></div>
+                    <div class="space-y-6">
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 bg-success-green rounded-full flex items-center justify-center text-white relative z-10">✓</div>
+                            <div class="ml-4">
+                                <h4 class="font-semibold">Documents Submitted</h4>
+                                <p class="text-sm text-gray-600">All required documents uploaded successfully</p>
+                                <div class="text-sm text-success-green font-medium">Completed</div>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 bg-warning-amber rounded-full flex items-center justify-center text-white relative z-10">⏳</div>
+                            <div class="ml-4">
+                                <h4 class="font-semibold">Background Verification</h4>
+                                <p class="text-sm text-gray-600">Conducting background checks and document authentication</p>
+                                <div class="text-sm text-warning-amber font-medium">In Progress</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="text-xl font-semibold text-charcoal mb-4 mt-6">API Endpoints</h3>
+            <div class="space-y-2">
+                <div class="api-endpoint">GET /api/drivers/verification/status</div>
+                <div class="api-endpoint">GET /api/drivers/verification/timeline</div>
+                <div class="api-endpoint">GET /api/drivers/verification/requirements</div>
+                <div class="api-endpoint">POST /api/drivers/verification/resubmit/{documentId}</div>
+            </div>
+        </div>
+
+        <!-- Technical Implementation -->
+        <div id="api-endpoints" class="spec-card">
+            <h2 class="text-2xl font-bold text-charcoal mb-6">Complete API Specification</h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-xl font-semibold text-charcoal mb-4">Earnings APIs</h3>
+                    <div class="space-y-4">
+                        <div class="border border-gray-200 rounded-lg p-4">
+                            <div class="api-endpoint mb-2">GET /api/drivers/earnings/overview</div>
+                            <div class="text-sm text-gray-600 mb-2">Returns current day, week, month earnings summary</div>
+                            <div class="code-block text-xs">
+{
+  "today": { "total": 1240, "trips": 8, "avgPerTrip": 155 },
+  "week": { "total": 8750, "trips": 47 },
+  "month": { "total": 28950, "trips": 156 },
+  "performance": { "rating": 4.9, "acceptRate": 95 }
+}
+                            </div>
+                        </div>
+                        
+                        <div class="border border-gray-200 rounded-lg p-4">
+                            <div class="api-endpoint mb-2">GET /api/drivers/earnings/history</div>
+                            <div class="text-sm text-gray-600 mb-2">Historical earnings data for charts</div>
+                            <div class="text-xs text-gray-500">Query params: period (7d|30d|90d)</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-semibold text-charcoal mb-4">Document APIs</h3>
+                    <div class="space-y-4">
+                        <div class="border border-gray-200 rounded-lg p-4">
+                            <div class="api-endpoint mb-2">POST /api/drivers/documents/upload</div>
+                            <div class="text-sm text-gray-600 mb-2">Upload document with metadata</div>
+                            <div class="code-block text-xs">
+{
+  "file": "multipart/form-data",
+  "documentType": "drivers_license|vehicle_registration|insurance|background_check",
+  "description": "string"
+}
+                            </div>
+                        </div>
+                        
+                        <div class="border border-gray-200 rounded-lg p-4">
+                            <div class="api-endpoint mb-2">GET /api/drivers/verification/status</div>
+                            <div class="text-sm text-gray-600 mb-2">Current verification status and progress</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Models -->
+        <div id="data-models" class="spec-card">
+            <h2 class="text-2xl font-bold text-charcoal mb-6">Data Models & Types</h2>
+            
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-xl font-semibold text-charcoal mb-4">Driver Interface</h3>
+                    <div class="code-block">
+interface Driver {
+  id: string;
+  userId: string;
+  personalInfo: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    dateOfBirth: string;
+    nationality: string;
+  };
+  driverLicense: {
+    number: string;
+    issueDate: string;
+    expiryDate: string;
+    issuingAuthority: string;
+    class: string;
+  };
+  vehicle: {
+    id: string;
+    make: string;
+    model: string;
+    year: number;
+    licensePlate: string;
+    category: 'BUSINESS' | 'EXECUTIVE' | 'LUXURY';
+    capacity: number;
+  };
+  verification: {
+    status: 'PENDING' | 'APPROVED' | 'REJECTED';
+    documents: Array<{
+      type: DocumentType;
+      status: 'PENDING' | 'APPROVED' | 'REJECTED';
+      uploadedAt: string;
+      reviewedAt?: string;
+      rejectionReason?: string;
+    }>;
+  };
+  settings: DriverSettings;
+  stats: {
+    totalTrips: number;
+    totalEarnings: number;
+    avgRating: number;
+    acceptanceRate: number;
+    completionRate: number;
+  };
+  isOnline: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+type DocumentType = 
+  | 'DRIVERS_LICENSE' 
+  | 'VEHICLE_REGISTRATION' 
+  | 'INSURANCE' 
+  | 'BACKGROUND_CHECK';
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-semibold text-charcoal mb-4">Earnings Interface</h3>
+                    <div class="code-block">
+interface EarningsData {
+  period: 'TODAY' | 'WEEK' | 'MONTH' | 'YEAR';
+  totalEarnings: number;
+  totalTrips: number;
+  avgEarningsPerTrip: number;
+  onlineTime: number; // minutes
+  acceptanceRate: number; // percentage
+  breakdown: {
+    baseFare: number;
+    distanceFare: number;
+    timeFare: number;
+    tips: number;
+    bonuses: number;
+    fees: number; // negative value
+  };
+  tripTypes: Array<{
+    type: 'CROSS_BORDER' | 'LONG_DISTANCE' | 'LOCAL';
+    count: number;
+    earnings: number;
+    percentage: number;
+  }>;
+  dailyTrend: Array<{
+    date: string;
+    earnings: number;
+    trips: number;
+  }>;
+}
+
+interface PaymentTransaction {
+  id: string;
+  type: 'EARNING' | 'PAYOUT' | 'FEE' | 'ADJUSTMENT';
+  amount: number;
+  currency: 'HKD' | 'CNY';
+  description: string;
+  tripId?: string;
+  status: 'PENDING' | 'COMPLETED' | 'FAILED';
+  createdAt: string;
+  processedAt?: string;
+}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Components -->
+        <div id="components" class="spec-card">
+            <h2 class="text-2xl font-bold text-charcoal mb-6">Reusable Components</h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-xl font-semibold text-charcoal mb-4">Tesla Card Component</h3>
+                    <div class="component-preview">
+                        <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition-all duration-300">
+                            <h4 class="text-lg font-semibold text-charcoal mb-2">Sample Card</h4>
+                            <p class="text-sm text-gray-600">Tesla-inspired card with hover effects and clean design</p>
+                        </div>
+                    </div>
+                    <div class="code-block text-xs">
+&lt;Card variant="default" hover={true}&gt;
+  &lt;h4 className="text-title-md font-semibold text-charcoal"&gt;
+    Card Title
+  &lt;/h4&gt;
+  &lt;p className="text-body-md text-gray-600"&gt;
+    Card content
+  &lt;/p&gt;
+&lt;/Card&gt;
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-semibold text-charcoal mb-4">Progress Bar Component</h3>
+                    <div class="component-preview">
+                        <div class="space-y-3">
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-gradient-to-r from-hot-pink to-deep-pink h-2 rounded-full" style="width: 75%;"></div>
+                            </div>
+                            <div class="text-sm text-gray-600">75% Complete</div>
+                        </div>
+                    </div>
+                    <div class="code-block text-xs">
+&lt;ProgressBar 
+  value={75} 
+  max={100} 
+  color="hot-pink"
+  showLabel={true}
+/&gt;
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="text-xl font-semibold text-charcoal mb-4 mt-8">Status Badge Component</h3>
+            <div class="component-preview">
+                <div class="flex flex-wrap gap-3">
+                    <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">✅ Approved</span>
+                    <span class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm font-medium">⏳ Pending</span>
+                    <span class="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-medium">❌ Rejected</span>
+                    <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">📄 Required</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Responsive Design -->
+        <div id="responsive-design" class="spec-card">
+            <h2 class="text-2xl font-bold text-charcoal mb-6">Responsive Design Guidelines</h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-xl font-semibold text-charcoal mb-4">Mobile (320px - 768px)</h3>
+                    <ul class="space-y-2 text-sm text-gray-700">
+                        <li>• Single column layouts</li>
+                        <li>• Stack cards vertically</li>
+                        <li>• Full-width buttons</li>
+                        <li>• Condensed navigation</li>
+                        <li>• Touch-friendly controls (44px+)</li>
+                        <li>• Swipe gestures for charts</li>
+                    </ul>
+                    
+                    <h4 class="font-semibold text-charcoal mt-4 mb-2">Key Adjustments</h4>
+                    <div class="code-block text-xs">
+/* Mobile-first approach */
+.earnings-grid {
+  grid-template-columns: 1fr;
+}
+
+.chart-container {
+  height: 200px; /* Smaller on mobile */
+}
+
+.settings-nav {
+  position: sticky;
+  top: 0;
+}
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-semibold text-charcoal mb-4">Tablet (768px - 1024px)</h3>
+                    <ul class="space-y-2 text-sm text-gray-700">
+                        <li>• Two-column layouts</li>
+                        <li>• Side-by-side charts</li>
+                        <li>• Tabbed navigation</li>
+                        <li>• Expanded card content</li>
+                        <li>• Larger touch targets</li>
+                        <li>• Horizontal scrolling tables</li>
+                    </ul>
+                    
+                    <h4 class="font-semibold text-charcoal mt-4 mb-2">Key Adjustments</h4>
+                    <div class="code-block text-xs">
+@media (min-width: 768px) {
+  .earnings-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .settings-layout {
+    grid-template-columns: 200px 1fr;
+  }
+}
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-semibold text-charcoal mb-4">Desktop (1024px+)</h3>
+                    <ul class="space-y-2 text-sm text-gray-700">
+                        <li>• Multi-column layouts</li>
+                        <li>• Sidebar navigation</li>
+                        <li>• Hover interactions</li>
+                        <li>• Expanded data tables</li>
+                        <li>• Multiple charts visible</li>
+                        <li>• Modal dialogs for details</li>
+                    </ul>
+                    
+                    <h4 class="font-semibold text-charcoal mt-4 mb-2">Key Adjustments</h4>
+                    <div class="code-block text-xs">
+@media (min-width: 1024px) {
+  .earnings-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  .main-layout {
+    grid-template-columns: 250px 1fr;
+  }
+  
+  .chart-container {
+    height: 400px;
+  }
+}
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="text-xl font-semibold text-charcoal mb-4 mt-8">Breakpoint Strategy</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full border-collapse border border-gray-300">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="border border-gray-300 px-4 py-2 text-left">Breakpoint</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left">Range</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left">Layout</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left">Navigation</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left">Cards Per Row</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="border border-gray-300 px-4 py-2">Mobile</td>
+                            <td class="border border-gray-300 px-4 py-2">320px - 767px</td>
+                            <td class="border border-gray-300 px-4 py-2">Single column</td>
+                            <td class="border border-gray-300 px-4 py-2">Bottom tab bar</td>
+                            <td class="border border-gray-300 px-4 py-2">1</td>
+                        </tr>
+                        <tr>
+                            <td class="border border-gray-300 px-4 py-2">Tablet</td>
+                            <td class="border border-gray-300 px-4 py-2">768px - 1023px</td>
+                            <td class="border border-gray-300 px-4 py-2">Two column</td>
+                            <td class="border border-gray-300 px-4 py-2">Side panel</td>
+                            <td class="border border-gray-300 px-4 py-2">2</td>
+                        </tr>
+                        <tr>
+                            <td class="border border-gray-300 px-4 py-2">Desktop</td>
+                            <td class="border border-gray-300 px-4 py-2">1024px+</td>
+                            <td class="border border-gray-300 px-4 py-2">Multi-column</td>
+                            <td class="border border-gray-300 px-4 py-2">Fixed sidebar</td>
+                            <td class="border border-gray-300 px-4 py-2">3-4</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Implementation Checklist -->
+        <div class="spec-card">
+            <h2 class="text-2xl font-bold text-charcoal mb-6">Implementation Checklist</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-xl font-semibold text-charcoal mb-4">Frontend Tasks</h3>
+                    <div class="space-y-3">
+                        <label class="flex items-center">
+                            <input type="checkbox" class="mr-3 text-hot-pink">
+                            <span class="text-sm">Create Tesla Card component</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" class="mr-3 text-hot-pink">
+                            <span class="text-sm">Implement Chart.js for earnings visualization</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" class="mr-3 text-hot-pink">
+                            <span class="text-sm">Build drag-and-drop file upload</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" class="mr-3 text-hot-pink">
+                            <span class="text-sm">Create settings toggle components</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" class="mr-3 text-hot-pink">
+                            <span class="text-sm">Implement responsive breakpoints</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" class="mr-3 text-hot-pink">
+                            <span class="text-sm">Add loading and error states</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-semibold text-charcoal mb-4">Backend Tasks</h3>
+                    <div class="space-y-3">
+                        <label class="flex items-center">
+                            <input type="checkbox" class="mr-3 text-hot-pink">
+                            <span class="text-sm">Create earnings API endpoints</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" class="mr-3 text-hot-pink">
+                            <span class="text-sm">Implement file upload with validation</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" class="mr-3 text-hot-pink">
+                            <span class="text-sm">Build verification workflow</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" class="mr-3 text-hot-pink">
+                            <span class="text-sm">Create settings management APIs</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" class="mr-3 text-hot-pink">
+                            <span class="text-sm">Add real-time notifications</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" class="mr-3 text-hot-pink">
+                            <span class="text-sm">Implement payment processing</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Smooth scrolling for table of contents links
+        document.querySelectorAll('.toc-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Highlight current section in TOC (optional enhancement)
+        function updateTOCHighlight() {
+            const sections = document.querySelectorAll('[id]');
+            const scrollPosition = window.scrollY + 100;
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.offsetHeight;
+                const tocLink = document.querySelector(`a[href="#${section.id}"]`);
+                
+                if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                    document.querySelectorAll('.toc-link').forEach(link => {
+                        link.classList.remove('bg-indigo-100');
+                    });
+                    if (tocLink) {
+                        tocLink.classList.add('bg-indigo-100');
+                    }
+                }
+            });
+        }
+
+        window.addEventListener('scroll', updateTOCHighlight);
+        updateTOCHighlight(); // Initial call
+    </script>
+</body>
+</html>

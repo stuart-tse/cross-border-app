@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-User Authentication Flow Designs</title>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #fafafa;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .auth-section {
+            background: white;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        .section-header {
+            background: linear-gradient(135deg, #171A20 0%, #2A2D35 100%);
+            color: white;
+            padding: 20px 30px;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        .auth-content {
+            padding: 30px;
+        }
+        .device-frame {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            margin: 20px 0;
+            overflow: hidden;
+            background: white;
+        }
+        .desktop-frame {
+            max-width: 1200px;
+        }
+        .mobile-frame {
+            max-width: 375px;
+            margin: 20px auto;
+        }
+        .nav-bar {
+            background: white;
+            border-bottom: 1px solid #f0f0f0;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-weight: 700;
+            color: #171A20;
+            font-size: 18px;
+        }
+        .logo .accent {
+            color: #FF69B4;
+        }
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 500px;
+            background: #fafafa;
+            padding: 40px 20px;
+        }
+        .auth-card {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+            width: 100%;
+            max-width: 400px;
+        }
+        .auth-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .auth-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #171A20;
+            margin-bottom: 8px;
+        }
+        .auth-subtitle {
+            color: #666;
+            font-size: 14px;
+        }
+        .user-type-selector {
+            margin-bottom: 32px;
+        }
+        .selector-title {
+            font-weight: 600;
+            color: #171A20;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        .user-type-grid {
+            display: grid;
+            gap: 12px;
+        }
+        .user-type-option {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .user-type-option:hover {
+            border-color: #FF69B4;
+            background: #FFF0F5;
+        }
+        .user-type-option.selected {
+            border-color: #FF69B4;
+            background: #FFF0F5;
+            position: relative;
+        }
+        .user-type-option.selected::after {
+            content: "✓";
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #FF69B4;
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .user-type-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        .user-type-icon.client {
+            background: linear-gradient(135deg, #FF69B4, #FF1493);
+            color: white;
+        }
+        .user-type-icon.driver {
+            background: linear-gradient(135deg, #00D563, #00A550);
+            color: white;
+        }
+        .user-type-icon.editor {
+            background: linear-gradient(135deg, #FFB800, #E6A600);
+            color: white;
+        }
+        .user-type-info {
+            flex: 1;
+        }
+        .user-type-name {
+            font-weight: 600;
+            color: #171A20;
+            margin-bottom: 4px;
+        }
+        .user-type-desc {
+            font-size: 12px;
+            color: #666;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: #171A20;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.2s ease;
+            box-sizing: border-box;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #FF69B4;
+            box-shadow: 0 0 0 3px rgba(255, 105, 180, 0.1);
+        }
+        .form-input.error {
+            border-color: #FF4B4B;
+        }
+        .error-message {
+            color: #FF4B4B;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+        .success-message {
+            color: #00D563;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+        .form-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .checkbox {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 3px;
+            cursor: pointer;
+            position: relative;
+        }
+        .checkbox.checked {
+            background: #FF69B4;
+            border-color: #FF69B4;
+        }
+        .checkbox.checked::after {
+            content: "✓";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        .checkbox-label {
+            font-size: 14px;
+            color: #666;
+            cursor: pointer;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn-primary {
+            background: #FF69B4;
+            color: white;
+            padding: 14px 24px;
+            width: 100%;
+            margin-bottom: 16px;
+        }
+        .btn-primary:hover {
+            background: #FF1493;
+            transform: translateY(-1px);
+        }
+        .btn-secondary {
+            background: transparent;
+            color: #FF69B4;
+            border: 2px solid #FF69B4;
+            padding: 12px 22px;
+            width: 100%;
+        }
+        .btn-secondary:hover {
+            background: #FF69B4;
+            color: white;
+        }
+        .btn-social {
+            background: white;
+            border: 2px solid #e0e0e0;
+            color: #666;
+            padding: 12px 20px;
+            width: 100%;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-social:hover {
+            border-color: #FF69B4;
+            color: #FF69B4;
+        }
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 24px 0;
+            color: #999;
+            font-size: 14px;
+        }
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e0e0e0;
+        }
+        .divider::before {
+            margin-right: 16px;
+        }
+        .divider::after {
+            margin-left: 16px;
+        }
+        .auth-link {
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            margin-top: 20px;
+        }
+        .auth-link a {
+            color: #FF69B4;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .auth-link a:hover {
+            text-decoration: underline;
+        }
+        .verification-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 32px;
+            padding: 0 10px;
+        }
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+        }
+        .step-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            color: #999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .step.active .step-icon {
+            background: #FF69B4;
+            color: white;
+        }
+        .step.completed .step-icon {
+            background: #00D563;
+            color: white;
+        }
+        .step-label {
+            font-size: 11px;
+            text-align: center;
+            color: #666;
+            line-height: 1.2;
+        }
+        .step.active .step-label {
+            color: #FF69B4;
+            font-weight: 500;
+        }
+        .step-connector {
+            flex: 1;
+            height: 2px;
+            background: #e0e0e0;
+            margin: 0 8px;
+            margin-top: 20px;
+        }
+        .step.completed + .step-connector {
+            background: #00D563;
+        }
+        .verification-status {
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+        .status-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .status-title {
+            font-weight: 600;
+            color: #171A20;
+        }
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .status-badge.pending {
+            background: #FFF8E7;
+            color: #FFB800;
+        }
+        .status-badge.verified {
+            background: #F0FFF0;
+            color: #00D563;
+        }
+        .status-badge.rejected {
+            background: #FFF0F0;
+            color: #FF4B4B;
+        }
+        .status-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: white;
+            border-radius: 6px;
+            border-left: 4px solid #e0e0e0;
+        }
+        .status-item.verified {
+            border-left-color: #00D563;
+        }
+        .status-item.pending {
+            border-left-color: #FFB800;
+        }
+        .status-item.rejected {
+            border-left-color: #FF4B4B;
+        }
+        .status-item-name {
+            font-size: 13px;
+            color: #171A20;
+        }
+        .status-item-status {
+            font-size: 11px;
+            font-weight: 500;
+        }
+        .otp-input {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+        .otp-digit {
+            width: 48px;
+            height: 48px;
+            text-align: center;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .otp-digit:focus {
+            outline: none;
+            border-color: #FF69B4;
+            box-shadow: 0 0 0 3px rgba(255, 105, 180, 0.1);
+        }
+        .verification-timer {
+            text-align: center;
+            margin-bottom: 16px;
+            font-size: 14px;
+            color: #666;
+        }
+        .timer-countdown {
+            color: #FF69B4;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            .auth-card {
+                padding: 24px;
+                margin: 20px;
+            }
+            .auth-title {
+                font-size: 24px;
+            }
+            .verification-steps {
+                flex-direction: column;
+                gap: 12px;
+            }
+            .step {
+                flex-direction: row;
+                align-items: center;
+                text-align: left;
+            }
+            .step-icon {
+                margin-right: 12px;
+                margin-bottom: 0;
+            }
+            .step-connector {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Registration Flow Overview -->
+        <div class="auth-section">
+            <div class="section-header">🔐 Multi-User Authentication System Overview</div>
+            <div class="auth-content">
+                <div style="background: #FFF0F5; padding: 20px; border-radius: 8px; border: 2px solid #FF69B4; margin-bottom: 24px;">
+                    <h3 style="margin-top: 0; color: #FF69B4;">🎯 Authentication Strategy</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
+                        <div>
+                            <h4 style="margin: 0 0 8px 0;">Role-Based Access</h4>
+                            <ul style="margin: 0; font-size: 12px; color: #666;">
+                                <li>Client users: Standard registration</li>
+                                <li>Drivers: Enhanced verification required</li>
+                                <li>Editors: Invitation-only access</li>
+                                <li>Admins: Super user permissions</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 style="margin: 0 0 8px 0;">Security Features</h4>
+                            <ul style="margin: 0; font-size: 12px; color: #666;">
+                                <li>Multi-factor authentication</li>
+                                <li>Email and SMS verification</li>
+                                <li>Password strength requirements</li>
+                                <li>Session management</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 style="margin: 0 0 8px 0;">Social Integration</h4>
+                            <ul style="margin: 0; font-size: 12px; color: #666;">
+                                <li>Google OAuth integration</li>
+                                <li>WeChat login for China market</li>
+                                <li>LinkedIn for business users</li>
+                                <li>Phone number verification</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 style="margin: 0 0 8px 0;">User Experience</h4>
+                            <ul style="margin: 0; font-size: 12px; color: #666;">
+                                <li>Progressive registration</li>
+                                <li>Auto-save form data</li>
+                                <li>Clear error messaging</li>
+                                <li>Mobile-optimized flows</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Type Selection -->
+        <div class="auth-section">
+            <div class="section-header">👥 User Type Selection Interface</div>
+            <div class="auth-content">
+                <div class="device-frame desktop-frame">
+                    <div class="nav-bar">
+                        <div class="logo">
+                            <span class="accent">●</span> CrossBorder
+                        </div>
+                        <div style="color: #666; font-size: 14px;">Join our platform</div>
+                    </div>
+                    
+                    <div class="auth-container">
+                        <div class="auth-card">
+                            <div class="auth-header">
+                                <div class="auth-title">Create Your Account</div>
+                                <div class="auth-subtitle">Choose your account type to get started</div>
+                            </div>
+
+                            <div class="user-type-selector">
+                                <div class="selector-title">I want to...</div>
+                                <div class="user-type-grid">
+                                    <div class="user-type-option selected">
+                                        <div class="user-type-icon client">👤</div>
+                                        <div class="user-type-info">
+                                            <div class="user-type-name">Book Transportation Services</div>
+                                            <div class="user-type-desc">As a client, book cross-border vehicle services and manage your trips</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="user-type-option">
+                                        <div class="user-type-icon driver">🚗</div>
+                                        <div class="user-type-info">
+                                            <div class="user-type-name">Provide Driver Services</div>
+                                            <div class="user-type-desc">As a driver, offer transportation services (requires verification)</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="user-type-option">
+                                        <div class="user-type-icon editor">✏️</div>
+                                        <div class="user-type-info">
+                                            <div class="user-type-name">Create Content</div>
+                                            <div class="user-type-desc">As an editor, manage blog content and articles (invitation only)</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-primary">Continue as Client →</button>
+                            
+                            <div class="auth-link">
+                                Already have an account? <a href="#">Sign in</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Client Registration -->
+        <div class="auth-section">
+            <div class="section-header">👤 Client Registration Flow</div>
+            <div class="auth-content">
+                <div class="device-frame desktop-frame">
+                    <div class="nav-bar">
+                        <div class="logo">
+                            <span class="accent">●</span> CrossBorder
+                        </div>
+                        <div style="color: #666; font-size: 14px;">Client Registration</div>
+                    </div>
+                    
+                    <div class="auth-container">
+                        <div class="auth-card">
+                            <div class="auth-header">
+                                <div class="auth-title">Join as a Client</div>
+                                <div class="auth-subtitle">Book and manage your cross-border journeys</div>
+                            </div>
+
+                            <!-- Social Login Options -->
+                            <div style="margin-bottom: 24px;">
+                                <button class="btn-social">
+                                    <span style="color: #4285f4;">G</span>
+                                    Continue with Google
+                                </button>
+                                <button class="btn-social">
+                                    <span style="color: #1da1f2;">💬</span>
+                                    Continue with WeChat
+                                </button>
+                            </div>
+
+                            <div class="divider">or sign up with email</div>
+
+                            <!-- Registration Form -->
+                            <form>
+                                <div class="form-group">
+                                    <label class="form-label">Full Name</label>
+                                    <input type="text" class="form-input" placeholder="Enter your full name" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Email Address</label>
+                                    <input type="email" class="form-input" placeholder="Enter your email" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Phone Number</label>
+                                    <input type="tel" class="form-input" placeholder="+852 or +86" required>
+                                    <div class="success-message">✓ We'll use this for booking confirmations</div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Password</label>
+                                    <input type="password" class="form-input" placeholder="Create a secure password" required>
+                                    <div style="font-size: 11px; color: #666; margin-top: 4px;">
+                                        Must be at least 8 characters with letters and numbers
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Confirm Password</label>
+                                    <input type="password" class="form-input" placeholder="Confirm your password" required>
+                                </div>
+
+                                <!-- Terms and Conditions -->
+                                <div class="form-checkbox">
+                                    <div class="checkbox checked"></div>
+                                    <div class="checkbox-label">
+                                        I agree to the <a href="#" style="color: #FF69B4;">Terms of Service</a> and <a href="#" style="color: #FF69B4;">Privacy Policy</a>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-checkbox">
+                                    <div class="checkbox"></div>
+                                    <div class="checkbox-label">
+                                        Send me travel tips and service updates via email
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary">Create Client Account</button>
+                            </form>
+                            
+                            <div class="auth-link">
+                                Already have an account? <a href="#">Sign in</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Driver Registration Flow -->
+        <div class="auth-section">
+            <div class="section-header">🚗 Driver Registration & Verification Flow</div>
+            <div class="auth-content">
+                <div class="device-frame desktop-frame">
+                    <div class="nav-bar">
+                        <div class="logo">
+                            <span class="accent">●</span> CrossBorder
+                        </div>
+                        <div style="color: #666; font-size: 14px;">Driver Registration</div>
+                    </div>
+                    
+                    <div class="auth-container">
+                        <div class="auth-card" style="max-width: 500px;">
+                            <div class="auth-header">
+                                <div class="auth-title">Become a Driver</div>
+                                <div class="auth-subtitle">Join our network of professional cross-border drivers</div>
+                            </div>
+
+                            <!-- Verification Steps -->
+                            <div class="verification-steps">
+                                <div class="step completed">
+                                    <div class="step-icon">✓</div>
+                                    <div class="step-label">Personal Info</div>
+                                </div>
+                                <div class="step-connector"></div>
+                                <div class="step active">
+                                    <div class="step-icon">2</div>
+                                    <div class="step-label">Documents</div>
+                                </div>
+                                <div class="step-connector"></div>
+                                <div class="step">
+                                    <div class="step-icon">3</div>
+                                    <div class="step-label">Vehicle Info</div>
+                                </div>
+                                <div class="step-connector"></div>
+                                <div class="step">
+                                    <div class="step-icon">4</div>
+                                    <div class="step-label">Verification</div>
+                                </div>
+                            </div>
+
+                            <!-- Current Step: Document Upload -->
+                            <div style="background: #F0F8FF; padding: 20px; border-radius: 8px; margin-bottom: 24px; border: 2px solid #0066CC;">
+                                <h4 style="margin-top: 0; color: #0066CC;">📄 Step 2: Document Upload</h4>
+                                <div class="form-group">
+                                    <label class="form-label">Hong Kong Driving License</label>
+                                    <input type="file" class="form-input" accept="image/*,.pdf" required>
+                                    <div style="font-size: 11px; color: #666; margin-top: 4px;">
+                                        Upload clear photo of front and back (JPG, PNG, or PDF)
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Cross-Border Driving Permit</label>
+                                    <input type="file" class="form-input" accept="image/*,.pdf" required>
+                                    <div style="font-size: 11px; color: #666; margin-top: 4px;">
+                                        Valid permit for Hong Kong-China border crossing
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Passport/ID Document</label>
+                                    <input type="file" class="form-input" accept="image/*,.pdf" required>
+                                    <div style="font-size: 11px; color: #666; margin-top: 4px;">
+                                        Government-issued photo identification
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Verification Status Dashboard -->
+                            <div class="verification-status">
+                                <div class="status-header">
+                                    <div class="status-title">Verification Progress</div>
+                                    <div class="status-badge pending">In Progress</div>
+                                </div>
+                                <div class="status-list">
+                                    <div class="status-item verified">
+                                        <div class="status-item-name">Personal Information</div>
+                                        <div class="status-item-status" style="color: #00D563;">✓ Verified</div>
+                                    </div>
+                                    <div class="status-item pending">
+                                        <div class="status-item-name">HK Driving License</div>
+                                        <div class="status-item-status" style="color: #FFB800;">⏳ Under Review</div>
+                                    </div>
+                                    <div class="status-item">
+                                        <div class="status-item-name">Cross-Border Permit</div>
+                                        <div class="status-item-status" style="color: #666;">○ Pending</div>
+                                    </div>
+                                    <div class="status-item">
+                                        <div class="status-item-name">Background Check</div>
+                                        <div class="status-item-status" style="color: #666;">○ Pending</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; gap: 12px;">
+                                <button class="btn btn-secondary" style="width: auto; flex: 1;">← Previous</button>
+                                <button class="btn btn-primary" style="width: auto; flex: 1;">Continue →</button>
+                            </div>
+                            
+                            <div style="background: #FFF8E7; padding: 12px; border-radius: 6px; margin-top: 16px; font-size: 12px; color: #996600;">
+                                💡 Verification typically takes 2-3 business days. We'll notify you of any updates.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Email Verification -->
+        <div class="auth-section">
+            <div class="section-header">📧 Email & Phone Verification Interface</div>
+            <div class="auth-content">
+                <div class="device-frame desktop-frame">
+                    <div class="nav-bar">
+                        <div class="logo">
+                            <span class="accent">●</span> CrossBorder
+                        </div>
+                        <div style="color: #666; font-size: 14px;">Account Verification</div>
+                    </div>
+                    
+                    <div class="auth-container">
+                        <div class="auth-card">
+                            <div class="auth-header">
+                                <div class="auth-title">Verify Your Account</div>
+                                <div class="auth-subtitle">We've sent a verification code to<br><strong>john.doe@email.com</strong></div>
+                            </div>
+
+                            <!-- OTP Input -->
+                            <div class="otp-input">
+                                <input type="text" class="otp-digit" maxlength="1" value="1">
+                                <input type="text" class="otp-digit" maxlength="1" value="2">
+                                <input type="text" class="otp-digit" maxlength="1" value="3">
+                                <input type="text" class="otp-digit" maxlength="1" value="">
+                                <input type="text" class="otp-digit" maxlength="1" value="">
+                                <input type="text" class="otp-digit" maxlength="1" value="">
+                            </div>
+
+                            <div class="verification-timer">
+                                Code expires in <span class="timer-countdown">04:32</span>
+                            </div>
+
+                            <button class="btn btn-primary">Verify Account</button>
+                            
+                            <div style="text-align: center; margin-top: 16px;">
+                                <a href="#" style="color: #FF69B4; text-decoration: none; font-size: 14px;">Didn't receive the code? Resend</a>
+                            </div>
+                            
+                            <div class="auth-link">
+                                Wrong email? <a href="#">Change email address</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Login Interface -->
+        <div class="auth-section">
+            <div class="section-header">🔑 Login Interface</div>
+            <div class="auth-content">
+                <div class="device-frame desktop-frame">
+                    <div class="nav-bar">
+                        <div class="logo">
+                            <span class="accent">●</span> CrossBorder
+                        </div>
+                        <div style="color: #666; font-size: 14px;">Welcome back</div>
+                    </div>
+                    
+                    <div class="auth-container">
+                        <div class="auth-card">
+                            <div class="auth-header">
+                                <div class="auth-title">Welcome Back</div>
+                                <div class="auth-subtitle">Sign in to your account</div>
+                            </div>
+
+                            <!-- Social Login -->
+                            <div style="margin-bottom: 20px;">
+                                <button class="btn-social">
+                                    <span style="color: #4285f4;">G</span>
+                                    Sign in with Google
+                                </button>
+                                <button class="btn-social">
+                                    <span style="color: #1da1f2;">💬</span>
+                                    Sign in with WeChat
+                                </button>
+                            </div>
+
+                            <div class="divider">or</div>
+
+                            <!-- Login Form -->
+                            <form>
+                                <div class="form-group">
+                                    <label class="form-label">Email or Phone</label>
+                                    <input type="text" class="form-input" placeholder="Enter email or phone number" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Password</label>
+                                    <input type="password" class="form-input" placeholder="Enter your password" required>
+                                </div>
+
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                                    <div class="form-checkbox">
+                                        <div class="checkbox checked"></div>
+                                        <div class="checkbox-label">Remember me</div>
+                                    </div>
+                                    <a href="#" style="color: #FF69B4; text-decoration: none; font-size: 14px;">Forgot password?</a>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary">Sign In</button>
+                            </form>
+                            
+                            <div class="auth-link">
+                                Don't have an account? <a href="#">Create account</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Password Reset Flow -->
+        <div class="auth-section">
+            <div class="section-header">🔄 Password Reset Interface</div>
+            <div class="auth-content">
+                <div class="device-frame desktop-frame">
+                    <div class="nav-bar">
+                        <div class="logo">
+                            <span class="accent">●</span> CrossBorder
+                        </div>
+                        <div style="color: #666; font-size: 14px;">Reset Password</div>
+                    </div>
+                    
+                    <div class="auth-container">
+                        <div class="auth-card">
+                            <div class="auth-header">
+                                <div class="auth-title">Reset Your Password</div>
+                                <div class="auth-subtitle">Enter your email and we'll send you a reset link</div>
+                            </div>
+
+                            <form>
+                                <div class="form-group">
+                                    <label class="form-label">Email Address</label>
+                                    <input type="email" class="form-input" placeholder="Enter your email address" required>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary">Send Reset Link</button>
+                            </form>
+                            
+                            <div class="auth-link">
+                                Remember your password? <a href="#">Sign in</a>
+                            </div>
+                            
+                            <!-- Success State -->
+                            <div style="background: #F0FFF0; border: 2px solid #00D563; border-radius: 8px; padding: 20px; margin-top: 20px; text-align: center;">
+                                <div style="color: #00D563; font-size: 48px; margin-bottom: 12px;">✓</div>
+                                <div style="font-weight: 600; color: #171A20; margin-bottom: 8px;">Check Your Email</div>
+                                <div style="font-size: 14px; color: #666;">We've sent a password reset link to your email address.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Authentication -->
+        <div class="auth-section">
+            <div class="section-header">📱 Mobile Authentication Interface</div>
+            <div class="auth-content">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
+                    <!-- Mobile Registration -->
+                    <div class="device-frame mobile-frame">
+                        <div class="nav-bar" style="padding: 12px 16px;">
+                            <div class="logo" style="font-size: 16px;">
+                                <span class="accent">●</span> CrossBorder
+                            </div>
+                            <div style="font-size: 14px; color: #666;">Sign Up</div>
+                        </div>
+                        
+                        <div class="auth-container" style="padding: 20px; min-height: 400px;">
+                            <div style="text-align: center; margin-bottom: 24px;">
+                                <div style="font-size: 24px; font-weight: 700; color: #171A20; margin-bottom: 8px;">Join CrossBorder</div>
+                                <div style="color: #666; font-size: 14px;">Create your account</div>
+                            </div>
+
+                            <!-- Mobile User Type Selection -->
+                            <div style="margin-bottom: 24px;">
+                                <div style="font-weight: 600; margin-bottom: 12px; text-align: center;">Choose account type:</div>
+                                <div style="display: grid; gap: 8px;">
+                                    <div style="border: 2px solid #FF69B4; background: #FFF0F5; border-radius: 6px; padding: 12px; display: flex; align-items: center; gap: 8px;">
+                                        <div style="width: 24px; height: 24px; background: #FF69B4; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px;">👤</div>
+                                        <div>
+                                            <div style="font-weight: 600; font-size: 14px;">Client</div>
+                                            <div style="font-size: 11px; color: #666;">Book services</div>
+                                        </div>
+                                        <div style="margin-left: auto; color: #FF69B4;">✓</div>
+                                    </div>
+                                    <div style="border: 1px solid #e0e0e0; border-radius: 6px; padding: 12px; display: flex; align-items: center; gap: 8px;">
+                                        <div style="width: 24px; height: 24px; background: #00D563; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px;">🚗</div>
+                                        <div>
+                                            <div style="font-weight: 600; font-size: 14px;">Driver</div>
+                                            <div style="font-size: 11px; color: #666;">Provide services</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Mobile Form -->
+                            <form>
+                                <div style="margin-bottom: 16px;">
+                                    <input type="text" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 16px; box-sizing: border-box;" placeholder="Full Name" required>
+                                </div>
+                                <div style="margin-bottom: 16px;">
+                                    <input type="email" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 16px; box-sizing: border-box;" placeholder="Email Address" required>
+                                </div>
+                                <div style="margin-bottom: 16px;">
+                                    <input type="password" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 16px; box-sizing: border-box;" placeholder="Password" required>
+                                </div>
+
+                                <button type="submit" style="width: 100%; background: #FF69B4; color: white; border: none; padding: 14px; border-radius: 6px; font-size: 16px; font-weight: 600; margin-bottom: 16px;">Create Account</button>
+                            </form>
+                            
+                            <div style="text-align: center; font-size: 14px; color: #666;">
+                                Already have an account? <a href="#" style="color: #FF69B4;">Sign in</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mobile Login -->
+                    <div class="device-frame mobile-frame">
+                        <div class="nav-bar" style="padding: 12px 16px;">
+                            <div class="logo" style="font-size: 16px;">
+                                <span class="accent">●</span> CrossBorder
+                            </div>
+                            <div style="font-size: 14px; color: #666;">Sign In</div>
+                        </div>
+                        
+                        <div class="auth-container" style="padding: 20px; min-height: 400px;">
+                            <div style="text-align: center; margin-bottom: 24px;">
+                                <div style="font-size: 24px; font-weight: 700; color: #171A20; margin-bottom: 8px;">Welcome Back</div>
+                                <div style="color: #666; font-size: 14px;">Sign in to continue</div>
+                            </div>
+
+                            <!-- Mobile Social Login -->
+                            <div style="margin-bottom: 20px;">
+                                <button style="width: 100%; background: white; border: 2px solid #e0e0e0; color: #666; padding: 12px; border-radius: 6px; font-size: 14px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                    <span style="color: #4285f4; font-weight: bold;">G</span>
+                                    Continue with Google
+                                </button>
+                                <button style="width: 100%; background: white; border: 2px solid #e0e0e0; color: #666; padding: 12px; border-radius: 6px; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                    <span style="color: #1da1f2;">💬</span>
+                                    Continue with WeChat
+                                </button>
+                            </div>
+
+                            <div style="display: flex; align-items: center; margin: 20px 0; color: #999; font-size: 14px;">
+                                <div style="flex: 1; height: 1px; background: #e0e0e0;"></div>
+                                <div style="margin: 0 16px;">or</div>
+                                <div style="flex: 1; height: 1px; background: #e0e0e0;"></div>
+                            </div>
+
+                            <form>
+                                <div style="margin-bottom: 16px;">
+                                    <input type="text" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 16px; box-sizing: border-box;" placeholder="Email or Phone" required>
+                                </div>
+                                <div style="margin-bottom: 16px;">
+                                    <input type="password" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 16px; box-sizing: border-box;" placeholder="Password" required>
+                                </div>
+
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; font-size: 14px;">
+                                    <label style="display: flex; align-items: center; gap: 6px;">
+                                        <input type="checkbox" style="margin: 0;">
+                                        Remember me
+                                    </label>
+                                    <a href="#" style="color: #FF69B4; text-decoration: none;">Forgot?</a>
+                                </div>
+
+                                <button type="submit" style="width: 100%; background: #FF69B4; color: white; border: none; padding: 14px; border-radius: 6px; font-size: 16px; font-weight: 600;">Sign In</button>
+                            </form>
+                            
+                            <div style="text-align: center; font-size: 14px; color: #666; margin-top: 16px;">
+                                Don't have an account? <a href="#" style="color: #FF69B4;">Sign up</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

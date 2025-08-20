@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Flow Diagrams - Cross-Border Vehicle Website</title>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #fafafa;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .flow-section {
+            background: white;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        .section-header {
+            background: linear-gradient(135deg, #171A20 0%, #2A2D35 100%);
+            color: white;
+            padding: 20px 30px;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        .flow-content {
+            padding: 30px;
+        }
+        .flow-diagram {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .flow-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .flow-step {
+            background: #f9f9f9;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 16px;
+            min-width: 200px;
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+        .flow-step.start {
+            background: linear-gradient(135deg, #FF69B4, #FF1493);
+            color: white;
+            border-color: #FF1493;
+        }
+        .flow-step.decision {
+            background: #FFF8E7;
+            border-color: #FFB800;
+            border-style: dashed;
+        }
+        .flow-step.process {
+            background: #F0F8FF;
+            border-color: #0066CC;
+        }
+        .flow-step.end {
+            background: #F0FFF0;
+            border-color: #00D563;
+        }
+        .flow-step.error {
+            background: #FFF0F0;
+            border-color: #FF4B4B;
+        }
+        .flow-arrow {
+            font-size: 20px;
+            color: #FF69B4;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        .step-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+        .step-desc {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        .flow-branch {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-left: 20px;
+        }
+        .branch-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 4px;
+            font-style: italic;
+        }
+        .user-type-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: #FF69B4;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .user-type-badge.client {
+            background: #FF69B4;
+        }
+        .user-type-badge.driver {
+            background: #00D563;
+        }
+        .user-type-badge.editor {
+            background: #FFB800;
+        }
+        .complexity-indicator {
+            display: flex;
+            gap: 4px;
+            margin-top: 8px;
+            justify-content: center;
+        }
+        .complexity-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #e0e0e0;
+        }
+        .complexity-dot.active {
+            background: #FF69B4;
+        }
+        .pain-point {
+            background: #FFF0F0;
+            border: 1px solid #FF4B4B;
+            border-radius: 4px;
+            padding: 8px;
+            margin-top: 8px;
+            font-size: 11px;
+            color: #CC0000;
+        }
+        .optimization {
+            background: #F0FFF0;
+            border: 1px solid #00D563;
+            border-radius: 4px;
+            padding: 8px;
+            margin-top: 8px;
+            font-size: 11px;
+            color: #006600;
+        }
+        .touchpoint {
+            display: inline-block;
+            background: rgba(255, 105, 180, 0.1);
+            color: #FF1493;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 10px;
+            margin: 2px;
+        }
+        .journey-map {
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .journey-phase {
+            margin-bottom: 24px;
+            padding: 16px;
+            background: white;
+            border-radius: 6px;
+            border-left: 4px solid #FF69B4;
+        }
+        .phase-title {
+            font-weight: 600;
+            color: #171A20;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .phase-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+            font-size: 12px;
+        }
+        .phase-section {
+            padding: 8px;
+            border-radius: 4px;
+        }
+        .phase-section.actions {
+            background: #F0F8FF;
+        }
+        .phase-section.thoughts {
+            background: #FFF8E7;
+        }
+        .phase-section.emotions {
+            background: #F0FFF0;
+        }
+        
+        @media (max-width: 768px) {
+            .flow-row {
+                flex-direction: column;
+            }
+            .flow-arrow {
+                transform: rotate(90deg);
+            }
+            .phase-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Overview -->
+        <div class="flow-section">
+            <div class="section-header">🗺️ User Flow Overview - Three User Types</div>
+            <div class="flow-content">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 30px;">
+                    <div style="background: linear-gradient(135deg, #FF69B4, #FF1493); color: white; padding: 20px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 24px; margin-bottom: 8px;">👤</div>
+                        <h3 style="margin: 0 0 8px 0;">Client Users</h3>
+                        <p style="margin: 0; font-size: 14px; opacity: 0.9;">Book services, manage trips, simple registration</p>
+                        <div class="complexity-indicator">
+                            <div class="complexity-dot active"></div>
+                            <div class="complexity-dot"></div>
+                            <div class="complexity-dot"></div>
+                        </div>
+                    </div>
+                    <div style="background: linear-gradient(135deg, #00D563, #00A550); color: white; padding: 20px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 24px; margin-bottom: 8px;">🚗</div>
+                        <h3 style="margin: 0 0 8px 0;">Driver Users</h3>
+                        <p style="margin: 0; font-size: 14px; opacity: 0.9;">Complex verification, document upload, availability management</p>
+                        <div class="complexity-indicator">
+                            <div class="complexity-dot active"></div>
+                            <div class="complexity-dot active"></div>
+                            <div class="complexity-dot active"></div>
+                        </div>
+                    </div>
+                    <div style="background: linear-gradient(135deg, #FFB800, #E6A600); color: white; padding: 20px; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 24px; margin-bottom: 8px;">✏️</div>
+                        <h3 style="margin: 0 0 8px 0;">Blog Editor Users</h3>
+                        <p style="margin: 0; font-size: 14px; opacity: 0.9;">Content management, SEO optimization, publishing workflow</p>
+                        <div class="complexity-indicator">
+                            <div class="complexity-dot active"></div>
+                            <div class="complexity-dot active"></div>
+                            <div class="complexity-dot"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background: #FFF0F5; padding: 20px; border-radius: 8px; border: 2px solid #FF69B4;">
+                    <h4 style="margin-top: 0; color: #FF69B4;">🎯 Key Flow Principles</h4>
+                    <ul style="margin: 0; columns: 2; column-gap: 40px;">
+                        <li>Progressive disclosure - show relevant information when needed</li>
+                        <li>Clear user type identification throughout the journey</li>
+                        <li>Minimal friction for client bookings</li>
+                        <li>Comprehensive verification for drivers</li>
+                        <li>Professional tools for content editors</li>
+                        <li>Error handling and recovery paths</li>
+                        <li>Mobile-optimized flows for all user types</li>
+                        <li>Real-time feedback and status updates</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Client User Flow -->
+        <div class="flow-section">
+            <div class="section-header">👤 Client User Flow - Booking Journey</div>
+            <div class="flow-content">
+                <div class="user-type-badge client">CLIENT JOURNEY</div>
+                <p><strong>Primary Goal:</strong> Book a cross-border vehicle service quickly and easily</p>
+                
+                <div class="flow-diagram">
+                    <!-- Entry Points -->
+                    <div class="flow-row">
+                        <div class="flow-step start">
+                            <div class="step-title">Entry Points</div>
+                            <div class="step-desc">Homepage, Google Ads, Referral</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step decision">
+                            <div class="step-title">New vs Returning?</div>
+                            <div class="step-desc">First time or logged in?</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Registration Branch -->
+                    <div class="flow-branch">
+                        <div class="branch-label">New User Path</div>
+                        <div class="flow-row">
+                            <div class="flow-step process">
+                                <div class="step-title">Quick Registration</div>
+                                <div class="step-desc">Name, email, phone</div>
+                                <div class="touchpoint">Form</div>
+                                <div class="optimization">Social login options</div>
+                            </div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-step process">
+                                <div class="step-title">Email Verification</div>
+                                <div class="step-desc">Optional verification</div>
+                                <div class="touchpoint">Email</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Booking Flow -->
+                    <div class="flow-row">
+                        <div class="flow-step process">
+                            <div class="step-title">Step 1: Location</div>
+                            <div class="step-desc">Pickup & destination with Amap</div>
+                            <div class="touchpoint">Map API</div>
+                            <div class="optimization">Auto-complete suggestions</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step process">
+                            <div class="step-title">Step 2: Vehicle</div>
+                            <div class="step-desc">Select vehicle type & capacity</div>
+                            <div class="touchpoint">Vehicle Cards</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step process">
+                            <div class="step-title">Step 3: Schedule</div>
+                            <div class="step-desc">Date, time, preferences</div>
+                            <div class="touchpoint">Date Picker</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Payment & Confirmation -->
+                    <div class="flow-row">
+                        <div class="flow-step process">
+                            <div class="step-title">Step 4: Payment</div>
+                            <div class="step-desc">Payment method & confirmation</div>
+                            <div class="touchpoint">Payment Gateway</div>
+                            <div class="pain-point">Payment security concerns</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step end">
+                            <div class="step-title">Booking Confirmed</div>
+                            <div class="step-desc">Confirmation & tracking info</div>
+                            <div class="touchpoint">SMS + Email</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Client Journey Map -->
+                <div class="journey-map">
+                    <h3 style="margin-top: 0; color: #FF69B4;">Client User Journey Emotional Map</h3>
+                    
+                    <div class="journey-phase">
+                        <div class="phase-title">
+                            <span>🔍</span> Awareness & Discovery
+                        </div>
+                        <div class="phase-content">
+                            <div class="phase-section actions">
+                                <strong>Actions:</strong><br>
+                                • Google search for cross-border transport<br>
+                                • Compare service providers<br>
+                                • Check reviews and pricing
+                            </div>
+                            <div class="phase-section thoughts">
+                                <strong>Thoughts:</strong><br>
+                                • "Is this service reliable?"<br>
+                                • "What are the real costs?"<br>
+                                • "How complicated is border crossing?"
+                            </div>
+                            <div class="phase-section emotions">
+                                <strong>Emotions:</strong><br>
+                                😰 Uncertainty<br>
+                                🤔 Skeptical<br>
+                                🔍 Curious
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="journey-phase">
+                        <div class="phase-title">
+                            <span>📝</span> Registration & Setup
+                        </div>
+                        <div class="phase-content">
+                            <div class="phase-section actions">
+                                <strong>Actions:</strong><br>
+                                • Create account<br>
+                                • Verify email/phone<br>
+                                • Review service options
+                            </div>
+                            <div class="phase-section thoughts">
+                                <strong>Thoughts:</strong><br>
+                                • "This seems straightforward"<br>
+                                • "Good, they have social login"<br>
+                                • "Nice clean interface"
+                            </div>
+                            <div class="phase-section emotions">
+                                <strong>Emotions:</strong><br>
+                                😊 Optimistic<br>
+                                👍 Confident<br>
+                                ⚡ Eager
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="journey-phase">
+                        <div class="phase-title">
+                            <span>📅</span> Booking Process
+                        </div>
+                        <div class="phase-content">
+                            <div class="phase-section actions">
+                                <strong>Actions:</strong><br>
+                                • Enter pickup/destination<br>
+                                • Select vehicle and time<br>
+                                • Review pricing<br>
+                                • Complete payment
+                            </div>
+                            <div class="phase-section thoughts">
+                                <strong>Thoughts:</strong><br>
+                                • "Great, the map shows my exact location"<br>
+                                • "Pricing is transparent"<br>
+                                • "Payment feels secure"
+                            </div>
+                            <div class="phase-section emotions">
+                                <strong>Emotions:</strong><br>
+                                😌 Relaxed<br>
+                                ✅ Satisfied<br>
+                                🎯 Focused
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="journey-phase">
+                        <div class="phase-title">
+                            <span>🚗</span> Service Experience
+                        </div>
+                        <div class="phase-content">
+                            <div class="phase-section actions">
+                                <strong>Actions:</strong><br>
+                                • Receive confirmation<br>
+                                • Track driver location<br>
+                                • Complete journey<br>
+                                • Rate experience
+                            </div>
+                            <div class="phase-section thoughts">
+                                <strong>Thoughts:</strong><br>
+                                • "Driver is professional"<br>
+                                • "Border crossing was smooth"<br>
+                                • "I'll use this again"
+                            </div>
+                            <div class="phase-section emotions">
+                                <strong>Emotions:</strong><br>
+                                😊 Happy<br>
+                                💯 Impressed<br>
+                                🔄 Loyal
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Driver User Flow -->
+        <div class="flow-section">
+            <div class="section-header">🚗 Driver User Flow - Verification & Onboarding</div>
+            <div class="flow-content">
+                <div class="user-type-badge driver">DRIVER JOURNEY</div>
+                <p><strong>Primary Goal:</strong> Complete verification process and start earning income</p>
+                
+                <div class="flow-diagram">
+                    <!-- Application Start -->
+                    <div class="flow-row">
+                        <div class="flow-step start">
+                            <div class="step-title">Driver Application</div>
+                            <div class="step-desc">Interest in becoming driver</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step process">
+                            <div class="step-title">Initial Screening</div>
+                            <div class="step-desc">Basic eligibility check</div>
+                            <div class="touchpoint">Form</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step decision">
+                            <div class="step-title">Eligible?</div>
+                            <div class="step-desc">Meets basic requirements</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Registration Process -->
+                    <div class="flow-row">
+                        <div class="flow-step process">
+                            <div class="step-title">Account Creation</div>
+                            <div class="step-desc">Personal info, contact details</div>
+                            <div class="touchpoint">Registration Form</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step process">
+                            <div class="step-title">Document Upload</div>
+                            <div class="step-desc">License, insurance, vehicle docs</div>
+                            <div class="touchpoint">File Upload</div>
+                            <div class="pain-point">Complex documentation requirements</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Verification Stages -->
+                    <div class="flow-row">
+                        <div class="flow-step process">
+                            <div class="step-title">HK License Verification</div>
+                            <div class="step-desc">Driving permit validation</div>
+                            <div class="touchpoint">Document Review</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step process">
+                            <div class="step-title">Vehicle Registration</div>
+                            <div class="step-desc">Cross-border vehicle permit</div>
+                            <div class="touchpoint">System Check</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step process">
+                            <div class="step-title">Insurance Verification</div>
+                            <div class="step-desc">HK & China insurance docs</div>
+                            <div class="touchpoint">Policy Check</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Background Check -->
+                    <div class="flow-row">
+                        <div class="flow-step process">
+                            <div class="step-title">Background Check</div>
+                            <div class="step-desc">Criminal record, driving history</div>
+                            <div class="touchpoint">External API</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step decision">
+                            <div class="step-title">All Checks Pass?</div>
+                            <div class="step-desc">Complete verification</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Onboarding -->
+                    <div class="flow-branch">
+                        <div class="branch-label">Approved Path</div>
+                        <div class="flow-row">
+                            <div class="flow-step process">
+                                <div class="step-title">Onboarding Training</div>
+                                <div class="step-desc">Platform training, best practices</div>
+                                <div class="touchpoint">Video + Quiz</div>
+                            </div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-step process">
+                                <div class="step-title">Profile Setup</div>
+                                <div class="step-desc">Photo, bio, availability</div>
+                                <div class="touchpoint">Profile Form</div>
+                            </div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-step end">
+                                <div class="step-title">Active Driver</div>
+                                <div class="step-desc">Ready to receive bookings</div>
+                                <div class="touchpoint">Dashboard</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Rejection Path -->
+                    <div class="flow-branch">
+                        <div class="branch-label">Rejected Path</div>
+                        <div class="flow-row">
+                            <div class="flow-step error">
+                                <div class="step-title">Application Rejected</div>
+                                <div class="step-desc">Clear reason provided</div>
+                                <div class="touchpoint">Email + SMS</div>
+                            </div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-step decision">
+                                <div class="step-title">Appeal Option?</div>
+                                <div class="step-desc">Correctable issues</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Driver Verification Status Tracker -->
+                <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin-top: 20px;">
+                    <h4 style="margin-top: 0; color: #00D563;">🔄 Driver Verification Status Tracker</h4>
+                    <div style="display: grid; gap: 12px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #F0FFF0; border-radius: 6px; border-left: 4px solid #00D563;">
+                            <div>
+                                <div style="font-weight: 600;">✅ Personal Information</div>
+                                <div style="font-size: 12px; color: #666;">Name, contact details, address</div>
+                            </div>
+                            <div style="color: #00D563; font-weight: 600;">Verified</div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #F0FFF0; border-radius: 6px; border-left: 4px solid #00D563;">
+                            <div>
+                                <div style="font-weight: 600;">✅ Hong Kong Driving License</div>
+                                <div style="font-size: 12px; color: #666;">Valid cross-border permit</div>
+                            </div>
+                            <div style="color: #00D563; font-weight: 600;">Verified</div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #FFF8E7; border-radius: 6px; border-left: 4px solid #FFB800;">
+                            <div>
+                                <div style="font-weight: 600;">⏳ Vehicle Registration</div>
+                                <div style="font-size: 12px; color: #666;">Cross-border vehicle permit</div>
+                            </div>
+                            <div style="color: #FFB800; font-weight: 600;">Under Review</div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #FFF0F0; border-radius: 6px; border-left: 4px solid #FF4B4B;">
+                            <div>
+                                <div style="font-weight: 600;">❌ Insurance Documents</div>
+                                <div style="font-size: 12px; color: #666;">Both HK and China coverage required</div>
+                            </div>
+                            <div style="color: #FF4B4B; font-weight: 600;">Required</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Blog Editor User Flow -->
+        <div class="flow-section">
+            <div class="section-header">✏️ Blog Editor User Flow - Content Management</div>
+            <div class="flow-content">
+                <div class="user-type-badge editor">EDITOR JOURNEY</div>
+                <p><strong>Primary Goal:</strong> Create, manage, and publish high-quality content efficiently</p>
+                
+                <div class="flow-diagram">
+                    <!-- Editor Access -->
+                    <div class="flow-row">
+                        <div class="flow-step start">
+                            <div class="step-title">Editor Invitation</div>
+                            <div class="step-desc">Invitation-only access</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step process">
+                            <div class="step-title">Account Setup</div>
+                            <div class="step-desc">Profile & permissions</div>
+                            <div class="touchpoint">Invitation Email</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step process">
+                            <div class="step-title">CMS Training</div>
+                            <div class="step-desc">Platform orientation</div>
+                            <div class="touchpoint">Tutorial</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Content Creation -->
+                    <div class="flow-row">
+                        <div class="flow-step process">
+                            <div class="step-title">New Article</div>
+                            <div class="step-desc">Start new content</div>
+                            <div class="touchpoint">CMS Dashboard</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step decision">
+                            <div class="step-title">Content Type?</div>
+                            <div class="step-desc">Article, guide, update</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Writing Process -->
+                    <div class="flow-row">
+                        <div class="flow-step process">
+                            <div class="step-title">Content Writing</div>
+                            <div class="step-desc">Rich text editor</div>
+                            <div class="touchpoint">WYSIWYG Editor</div>
+                            <div class="optimization">Auto-save functionality</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step process">
+                            <div class="step-title">Media Upload</div>
+                            <div class="step-desc">Images, videos, assets</div>
+                            <div class="touchpoint">Media Library</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step process">
+                            <div class="step-title">SEO Optimization</div>
+                            <div class="step-desc">Meta tags, keywords</div>
+                            <div class="touchpoint">SEO Fields</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Review & Publishing -->
+                    <div class="flow-row">
+                        <div class="flow-step process">
+                            <div class="step-title">Preview & Review</div>
+                            <div class="step-desc">Content preview</div>
+                            <div class="touchpoint">Preview Mode</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step decision">
+                            <div class="step-title">Ready to Publish?</div>
+                            <div class="step-desc">Quality check</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Publishing Options -->
+                    <div class="flow-branch">
+                        <div class="branch-label">Ready Path</div>
+                        <div class="flow-row">
+                            <div class="flow-step process">
+                                <div class="step-title">Schedule/Publish</div>
+                                <div class="step-desc">Immediate or scheduled</div>
+                                <div class="touchpoint">Publishing Options</div>
+                            </div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-step end">
+                                <div class="step-title">Content Live</div>
+                                <div class="step-desc">Published & trackable</div>
+                                <div class="touchpoint">Analytics</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Draft Path -->
+                    <div class="flow-branch">
+                        <div class="branch-label">Needs Work Path</div>
+                        <div class="flow-row">
+                            <div class="flow-step process">
+                                <div class="step-title">Save as Draft</div>
+                                <div class="step-desc">Continue later</div>
+                                <div class="touchpoint">Draft Storage</div>
+                            </div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-step process">
+                                <div class="step-title">Revision Notes</div>
+                                <div class="step-desc">Comments & feedback</div>
+                                <div class="touchpoint">Note System</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Editor Dashboard Features -->
+                <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin-top: 20px;">
+                    <h4 style="margin-top: 0; color: #FFB800;">📊 Editor Dashboard Overview</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                        <div style="background: white; padding: 16px; border-radius: 6px; text-align: center;">
+                            <div style="font-size: 24px; font-weight: 700; color: #FFB800;">12</div>
+                            <div style="font-size: 12px; color: #666;">Published Articles</div>
+                        </div>
+                        <div style="background: white; padding: 16px; border-radius: 6px; text-align: center;">
+                            <div style="font-size: 24px; font-weight: 700; color: #FF69B4;">5</div>
+                            <div style="font-size: 12px; color: #666;">Draft Articles</div>
+                        </div>
+                        <div style="background: white; padding: 16px; border-radius: 6px; text-align: center;">
+                            <div style="font-size: 24px; font-weight: 700; color: #00D563;">8.4k</div>
+                            <div style="font-size: 12px; color: #666;">Total Page Views</div>
+                        </div>
+                        <div style="background: white; padding: 16px; border-radius: 6px; text-align: center;">
+                            <div style="font-size: 24px; font-weight: 700; color: #0066CC;">3.2</div>
+                            <div style="font-size: 12px; color: #666;">Avg. Reading Time</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cross-User Interactions -->
+        <div class="flow-section">
+            <div class="section-header">🔄 Cross-User Type Interactions</div>
+            <div class="flow-content">
+                <h3>How Different User Types Interact</h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 20px 0;">
+                    <div style="background: #F0F8FF; padding: 20px; border-radius: 8px; border: 2px solid #0066CC;">
+                        <h4 style="margin-top: 0; color: #0066CC;">👤 → 🚗 Client-Driver Flow</h4>
+                        <ol style="font-size: 14px; margin: 0;">
+                            <li>Client books service</li>
+                            <li>System matches available driver</li>
+                            <li>Driver receives booking notification</li>
+                            <li>Driver accepts/declines booking</li>
+                            <li>Client receives confirmation</li>
+                            <li>Real-time tracking during service</li>
+                            <li>Rating & feedback exchange</li>
+                        </ol>
+                    </div>
+                    
+                    <div style="background: #FFF8E7; padding: 20px; border-radius: 8px; border: 2px solid #FFB800;">
+                        <h4 style="margin-top: 0; color: #FFB800;">✏️ → 👤 Editor-Client Flow</h4>
+                        <ol style="font-size: 14px; margin: 0;">
+                            <li>Editor creates helpful content</li>
+                            <li>Content appears in blog section</li>
+                            <li>Client discovers articles during research</li>
+                            <li>Content influences booking decisions</li>
+                            <li>Client engagement tracked</li>
+                            <li>Editor refines content strategy</li>
+                            <li>SEO drives new client discovery</li>
+                        </ol>
+                    </div>
+                    
+                    <div style="background: #F0FFF0; padding: 20px; border-radius: 8px; border: 2px solid #00D563;">
+                        <h4 style="margin-top: 0; color: #00D563;">🚗 → ✏️ Driver-Editor Flow</h4>
+                        <ol style="font-size: 14px; margin: 0;">
+                            <li>Driver provides industry insights</li>
+                            <li>Editor interviews drivers for content</li>
+                            <li>Driver experiences become case studies</li>
+                            <li>Content helps train new drivers</li>
+                            <li>Driver feedback improves service</li>
+                            <li>Success stories become marketing</li>
+                            <li>Best practices documentation</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- System Integration Points -->
+                <div style="background: #FFF0F5; padding: 20px; border-radius: 8px; border: 2px solid #FF69B4; margin-top: 20px;">
+                    <h4 style="margin-top: 0; color: #FF69B4;">🔗 Key System Integration Points</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
+                        <div>
+                            <h5>Authentication System</h5>
+                            <ul style="font-size: 12px; margin: 0;">
+                                <li>Role-based permissions</li>
+                                <li>Single sign-on across features</li>
+                                <li>Session management</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h5>Notification System</h5>
+                            <ul style="font-size: 12px; margin: 0;">
+                                <li>Real-time booking updates</li>
+                                <li>Verification status changes</li>
+                                <li>Content publishing alerts</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h5>Analytics & Tracking</h5>
+                            <ul style="font-size: 12px; margin: 0;">
+                                <li>User behavior analytics</li>
+                                <li>Conversion funnel tracking</li>
+                                <li>Content performance metrics</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h5>Data Synchronization</h5>
+                            <ul style="font-size: 12px; margin: 0;">
+                                <li>User profiles across modules</li>
+                                <li>Booking status updates</li>
+                                <li>Real-time availability</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

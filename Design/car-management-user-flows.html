@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Management User Flows - Cross-Border Transportation App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #171A20;
+            background: #FAFAFA;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        h1, h2, h3 {
+            margin-bottom: 1rem;
+            color: #171A20;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 2rem;
+            background: linear-gradient(45deg, #FF69B4, #FF1493);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h2 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-top: 3rem;
+            border-bottom: 2px solid #FF69B4;
+            padding-bottom: 0.5rem;
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #FF1493;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .flow-container {
+            background: white;
+            border: 1px solid #E0E0E0;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        }
+
+        .flow-header {
+            text-align: center;
+            font-weight: 600;
+            color: #FF1493;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #FFB6C1;
+        }
+
+        .flow-diagram {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            align-items: center;
+            margin: 1.5rem 0;
+        }
+
+        .flow-step {
+            background: #FF69B4;
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 500;
+            font-size: 0.9rem;
+            position: relative;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .flow-step.decision {
+            background: #FFB800;
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto;
+        }
+
+        .flow-step.start {
+            background: #00D563;
+        }
+
+        .flow-step.end {
+            background: #FF1493;
+        }
+
+        .flow-step.error {
+            background: #FF4B4B;
+        }
+
+        .flow-step.process {
+            background: #0066CC;
+        }
+
+        .flow-arrow {
+            color: #FF69B4;
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .flow-vertical {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .flow-horizontal {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .decision-branch {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 1rem;
+            align-items: center;
+            margin: 1rem 0;
+        }
+
+        .branch-option {
+            text-align: center;
+            font-size: 0.8rem;
+            color: #616161;
+            font-weight: 500;
+        }
+
+        .substep {
+            background: #E3F2FD;
+            color: #0066CC;
+            padding: 0.5rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            margin: 0.5rem 0;
+            border: 1px solid #90CAF9;
+        }
+
+        .user-action {
+            background: #E8F5E8;
+            color: #2E7D2E;
+            border: 2px solid #81C784;
+        }
+
+        .system-action {
+            background: #FFF3E0;
+            color: #E65100;
+            border: 2px solid #FFB74D;
+        }
+
+        .validation-step {
+            background: #F3E5F5;
+            color: #7B1FA2;
+            border: 2px solid #CE93D8;
+        }
+
+        .notes {
+            background: #FFF9C4;
+            border-left: 4px solid #FFB800;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .error-handling {
+            background: #FFEBEE;
+            border-left: 4px solid #FF4B4B;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .success-path {
+            background: #E8F5E8;
+            border-left: 4px solid #00D563;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .flow-diagram {
+                grid-template-columns: 1fr;
+            }
+
+            .flow-horizontal {
+                flex-direction: column;
+            }
+
+            .decision-branch {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔄 Car Management User Flows</h1>
+        <p style="text-align: center; font-size: 1.1rem; color: #616161; margin-bottom: 3rem;">
+            Detailed user journey maps for cross-border transportation vehicle management
+        </p>
+
+        <h2>🚗 1. Vehicle Registration Flow</h2>
+
+        <div class="flow-container">
+            <div class="flow-header">Complete Vehicle Registration Journey</div>
+            
+            <div class="flow-vertical">
+                <div class="flow-step start">Dashboard Entry Point</div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step user-action">Click "Add New Vehicle"</div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step process">Load Registration Form</div>
+                <div class="flow-arrow">↓</div>
+                
+                <!-- Step 1: Basic Information -->
+                <div style="border: 2px dashed #FF69B4; border-radius: 8px; padding: 1rem; width: 100%;">
+                    <div class="flow-header">Step 1: Basic Vehicle Information</div>
+                    <div class="flow-horizontal">
+                        <div class="flow-step user-action">Enter Make/Model</div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step user-action">Enter Year/Color</div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step user-action">Enter License/VIN</div>
+                    </div>
+                    <div class="substep validation-step">
+                        ✓ Validate VIN format<br>
+                        ✓ Check license plate uniqueness<br>
+                        ✓ Verify make/model combination
+                    </div>
+                </div>
+
+                <div class="flow-arrow">↓</div>
+
+                <!-- Step 2: Features & Specifications -->
+                <div style="border: 2px dashed #0066CC; border-radius: 8px; padding: 1rem; width: 100%;">
+                    <div class="flow-header">Step 2: Features & Specifications</div>
+                    <div class="flow-horizontal">
+                        <div class="flow-step user-action">Select Vehicle Category</div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step user-action">Choose Features</div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step user-action">Set Capacity</div>
+                    </div>
+                    <div class="substep system-action">
+                        📊 Auto-suggest features based on make/model<br>
+                        💰 Calculate estimated value range<br>
+                        🔄 Save progress automatically
+                    </div>
+                </div>
+
+                <div class="flow-arrow">↓</div>
+
+                <!-- Step 3: Photo Upload -->
+                <div style="border: 2px dashed #00D563; border-radius: 8px; padding: 1rem; width: 100%;">
+                    <div class="flow-header">Step 3: Photo Documentation</div>
+                    <div class="flow-horizontal">
+                        <div class="flow-step user-action">Upload Required Photos</div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step system-action">Process & Validate</div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step user-action">Review & Confirm</div>
+                    </div>
+                    <div class="substep validation-step">
+                        📷 Minimum 4 photos required (front, rear, sides)<br>
+                        🔍 AI validation for image quality<br>
+                        📏 File size and format check
+                    </div>
+                </div>
+
+                <div class="flow-arrow">↓</div>
+
+                <!-- Step 4: Document Upload -->
+                <div style="border: 2px dashed #FF1493; border-radius: 8px; padding: 1rem; width: 100%;">
+                    <div class="flow-header">Step 4: Initial Document Setup</div>
+                    <div class="flow-horizontal">
+                        <div class="flow-step user-action">Upload Registration</div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step user-action">Upload Insurance</div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step user-action">Set Expiry Dates</div>
+                    </div>
+                    <div class="substep system-action">
+                        📋 OCR scan for document details<br>
+                        📅 Auto-set reminder notifications<br>
+                        🔐 Encrypt and store securely
+                    </div>
+                </div>
+
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step decision">Final Review?</div>
+                
+                <div class="decision-branch">
+                    <div class="branch-option">← Issues Found</div>
+                    <div class="flow-step validation-step">Review & Corrections</div>
+                    <div class="branch-option">All Good →</div>
+                </div>
+
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step end">Vehicle Successfully Registered</div>
+            </div>
+
+            <div class="success-path">
+                <strong>✅ Success Outcome:</strong> Vehicle added to driver's fleet, all documents tracked, notifications set up, ready for booking assignments.
+            </div>
+
+            <div class="error-handling">
+                <strong>⚠️ Common Error Paths:</strong>
+                <ul style="margin-top: 0.5rem;">
+                    <li>VIN already exists → Show existing vehicle option</li>
+                    <li>Invalid document format → Show format requirements</li>
+                    <li>Poor photo quality → Provide retake guidance</li>
+                    <li>Network failure during upload → Auto-save and resume</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2>✏️ 2. Vehicle Editing Flow</h2>
+
+        <div class="flow-container">
+            <div class="flow-header">Edit Existing Vehicle Information</div>
+            
+            <div class="flow-vertical">
+                <div class="flow-step start">Vehicle List View</div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step user-action">Select Vehicle to Edit</div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step process">Load Vehicle Details</div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step user-action">Click "Edit Details"</div>
+                <div class="flow-arrow">↓</div>
+                
+                <div class="flow-step decision">What to Edit?</div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin: 1rem 0;">
+                    <div>
+                        <div class="flow-step process">Basic Info</div>
+                        <div class="substep">
+                            • Color change<br>
+                            • Mileage update<br>
+                            • Status change
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flow-step process">Features</div>
+                        <div class="substep">
+                            • Add/remove features<br>
+                            • Update capacity<br>
+                            • Modify equipment
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flow-step process">Photos</div>
+                        <div class="substep">
+                            • Update vehicle photos<br>
+                            • Replace damaged images<br>
+                            • Add new angles
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step validation-step">Validate Changes</div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step system-action">Update Database</div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step system-action">Sync with Booking System</div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step end">Changes Saved Successfully</div>
+            </div>
+
+            <div class="notes">
+                <strong>📝 Edit Restrictions:</strong>
+                <ul style="margin-top: 0.5rem;">
+                    <li>VIN number cannot be changed (contact support)</li>
+                    <li>License plate changes require document re-upload</li>
+                    <li>Category changes may affect active bookings</li>
+                    <li>Some features require admin approval</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2>📋 3. Document Management Flow</h2>
+
+        <div class="flow-container">
+            <div class="flow-header">Comprehensive Document Lifecycle Management</div>
+            
+            <h3>3.1 Document Upload Flow</h3>
+            <div class="flow-horizontal">
+                <div class="flow-step user-action">Select Vehicle</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step user-action">Documents Tab</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step user-action">Add New Document</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step process">Upload & Process</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step end">Document Stored</div>
+            </div>
+
+            <div class="substep system-action" style="margin: 1rem 0;">
+                📊 OCR Processing → Extract key information<br>
+                📅 Auto-detect expiry dates → Set reminders<br>
+                🔍 Validate document format → Check completeness<br>
+                🔐 Encrypt and store → Secure file handling
+            </div>
+
+            <h3>3.2 Document Renewal Flow</h3>
+            <div style="border: 2px solid #FFB800; border-radius: 8px; padding: 1rem; margin: 1rem 0;">
+                <div class="flow-vertical">
+                    <div class="flow-step">📅 30 Days Before Expiry</div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="flow-step system-action">Send First Reminder</div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="flow-step">📅 7 Days Before Expiry</div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="flow-step system-action">Send Urgent Notice</div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="flow-step decision">User Action?</div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0;">
+                        <div>
+                            <div class="flow-step user-action">Start Renewal</div>
+                            <div class="flow-arrow">↓</div>
+                            <div class="flow-step process">Upload New Document</div>
+                            <div class="flow-arrow">↓</div>
+                            <div class="flow-step end">Status Updated</div>
+                        </div>
+                        <div>
+                            <div class="flow-step">No Action</div>
+                            <div class="flow-arrow">↓</div>
+                            <div class="flow-step error">Document Expired</div>
+                            <div class="flow-arrow">↓</div>
+                            <div class="flow-step system-action">Restrict Vehicle</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3>3.3 Document Types & Requirements</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 1rem 0;">
+                <div class="substep" style="background: #E8F5E8;">
+                    <strong>🌏 Mainland Permits</strong><br>
+                    • Issue & expiry dates<br>
+                    • Valid routes<br>
+                    • Renewal requirements<br>
+                    • Processing timeline
+                </div>
+                <div class="substep" style="background: #E3F2FD;">
+                    <strong>🌍 International Permits</strong><br>
+                    • Country validity<br>
+                    • License requirements<br>
+                    • Medical certificates<br>
+                    • Background checks
+                </div>
+                <div class="substep" style="background: #FFF3E0;">
+                    <strong>🚛 Commercial Licenses</strong><br>
+                    • Vehicle fitness cert<br>
+                    • Insurance coverage<br>
+                    • Driver qualifications<br>
+                    • Business registration
+                </div>
+                <div class="substep" style="background: #F3E5F5;">
+                    <strong>📋 Customs Permits</strong><br>
+                    • Cargo declarations<br>
+                    • Border clearances<br>
+                    • Tax certificates<br>
+                    • Security bonds
+                </div>
+            </div>
+        </div>
+
+        <h2>🔔 4. Notification System Flow</h2>
+
+        <div class="flow-container">
+            <div class="flow-header">Smart Notification & Alert Management</div>
+            
+            <h3>4.1 Notification Trigger Flow</h3>
+            <div class="flow-vertical">
+                <div class="flow-step start">System Scheduler</div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step system-action">Check All Vehicle Documents</div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step decision">Expiry Within Threshold?</div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin: 1rem 0;">
+                    <div>
+                        <div class="flow-step" style="background: #00D563;">30+ Days</div>
+                        <div class="flow-arrow">↓</div>
+                        <div class="flow-step process">No Alert</div>
+                    </div>
+                    <div>
+                        <div class="flow-step" style="background: #FFB800;">7-30 Days</div>
+                        <div class="flow-arrow">↓</div>
+                        <div class="flow-step process">Standard Alert</div>
+                    </div>
+                    <div>
+                        <div class="flow-step" style="background: #FF4B4B;">&lt;7 Days</div>
+                        <div class="flow-arrow">↓</div>
+                        <div class="flow-step error">Urgent Alert</div>
+                    </div>
+                </div>
+
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step system-action">Generate Notification</div>
+                <div class="flow-arrow">↓</div>
+                
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin: 1rem 0;">
+                    <div class="flow-step process">📱 Push</div>
+                    <div class="flow-step process">📧 Email</div>
+                    <div class="flow-step process">💬 SMS</div>
+                    <div class="flow-step process">📊 Dashboard</div>
+                </div>
+
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step end">User Receives Alert</div>
+            </div>
+
+            <h3>4.2 User Response Flow</h3>
+            <div class="flow-horizontal">
+                <div class="flow-step user-action">Receive Notification</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step decision">User Action?</div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1rem 0;">
+                <div class="flow-vertical">
+                    <div class="flow-step user-action">Take Action</div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="flow-step process">Navigate to Document</div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="flow-step process">Complete Renewal</div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="flow-step end">Problem Resolved</div>
+                </div>
+                <div class="flow-vertical">
+                    <div class="flow-step user-action">Snooze Alert</div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="flow-step system-action">Set Reminder</div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="flow-step process">Re-alert Later</div>
+                </div>
+                <div class="flow-vertical">
+                    <div class="flow-step">No Action</div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="flow-step system-action">Escalate Alert</div>
+                    <div class="flow-arrow">↓</div>
+                    <div class="flow-step error">Vehicle Restricted</div>
+                </div>
+            </div>
+
+            <h3>4.3 Notification Preferences Setup</h3>
+            <div class="flow-horizontal">
+                <div class="flow-step user-action">Go to Settings</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step user-action">Notification Preferences</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step user-action">Configure Channels</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step user-action">Set Timing</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step user-action">Test Notification</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step end">Preferences Saved</div>
+            </div>
+
+            <div class="notes">
+                <strong>🎯 Smart Notification Features:</strong>
+                <ul style="margin-top: 0.5rem;">
+                    <li>🧠 AI-powered optimal timing (user activity patterns)</li>
+                    <li>📍 Location-aware alerts (near relevant offices)</li>
+                    <li>⚡ Batch similar notifications to reduce noise</li>
+                    <li>🔄 Automatic retry with different channels if unread</li>
+                    <li>📊 Analytics on notification effectiveness</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2>📱 5. Mobile-Specific Flows</h2>
+
+        <div class="flow-container">
+            <div class="flow-header">Mobile-Optimized User Journeys</div>
+            
+            <h3>5.1 Mobile Photo Capture Flow</h3>
+            <div class="flow-vertical">
+                <div class="flow-step start">Add Vehicle (Mobile)</div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step user-action">Reach Photo Step</div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step decision">Photo Method?</div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0;">
+                    <div class="flow-vertical">
+                        <div class="flow-step user-action">📷 Camera</div>
+                        <div class="flow-arrow">↓</div>
+                        <div class="flow-step system-action">Launch Camera</div>
+                        <div class="flow-arrow">↓</div>
+                        <div class="flow-step user-action">Capture Photo</div>
+                        <div class="flow-arrow">↓</div>
+                        <div class="flow-step validation-step">Preview & Confirm</div>
+                    </div>
+                    <div class="flow-vertical">
+                        <div class="flow-step user-action">📁 Gallery</div>
+                        <div class="flow-arrow">↓</div>
+                        <div class="flow-step system-action">Open File Picker</div>
+                        <div class="flow-arrow">↓</div>
+                        <div class="flow-step user-action">Select Photos</div>
+                        <div class="flow-arrow">↓</div>
+                        <div class="flow-step validation-step">Validate Selection</div>
+                    </div>
+                </div>
+
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step system-action">Compress & Upload</div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step process">Add to Vehicle Record</div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step end">Photos Saved</div>
+            </div>
+
+            <h3>5.2 Mobile Document Scanning Flow</h3>
+            <div class="flow-horizontal">
+                <div class="flow-step user-action">Upload Document</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step system-action">Detect Document Mode</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step process">📄 Smart Crop</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step process">🔍 OCR Extract</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step validation-step">Review Results</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step end">Document Processed</div>
+            </div>
+
+            <div class="substep system-action" style="margin: 1rem 0;">
+                📱 Mobile-Specific Features:<br>
+                • Auto-rotate and perspective correction<br>
+                • Background noise reduction<br>
+                • Multi-page document support<br>
+                • Offline processing capability<br>
+                • Battery-optimized compression
+            </div>
+
+            <h3>5.3 Mobile Notification Handling</h3>
+            <div class="flow-vertical">
+                <div class="flow-step system-action">📱 Push Notification Sent</div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step decision">User Device Status?</div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin: 1rem 0;">
+                    <div class="flow-vertical">
+                        <div class="flow-step" style="background: #00D563;">Active/Unlocked</div>
+                        <div class="flow-arrow">↓</div>
+                        <div class="flow-step process">Show Banner</div>
+                        <div class="flow-arrow">↓</div>
+                        <div class="flow-step user-action">Tap to Open</div>
+                    </div>
+                    <div class="flow-vertical">
+                        <div class="flow-step" style="background: #FFB800;">Locked/Idle</div>
+                        <div class="flow-arrow">↓</div>
+                        <div class="flow-step process">Lock Screen Notice</div>
+                        <div class="flow-arrow">↓</div>
+                        <div class="flow-step user-action">Swipe to Open</div>
+                    </div>
+                    <div class="flow-vertical">
+                        <div class="flow-step" style="background: #FF4B4B;">Do Not Disturb</div>
+                        <div class="flow-arrow">↓</div>
+                        <div class="flow-step process">Queue for Later</div>
+                        <div class="flow-arrow">↓</div>
+                        <div class="flow-step system-action">Retry Later</div>
+                    </div>
+                </div>
+
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step process">Open App to Relevant Screen</div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step end">User Completes Action</div>
+            </div>
+        </div>
+
+        <h2>⚠️ 6. Error Handling & Edge Cases</h2>
+
+        <div class="flow-container">
+            <div class="flow-header">Comprehensive Error Recovery Flows</div>
+            
+            <h3>6.1 Network Failure During Upload</h3>
+            <div class="flow-vertical">
+                <div class="flow-step user-action">Upload in Progress</div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step error">❌ Network Error</div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step system-action">Auto-save Progress</div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step process">Show Error Message</div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step decision">Auto-retry or Manual?</div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0;">
+                    <div class="flow-vertical">
+                        <div class="flow-step system-action">🔄 Auto-retry (3 attempts)</div>
+                        <div class="flow-arrow">↓</div>
+                        <div class="flow-step process">Resume from Last Point</div>
+                        <div class="flow-arrow">↓</div>
+                        <div class="flow-step end">✅ Upload Complete</div>
+                    </div>
+                    <div class="flow-vertical">
+                        <div class="flow-step user-action">👤 Manual Retry</div>
+                        <div class="flow-arrow">↓</div>
+                        <div class="flow-step process">Load Saved Progress</div>
+                        <div class="flow-arrow">↓</div>
+                        <div class="flow-step user-action">Continue Upload</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3>6.2 Invalid Document Handling</h3>
+            <div class="flow-horizontal">
+                <div class="flow-step user-action">Upload Document</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step system-action">Validate Document</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step error">❌ Invalid Format</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step process">Show Specific Error</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step process">Suggest Corrections</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step user-action">Re-upload</div>
+            </div>
+
+            <div class="error-handling">
+                <strong>🔧 Common Error Types & Solutions:</strong>
+                <ul style="margin-top: 0.5rem;">
+                    <li><strong>File too large:</strong> Auto-compress with quality preservation</li>
+                    <li><strong>Unsupported format:</strong> Show conversion tools/options</li>
+                    <li><strong>Poor image quality:</strong> AI enhancement suggestions</li>
+                    <li><strong>Missing required fields:</strong> Highlight and guide completion</li>
+                    <li><strong>Duplicate VIN:</strong> Show existing vehicle, offer merge option</li>
+                    <li><strong>Expired documents:</strong> Block submission, require renewal first</li>
+                </ul>
+            </div>
+
+            <h3>6.3 System Maintenance Flow</h3>
+            <div class="flow-vertical">
+                <div class="flow-step system-action">🔧 Maintenance Mode Triggered</div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step process">Show Maintenance Banner</div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step user-action">User Attempts Action</div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step process">Graceful Degradation</div>
+                
+                <div class="substep system-action" style="margin: 1rem 0;">
+                    🛡️ Maintenance Mode Features:<br>
+                    • Read-only access to existing data<br>
+                    • Queue new uploads for later processing<br>
+                    • Cache frequently accessed documents<br>
+                    • Show estimated restoration time<br>
+                    • Allow emergency contact for urgent needs
+                </div>
+
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step end">✅ System Restored</div>
+                <div class="flow-arrow">↓</div>
+                <div class="flow-step system-action">Process Queued Actions</div>
+            </div>
+        </div>
+
+        <h2>📊 7. Analytics & Success Metrics Flow</h2>
+
+        <div class="flow-container">
+            <div class="flow-header">User Journey Analytics & Optimization</div>
+            
+            <div class="flow-horizontal">
+                <div class="flow-step system-action">Track User Actions</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step process">Analyze Patterns</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step process">Generate Insights</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step process">Optimize Flows</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step end">Improved UX</div>
+            </div>
+
+            <h3>Key Metrics Tracked:</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1rem 0;">
+                <div class="substep" style="background: #E8F5E8;">
+                    <strong>📈 Completion Rates</strong><br>
+                    • Vehicle registration: >95%<br>
+                    • Document upload: >90%<br>
+                    • Photo capture: >85%
+                </div>
+                <div class="substep" style="background: #E3F2FD;">
+                    <strong>⏱️ Time Metrics</strong><br>
+                    • Average completion time<br>
+                    • Drop-off points<br>
+                    • Recovery success rate
+                </div>
+                <div class="substep" style="background: #FFF3E0;">
+                    <strong>🔔 Notification Effectiveness</strong><br>
+                    • Open rates by channel<br>
+                    • Action completion rates<br>
+                    • Optimal timing analysis
+                </div>
+                <div class="substep" style="background: #F3E5F5;">
+                    <strong>📱 Device Performance</strong><br>
+                    • Mobile vs desktop usage<br>
+                    • Platform-specific issues<br>
+                    • Feature adoption rates
+                </div>
+            </div>
+
+            <div class="success-path">
+                <strong>🎯 Success Indicators:</strong>
+                <ul style="margin-top: 0.5rem;">
+                    <li>95%+ of vehicles have complete documentation</li>
+                    <li>Average registration time under 5 minutes</li>
+                    <li>80%+ notification response rate</li>
+                    <li>Less than 2% error rate in document processing</li>
+                    <li>4.5+ star user satisfaction rating</li>
+                </ul>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin: 3rem 0; color: #616161; background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.08);">
+            <h3 style="color: #FF1493; margin-bottom: 1rem;">🚀 Implementation Priority</h3>
+            <p style="margin-bottom: 1rem;"><strong>Phase 1:</strong> Core vehicle registration and basic document management</p>
+            <p style="margin-bottom: 1rem;"><strong>Phase 2:</strong> Advanced notification system and mobile optimization</p>
+            <p style="margin-bottom: 1rem;"><strong>Phase 3:</strong> AI-powered document processing and predictive analytics</p>
+            <p style="margin-top: 1.5rem; font-style: italic;">These user flows provide the blueprint for creating an intuitive, efficient, and compliant vehicle management system that scales with your cross-border transportation business.</p>
+        </div>
+    </div>
+</body>
+</html>

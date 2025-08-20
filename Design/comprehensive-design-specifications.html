@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Design Specifications - Cross-Border Vehicle Website</title>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #fafafa;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .spec-section {
+            background: white;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        .section-header {
+            background: linear-gradient(135deg, #171A20 0%, #2A2D35 100%);
+            color: white;
+            padding: 20px 30px;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        .spec-content {
+            padding: 30px;
+        }
+        .interface-mockup {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            margin: 20px 0;
+            overflow: hidden;
+            background: white;
+        }
+        .mockup-header {
+            background: #f9f9f9;
+            padding: 12px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            font-weight: 500;
+            color: #666;
+        }
+        .mockup-body {
+            padding: 24px;
+        }
+        .dashboard-nav {
+            background: #171A20;
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-logo {
+            font-weight: 700;
+            font-size: 18px;
+        }
+        .nav-logo .accent {
+            color: #FF69B4;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+        }
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: #FF69B4;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        .dashboard-layout {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 500px;
+        }
+        .sidebar {
+            background: #f9f9f9;
+            border-right: 1px solid #e0e0e0;
+            padding: 24px 0;
+        }
+        .sidebar-item {
+            padding: 12px 24px;
+            cursor: pointer;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s ease;
+        }
+        .sidebar-item:hover, .sidebar-item.active {
+            background: #FFF0F5;
+            color: #FF69B4;
+            border-right: 3px solid #FF69B4;
+        }
+        .main-content {
+            padding: 32px;
+            background: #fafafa;
+        }
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        .page-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #171A20;
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            margin-bottom: 20px;
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .card-title {
+            font-weight: 600;
+            color: #171A20;
+        }
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        .status-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 4px solid #e0e0e0;
+        }
+        .status-card.verified {
+            border-left-color: #00D563;
+            background: #F0FFF0;
+        }
+        .status-card.pending {
+            border-left-color: #FFB800;
+            background: #FFF8E7;
+        }
+        .status-card.rejected {
+            border-left-color: #FF4B4B;
+            background: #FFF0F0;
+        }
+        .editor-toolbar {
+            background: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px 6px 0 0;
+            padding: 12px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .toolbar-btn {
+            padding: 6px 12px;
+            border: 1px solid #e0e0e0;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            color: #666;
+        }
+        .toolbar-btn:hover, .toolbar-btn.active {
+            background: #FF69B4;
+            color: white;
+            border-color: #FF69B4;
+        }
+        .editor-content {
+            border: 1px solid #e0e0e0;
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+            padding: 16px;
+            min-height: 200px;
+            background: white;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: #171A20;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.2s ease;
+            box-sizing: border-box;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #FF69B4;
+            box-shadow: 0 0 0 3px rgba(255, 105, 180, 0.1);
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn-primary {
+            background: #FF69B4;
+            color: white;
+            padding: 12px 24px;
+        }
+        .btn-primary:hover {
+            background: #FF1493;
+            transform: translateY(-1px);
+        }
+        .btn-secondary {
+            background: transparent;
+            color: #FF69B4;
+            border: 2px solid #FF69B4;
+            padding: 10px 22px;
+        }
+        .btn-secondary:hover {
+            background: #FF69B4;
+            color: white;
+        }
+        .mobile-mockup {
+            max-width: 375px;
+            margin: 0 auto;
+            border: 3px solid #333;
+            border-radius: 20px;
+            overflow: hidden;
+            background: #333;
+            padding: 8px;
+        }
+        .mobile-screen {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            height: 600px;
+        }
+        .mobile-header {
+            background: white;
+            padding: 12px 16px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .schema-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 12px;
+        }
+        .schema-table th,
+        .schema-table td {
+            padding: 8px 12px;
+            text-align: left;
+            border: 1px solid #e0e0e0;
+        }
+        .schema-table th {
+            background: #f9f9f9;
+            font-weight: 600;
+            color: #171A20;
+        }
+        .field-type {
+            color: #0066CC;
+            font-family: monospace;
+            font-size: 11px;
+        }
+        .field-constraint {
+            color: #FF69B4;
+            font-size: 10px;
+            font-style: italic;
+        }
+        .responsive-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-layout {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                display: none;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Driver Verification Dashboard -->
+        <div class="spec-section">
+            <div class="section-header">🚗 Driver Verification Dashboard Interface</div>
+            <div class="spec-content">
+                <div class="interface-mockup">
+                    <div class="dashboard-nav">
+                        <div class="nav-logo">
+                            <span class="accent">●</span> CrossBorder Driver Portal
+                        </div>
+                        <div class="user-info">
+                            <div class="user-avatar">JD</div>
+                            <div>
+                                <div style="font-weight: 600;">John Doe</div>
+                                <div style="font-size: 12px; opacity: 0.8;">Driver ID: DR-12345</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-layout">
+                        <div class="sidebar">
+                            <div class="sidebar-item active">
+                                <span>📊</span> Dashboard
+                            </div>
+                            <div class="sidebar-item">
+                                <span>📋</span> Verification Status
+                            </div>
+                            <div class="sidebar-item">
+                                <span>📄</span> Documents
+                            </div>
+                            <div class="sidebar-item">
+                                <span>🚗</span> Vehicle Details
+                            </div>
+                            <div class="sidebar-item">
+                                <span>📅</span> Availability
+                            </div>
+                            <div class="sidebar-item">
+                                <span>💰</span> Earnings
+                            </div>
+                            <div class="sidebar-item">
+                                <span>⚙️</span> Settings
+                            </div>
+                        </div>
+                        
+                        <div class="main-content">
+                            <div class="content-header">
+                                <div class="page-title">Verification Dashboard</div>
+                                <div style="background: #FFF8E7; color: #FFB800; padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: 600;">
+                                    UNDER REVIEW
+                                </div>
+                            </div>
+                            
+                            <!-- Verification Status Grid -->
+                            <div class="status-grid">
+                                <div class="status-card verified">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                        <div style="font-weight: 600; color: #171A20;">Personal Information</div>
+                                        <div style="color: #00D563; font-size: 18px;">✓</div>
+                                    </div>
+                                    <div style="font-size: 12px; color: #666; margin-bottom: 8px;">Complete and verified</div>
+                                    <div style="font-size: 11px; color: #00D563;">Verified on Mar 10, 2024</div>
+                                </div>
+                                
+                                <div class="status-card verified">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                        <div style="font-weight: 600; color: #171A20;">HK Driving License</div>
+                                        <div style="color: #00D563; font-size: 18px;">✓</div>
+                                    </div>
+                                    <div style="font-size: 12px; color: #666; margin-bottom: 8px;">Valid until Dec 2025</div>
+                                    <div style="font-size: 11px; color: #00D563;">Verified on Mar 12, 2024</div>
+                                </div>
+                                
+                                <div class="status-card pending">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                        <div style="font-weight: 600; color: #171A20;">Cross-Border Permit</div>
+                                        <div style="color: #FFB800; font-size: 18px;">⏳</div>
+                                    </div>
+                                    <div style="font-size: 12px; color: #666; margin-bottom: 8px;">Under review by authorities</div>
+                                    <div style="font-size: 11px; color: #FFB800;">Est. completion: 2-3 days</div>
+                                </div>
+                                
+                                <div class="status-card">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                        <div style="font-weight: 600; color: #171A20;">Insurance Documents</div>
+                                        <div style="color: #666; font-size: 18px;">○</div>
+                                    </div>
+                                    <div style="font-size: 12px; color: #666; margin-bottom: 8px;">HK & China coverage required</div>
+                                    <button class="btn btn-primary" style="font-size: 11px; padding: 6px 12px;">Upload Documents</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Document Upload Section -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="card-title">Required Documents</div>
+                                    <div style="font-size: 12px; color: #666;">2 of 4 completed</div>
+                                </div>
+                                
+                                <div style="display: grid; gap: 16px;">
+                                    <div style="border: 1px solid #00D563; border-radius: 6px; padding: 16px; background: #F0FFF0;">
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <div>
+                                                <div style="font-weight: 600; color: #171A20; margin-bottom: 4px;">✓ Hong Kong ID Card</div>
+                                                <div style="font-size: 12px; color: #666;">Uploaded: hkid_front_back.pdf</div>
+                                            </div>
+                                            <div style="color: #00D563; font-size: 12px;">Verified</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div style="border: 1px solid #FFB800; border-radius: 6px; padding: 16px; background: #FFF8E7;">
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <div>
+                                                <div style="font-weight: 600; color: #171A20; margin-bottom: 4px;">⏳ Vehicle Registration</div>
+                                                <div style="font-size: 12px; color: #666;">Uploaded: vehicle_reg.pdf</div>
+                                            </div>
+                                            <div style="color: #FFB800; font-size: 12px;">Under Review</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div style="border: 2px dashed #e0e0e0; border-radius: 6px; padding: 16px; text-align: center; cursor: pointer;">
+                                        <div style="color: #666; margin-bottom: 8px;">📄</div>
+                                        <div style="font-weight: 600; color: #171A20; margin-bottom: 4px;">Upload Insurance Policy</div>
+                                        <div style="font-size: 12px; color: #666;">HK & China comprehensive coverage</div>
+                                        <button class="btn btn-secondary" style="margin-top: 8px; padding: 8px 16px; font-size: 12px;">Choose File</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Blog Editor CMS Interface -->
+        <div class="spec-section">
+            <div class="section-header">✏️ Blog Editor CMS Interface</div>
+            <div class="spec-content">
+                <div class="interface-mockup">
+                    <div class="dashboard-nav">
+                        <div class="nav-logo">
+                            <span class="accent">●</span> CrossBorder CMS
+                        </div>
+                        <div class="user-info">
+                            <div class="user-avatar" style="background: #FFB800;">SE</div>
+                            <div>
+                                <div style="font-weight: 600;">Sarah Editor</div>
+                                <div style="font-size: 12px; opacity: 0.8;">Content Manager</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-layout">
+                        <div class="sidebar">
+                            <div class="sidebar-item active">
+                                <span>📝</span> New Article
+                            </div>
+                            <div class="sidebar-item">
+                                <span>📋</span> All Articles
+                            </div>
+                            <div class="sidebar-item">
+                                <span>📊</span> Analytics
+                            </div>
+                            <div class="sidebar-item">
+                                <span>🏷️</span> Categories
+                            </div>
+                            <div class="sidebar-item">
+                                <span>📷</span> Media Library
+                            </div>
+                            <div class="sidebar-item">
+                                <span>👥</span> Authors
+                            </div>
+                            <div class="sidebar-item">
+                                <span>⚙️</span> Settings
+                            </div>
+                        </div>
+                        
+                        <div class="main-content">
+                            <div class="content-header">
+                                <div class="page-title">Create New Article</div>
+                                <div style="display: flex; gap: 8px;">
+                                    <button class="btn btn-secondary">Save Draft</button>
+                                    <button class="btn btn-primary">Publish</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Article Editor -->
+                            <div class="card">
+                                <div class="form-group">
+                                    <label class="form-label">Article Title</label>
+                                    <input type="text" class="form-input" placeholder="Enter article title..." value="Essential Cross-Border Travel Tips for 2024">
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Category</label>
+                                        <select class="form-input">
+                                            <option>Travel Tips</option>
+                                            <option>Regulations</option>
+                                            <option>Business Travel</option>
+                                            <option>Vehicle Services</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Author</label>
+                                        <select class="form-input">
+                                            <option>Sarah Editor</option>
+                                            <option>John Writer</option>
+                                            <option>Travel Expert</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Article Content</label>
+                                    <div class="editor-toolbar">
+                                        <div class="toolbar-btn active">B</div>
+                                        <div class="toolbar-btn">I</div>
+                                        <div class="toolbar-btn">U</div>
+                                        <div class="toolbar-btn">|</div>
+                                        <div class="toolbar-btn">H1</div>
+                                        <div class="toolbar-btn">H2</div>
+                                        <div class="toolbar-btn">|</div>
+                                        <div class="toolbar-btn">🔗</div>
+                                        <div class="toolbar-btn">📷</div>
+                                        <div class="toolbar-btn">📹</div>
+                                        <div class="toolbar-btn">|</div>
+                                        <div class="toolbar-btn">📝</div>
+                                        <div class="toolbar-btn">📊</div>
+                                    </div>
+                                    <div class="editor-content">
+                                        <h2>Planning Your Cross-Border Journey</h2>
+                                        <p>Traveling between Hong Kong and Mainland China requires careful preparation and understanding of current regulations. Here's your complete guide to ensuring a smooth cross-border experience.</p>
+                                        <h3>Essential Documents</h3>
+                                        <ul>
+                                            <li>Valid passport or travel document</li>
+                                            <li>Appropriate visa or permit</li>
+                                            <li>Health certificates (if required)</li>
+                                        </ul>
+                                        <p><em>[Content continues...]</em></p>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Featured Image</label>
+                                    <div style="border: 2px dashed #e0e0e0; border-radius: 6px; padding: 20px; text-align: center;">
+                                        <div style="background: linear-gradient(135deg, #FFB6C1, #FF69B4); width: 150px; height: 100px; margin: 0 auto 12px; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px;">
+                                            Preview Image
+                                        </div>
+                                        <button class="btn btn-secondary">Change Image</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- SEO Settings -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="card-title">SEO Settings</div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Meta Title (60 characters max)</label>
+                                    <input type="text" class="form-input" placeholder="SEO-optimized title..." value="Cross-Border Travel Tips 2024 | Hong Kong China Guide">
+                                    <div style="font-size: 11px; color: #666; margin-top: 4px;">52/60 characters used</div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Meta Description (160 characters max)</label>
+                                    <textarea class="form-input" rows="3" placeholder="SEO description...">Complete guide to cross-border travel between Hong Kong and China. Essential tips, document requirements, and expert advice for smooth border crossings.</textarea>
+                                    <div style="font-size: 11px; color: #666; margin-top: 4px;">147/160 characters used</div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Keywords (comma-separated)</label>
+                                    <input type="text" class="form-input" placeholder="Enter keywords..." value="cross-border travel, hong kong, china, border crossing, travel guide">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Responsive Specifications -->
+        <div class="spec-section">
+            <div class="section-header">📱 Mobile Responsive Design Specifications</div>
+            <div class="spec-content">
+                <div class="responsive-grid">
+                    <div>
+                        <h3 style="color: #FF69B4; margin-top: 0;">📐 Breakpoints & Grid System</h3>
+                        <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+                            <tr style="background: #f9f9f9;">
+                                <th style="padding: 8px; border: 1px solid #e0e0e0; text-align: left;">Device</th>
+                                <th style="padding: 8px; border: 1px solid #e0e0e0; text-align: left;">Breakpoint</th>
+                                <th style="padding: 8px; border: 1px solid #e0e0e0; text-align: left;">Columns</th>
+                                <th style="padding: 8px; border: 1px solid #e0e0e0; text-align: left;">Margins</th>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px; border: 1px solid #e0e0e0;">Mobile</td>
+                                <td style="padding: 8px; border: 1px solid #e0e0e0;">320px - 767px</td>
+                                <td style="padding: 8px; border: 1px solid #e0e0e0;">1 column</td>
+                                <td style="padding: 8px; border: 1px solid #e0e0e0;">16px</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px; border: 1px solid #e0e0e0;">Tablet</td>
+                                <td style="padding: 8px; border: 1px solid #e0e0e0;">768px - 1023px</td>
+                                <td style="padding: 8px; border: 1px solid #e0e0e0;">2-3 columns</td>
+                                <td style="padding: 8px; border: 1px solid #e0e0e0;">24px</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px; border: 1px solid #e0e0e0;">Desktop</td>
+                                <td style="padding: 8px; border: 1px solid #e0e0e0;">1024px+</td>
+                                <td style="padding: 8px; border: 1px solid #e0e0e0;">Multi-column</td>
+                                <td style="padding: 8px; border: 1px solid #e0e0e0;">32px</td>
+                            </tr>
+                        </table>
+                        
+                        <h4 style="color: #171A20; margin-top: 20px;">Typography Scale</h4>
+                        <div style="background: #f9f9f9; padding: 16px; border-radius: 6px; margin-bottom: 16px;">
+                            <div style="font-size: 24px; font-weight: 700; margin-bottom: 8px;">Mobile Heading (24px)</div>
+                            <div style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">Mobile Subheading (16px)</div>
+                            <div style="font-size: 14px; margin-bottom: 8px;">Mobile Body Text (14px)</div>
+                            <div style="font-size: 12px; color: #666;">Mobile Caption (12px)</div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 style="color: #FF69B4; margin-top: 0;">🎯 Touch Target Guidelines</h3>
+                        <div style="background: #f9f9f9; padding: 16px; border-radius: 6px; margin-bottom: 16px;">
+                            <div style="margin-bottom: 12px;"><strong>Minimum Touch Targets:</strong></div>
+                            <ul style="margin: 0; padding-left: 20px; font-size: 14px;">
+                                <li>Buttons: 44px × 44px minimum</li>
+                                <li>Links: 44px × 44px click area</li>
+                                <li>Form inputs: 48px height minimum</li>
+                                <li>Spacing between targets: 8px minimum</li>
+                            </ul>
+                        </div>
+                        
+                        <h4 style="color: #171A20;">Interactive Elements</h4>
+                        <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px;">
+                            <button style="background: #FF69B4; color: white; border: none; padding: 12px 24px; border-radius: 6px; font-size: 16px; min-height: 44px;">Primary Button</button>
+                            <button style="background: transparent; color: #FF69B4; border: 2px solid #FF69B4; padding: 10px 22px; border-radius: 6px; font-size: 16px; min-height: 44px;">Secondary</button>
+                        </div>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <input type="text" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 16px; min-height: 44px; box-sizing: border-box;" placeholder="Mobile-optimized input">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Mobile Interface Examples -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 32px; margin-top: 32px;">
+                    <div class="mobile-mockup">
+                        <div class="mobile-screen">
+                            <div class="mobile-header">
+                                <div style="font-weight: 700; font-size: 16px;">
+                                    <span style="color: #FF69B4;">●</span> CrossBorder
+                                </div>
+                                <div>☰</div>
+                            </div>
+                            <div style="padding: 16px;">
+                                <div style="text-align: center; margin-bottom: 24px;">
+                                    <div style="font-size: 24px; font-weight: 700; margin-bottom: 8px;">Book Your Journey</div>
+                                    <div style="font-size: 14px; color: #666;">Fast & reliable service</div>
+                                </div>
+                                
+                                <div style="margin-bottom: 16px;">
+                                    <input type="text" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 25px; font-size: 16px; box-sizing: border-box;" placeholder="From: Central, Hong Kong">
+                                </div>
+                                <div style="margin-bottom: 16px;">
+                                    <input type="text" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 25px; font-size: 16px; box-sizing: border-box;" placeholder="To: Futian, Shenzhen">
+                                </div>
+                                
+                                <button style="width: 100%; background: #FF69B4; color: white; border: none; padding: 14px; border-radius: 25px; font-size: 16px; font-weight: 600; margin-bottom: 20px;">Find Available Vehicles</button>
+                                
+                                <div style="background: #f9f9f9; padding: 16px; border-radius: 8px;">
+                                    <div style="font-weight: 600; margin-bottom: 8px;">Quick Stats</div>
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px;">
+                                        <div>50,000+ trips</div>
+                                        <div>99.8% on-time</div>
+                                        <div>24/7 support</div>
+                                        <div>10+ years</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mobile-mockup">
+                        <div class="mobile-screen">
+                            <div class="mobile-header">
+                                <div style="font-weight: 600;">Driver Dashboard</div>
+                                <div style="background: #FF69B4; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px;">ONLINE</div>
+                            </div>
+                            <div style="padding: 16px;">
+                                <div style="background: linear-gradient(135deg, #FF69B4, #FF1493); color: white; padding: 20px; border-radius: 8px; margin-bottom: 16px; text-align: center;">
+                                    <div style="font-size: 24px; font-weight: 700; margin-bottom: 4px;">HK$2,450</div>
+                                    <div style="font-size: 12px; opacity: 0.9;">Today's Earnings</div>
+                                </div>
+                                
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px;">
+                                    <div style="background: white; padding: 12px; border-radius: 6px; text-align: center; border: 1px solid #e0e0e0;">
+                                        <div style="font-weight: 600; color: #00D563;">5</div>
+                                        <div style="font-size: 11px; color: #666;">Completed</div>
+                                    </div>
+                                    <div style="background: white; padding: 12px; border-radius: 6px; text-align: center; border: 1px solid #e0e0e0;">
+                                        <div style="font-weight: 600; color: #FF69B4;">2</div>
+                                        <div style="font-size: 11px; color: #666;">Pending</div>
+                                    </div>
+                                </div>
+                                
+                                <div style="background: white; border: 1px solid #e0e0e0; border-radius: 8px; padding: 16px;">
+                                    <div style="font-weight: 600; margin-bottom: 8px;">Next Booking</div>
+                                    <div style="font-size: 14px; color: #666; margin-bottom: 4px;">Central → Futian District</div>
+                                    <div style="font-size: 12px; color: #999;">Tomorrow, 9:00 AM</div>
+                                    <button style="width: 100%; background: #FF69B4; color: white; border: none; padding: 8px; border-radius: 4px; font-size: 12px; margin-top: 8px;">View Details</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Database Schema Recommendations -->
+        <div class="spec-section">
+            <div class="section-header">🗃️ Database Schema Recommendations</div>
+            <div class="spec-content">
+                <div style="background: #F0F8FF; padding: 20px; border-radius: 8px; border: 2px solid #0066CC; margin-bottom: 24px;">
+                    <h3 style="margin-top: 0; color: #0066CC;">🏗️ Database Architecture Overview</h3>
+                    <p style="margin: 0;">Recommended PostgreSQL schema for scalable multi-user cross-border vehicle booking system with role-based access control.</p>
+                </div>
+                
+                <!-- Users Table -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">👤 Users Table</div>
+                        <div style="color: #666; font-size: 12px;">Core user authentication and profile data</div>
+                    </div>
+                    <table class="schema-table">
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Type</th>
+                                <th>Constraints</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>id</td>
+                                <td class="field-type">UUID</td>
+                                <td class="field-constraint">PRIMARY KEY</td>
+                                <td>Unique user identifier</td>
+                            </tr>
+                            <tr>
+                                <td>email</td>
+                                <td class="field-type">VARCHAR(255)</td>
+                                <td class="field-constraint">UNIQUE, NOT NULL</td>
+                                <td>User email address</td>
+                            </tr>
+                            <tr>
+                                <td>phone</td>
+                                <td class="field-type">VARCHAR(20)</td>
+                                <td class="field-constraint">UNIQUE</td>
+                                <td>Phone number with country code</td>
+                            </tr>
+                            <tr>
+                                <td>password_hash</td>
+                                <td class="field-type">VARCHAR(255)</td>
+                                <td class="field-constraint">NOT NULL</td>
+                                <td>Encrypted password</td>
+                            </tr>
+                            <tr>
+                                <td>full_name</td>
+                                <td class="field-type">VARCHAR(100)</td>
+                                <td class="field-constraint">NOT NULL</td>
+                                <td>User's full name</td>
+                            </tr>
+                            <tr>
+                                <td>role</td>
+                                <td class="field-type">ENUM</td>
+                                <td class="field-constraint">client, driver, editor, admin</td>
+                                <td>User role for access control</td>
+                            </tr>
+                            <tr>
+                                <td>status</td>
+                                <td class="field-type">ENUM</td>
+                                <td class="field-constraint">active, pending, suspended</td>
+                                <td>Account status</td>
+                            </tr>
+                            <tr>
+                                <td>email_verified</td>
+                                <td class="field-type">BOOLEAN</td>
+                                <td class="field-constraint">DEFAULT FALSE</td>
+                                <td>Email verification status</td>
+                            </tr>
+                            <tr>
+                                <td>phone_verified</td>
+                                <td class="field-type">BOOLEAN</td>
+                                <td class="field-constraint">DEFAULT FALSE</td>
+                                <td>Phone verification status</td>
+                            </tr>
+                            <tr>
+                                <td>created_at</td>
+                                <td class="field-type">TIMESTAMP</td>
+                                <td class="field-constraint">DEFAULT NOW()</td>
+                                <td>Account creation timestamp</td>
+                            </tr>
+                            <tr>
+                                <td>updated_at</td>
+                                <td class="field-type">TIMESTAMP</td>
+                                <td class="field-constraint">DEFAULT NOW()</td>
+                                <td>Last update timestamp</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Driver Profiles Table -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">🚗 Driver Profiles Table</div>
+                        <div style="color: #666; font-size: 12px;">Extended driver information and verification</div>
+                    </div>
+                    <table class="schema-table">
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Type</th>
+                                <th>Constraints</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>id</td>
+                                <td class="field-type">UUID</td>
+                                <td class="field-constraint">PRIMARY KEY</td>
+                                <td>Driver profile identifier</td>
+                            </tr>
+                            <tr>
+                                <td>user_id</td>
+                                <td class="field-type">UUID</td>
+                                <td class="field-constraint">FOREIGN KEY, UNIQUE</td>
+                                <td>Reference to users table</td>
+                            </tr>
+                            <tr>
+                                <td>license_number</td>
+                                <td class="field-type">VARCHAR(50)</td>
+                                <td class="field-constraint">UNIQUE</td>
+                                <td>HK driving license number</td>
+                            </tr>
+                            <tr>
+                                <td>license_expiry</td>
+                                <td class="field-type">DATE</td>
+                                <td class="field-constraint">NOT NULL</td>
+                                <td>License expiration date</td>
+                            </tr>
+                            <tr>
+                                <td>cross_border_permit</td>
+                                <td class="field-type">VARCHAR(50)</td>
+                                <td class="field-constraint">UNIQUE</td>
+                                <td>Cross-border permit number</td>
+                            </tr>
+                            <tr>
+                                <td>verification_status</td>
+                                <td class="field-type">ENUM</td>
+                                <td class="field-constraint">pending, verified, rejected</td>
+                                <td>Overall verification status</td>
+                            </tr>
+                            <tr>
+                                <td>background_check_status</td>
+                                <td class="field-type">ENUM</td>
+                                <td class="field-constraint">pending, passed, failed</td>
+                                <td>Background check result</td>
+                            </tr>
+                            <tr>
+                                <td>availability_status</td>
+                                <td class="field-type">ENUM</td>
+                                <td class="field-constraint">online, offline, busy</td>
+                                <td>Current availability</td>
+                            </tr>
+                            <tr>
+                                <td>total_earnings</td>
+                                <td class="field-type">DECIMAL(10,2)</td>
+                                <td class="field-constraint">DEFAULT 0.00</td>
+                                <td>Total lifetime earnings</td>
+                            </tr>
+                            <tr>
+                                <td>rating</td>
+                                <td class="field-type">DECIMAL(3,2)</td>
+                                <td class="field-constraint">DEFAULT 5.00</td>
+                                <td>Average customer rating</td>
+                            </tr>
+                            <tr>
+                                <td>total_trips</td>
+                                <td class="field-type">INTEGER</td>
+                                <td class="field-constraint">DEFAULT 0</td>
+                                <td>Total completed trips</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Bookings Table -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">📅 Bookings Table</div>
+                        <div style="color: #666; font-size: 12px;">Trip booking and tracking information</div>
+                    </div>
+                    <table class="schema-table">
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Type</th>
+                                <th>Constraints</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>id</td>
+                                <td class="field-type">UUID</td>
+                                <td class="field-constraint">PRIMARY KEY</td>
+                                <td>Booking identifier</td>
+                            </tr>
+                            <tr>
+                                <td>client_id</td>
+                                <td class="field-type">UUID</td>
+                                <td class="field-constraint">FOREIGN KEY</td>
+                                <td>Reference to client user</td>
+                            </tr>
+                            <tr>
+                                <td>driver_id</td>
+                                <td class="field-type">UUID</td>
+                                <td class="field-constraint">FOREIGN KEY</td>
+                                <td>Reference to assigned driver</td>
+                            </tr>
+                            <tr>
+                                <td>pickup_location</td>
+                                <td class="field-type">TEXT</td>
+                                <td class="field-constraint">NOT NULL</td>
+                                <td>Pickup address</td>
+                            </tr>
+                            <tr>
+                                <td>pickup_coordinates</td>
+                                <td class="field-type">POINT</td>
+                                <td class="field-constraint">NOT NULL</td>
+                                <td>GPS coordinates for pickup</td>
+                            </tr>
+                            <tr>
+                                <td>destination_location</td>
+                                <td class="field-type">TEXT</td>
+                                <td class="field-constraint">NOT NULL</td>
+                                <td>Destination address</td>
+                            </tr>
+                            <tr>
+                                <td>destination_coordinates</td>
+                                <td class="field-type">POINT</td>
+                                <td class="field-constraint">NOT NULL</td>
+                                <td>GPS coordinates for destination</td>
+                            </tr>
+                            <tr>
+                                <td>scheduled_time</td>
+                                <td class="field-type">TIMESTAMP</td>
+                                <td class="field-constraint">NOT NULL</td>
+                                <td>Scheduled departure time</td>
+                            </tr>
+                            <tr>
+                                <td>vehicle_type</td>
+                                <td class="field-type">ENUM</td>
+                                <td class="field-constraint">business, executive, luxury</td>
+                                <td>Requested vehicle category</td>
+                            </tr>
+                            <tr>
+                                <td>passenger_count</td>
+                                <td class="field-type">INTEGER</td>
+                                <td class="field-constraint">DEFAULT 1</td>
+                                <td>Number of passengers</td>
+                            </tr>
+                            <tr>
+                                <td>status</td>
+                                <td class="field-type">ENUM</td>
+                                <td class="field-constraint">pending, confirmed, in_progress, completed, cancelled</td>
+                                <td>Booking status</td>
+                            </tr>
+                            <tr>
+                                <td>total_amount</td>
+                                <td class="field-type">DECIMAL(8,2)</td>
+                                <td class="field-constraint">NOT NULL</td>
+                                <td>Total booking cost</td>
+                            </tr>
+                            <tr>
+                                <td>payment_status</td>
+                                <td class="field-type">ENUM</td>
+                                <td class="field-constraint">pending, paid, refunded</td>
+                                <td>Payment status</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Blog Articles Table -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">📝 Blog Articles Table</div>
+                        <div style="color: #666; font-size: 12px;">Content management system data</div>
+                    </div>
+                    <table class="schema-table">
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Type</th>
+                                <th>Constraints</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>id</td>
+                                <td class="field-type">UUID</td>
+                                <td class="field-constraint">PRIMARY KEY</td>
+                                <td>Article identifier</td>
+                            </tr>
+                            <tr>
+                                <td>author_id</td>
+                                <td class="field-type">UUID</td>
+                                <td class="field-constraint">FOREIGN KEY</td>
+                                <td>Reference to author user</td>
+                            </tr>
+                            <tr>
+                                <td>title</td>
+                                <td class="field-type">VARCHAR(255)</td>
+                                <td class="field-constraint">NOT NULL</td>
+                                <td>Article title</td>
+                            </tr>
+                            <tr>
+                                <td>slug</td>
+                                <td class="field-type">VARCHAR(255)</td>
+                                <td class="field-constraint">UNIQUE, NOT NULL</td>
+                                <td>URL-friendly identifier</td>
+                            </tr>
+                            <tr>
+                                <td>content</td>
+                                <td class="field-type">TEXT</td>
+                                <td class="field-constraint">NOT NULL</td>
+                                <td>Article content (HTML)</td>
+                            </tr>
+                            <tr>
+                                <td>excerpt</td>
+                                <td class="field-type">TEXT</td>
+                                <td class="field-constraint">NULL</td>
+                                <td>Article summary</td>
+                            </tr>
+                            <tr>
+                                <td>category</td>
+                                <td class="field-type">VARCHAR(50)</td>
+                                <td class="field-constraint">NOT NULL</td>
+                                <td>Article category</td>
+                            </tr>
+                            <tr>
+                                <td>tags</td>
+                                <td class="field-type">TEXT[]</td>
+                                <td class="field-constraint">NULL</td>
+                                <td>Article tags array</td>
+                            </tr>
+                            <tr>
+                                <td>featured_image</td>
+                                <td class="field-type">VARCHAR(500)</td>
+                                <td class="field-constraint">NULL</td>
+                                <td>Featured image URL</td>
+                            </tr>
+                            <tr>
+                                <td>meta_title</td>
+                                <td class="field-type">VARCHAR(60)</td>
+                                <td class="field-constraint">NULL</td>
+                                <td>SEO meta title</td>
+                            </tr>
+                            <tr>
+                                <td>meta_description</td>
+                                <td class="field-type">VARCHAR(160)</td>
+                                <td class="field-constraint">NULL</td>
+                                <td>SEO meta description</td>
+                            </tr>
+                            <tr>
+                                <td>status</td>
+                                <td class="field-type">ENUM</td>
+                                <td class="field-constraint">draft, published, archived</td>
+                                <td>Publication status</td>
+                            </tr>
+                            <tr>
+                                <td>published_at</td>
+                                <td class="field-type">TIMESTAMP</td>
+                                <td class="field-constraint">NULL</td>
+                                <td>Publication timestamp</td>
+                            </tr>
+                            <tr>
+                                <td>view_count</td>
+                                <td class="field-type">INTEGER</td>
+                                <td class="field-constraint">DEFAULT 0</td>
+                                <td>Total page views</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Additional Recommendations -->
+                <div style="background: #FFF0F5; padding: 20px; border-radius: 8px; border: 2px solid #FF69B4; margin-top: 24px;">
+                    <h3 style="margin-top: 0; color: #FF69B4;">💡 Additional Schema Recommendations</h3>
+                    <div class="responsive-grid">
+                        <div>
+                            <h4>🔐 Security & Performance</h4>
+                            <ul style="font-size: 14px; margin: 0;">
+                                <li>Add database indexes on frequently queried fields</li>
+                                <li>Implement row-level security policies</li>
+                                <li>Use UUID v4 for all primary keys</li>
+                                <li>Store sensitive data with proper encryption</li>
+                                <li>Implement audit logging tables</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4>📊 Analytics & Tracking</h4>
+                            <ul style="font-size: 14px; margin: 0;">
+                                <li>User activity logs table</li>
+                                <li>Email/SMS notification history</li>
+                                <li>Payment transaction records</li>
+                                <li>Driver location tracking logs</li>
+                                <li>API usage and rate limiting data</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4>🌐 Internationalization</h4>
+                            <ul style="font-size: 14px; margin: 0;">
+                                <li>Multi-language content support</li>
+                                <li>Timezone-aware timestamp handling</li>
+                                <li>Currency and localization settings</li>
+                                <li>Regional compliance data</li>
+                                <li>Localized notification templates</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4>⚡ Scalability Considerations</h4>
+                            <ul style="font-size: 14px; margin: 0;">
+                                <li>Database connection pooling</li>
+                                <li>Read replica configurations</li>
+                                <li>Horizontal scaling preparation</li>
+                                <li>Caching layer integration points</li>
+                                <li>Background job queue tables</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

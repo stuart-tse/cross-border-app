@@ -64,4 +64,4 @@ prisma/dev.db-journal
 *.tar.gz
 cookies*.txt
 test*.json
-*.html
+

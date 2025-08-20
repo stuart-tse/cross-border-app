@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cross-Border App - Editor Dashboard Comprehensive Design</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #171A20;
+            background: #FAFAFA;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .design-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        
+        .design-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #171A20;
+            margin-bottom: 1rem;
+        }
+        
+        .design-header p {
+            font-size: 1.1rem;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .section {
+            margin-bottom: 4rem;
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        
+        .section h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #171A20;
+            border-bottom: 3px solid #FF69B4;
+            display: inline-block;
+            padding-bottom: 0.5rem;
+        }
+        
+        .section h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem 0;
+            color: #FF1493;
+        }
+        
+        .section h4 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 1.5rem 0 1rem 0;
+            color: #171A20;
+        }
+        
+        .wireframe {
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            background: #FAFAFA;
+            font-family: monospace;
+            position: relative;
+        }
+        
+        .wireframe::before {
+            content: attr(data-page);
+            position: absolute;
+            top: -12px;
+            left: 1rem;
+            background: #FF69B4;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .component-spec {
+            background: #F8F9FA;
+            border-left: 4px solid #FF69B4;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .color-palette {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .color-item {
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .color-primary { background: #FF69B4; }
+        .color-secondary { background: #FF1493; }
+        .color-accent { background: #FFB6C1; }
+        .color-neutral { background: #171A20; }
+        .color-success { background: #00D563; }
+        .color-warning { background: #FFB800; }
+        .color-error { background: #FF4B4B; }
+        
+        .typography {
+            margin: 1.5rem 0;
+        }
+        
+        .typography h1 { font-size: 2.5rem; margin: 0.5rem 0; }
+        .typography h2 { font-size: 2rem; margin: 0.5rem 0; }
+        .typography h3 { font-size: 1.5rem; margin: 0.5rem 0; }
+        .typography h4 { font-size: 1.25rem; margin: 0.5rem 0; }
+        .typography p { font-size: 1rem; margin: 0.5rem 0; }
+        .typography small { font-size: 0.875rem; margin: 0.5rem 0; }
+        
+        .grid-layout {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .flow-diagram {
+            background: #F0F8FF;
+            border: 2px solid #0066CC;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .user-story {
+            background: #FFF0F5;
+            border: 2px solid #FF69B4;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .requirements-list {
+            background: #F0FFF0;
+            border: 2px solid #00D563;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .requirements-list ul {
+            margin-left: 1.5rem;
+        }
+        
+        .requirements-list li {
+            margin: 0.5rem 0;
+        }
+        
+        code {
+            background: #F5F5F5;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Menlo', monospace;
+        }
+        
+        .note {
+            background: #FFF8E1;
+            border: 1px solid #FFB800;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .note strong {
+            color: #FF8F00;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="design-header">
+            <h1>🎨 Editor Dashboard Interface Design</h1>
+            <p>Comprehensive design specifications for the Cross-Border App editor interface, featuring Tesla-inspired aesthetics with light pink accents and optimal user experience patterns.</p>
+        </div>
+
+        <!-- Design System Analysis -->
+        <div class="section">
+            <h2>🎯 Current Design System Analysis</h2>
+            
+            <h3>Color Palette</h3>
+            <div class="color-palette">
+                <div class="color-item color-primary">#FF69B4<br>Hot Pink (Primary)</div>
+                <div class="color-item color-secondary">#FF1493<br>Deep Pink (Secondary)</div>
+                <div class="color-item color-accent">#FFB6C1<br>Light Pink (Accent)</div>
+                <div class="color-item color-neutral">#171A20<br>Charcoal (Text)</div>
+                <div class="color-item color-success">#00D563<br>Success Green</div>
+                <div class="color-item color-warning">#FFB800<br>Warning Amber</div>
+                <div class="color-item color-error">#FF4B4B<br>Error Red</div>
+            </div>
+
+            <h3>Typography Scale</h3>
+            <div class="typography">
+                <h1>Display Large - Headlines & Hero Text</h1>
+                <h2>Headline Medium - Section Headers</h2>
+                <h3>Title Large - Card & Component Titles</h3>
+                <h4>Title Medium - Subsection Headers</h4>
+                <p>Body Large - Primary content text and descriptions</p>
+                <small>Body Small - Secondary information and metadata</small>
+            </div>
+
+            <h3>Component Patterns</h3>
+            <div class="component-spec">
+                <strong>Cards:</strong> White background, subtle shadows, 8px border radius, hover effects with slight elevation<br>
+                <strong>Buttons:</strong> Pink gradients for primary actions, outline styles for secondary, ghost for tertiary<br>
+                <strong>Forms:</strong> Clean inputs with pink focus states, validation feedback, accessible labels<br>
+                <strong>Navigation:</strong> Tab-based with pink indicators, breadcrumbs for hierarchy
+            </div>
+        </div>
+
+        <!-- Editor Dashboard Main Page -->
+        <div class="section">
+            <h2>📊 Editor Dashboard - Main Page</h2>
+            
+            <div class="user-story">
+                <strong>User Story:</strong> As a blog editor, I want a comprehensive dashboard that shows my content performance, recent activity, and quick access to all editorial functions, so I can efficiently manage and track my content creation workflow.
+            </div>
+
+            <div class="wireframe" data-page="Editor Dashboard">
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Header: CrossBorder • [Profile Menu] [Role Switcher] [Notifications]        │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ 📝 Content Management Dashboard                        [+ New Post] [Import] │
+│ Dashboard › Editor                                                           │
+│                                                                             │
+│ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐            │
+│ │    ✅ 24    │ │    📝 6     │ │   👁️ 12.5K  │ │   🎯 85%    │            │
+│ │  Published  │ │   Drafts    │ │ Total Views │ │ SEO Score   │            │
+│ │ +3 this wk  │ │ 2 pending   │ │ +12% month  │ │ Above avg   │            │
+│ └─────────────┘ └─────────────┘ └─────────────┘ └─────────────┘            │
+│                                                                             │
+│ ┌─── [📄 Posts] [🖼️ Media] [📊 Analytics] ────────────────────────────────┐ │
+│ │                                                                         │ │
+│ │ 🔍 [Search posts, authors, content...              ] [Clear]           │ │
+│ │                                                                         │ │
+│ │ [All Status ▼] [All Categories ▼] [Newest First ▼]     [⊞][☰] [Bulk ▼] │ │
+│ │                                                                         │ │
+│ │ ┌───────────────┐ ┌───────────────┐ ┌───────────────┐                  │ │
+│ │ │[☑] [img]     │ │[☑] [img]     │ │[☑] [img]     │                  │ │
+│ │ │Cross-Border   │ │Tesla-Style    │ │Business Travel│                  │ │
+│ │ │Travel Guide   │ │Luxury Trans   │ │Optimization   │                  │ │
+│ │ │✅ Published   │ │✅ Published   │ │📝 Draft       │                  │ │
+│ │ │👁️ 2,341      │ │👁️ 1,876      │ │👁️ 0          │                  │ │
+│ │ │📊 SEO: 92%   │ │📊 SEO: 88%   │ │📊 SEO: 76%   │                  │ │
+│ │ │[Edit][View]   │ │[Edit][View]   │ │[Edit][View]   │                  │ │
+│ │ └───────────────┘ └───────────────┘ └───────────────┘                  │ │
+│ └─────────────────────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────────────────────┘
+            </div>
+
+            <h3>Key Features & Components</h3>
+            <div class="requirements-list">
+                <h4>Overview Statistics Cards</h4>
+                <ul>
+                    <li>Published posts count with week-over-week growth</li>
+                    <li>Draft posts with pending review indicator</li>
+                    <li>Total views with percentage growth</li>
+                    <li>Average SEO score with performance indicator</li>
+                </ul>
+
+                <h4>Content Management Section</h4>
+                <ul>
+                    <li>Tabbed interface for Posts, Media, Analytics</li>
+                    <li>Advanced search with real-time filtering</li>
+                    <li>Multiple view modes (card/list) with preferences</li>
+                    <li>Bulk actions for efficient content management</li>
+                </ul>
+
+                <h4>Post Cards/List Items</h4>
+                <ul>
+                    <li>Thumbnail preview with status badges</li>
+                    <li>Title, excerpt, author, and metadata</li>
+                    <li>SEO score with color-coded indicators</li>
+                    <li>Quick action buttons (Edit, View, Duplicate)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Create Post Interface -->
+        <div class="section">
+            <h2>✍️ Create Post Interface</h2>
+            
+            <div class="user-story">
+                <strong>User Story:</strong> As a blog editor, I want a distraction-free writing environment with rich text editing capabilities, media insertion, SEO optimization tools, and flexible publishing options.
+            </div>
+
+            <div class="wireframe" data-page="Create/Edit Post">
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ [← Back] Create New Post                               [💾 Save] [👁️ Preview] │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ ┌─ Content Editor ──────────────────┐ ┌─ Post Settings ──┐                  │
+│ │                                   │ │                  │                  │
+│ │ [📷 Media] [🔗 Link] [📊 SEO]     │ │ Status: [Draft ▼] │                  │
+│ │                                   │ │                  │                  │
+│ │ Title: [                        ] │ │ Category:        │                  │
+│ │                                   │ │ [Travel Guide ▼] │                  │
+│ │ ┌─ Rich Text Editor ─────────────┐ │ │                  │                  │
+│ │ │ [B][I][U] [H1][H2] [•][1.] .. │ │ │ Tags:            │                  │
+│ │ │                               │ │ │ [travel, guide]  │                  │
+│ │ │ Start writing your post...    │ │ │ [+ Add Tag]      │                  │
+│ │ │                               │ │ │                  │                  │
+│ │ │                               │ │ │ Featured Image:  │                  │
+│ │ │                               │ │ │ [Upload/Select]  │                  │
+│ │ │                               │ │ │                  │                  │
+│ │ │                               │ │ │ Excerpt:         │                  │
+│ │ │                               │ │ │ [              ] │                  │
+│ │ │                               │ │ │ [              ] │                  │
+│ │ │                               │ │ │                  │                  │
+│ │ └───────────────────────────────┘ │ │ SEO Score: 🎯85% │                  │
+│ │                                   │ │ ┌──────────────┐ │                  │
+│ │ Word Count: 247 | Reading: 3 min  │ │ │ ✅ Title OK  │ │                  │
+│ └───────────────────────────────────┘ │ │ ⚠️  Meta Desc│ │                  │
+│                                       │ │ ✅ Keywords  │ │                  │
+│ ┌─ Publishing Options ──────────────┐ │ │ ✅ Readability│ │                  │
+│ │ ○ Save as Draft                   │ │ └──────────────┘ │                  │
+│ │ ○ Submit for Review               │ │                  │                  │
+│ │ ○ Publish Immediately             │ │ Schedule:        │                  │
+│ │ ○ Schedule for Later              │ │ [Now          ▼] │                  │
+│ │   Date: [        ] Time: [    ]   │ │                  │                  │
+│ │                                   │ │ [Publish Post]   │                  │
+│ │ [Cancel] [Save Draft] [Publish]   │ └──────────────────┘                  │
+│ └───────────────────────────────────┘                                       │
+└─────────────────────────────────────────────────────────────────────────────┘
+            </div>
+
+            <h3>Rich Text Editor Features</h3>
+            <div class="requirements-list">
+                <h4>Formatting Tools</h4>
+                <ul>
+                    <li>Bold, italic, underline, strikethrough</li>
+                    <li>Heading levels (H1-H6) with consistent styling</li>
+                    <li>Lists (bulleted, numbered, nested)</li>
+                    <li>Block quotes, code blocks, horizontal rules</li>
+                </ul>
+
+                <h4>Media Integration</h4>
+                <ul>
+                    <li>Drag-and-drop image upload with inline preview</li>
+                    <li>Media library integration for existing assets</li>
+                    <li>Image alt-text editing for accessibility</li>
+                    <li>Video embed support (YouTube, Vimeo)</li>
+                </ul>
+
+                <h4>SEO Optimization</h4>
+                <ul>
+                    <li>Real-time SEO score calculation</li>
+                    <li>Meta description optimization</li>
+                    <li>Keyword density analysis</li>
+                    <li>Readability score with suggestions</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Individual Post Page -->
+        <div class="section">
+            <h2>📄 Post Page - View/Edit Interface</h2>
+            
+            <div class="user-story">
+                <strong>User Story:</strong> As a blog editor, I want to view published posts as readers see them while having quick access to editing tools, analytics, and management options.
+            </div>
+
+            <div class="wireframe" data-page="Post View/Edit">
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ [← Back to Dashboard] Cross-Border Travel Guide 2024    [✏️ Edit] [📊 Stats] │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ ┌─ Article Header ─────────────────────────────────────────────────────────┐ │
+│ │ Cross-Border Travel Guide 2024                    ✅ Published │ 92% SEO │ │
+│ │ By Editorial Team • Travel Guide • Jan 15, 2024 • 12 min read           │ │
+│ │ 👁️ 2,341 views • 💬 23 comments • ⭐ Featured                          │ │
+│ │                                                                         │ │
+│ │ [Featured Image: Hong Kong-Shenzhen Border Crossing]                   │ │
+│ └─────────────────────────────────────────────────────────────────────────┘ │
+│                                                                             │
+│ ┌─ Article Content ──────────────────┐ ┌─ Sidebar ─────────────────────────┐ │
+│ │                                    │ │ Quick Actions:                    │ │
+│ │ Complete guide for seamless        │ │ [✏️ Edit Post]                   │ │
+│ │ border crossings between Hong      │ │ [📄 Duplicate]                   │ │
+│ │ Kong and Mainland China...         │ │ [🗑️ Delete]                      │ │
+│ │                                    │ │ [📤 Share]                       │ │
+│ │ ## Requirements                    │ │                                   │ │
+│ │ - Valid passport                   │ │ Performance:                      │ │
+│ │ - Travel permits                   │ │ • Views: 2,341 (+12%)           │ │
+│ │ - Health declarations              │ │ • Engagement: 4.2 min avg       │ │
+│ │                                    │ │ • Bounce rate: 23%              │ │
+│ │ ## Border Checkpoints              │ │ • Social shares: 47             │ │
+│ │ [Detailed content...]              │ │                                   │ │
+│ │                                    │ │ SEO Analysis:                     │ │
+│ │                                    │ │ • Title optimization: ✅         │ │
+│ │                                    │ │ • Meta description: ✅           │ │
+│ │                                    │ │ • Keywords: ✅                   │ │
+│ │                                    │ │ • Internal links: ⚠️            │ │
+│ │                                    │ │                                   │ │
+│ │                                    │ │ Recent Comments:                  │ │
+│ │                                    │ │ "Very helpful guide!" - John     │ │
+│ │                                    │ │ "Could use more photos" - Sarah  │ │
+│ │                                    │ │ [View All Comments]              │ │
+│ └────────────────────────────────────┘ └───────────────────────────────────┘ │
+│                                                                             │
+│ ┌─ Related Posts ─────────────────────────────────────────────────────────┐ │
+│ │ [Post 1: Tesla-Style Luxury] [Post 2: Business Travel] [Post 3: Routes] │ │
+│ └─────────────────────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────────────────────┘
+            </div>
+
+            <h3>Post Management Features</h3>
+            <div class="requirements-list">
+                <h4>Content Display</h4>
+                <ul>
+                    <li>Full article rendering with proper typography</li>
+                    <li>Responsive layout for all device sizes</li>
+                    <li>Featured image with alt-text display</li>
+                    <li>Social sharing buttons and metadata</li>
+                </ul>
+
+                <h4>Editorial Tools</h4>
+                <ul>
+                    <li>One-click edit mode transition</li>
+                    <li>Inline commenting and revision history</li>
+                    <li>Quick status change (draft/review/published)</li>
+                    <li>Bulk operations (duplicate, delete, share)</li>
+                </ul>
+
+                <h4>Performance Analytics</h4>
+                <ul>
+                    <li>Real-time view counts and engagement metrics</li>
+                    <li>SEO performance indicators</li>
+                    <li>Comment moderation interface</li>
+                    <li>Related posts suggestions</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Profile Management -->
+        <div class="section">
+            <h2>👤 Profile Management Interface</h2>
+            
+            <div class="user-story">
+                <strong>User Story:</strong> As a blog editor, I want to manage my profile information, preferences, and account settings in a centralized location with easy navigation between different sections.
+            </div>
+
+            <div class="wireframe" data-page="Profile Management">
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ [← Dashboard] Profile Settings                                              │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ ┌─ Profile Header ────────────────────────────────────────────────────────┐ │
+│ │ [📷 Avatar]  Sarah Wong - Blog Editor                  [Change Photo]   │ │
+│ │              @sarahwong • Member since Jan 2024                        │ │
+│ │              47 posts published • 12.5K total views                    │ │
+│ └─────────────────────────────────────────────────────────────────────────┘ │
+│                                                                             │
+│ ┌─ [🏠 Overview] [👤 Personal] [🔒 Security] [⚙️ Preferences] [📊 Activity] ┐ │
+│ │                                                                         │ │
+│ │ ┌─ Personal Information ──────────────┐ ┌─ Editor Preferences ─────────┐ │ │
+│ │ │                                     │ │                              │ │ │
+│ │ │ Display Name: [Sarah Wong        ]  │ │ Default Category:            │ │ │
+│ │ │ Email: [sarah@crossborder.com    ]  │ │ [Travel Guide            ▼]  │ │ │
+│ │ │ Bio: [Travel content specialist  ]  │ │                              │ │ │
+│ │ │      [passionate about cross-   ]  │ │ Auto-save Interval:          │ │ │
+│ │ │      [border experiences...     ]  │ │ [Every 30 seconds        ▼]  │ │ │
+│ │ │                                     │ │                              │ │ │
+│ │ │ Location: [Hong Kong             ]  │ │ Editor Theme:                │ │ │
+│ │ │ Website: [www.sarahwrites.com    ]  │ │ ○ Light  ● Dark  ○ Auto     │ │ │
+│ │ │ LinkedIn: [sarah-wong-writer     ]  │ │                              │ │ │
+│ │ │ Twitter: [@sarahwriteshk         ]  │ │ Notification Preferences:    │ │ │
+│ │ │                                     │ │ ☑️ Comment notifications     │ │ │
+│ │ │ [Update Profile]                    │ │ ☑️ Weekly performance        │ │ │
+│ │ └─────────────────────────────────────┘ │ ☑️ Publishing reminders      │ │ │
+│ │                                         │ ☐ Marketing emails          │ │ │
+│ │ ┌─ Account Statistics ─────────────────┐ │                              │ │ │
+│ │ │ • Posts: 47 published, 3 drafts     │ │ [Save Preferences]           │ │ │
+│ │ │ • Total views: 12,543               │ │                              │ │ │
+│ │ │ • Avg. SEO score: 88%               │ └──────────────────────────────┘ │ │
+│ │ │ • Comments: 234 total               │                                │ │ │
+│ │ └─────────────────────────────────────┘                                │ │ │
+│ └─────────────────────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────────────────────┘
+            </div>
+
+            <h3>Profile Features</h3>
+            <div class="requirements-list">
+                <h4>Personal Information</h4>
+                <ul>
+                    <li>Avatar upload with image cropping tool</li>
+                    <li>Editable display name and bio section</li>
+                    <li>Social media links integration</li>
+                    <li>Contact information management</li>
+                </ul>
+
+                <h4>Editor Preferences</h4>
+                <ul>
+                    <li>Default category and tag selections</li>
+                    <li>Auto-save interval configuration</li>
+                    <li>Editor theme (light/dark/auto)</li>
+                    <li>Notification preferences with granular control</li>
+                </ul>
+
+                <h4>Account Statistics</h4>
+                <ul>
+                    <li>Publication metrics and growth trends</li>
+                    <li>Engagement analytics overview</li>
+                    <li>SEO performance tracking</li>
+                    <li>Activity timeline and history</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Media Library -->
+        <div class="section">
+            <h2>🖼️ Media Library Interface</h2>
+            
+            <div class="user-story">
+                <strong>User Story:</strong> As a blog editor, I want a comprehensive media management system that allows me to upload, organize, search, and insert media files efficiently into my posts.
+            </div>
+
+            <div class="wireframe" data-page="Media Library">
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Media Library                                      [📤 Upload] [📁 New Folder] │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ 🔍 [Search media...                ] [All Types ▼] [Date ▼] [⊞][☰] [Bulk ▼] │
+│                                                                             │
+│ ┌─ Folders ─────────────────┐ ┌─ Media Grid ────────────────────────────────┐ │
+│ │ 📁 All Media (234)        │ │                                             │ │
+│ │ 📁 Images (189)           │ │ ┌──────────┐ ┌──────────┐ ┌──────────┐      │ │
+│ │   📁 Blog Posts (156)     │ │ │[☑] 🖼️   │ │[☑] 🖼️   │ │[☑] 🎥    │      │ │
+│ │   📁 Featured (23)        │ │ │ HK-SZ    │ │ Tesla    │ │ Business │      │ │
+│ │   📁 Icons (10)           │ │ │ Border   │ │ Luxury   │ │ Travel   │      │ │
+│ │ 📁 Videos (32)            │ │ │ 2.4 MB   │ │ 1.8 MB   │ │ 15.7 MB  │      │ │
+│ │ 📁 Documents (13)         │ │ │ 2 hrs ago│ │ 1 day ago│ │ 1 wk ago │      │ │
+│ │                           │ │ └──────────┘ └──────────┘ └──────────┘      │ │
+│ │ Storage: 89.2 MB / 2 GB   │ │                                             │ │
+│ └───────────────────────────┘ │ ┌──────────┐ ┌──────────┐ ┌──────────┐      │ │
+│                               │ │[☑] 📄    │ │[☑] 🖼️   │ │[☑] 🖼️   │      │ │
+│ ┌─ Upload Zone ─────────────┐ │ │ Route    │ │ Skyline  │ │ Guide    │      │ │
+│ │                           │ │ │ Map      │ │ Photo    │ │ Thumb    │      │ │
+│ │   📤 Drag files here      │ │ │ 890 KB   │ │ 3.2 MB   │ │ 1.1 MB   │      │ │
+│ │   or click to browse      │ │ │ 3 dys ago│ │ 1 wk ago │ │ 2 wks ago│      │ │
+│ │                           │ │ └──────────┘ └──────────┘ └──────────┘      │ │
+│ │ [Browse Files]            │ │                                             │ │
+│ └───────────────────────────┘ │ [Load More...] (24 of 234 items)           │ │
+│                               └─────────────────────────────────────────────┘ │
+│                                                                             │
+│ ┌─ Selected Item Details ──────────────────────────────────────────────────┐ │
+│ │ hong-kong-skyline.jpg                                     [Edit] [Delete] │ │
+│ │ 🖼️ Image • 3.2 MB • 1920x1080 • Uploaded 1 week ago                    │ │
+│ │ Alt Text: [Hong Kong skyline at sunset with harbor view           ]      │ │
+│ │ Caption: [Beautiful sunset view of Hong Kong's iconic skyline     ]      │ │
+│ │ Tags: [hong-kong, skyline, sunset, harbor]                               │ │
+│ │ Used in: Cross-Border Travel Guide 2024, Business Travel Tips            │ │
+│ │ [Copy URL] [Insert into Post] [Download] [Generate Variants]             │ │
+│ └─────────────────────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────────────────────┘
+            </div>
+
+            <h3>Media Management Features</h3>
+            <div class="requirements-list">
+                <h4>Organization System</h4>
+                <ul>
+                    <li>Hierarchical folder structure with drag-and-drop</li>
+                    <li>Smart collections (Recent, Unused, Popular)</li>
+                    <li>Tag-based organization and filtering</li>
+                    <li>Storage usage tracking and optimization</li>
+                </ul>
+
+                <h4>Upload & Processing</h4>
+                <ul>
+                    <li>Drag-and-drop upload with progress indicators</li>
+                    <li>Batch upload support for multiple files</li>
+                    <li>Automatic image optimization and resizing</li>
+                    <li>Format conversion (WebP, multiple sizes)</li>
+                </ul>
+
+                <h4>Search & Discovery</h4>
+                <ul>
+                    <li>Advanced search with filters (type, date, size)</li>
+                    <li>Visual similarity search for images</li>
+                    <li>Usage tracking (which posts use which media)</li>
+                    <li>Duplicate detection and management</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Analytics Dashboard -->
+        <div class="section">
+            <h2>📊 Analytics Dashboard</h2>
+            
+            <div class="user-story">
+                <strong>User Story:</strong> As a blog editor, I want detailed analytics about my content performance, audience engagement, and SEO metrics to make data-driven decisions about my editorial strategy.
+            </div>
+
+            <div class="wireframe" data-page="Analytics Dashboard">
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Analytics Dashboard                          [📊 Export] [📧 Schedule Report] │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ ┌─ Time Range: [Last 30 Days ▼] [Jan 1 - Jan 30, 2024] [Apply]            ┐ │
+│ └─────────────────────────────────────────────────────────────────────────┘ │
+│                                                                             │
+│ ┌─ Key Metrics ───────────────────────────────────────────────────────────┐ │
+│ │ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐          │ │
+│ │ │    👁️       │ │     📄      │ │     💬      │ │     ⏱️       │          │ │
+│ │ │   24,567    │ │     12      │ │    189      │ │   4m 23s    │          │ │
+│ │ │ Page Views  │ │Posts Publish│ │  Comments   │ │ Avg. Time   │          │ │
+│ │ │ (+15.2%)    │ │ (+3 posts)  │ │ (+12.3%)    │ │ (+8.7%)     │          │ │
+│ │ └─────────────┘ └─────────────┘ └─────────────┘ └─────────────┘          │ │
+│ └─────────────────────────────────────────────────────────────────────────┘ │
+│                                                                             │
+│ ┌─ Traffic Trends ──────────────┐ ┌─ Top Performing Posts ──────────────────┐ │
+│ │                               │ │                                         │ │
+│ │     ▲                        │ │ 1. Cross-Border Travel Guide  2,341 👁️ │ │
+│ │   ▲   ▲                      │ │    92% SEO • 23 💬 • +15% growth       │ │
+│ │ ▲      ▲  ▲                  │ │                                         │ │
+│ │          ▲   ▲▲              │ │ 2. Tesla-Style Luxury Trans   1,876 👁️ │ │
+│ │               ▲ ▲ ▲          │ │    88% SEO • 18 💬 • +8% growth        │ │
+│ │                 ▲   ▲        │ │                                         │ │
+│ │ Jan 1    Jan 15    Jan 30    │ │ 3. HK-Shenzhen Routes         1,245 👁️ │ │
+│ │                               │ │    84% SEO • 31 💬 • +22% growth       │ │
+│ │ 📊 [Daily][Weekly][Monthly]   │ │                                         │ │
+│ └───────────────────────────────┘ │ [View Full Report]                      │ │
+│                                   └─────────────────────────────────────────┘ │
+│                                                                             │
+│ ┌─ Audience Insights ───────────┐ ┌─ SEO Performance ────────────────────────┐ │
+│ │                               │ │                                         │ │
+│ │ Top Locations:                │ │ Avg. SEO Score: 87% (▲ +3%)            │ │
+│ │ 🇭🇰 Hong Kong      45%       │ │                                         │ │
+│ │ 🇨🇳 Mainland China 28%       │ │ ┌─────────────────────────────────────┐ │ │
+│ │ 🇺🇸 United States  12%       │ │ │ ✅ Excellent (90-100%): 8 posts    │ │ │
+│ │ 🇬🇧 United Kingdom  8%       │ │ │ ⚠️  Good (70-89%): 14 posts        │ │ │
+│ │ 🌏 Others           7%        │ │ │ ❌ Needs Work (<70%): 2 posts      │ │ │
+│ │                               │ │ └─────────────────────────────────────┘ │ │
+│ │ Device Types:                 │ │                                         │ │
+│ │ 📱 Mobile    65%             │ │ Top Keywords:                           │ │ │
+│ │ 💻 Desktop   28%             │ │ • "cross border travel"  #3 ▲          │ │ │
+│ │ 📟 Tablet     7%             │ │ • "hong kong transport"  #7 ▲          │ │ │
+│ │                               │ │ • "business travel tips" #12 ▼         │ │ │
+│ │ Traffic Sources:              │ │                                         │ │ │
+│ │ 🔍 Search     52%            │ │ [View SEO Report]                       │ │ │
+│ │ 🔗 Direct     31%            │ └─────────────────────────────────────────┘ │ │
+│ │ 📱 Social     17%            │                                           │ │ │
+│ └───────────────────────────────┘                                           │ │
+└─────────────────────────────────────────────────────────────────────────────┘
+            </div>
+
+            <h3>Analytics Features</h3>
+            <div class="requirements-list">
+                <h4>Performance Metrics</h4>
+                <ul>
+                    <li>Page views, unique visitors, and engagement metrics</li>
+                    <li>Time-based trend analysis with multiple period views</li>
+                    <li>Comparative analysis (period-over-period growth)</li>
+                    <li>Real-time data updates and notifications</li>
+                </ul>
+
+                <h4>Content Analysis</h4>
+                <ul>
+                    <li>Top-performing posts with engagement details</li>
+                    <li>Content category performance comparison</li>
+                    <li>Reading patterns and user behavior tracking</li>
+                    <li>Comment sentiment analysis</li>
+                </ul>
+
+                <h4>SEO Insights</h4>
+                <ul>
+                    <li>Keyword ranking tracking and suggestions</li>
+                    <li>SEO score distribution and improvement areas</li>
+                    <li>Search traffic analysis and optimization tips</li>
+                    <li>Backlink monitoring and quality assessment</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Settings Interface -->
+        <div class="section">
+            <h2>⚙️ Settings Interface</h2>
+            
+            <div class="user-story">
+                <strong>User Story:</strong> As a blog editor, I want centralized access to all application settings, content preferences, and configuration options that affect my editorial workflow.
+            </div>
+
+            <div class="wireframe" data-page="Settings">
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Settings                                                                    │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ ┌─ [⚙️ General] [✍️ Editor] [🔔 Notifications] [🔒 Privacy] [🚀 Advanced] ──┐ │
+│ │                                                                         │ │
+│ │ ┌─ Content Settings ─────────────────┐ ┌─ Publishing Defaults ────────┐ │ │
+│ │ │                                    │ │                              │ │ │
+│ │ │ Default Category:                  │ │ Default Status:              │ │ │
+│ │ │ [Travel Guide               ▼]     │ │ ● Draft  ○ Review  ○ Publish │ │ │
+│ │ │                                    │ │                              │ │ │
+│ │ │ Default Tags:                      │ │ Auto-publish Time:           │ │ │
+│ │ │ [travel, cross-border, guide   ]   │ │ [9:00 AM] [GMT+8        ▼]   │ │ │
+│ │ │ [+ Add Default Tag]                │ │                              │ │ │
+│ │ │                                    │ │ Content Guidelines:          │ │ │
+│ │ │ SEO Template:                      │ │ ☑️ Require featured image    │ │ │
+│ │ │ Title: [                      ]    │ │ ☑️ Require excerpt           │ │ │
+│ │ │ Meta: [                       ]    │ │ ☑️ Minimum word count: 500   │ │ │
+│ │ │                                    │ │ ☑️ SEO score minimum: 70%    │ │ │
+│ │ │ [Save Content Settings]            │ │                              │ │ │
+│ │ └────────────────────────────────────┘ │ [Save Publishing Settings]   │ │ │
+│ │                                        └──────────────────────────────┘ │ │
+│ │                                                                         │ │
+│ │ ┌─ Editor Preferences ──────────────────────────────────────────────────┐ │ │
+│ │ │                                                                       │ │ │
+│ │ │ Editor Theme:  ○ Light  ● Dark  ○ Auto                               │ │ │
+│ │ │                                                                       │ │ │
+│ │ │ Font Family:   [Inter                                            ▼]  │ │ │
+│ │ │ Font Size:     [Medium                                           ▼]  │ │ │
+│ │ │                                                                       │ │ │
+│ │ │ Auto-save:     ● Enabled  ○ Disabled                                │ │ │
+│ │ │ Save Interval: [Every 30 seconds                                 ▼]  │ │ │
+│ │ │                                                                       │ │ │
+│ │ │ Distraction-free Mode: ● Enabled  ○ Disabled                        │ │ │
+│ │ │ Word Count Display:    ● Enabled  ○ Disabled                        │ │ │
+│ │ │ Reading Time Est.:     ● Enabled  ○ Disabled                        │ │ │
+│ │ │                                                                       │ │ │
+│ │ │ Keyboard Shortcuts:                                                   │ │ │
+│ │ │ Bold:      Ctrl+B     Italic:    Ctrl+I                             │ │ │
+│ │ │ Save:      Ctrl+S     Preview:   Ctrl+P                             │ │ │
+│ │ │ [Customize Shortcuts]                                                │ │ │
+│ │ │                                                                       │ │ │
+│ │ │ [Save Editor Preferences]                                             │ │ │
+│ │ └───────────────────────────────────────────────────────────────────────┘ │ │
+│ └─────────────────────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────────────────────┘
+            </div>
+
+            <h3>Settings Categories</h3>
+            <div class="requirements-list">
+                <h4>Content Management</h4>
+                <ul>
+                    <li>Default categories, tags, and templates</li>
+                    <li>SEO template configuration</li>
+                    <li>Content guidelines and requirements</li>
+                    <li>Publishing workflow preferences</li>
+                </ul>
+
+                <h4>Editor Configuration</h4>
+                <ul>
+                    <li>Theme selection (light/dark/auto)</li>
+                    <li>Typography and layout preferences</li>
+                    <li>Auto-save and backup settings</li>
+                    <li>Keyboard shortcuts customization</li>
+                </ul>
+
+                <h4>Notifications & Privacy</h4>
+                <ul>
+                    <li>Email notification preferences</li>
+                    <li>Privacy settings and data handling</li>
+                    <li>Comment moderation settings</li>
+                    <li>Integration with external services</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Navigation Flows -->
+        <div class="section">
+            <h2>🧭 Navigation Flow Diagrams</h2>
+            
+            <div class="flow-diagram">
+                <h3>Primary User Flows</h3>
+                <strong>Content Creation Flow:</strong><br>
+                Dashboard → New Post → Rich Editor → Media Library → SEO Check → Publish → Post View
+                <br><br>
+                <strong>Content Management Flow:</strong><br>
+                Dashboard → Posts List → Filter/Search → Select Post → Edit/View/Delete → Analytics
+                <br><br>
+                <strong>Profile Management Flow:</strong><br>
+                Dashboard → Profile → Personal Info → Preferences → Security → Activity Log
+                <br><br>
+                <strong>Analytics Review Flow:</strong><br>
+                Dashboard → Analytics → Performance Metrics → Content Reports → SEO Insights → Export
+            </div>
+
+            <h3>Information Architecture</h3>
+            <div class="requirements-list">
+                <h4>Primary Navigation</h4>
+                <ul>
+                    <li>Dashboard (overview and quick actions)</li>
+                    <li>Posts (create, edit, manage content)</li>
+                    <li>Media (asset management and organization)</li>
+                    <li>Analytics (performance and insights)</li>
+                </ul>
+
+                <h4>Secondary Navigation</h4>
+                <ul>
+                    <li>Profile settings and preferences</li>
+                    <li>Account security and privacy</li>
+                    <li>Application settings and configuration</li>
+                    <li>Help documentation and support</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Design System Components -->
+        <div class="section">
+            <h2>🎨 Design System & Component Specifications</h2>
+            
+            <h3>Component Library</h3>
+            <div class="grid-layout">
+                <div class="component-spec">
+                    <h4>Buttons</h4>
+                    <strong>Primary:</strong> Pink gradient (#FF69B4 to #FF1493)<br>
+                    <strong>Secondary:</strong> Charcoal (#171A20) with white text<br>
+                    <strong>Outline:</strong> Pink border with pink text<br>
+                    <strong>Ghost:</strong> Transparent with hover effects
+                </div>
+                
+                <div class="component-spec">
+                    <h4>Cards</h4>
+                    <strong>Background:</strong> White with subtle shadow<br>
+                    <strong>Border Radius:</strong> 8px for consistency<br>
+                    <strong>Hover:</strong> Slight elevation and transform<br>
+                    <strong>Padding:</strong> 24px standard, 16px compact
+                </div>
+                
+                <div class="component-spec">
+                    <h4>Forms</h4>
+                    <strong>Inputs:</strong> Gray border with pink focus<br>
+                    <strong>Labels:</strong> Above inputs, bold weight<br>
+                    <strong>Validation:</strong> Real-time with color coding<br>
+                    <strong>Accessibility:</strong> ARIA labels and descriptions
+                </div>
+                
+                <div class="component-spec">
+                    <h4>Navigation</h4>
+                    <strong>Tabs:</strong> Rounded with pink active state<br>
+                    <strong>Breadcrumbs:</strong> With pink separators<br>
+                    <strong>Menu:</strong> Dropdown with shadow and animations<br>
+                    <strong>Mobile:</strong> Slide-out drawer with overlay
+                </div>
+            </div>
+
+            <h3>Responsive Design Principles</h3>
+            <div class="requirements-list">
+                <h4>Breakpoint Strategy</h4>
+                <ul>
+                    <li>Mobile: 320px - 768px (single column layout)</li>
+                    <li>Tablet: 768px - 1024px (two column where appropriate)</li>
+                    <li>Desktop: 1024px+ (full multi-column layouts)</li>
+                    <li>Large Desktop: 1440px+ (max-width containers)</li>
+                </ul>
+
+                <h4>Component Adaptations</h4>
+                <ul>
+                    <li>Statistics cards: 2x2 grid on mobile, 1x4 on desktop</li>
+                    <li>Post cards: 1 column mobile, 2-3 columns desktop</li>
+                    <li>Sidebars: Collapsed on mobile, visible on desktop</li>
+                    <li>Navigation: Hamburger menu on mobile, full nav on desktop</li>
+                </ul>
+            </div>
+
+            <h3>Accessibility Requirements</h3>
+            <div class="requirements-list">
+                <h4>WCAG 2.1 AA Compliance</h4>
+                <ul>
+                    <li>Color contrast ratios: 4.5:1 for normal text, 3:1 for large text</li>
+                    <li>Keyboard navigation: All interactive elements accessible</li>
+                    <li>Screen reader support: Proper ARIA labels and roles</li>
+                    <li>Focus indicators: Visible and high contrast</li>
+                </ul>
+
+                <h4>Inclusive Design Patterns</h4>
+                <ul>
+                    <li>Alternative text for all images and icons</li>
+                    <li>Descriptive link text and button labels</li>
+                    <li>Form validation with clear error messages</li>
+                    <li>Loading states and progress indicators</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Implementation Guidelines -->
+        <div class="section">
+            <h2>🚀 Implementation Guidelines</h2>
+            
+            <h3>Development Priorities</h3>
+            <div class="requirements-list">
+                <h4>Phase 1: Core Editor (MVP)</h4>
+                <ul>
+                    <li>Dashboard with basic statistics</li>
+                    <li>Rich text editor with essential formatting</li>
+                    <li>Post management (create, edit, delete)</li>
+                    <li>Basic media upload and insertion</li>
+                </ul>
+
+                <h4>Phase 2: Enhanced Features</h4>
+                <ul>
+                    <li>Advanced search and filtering</li>
+                    <li>SEO optimization tools</li>
+                    <li>Bulk operations and workflows</li>
+                    <li>Enhanced media library</li>
+                </ul>
+
+                <h4>Phase 3: Analytics & Advanced</h4>
+                <ul>
+                    <li>Comprehensive analytics dashboard</li>
+                    <li>Advanced editor features</li>
+                    <li>Workflow automation</li>
+                    <li>API integrations and exports</li>
+                </ul>
+            </div>
+
+            <div class="note">
+                <strong>Note:</strong> This design follows the existing Tesla-inspired aesthetic with light pink accents. All components use the established color palette, typography scale, and interaction patterns. The interface prioritizes clarity, efficiency, and accessibility while maintaining visual consistency with the overall application design.
+            </div>
+        </div>
+    </div>
+</body>
+</html>

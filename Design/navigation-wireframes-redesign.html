@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navigation Redesign - Cross-Border Vehicle Website</title>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #fafafa;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .wireframe-section {
+            background: white;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        .section-header {
+            background: linear-gradient(135deg, #171A20 0%, #2A2D35 100%);
+            color: white;
+            padding: 20px 30px;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        .wireframe-content {
+            padding: 30px;
+        }
+        .device-frame {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            margin: 20px 0;
+            overflow: hidden;
+            background: white;
+        }
+        .desktop-frame {
+            max-width: 1200px;
+        }
+        .mobile-frame {
+            max-width: 375px;
+            margin: 20px auto;
+        }
+        .nav-bar {
+            background: white;
+            border-bottom: 1px solid #f0f0f0;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-weight: 700;
+            color: #171A20;
+            font-size: 18px;
+        }
+        .logo .accent {
+            color: #FF69B4;
+        }
+        .nav-items {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .nav-item {
+            color: #171A20;
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        .nav-item:hover, .nav-item.active {
+            color: #FF69B4;
+            background: #FFF0F5;
+        }
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .nav-button {
+            padding: 8px 16px;
+            border: 1px solid #FF69B4;
+            background: transparent;
+            color: #FF69B4;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        .nav-button:hover, .nav-button.primary {
+            background: #FF69B4;
+            color: white;
+        }
+        .page-content {
+            padding: 40px 24px;
+            min-height: 400px;
+            background: #fafafa;
+        }
+        .hero-section {
+            text-align: center;
+            padding: 60px 0;
+        }
+        .hero-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: #171A20;
+            margin-bottom: 16px;
+        }
+        .hero-subtitle {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 32px;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 40px;
+        }
+        .feature-card {
+            background: white;
+            padding: 24px;
+            border-radius: 8px;
+            border: 1px solid #f0f0f0;
+            text-align: center;
+        }
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: #FF69B4;
+            border-radius: 50%;
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+        .booking-flow {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            margin-top: 24px;
+        }
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 32px;
+        }
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+        }
+        .step-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #FF69B4;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .step-title {
+            font-size: 12px;
+            text-align: center;
+            color: #171A20;
+            font-weight: 500;
+        }
+        .blog-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 32px;
+            margin-top: 24px;
+        }
+        .article-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #f0f0f0;
+            margin-bottom: 24px;
+        }
+        .article-image {
+            height: 200px;
+            background: linear-gradient(135deg, #FFB6C1, #FF69B4);
+            position: relative;
+        }
+        .article-tag {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        .article-content {
+            padding: 20px;
+        }
+        .article-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #171A20;
+        }
+        .article-meta {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+        .sidebar {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            border: 1px solid #f0f0f0;
+            height: fit-content;
+        }
+        .mobile-nav {
+            display: none;
+        }
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 18px;
+            color: #171A20;
+        }
+        .login-form {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            padding: 32px;
+            border-radius: 8px;
+            border: 1px solid #f0f0f0;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: #171A20;
+            margin-bottom: 6px;
+        }
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #FF69B4;
+            box-shadow: 0 0 0 3px rgba(255, 105, 180, 0.1);
+        }
+        .user-type-selector {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .user-type-option {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .user-type-option:hover, .user-type-option.selected {
+            border-color: #FF69B4;
+            background: #FFF0F5;
+        }
+        .user-type-option.selected {
+            border-width: 2px;
+        }
+        .user-type-title {
+            font-weight: 600;
+            color: #171A20;
+            margin-bottom: 4px;
+        }
+        .user-type-desc {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        /* Mobile Styles */
+        @media (max-width: 768px) {
+            .nav-items {
+                display: none;
+            }
+            .mobile-menu-toggle {
+                display: block;
+            }
+            .hero-title {
+                font-size: 32px;
+            }
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            .blog-layout {
+                grid-template-columns: 1fr;
+            }
+            .step-indicator {
+                flex-direction: column;
+                gap: 16px;
+            }
+            .step {
+                flex-direction: row;
+                text-align: left;
+            }
+            .step-number {
+                margin-right: 12px;
+                margin-bottom: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Desktop Navigation Wireframes -->
+        <div class="wireframe-section">
+            <div class="section-header">🖥️ Desktop Navigation - All Pages</div>
+            <div class="wireframe-content">
+                <h3>New Navigation Structure Overview</h3>
+                <div class="device-frame desktop-frame">
+                    <div class="nav-bar">
+                        <div class="logo">
+                            <span class="accent">●</span> CrossBorder
+                        </div>
+                        <nav>
+                            <ul class="nav-items">
+                                <li><a href="#" class="nav-item active">Home</a></li>
+                                <li><a href="#" class="nav-item">Booking</a></li>
+                                <li><a href="#" class="nav-item">Blog</a></li>
+                                <li><a href="#" class="nav-item">Login</a></li>
+                            </ul>
+                        </nav>
+                        <div class="nav-actions">
+                            <a href="#" class="nav-button">EN</a>
+                            <a href="#" class="nav-button primary">Register</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 24px; padding: 16px; background: #f9f9f9; border-radius: 8px;">
+                    <h4 style="margin-top: 0; color: #FF69B4;">Navigation Changes Summary:</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div>
+                            <h5>Previous Navigation:</h5>
+                            <ul style="margin: 0;">
+                                <li>Home</li>
+                                <li>Services</li>
+                                <li>Routes</li>
+                                <li>About</li>
+                                <li>Contact</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h5>New Navigation:</h5>
+                            <ul style="margin: 0;">
+                                <li>Home (Homepage with overview)</li>
+                                <li>Booking (Interactive booking system)</li>
+                                <li>Blog (Magazine-style content)</li>
+                                <li>Login/Register (Multi-user auth)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Home Page Wireframe -->
+        <div class="wireframe-section">
+            <div class="section-header">🏠 Home Page Wireframe</div>
+            <div class="wireframe-content">
+                <div class="device-frame desktop-frame">
+                    <div class="nav-bar">
+                        <div class="logo">
+                            <span class="accent">●</span> CrossBorder
+                        </div>
+                        <nav>
+                            <ul class="nav-items">
+                                <li><a href="#" class="nav-item active">Home</a></li>
+                                <li><a href="#" class="nav-item">Booking</a></li>
+                                <li><a href="#" class="nav-item">Blog</a></li>
+                                <li><a href="#" class="nav-item">Login</a></li>
+                            </ul>
+                        </nav>
+                        <div class="nav-actions">
+                            <a href="#" class="nav-button">EN</a>
+                            <a href="#" class="nav-button primary">Register</a>
+                        </div>
+                    </div>
+                    <div class="page-content">
+                        <div class="hero-section">
+                            <div class="hero-title">Premium Cross-Border<br>Vehicle Services</div>
+                            <div class="hero-subtitle">Professional transportation between Hong Kong and Mainland China</div>
+                            <div style="display: flex; gap: 16px; justify-content: center; margin-top: 24px;">
+                                <a href="#" class="nav-button primary" style="padding: 12px 24px;">Book Now</a>
+                                <a href="#" class="nav-button" style="padding: 12px 24px;">Learn More</a>
+                            </div>
+                        </div>
+                        <div class="feature-grid">
+                            <div class="feature-card">
+                                <div class="feature-icon">🚗</div>
+                                <h3>Quick Booking</h3>
+                                <p>Easy online booking with real-time availability</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">📍</div>
+                                <h3>Smart Routes</h3>
+                                <p>AI-powered route optimization with Amap integration</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">👨‍💼</div>
+                                <h3>Verified Drivers</h3>
+                                <p>Professional drivers with complete verification</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-icon">📱</div>
+                                <h3>Live Updates</h3>
+                                <p>Real-time tracking and trip notifications</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Booking Page Wireframe -->
+        <div class="wireframe-section">
+            <div class="section-header">📅 Booking Page Wireframe</div>
+            <div class="wireframe-content">
+                <div class="device-frame desktop-frame">
+                    <div class="nav-bar">
+                        <div class="logo">
+                            <span class="accent">●</span> CrossBorder
+                        </div>
+                        <nav>
+                            <ul class="nav-items">
+                                <li><a href="#" class="nav-item">Home</a></li>
+                                <li><a href="#" class="nav-item active">Booking</a></li>
+                                <li><a href="#" class="nav-item">Blog</a></li>
+                                <li><a href="#" class="nav-item">Login</a></li>
+                            </ul>
+                        </nav>
+                        <div class="nav-actions">
+                            <a href="#" class="nav-button">EN</a>
+                            <a href="#" class="nav-button primary">Register</a>
+                        </div>
+                    </div>
+                    <div class="page-content">
+                        <h2 style="text-align: center; margin-bottom: 32px;">Book Your Cross-Border Journey</h2>
+                        <div class="booking-flow">
+                            <div class="step-indicator">
+                                <div class="step">
+                                    <div class="step-number">1</div>
+                                    <div class="step-title">Location & Route</div>
+                                </div>
+                                <div class="step">
+                                    <div class="step-number">2</div>
+                                    <div class="step-title">Vehicle Selection</div>
+                                </div>
+                                <div class="step">
+                                    <div class="step-number">3</div>
+                                    <div class="step-title">Date & Time</div>
+                                </div>
+                                <div class="step">
+                                    <div class="step-number">4</div>
+                                    <div class="step-title">Payment & Confirm</div>
+                                </div>
+                            </div>
+                            
+                            <div style="background: #f9f9f9; padding: 24px; border-radius: 8px;">
+                                <h3 style="margin-top: 0;">Step 1: Location & Route (Amap Integration)</h3>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                                    <div class="form-group">
+                                        <label class="form-label">Pickup Location</label>
+                                        <input type="text" class="form-input" placeholder="Enter pickup location (HK/China)...">
+                                        <div style="font-size: 12px; color: #666; margin-top: 4px;">
+                                            🗺️ Powered by Amap - Autocomplete with location hints
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Destination</label>
+                                        <input type="text" class="form-input" placeholder="Enter destination...">
+                                        <div style="font-size: 12px; color: #666; margin-top: 4px;">
+                                            📍 Real-time route calculation & pricing
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="background: white; padding: 16px; border-radius: 4px; margin-top: 16px; border: 1px solid #e0e0e0;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <div>
+                                            <div style="font-weight: 600;">Recommended Route</div>
+                                            <div style="font-size: 14px; color: #666;">Hong Kong → Lok Ma Chau → Shenzhen</div>
+                                        </div>
+                                        <div style="text-align: right;">
+                                            <div style="font-weight: 600; color: #FF69B4;">From HK$800</div>
+                                            <div style="font-size: 12px; color: #666;">~45-60 minutes</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Blog Page Wireframe -->
+        <div class="wireframe-section">
+            <div class="section-header">📰 Blog/Magazine Page Wireframe</div>
+            <div class="wireframe-content">
+                <div class="device-frame desktop-frame">
+                    <div class="nav-bar">
+                        <div class="logo">
+                            <span class="accent">●</span> CrossBorder
+                        </div>
+                        <nav>
+                            <ul class="nav-items">
+                                <li><a href="#" class="nav-item">Home</a></li>
+                                <li><a href="#" class="nav-item">Booking</a></li>
+                                <li><a href="#" class="nav-item active">Blog</a></li>
+                                <li><a href="#" class="nav-item">Login</a></li>
+                            </ul>
+                        </nav>
+                        <div class="nav-actions">
+                            <a href="#" class="nav-button">EN</a>
+                            <a href="#" class="nav-button primary">Register</a>
+                        </div>
+                    </div>
+                    <div class="page-content">
+                        <div style="text-align: center; margin-bottom: 32px;">
+                            <h2>Cross-Border Travel Magazine</h2>
+                            <p style="color: #666;">Expert insights, travel guides, and industry updates</p>
+                        </div>
+                        <div class="blog-layout">
+                            <div>
+                                <!-- Featured Article -->
+                                <div class="article-card" style="margin-bottom: 32px;">
+                                    <div class="article-image">
+                                        <div class="article-tag">FEATURED</div>
+                                        <div style="position: absolute; bottom: 16px; left: 16px; color: white;">
+                                            <h2 style="margin: 0; font-size: 24px;">2024 Cross-Border Travel Guide</h2>
+                                        </div>
+                                    </div>
+                                    <div class="article-content">
+                                        <div class="article-meta">March 15, 2024 • Travel Guide • 8 min read</div>
+                                        <p style="margin: 0;">Everything you need to know about traveling between Hong Kong and Mainland China in 2024, including new regulations, best practices, and insider tips...</p>
+                                    </div>
+                                </div>
+
+                                <!-- Article List -->
+                                <div class="article-card">
+                                    <div style="display: flex; gap: 16px;">
+                                        <div style="width: 120px; height: 80px; background: linear-gradient(135deg, #FFB6C1, #FF69B4); border-radius: 4px; flex-shrink: 0;"></div>
+                                        <div style="flex: 1;">
+                                            <div class="article-title" style="font-size: 16px;">New Border Crossing Procedures</div>
+                                            <div class="article-meta">March 10, 2024 • Regulations</div>
+                                            <p style="margin: 8px 0 0 0; font-size: 14px; color: #333;">Recent updates to border crossing procedures and what travelers need to know...</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="article-card">
+                                    <div style="display: flex; gap: 16px;">
+                                        <div style="width: 120px; height: 80px; background: linear-gradient(135deg, #FFB6C1, #FF69B4); border-radius: 4px; flex-shrink: 0;"></div>
+                                        <div style="flex: 1;">
+                                            <div class="article-title" style="font-size: 16px;">Best Routes for Business Travel</div>
+                                            <div class="article-meta">March 5, 2024 • Business</div>
+                                            <p style="margin: 8px 0 0 0; font-size: 14px; color: #333;">Optimize your business trips with our recommended routes and timing...</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="sidebar">
+                                <h3 style="margin-top: 0;">Categories</h3>
+                                <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px;">
+                                    <span style="background: #FFF0F5; color: #FF69B4; padding: 4px 8px; border-radius: 4px; font-size: 12px;">Travel Tips</span>
+                                    <span style="background: #f0f0f0; color: #666; padding: 4px 8px; border-radius: 4px; font-size: 12px;">Regulations</span>
+                                    <span style="background: #f0f0f0; color: #666; padding: 4px 8px; border-radius: 4px; font-size: 12px;">Business</span>
+                                    <span style="background: #f0f0f0; color: #666; padding: 4px 8px; border-radius: 4px; font-size: 12px;">Updates</span>
+                                </div>
+
+                                <h3>Popular Articles</h3>
+                                <div style="space-y: 12px;">
+                                    <div style="padding-bottom: 12px; border-bottom: 1px solid #f0f0f0;">
+                                        <div style="font-weight: 500; font-size: 14px; margin-bottom: 4px;">Hong Kong to Shenzhen Guide</div>
+                                        <div style="font-size: 12px; color: #666;">12,543 views</div>
+                                    </div>
+                                    <div style="padding-bottom: 12px; border-bottom: 1px solid #f0f0f0;">
+                                        <div style="font-weight: 500; font-size: 14px; margin-bottom: 4px;">Business Travel Essentials</div>
+                                        <div style="font-size: 12px; color: #666;">8,932 views</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Login/Register Page Wireframe -->
+        <div class="wireframe-section">
+            <div class="section-header">🔐 Login/Register Page Wireframe</div>
+            <div class="wireframe-content">
+                <div class="device-frame desktop-frame">
+                    <div class="nav-bar">
+                        <div class="logo">
+                            <span class="accent">●</span> CrossBorder
+                        </div>
+                        <nav>
+                            <ul class="nav-items">
+                                <li><a href="#" class="nav-item">Home</a></li>
+                                <li><a href="#" class="nav-item">Booking</a></li>
+                                <li><a href="#" class="nav-item">Blog</a></li>
+                                <li><a href="#" class="nav-item active">Login</a></li>
+                            </ul>
+                        </nav>
+                        <div class="nav-actions">
+                            <a href="#" class="nav-button">EN</a>
+                            <a href="#" class="nav-button primary">Register</a>
+                        </div>
+                    </div>
+                    <div class="page-content">
+                        <div class="login-form">
+                            <h2 style="text-align: center; margin-bottom: 24px;">Create Your Account</h2>
+                            
+                            <div class="user-type-selector">
+                                <div class="user-type-option selected">
+                                    <div class="user-type-title">✓ Client Account</div>
+                                    <div class="user-type-desc">Book vehicles and manage your trips</div>
+                                </div>
+                                <div class="user-type-option">
+                                    <div class="user-type-title">Driver Account</div>
+                                    <div class="user-type-desc">Provide services and manage availability (requires verification)</div>
+                                </div>
+                                <div class="user-type-option">
+                                    <div class="user-type-title">Blog Editor</div>
+                                    <div class="user-type-desc">Create and manage content (by invitation only)</div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" class="form-input" placeholder="Enter your full name">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email Address</label>
+                                <input type="email" class="form-input" placeholder="Enter your email">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Password</label>
+                                <input type="password" class="form-input" placeholder="Create a secure password">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Phone Number</label>
+                                <input type="tel" class="form-input" placeholder="+852 / +86">
+                            </div>
+
+                            <div style="margin-bottom: 20px;">
+                                <label style="display: flex; align-items: center; gap: 8px; font-size: 14px;">
+                                    <input type="checkbox" style="margin: 0;">
+                                    I agree to the <a href="#" style="color: #FF69B4;">Terms of Service</a> and <a href="#" style="color: #FF69B4;">Privacy Policy</a>
+                                </label>
+                            </div>
+
+                            <button class="nav-button primary" style="width: 100%; padding: 12px; margin-bottom: 16px;">Create Account</button>
+                            
+                            <div style="text-align: center;">
+                                <span style="color: #666;">Already have an account? </span>
+                                <a href="#" style="color: #FF69B4; text-decoration: none;">Sign in</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Wireframes -->
+        <div class="wireframe-section">
+            <div class="section-header">📱 Mobile Navigation Wireframes</div>
+            <div class="wireframe-content">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
+                    <!-- Mobile Closed Menu -->
+                    <div class="device-frame mobile-frame">
+                        <div class="nav-bar">
+                            <div class="logo" style="font-size: 16px;">
+                                <span class="accent">●</span> CrossBorder
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <a href="#" class="nav-button" style="font-size: 12px; padding: 6px 10px;">EN</a>
+                                <button class="mobile-menu-toggle">☰</button>
+                            </div>
+                        </div>
+                        <div class="page-content" style="padding: 20px; text-align: center;">
+                            <h3 style="margin: 0;">Mobile Navigation - Closed</h3>
+                            <p style="color: #666; font-size: 14px;">Clean header with hamburger menu</p>
+                        </div>
+                    </div>
+
+                    <!-- Mobile Open Menu -->
+                    <div class="device-frame mobile-frame">
+                        <div class="nav-bar">
+                            <div class="logo" style="font-size: 16px;">
+                                <span class="accent">●</span> CrossBorder
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <a href="#" class="nav-button" style="font-size: 12px; padding: 6px 10px;">EN</a>
+                                <button class="mobile-menu-toggle">✕</button>
+                            </div>
+                        </div>
+                        <div style="background: white; padding: 20px; border-bottom: 1px solid #f0f0f0;">
+                            <div style="display: flex; flex-direction: column; gap: 12px;">
+                                <a href="#" class="nav-item active" style="display: block; padding: 12px;">Home</a>
+                                <a href="#" class="nav-item" style="display: block; padding: 12px;">Booking</a>
+                                <a href="#" class="nav-item" style="display: block; padding: 12px;">Blog</a>
+                                <a href="#" class="nav-item" style="display: block; padding: 12px;">Login</a>
+                            </div>
+                            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #f0f0f0;">
+                                <button class="nav-button primary" style="width: 100%; padding: 12px; margin-bottom: 12px;">Register</button>
+                                <div style="text-align: center; font-size: 12px; color: #666;">
+                                    📞 +852-2234-5678<br>
+                                    💬 WeChat Support
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Summary -->
+        <div class="wireframe-section">
+            <div class="section-header">📋 Navigation Architecture Summary</div>
+            <div class="wireframe-content">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
+                    <div style="background: #f9f9f9; padding: 20px; border-radius: 8px;">
+                        <h3 style="margin-top: 0; color: #FF69B4;">🏠 Home Page</h3>
+                        <ul style="margin: 0; padding-left: 16px;">
+                            <li>Hero section with main CTA</li>
+                            <li>Service overview cards</li>
+                            <li>Trust indicators</li>
+                            <li>Quick booking widget</li>
+                            <li>Testimonials section</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="background: #f9f9f9; padding: 20px; border-radius: 8px;">
+                        <h3 style="margin-top: 0; color: #FF69B4;">📅 Booking Page</h3>
+                        <ul style="margin: 0; padding-left: 16px;">
+                            <li>4-step booking process</li>
+                            <li>Amap API integration</li>
+                            <li>Real-time pricing</li>
+                            <li>Vehicle selection</li>
+                            <li>Date/time picker</li>
+                            <li>Payment integration</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="background: #f9f9f9; padding: 20px; border-radius: 8px;">
+                        <h3 style="margin-top: 0; color: #FF69B4;">📰 Blog Page</h3>
+                        <ul style="margin: 0; padding-left: 16px;">
+                            <li>Magazine-style layout</li>
+                            <li>Featured article hero</li>
+                            <li>Category filtering</li>
+                            <li>Search functionality</li>
+                            <li>Popular articles sidebar</li>
+                            <li>SEO-optimized structure</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="background: #f9f9f9; padding: 20px; border-radius: 8px;">
+                        <h3 style="margin-top: 0; color: #FF69B4;">🔐 Login/Register</h3>
+                        <ul style="margin: 0; padding-left: 16px;">
+                            <li>Multi-user type selection</li>
+                            <li>Client registration (standard)</li>
+                            <li>Driver registration (verification)</li>
+                            <li>Blog editor (invitation)</li>
+                            <li>Social login options</li>
+                            <li>Password recovery</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 32px; padding: 20px; background: #FFF0F5; border-radius: 8px; border: 2px solid #FF69B4;">
+                    <h3 style="margin-top: 0; color: #FF69B4;">🎯 Key Design Principles</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                        <div>
+                            <h4 style="margin: 0 0 8px 0;">Tesla-Inspired</h4>
+                            <p style="margin: 0; font-size: 14px; color: #666;">Clean, minimalist design with premium feel</p>
+                        </div>
+                        <div>
+                            <h4 style="margin: 0 0 8px 0;">Light Pink Accent</h4>
+                            <p style="margin: 0; font-size: 14px; color: #666;">Warm, approachable color palette</p>
+                        </div>
+                        <div>
+                            <h4 style="margin: 0 0 8px 0;">Mobile-First</h4>
+                            <p style="margin: 0; font-size: 14px; color: #666;">Responsive design for all devices</p>
+                        </div>
+                        <div>
+                            <h4 style="margin: 0 0 8px 0;">User-Centric</h4>
+                            <p style="margin: 0; font-size: 14px; color: #666;">Clear navigation paths for each user type</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver Dashboard - HTML Wireframes & Design Specifications</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'hot-pink': '#FF69B4',
+                        'light-pink': '#FFB6C1',
+                        'deep-pink': '#FF1493',
+                        'pink-tint': '#FFF0F5',
+                        'rose-gold': '#F7C6C7',
+                        'charcoal': '#171A20',
+                        'light-gray': '#F4F4F4',
+                        'electric-blue': '#0066CC',
+                        'success-green': '#00D563',
+                        'warning-amber': '#FFB800',
+                        'error-red': '#FF4B4B'
+                    },
+                    fontSize: {
+                        'display-lg': ['72px', { lineHeight: '1.1', letterSpacing: '-2px' }],
+                        'display-md': ['56px', { lineHeight: '1.1', letterSpacing: '-1.5px' }],
+                        'display-sm': ['48px', { lineHeight: '1.1', letterSpacing: '-1px' }],
+                        'headline-lg': ['40px', { lineHeight: '1.2', letterSpacing: '-0.5px' }],
+                        'headline-md': ['32px', { lineHeight: '1.2', letterSpacing: '-0.25px' }],
+                        'headline-sm': ['28px', { lineHeight: '1.3', letterSpacing: '0px' }],
+                        'title-lg': ['24px', { lineHeight: '1.3', letterSpacing: '0px' }],
+                        'title-md': ['20px', { lineHeight: '1.3', letterSpacing: '0.1px' }],
+                        'title-sm': ['18px', { lineHeight: '1.3', letterSpacing: '0.1px' }],
+                        'body-lg': ['16px', { lineHeight: '1.6', letterSpacing: '0.15px' }],
+                        'body-md': ['14px', { lineHeight: '1.5', letterSpacing: '0.25px' }],
+                        'body-sm': ['12px', { lineHeight: '1.4', letterSpacing: '0.4px' }]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+        
+        .tesla-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            transition: all 0.3s ease;
+        }
+        
+        .tesla-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+        
+        .progress-bar {
+            background: linear-gradient(90deg, #FF69B4 0%, #FF1493 100%);
+            height: 8px;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .upload-zone {
+            border: 2px dashed #d1d5db;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .upload-zone:hover {
+            border-color: #FF69B4;
+            background-color: #FFF0F5;
+        }
+        
+        .upload-zone.dragover {
+            border-color: #FF1493;
+            background-color: #FFB6C1;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- Navigation -->
+    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <h1 class="text-xl font-semibold text-charcoal">Driver Dashboard Wireframes</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <select id="pageSelector" class="border border-gray-300 rounded-md px-3 py-2 text-sm">
+                        <option value="earnings">Earnings Page</option>
+                        <option value="settings">Settings Page</option>
+                        <option value="upload">Document Upload</option>
+                        <option value="verification">Document Verification</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Container -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- 1. DRIVER EARNINGS PAGE -->
+        <div id="earnings-page" class="page-content">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-charcoal mb-2">Driver Earnings Page</h1>
+                <p class="text-gray-600">Comprehensive earnings dashboard with charts, payment history, and performance metrics</p>
+            </div>
+
+            <!-- Earnings Overview Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <!-- Today's Earnings -->
+                <div class="tesla-card">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-title-md font-semibold text-charcoal">Today's Earnings</h3>
+                        <div class="w-10 h-10 bg-hot-pink bg-opacity-10 rounded-lg flex items-center justify-center">
+                            <span class="text-hot-pink text-xl">💰</span>
+                        </div>
+                    </div>
+                    <div class="text-display-sm font-bold text-hot-pink mb-2">HK$1,240</div>
+                    <div class="text-body-sm text-gray-600">+18% from yesterday</div>
+                    <div class="w-full bg-gray-200 rounded-full h-2 mt-3">
+                        <div class="progress-bar" style="width: 75%;"></div>
+                    </div>
+                    <div class="text-body-sm text-gray-500 mt-2">Goal: HK$1,600</div>
+                </div>
+
+                <!-- This Week -->
+                <div class="tesla-card">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-title-md font-semibold text-charcoal">This Week</h3>
+                        <div class="w-10 h-10 bg-electric-blue bg-opacity-10 rounded-lg flex items-center justify-center">
+                            <span class="text-electric-blue text-xl">📊</span>
+                        </div>
+                    </div>
+                    <div class="text-display-sm font-bold text-charcoal mb-2">HK$8,750</div>
+                    <div class="text-body-sm text-success-green">+12% from last week</div>
+                    <div class="text-body-sm text-gray-600 mt-2">47 trips completed</div>
+                </div>
+
+                <!-- This Month -->
+                <div class="tesla-card">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-title-md font-semibold text-charcoal">This Month</h3>
+                        <div class="w-10 h-10 bg-success-green bg-opacity-10 rounded-lg flex items-center justify-center">
+                            <span class="text-success-green text-xl">📈</span>
+                        </div>
+                    </div>
+                    <div class="text-display-sm font-bold text-charcoal mb-2">HK$28,950</div>
+                    <div class="text-body-sm text-gray-600">Average: HK$965/day</div>
+                    <div class="text-body-sm text-gray-600">156 trips completed</div>
+                </div>
+
+                <!-- Performance Score -->
+                <div class="tesla-card">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-title-md font-semibold text-charcoal">Performance</h3>
+                        <div class="w-10 h-10 bg-warning-amber bg-opacity-10 rounded-lg flex items-center justify-center">
+                            <span class="text-warning-amber text-xl">⭐</span>
+                        </div>
+                    </div>
+                    <div class="text-display-sm font-bold text-charcoal mb-2">4.9</div>
+                    <div class="text-body-sm text-gray-600">Average rating</div>
+                    <div class="text-body-sm text-success-green mt-2">95% acceptance rate</div>
+                </div>
+            </div>
+
+            <!-- Charts and Analytics -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <!-- Earnings Chart -->
+                <div class="tesla-card">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-title-lg font-semibold text-charcoal">Earnings Trend</h3>
+                        <div class="flex space-x-2">
+                            <button class="px-3 py-1 text-sm bg-hot-pink text-white rounded-md">7D</button>
+                            <button class="px-3 py-1 text-sm bg-gray-200 text-gray-600 rounded-md">30D</button>
+                            <button class="px-3 py-1 text-sm bg-gray-200 text-gray-600 rounded-md">90D</button>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="earningsChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Trip Types Breakdown -->
+                <div class="tesla-card">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-title-lg font-semibold text-charcoal">Trip Types</h3>
+                        <span class="text-body-sm text-gray-500">This month</span>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <div class="w-4 h-4 bg-hot-pink rounded-full mr-3"></div>
+                                <span class="text-body-md">Cross-border (HK-SZ)</span>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-title-sm font-semibold">68%</div>
+                                <div class="text-body-sm text-gray-500">89 trips</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <div class="w-4 h-4 bg-electric-blue rounded-full mr-3"></div>
+                                <span class="text-body-md">Long distance (HK-GZ)</span>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-title-sm font-semibold">22%</div>
+                                <div class="text-body-sm text-gray-500">29 trips</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <div class="w-4 h-4 bg-success-green rounded-full mr-3"></div>
+                                <span class="text-body-md">Local (HK only)</span>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-title-sm font-semibold">10%</div>
+                                <div class="text-body-sm text-gray-500">13 trips</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment History -->
+            <div class="tesla-card mb-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-title-lg font-semibold text-charcoal">Payment History</h3>
+                    <div class="flex space-x-3">
+                        <button class="px-4 py-2 bg-hot-pink text-white rounded-md text-sm">Request Withdrawal</button>
+                        <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md text-sm">Export Statement</button>
+                    </div>
+                </div>
+                
+                <!-- Available Balance -->
+                <div class="bg-gradient-to-r from-hot-pink to-deep-pink rounded-lg p-6 text-white mb-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h4 class="text-title-md font-semibold mb-2">Available Balance</h4>
+                            <div class="text-display-md font-bold">HK$3,450</div>
+                            <div class="text-body-sm opacity-90 mt-2">Last payout: Jan 10, 2024</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-body-sm opacity-90">Next auto-payout</div>
+                            <div class="text-title-sm font-semibold">Jan 17, 2024</div>
+                            <div class="text-body-sm opacity-90">Weekly schedule</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment Transactions -->
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b border-gray-200">
+                                <th class="text-left py-3 text-body-sm font-medium text-gray-500">Date</th>
+                                <th class="text-left py-3 text-body-sm font-medium text-gray-500">Type</th>
+                                <th class="text-left py-3 text-body-sm font-medium text-gray-500">Description</th>
+                                <th class="text-right py-3 text-body-sm font-medium text-gray-500">Amount</th>
+                                <th class="text-right py-3 text-body-sm font-medium text-gray-500">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            <tr>
+                                <td class="py-4 text-body-md">Jan 15, 2024</td>
+                                <td class="py-4">
+                                    <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">Earning</span>
+                                </td>
+                                <td class="py-4 text-body-md">Trip #TRP-001 (HK → SZ)</td>
+                                <td class="py-4 text-right text-body-md font-medium text-success-green">+HK$1,200</td>
+                                <td class="py-4 text-right">
+                                    <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">Completed</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="py-4 text-body-md">Jan 10, 2024</td>
+                                <td class="py-4">
+                                    <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">Payout</span>
+                                </td>
+                                <td class="py-4 text-body-md">Weekly earnings payout</td>
+                                <td class="py-4 text-right text-body-md font-medium">-HK$8,750</td>
+                                <td class="py-4 text-right">
+                                    <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">Transferred</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="py-4 text-body-md">Jan 8, 2024</td>
+                                <td class="py-4">
+                                    <span class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs">Fee</span>
+                                </td>
+                                <td class="py-4 text-body-md">Platform service fee (5%)</td>
+                                <td class="py-4 text-right text-body-md font-medium text-error-red">-HK$65</td>
+                                <td class="py-4 text-right">
+                                    <span class="px-2 py-1 bg-gray-100 text-gray-800 rounded-full text-xs">Processed</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tax Information -->
+            <div class="tesla-card">
+                <h3 class="text-title-lg font-semibold text-charcoal mb-6">Tax Information</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <h4 class="text-title-md font-semibold text-charcoal mb-2">YTD Earnings</h4>
+                        <div class="text-title-lg font-bold text-hot-pink">HK$28,950</div>
+                        <div class="text-body-sm text-gray-600">Taxable income</div>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <h4 class="text-title-md font-semibold text-charcoal mb-2">Platform Fees</h4>
+                        <div class="text-title-lg font-bold text-charcoal">HK$1,448</div>
+                        <div class="text-body-sm text-gray-600">Deductible expenses</div>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <h4 class="text-title-md font-semibold text-charcoal mb-2">Vehicle Expenses</h4>
+                        <div class="text-title-lg font-bold text-charcoal">HK$2,150</div>
+                        <div class="text-body-sm text-gray-600">Fuel, maintenance, etc.</div>
+                    </div>
+                </div>
+                <button class="mt-6 px-4 py-2 bg-gray-200 text-gray-700 rounded-md text-sm">Download Tax Summary</button>
+            </div>
+        </div>
+
+        <!-- 2. DRIVER SETTINGS PAGE -->
+        <div id="settings-page" class="page-content" style="display: none;">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-charcoal mb-2">Driver Settings Page</h1>
+                <p class="text-gray-600">Manage your preferences, availability, and account security</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Settings Navigation -->
+                <div class="lg:col-span-1">
+                    <div class="tesla-card">
+                        <h3 class="text-title-lg font-semibold text-charcoal mb-4">Settings</h3>
+                        <nav class="space-y-2">
+                            <a href="#" class="flex items-center px-3 py-2 text-hot-pink bg-pink-tint rounded-md">
+                                <span class="mr-3">🔔</span>
+                                Notifications
+                            </a>
+                            <a href="#" class="flex items-center px-3 py-2 text-gray-600 hover:text-charcoal hover:bg-gray-50 rounded-md">
+                                <span class="mr-3">⏰</span>
+                                Working Hours
+                            </a>
+                            <a href="#" class="flex items-center px-3 py-2 text-gray-600 hover:text-charcoal hover:bg-gray-50 rounded-md">
+                                <span class="mr-3">🔒</span>
+                                Security
+                            </a>
+                            <a href="#" class="flex items-center px-3 py-2 text-gray-600 hover:text-charcoal hover:bg-gray-50 rounded-md">
+                                <span class="mr-3">💳</span>
+                                Payment Methods
+                            </a>
+                            <a href="#" class="flex items-center px-3 py-2 text-gray-600 hover:text-charcoal hover:bg-gray-50 rounded-md">
+                                <span class="mr-3">🌐</span>
+                                Language & Region
+                            </a>
+                            <a href="#" class="flex items-center px-3 py-2 text-gray-600 hover:text-charcoal hover:bg-gray-50 rounded-md">
+                                <span class="mr-3">📱</span>
+                                App Preferences
+                            </a>
+                        </nav>
+                    </div>
+                </div>
+
+                <!-- Settings Content -->
+                <div class="lg:col-span-2 space-y-6">
+                    <!-- Notification Settings -->
+                    <div class="tesla-card">
+                        <h3 class="text-title-lg font-semibold text-charcoal mb-6">Notification Preferences</h3>
+                        
+                        <div class="space-y-6">
+                            <!-- Trip Notifications -->
+                            <div>
+                                <h4 class="text-title-md font-semibold text-charcoal mb-4">Trip Notifications</h4>
+                                <div class="space-y-4">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <div class="text-body-md font-medium">New trip requests</div>
+                                            <div class="text-body-sm text-gray-600">Get notified when new trips are available</div>
+                                        </div>
+                                        <label class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" checked class="sr-only peer">
+                                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-hot-pink"></div>
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <div class="text-body-md font-medium">Trip updates</div>
+                                            <div class="text-body-sm text-gray-600">Updates about accepted trips</div>
+                                        </div>
+                                        <label class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" checked class="sr-only peer">
+                                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-hot-pink"></div>
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <div class="text-body-md font-medium">Sound alerts</div>
+                                            <div class="text-body-sm text-gray-600">Audio notifications for urgent requests</div>
+                                        </div>
+                                        <label class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" class="sr-only peer">
+                                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-hot-pink"></div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Earnings Notifications -->
+                            <div class="border-t border-gray-200 pt-6">
+                                <h4 class="text-title-md font-semibold text-charcoal mb-4">Earnings & Payments</h4>
+                                <div class="space-y-4">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <div class="text-body-md font-medium">Payment confirmations</div>
+                                            <div class="text-body-sm text-gray-600">When payments are processed</div>
+                                        </div>
+                                        <label class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" checked class="sr-only peer">
+                                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-hot-pink"></div>
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <div class="text-body-md font-medium">Weekly earnings summary</div>
+                                            <div class="text-body-sm text-gray-600">Summary of weekly performance</div>
+                                        </div>
+                                        <label class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" checked class="sr-only peer">
+                                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-hot-pink"></div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Working Hours -->
+                    <div class="tesla-card">
+                        <h3 class="text-title-lg font-semibold text-charcoal mb-6">Working Hours & Availability</h3>
+                        
+                        <div class="space-y-6">
+                            <!-- Availability Status -->
+                            <div class="bg-gradient-to-r from-success-green to-green-600 rounded-lg p-4 text-white">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h4 class="text-title-md font-semibold mb-1">Current Status</h4>
+                                        <div class="text-body-md">Online and available for trips</div>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" checked class="sr-only peer">
+                                        <div class="w-11 h-6 bg-white bg-opacity-30 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-white peer-checked:bg-opacity-40"></div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Weekly Schedule -->
+                            <div>
+                                <h4 class="text-title-md font-semibold text-charcoal mb-4">Weekly Schedule</h4>
+                                <div class="space-y-3">
+                                    {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map(day => (
+                                        <div key={day} class="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
+                                            <div class="flex items-center">
+                                                <input type="checkbox" checked={day !== 'Sunday'} class="mr-3 text-hot-pink">
+                                                <span class="text-body-md font-medium">{day}</span>
+                                            </div>
+                                            <div class="flex items-center space-x-2">
+                                                <select class="border border-gray-300 rounded px-2 py-1 text-sm">
+                                                    <option>09:00</option>
+                                                    <option>10:00</option>
+                                                    <option>11:00</option>
+                                                </select>
+                                                <span class="text-gray-500">to</span>
+                                                <select class="border border-gray-300 rounded px-2 py-1 text-sm">
+                                                    <option>18:00</option>
+                                                    <option>19:00</option>
+                                                    <option>20:00</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <!-- Auto-offline Settings -->
+                            <div class="border-t border-gray-200 pt-6">
+                                <h4 class="text-title-md font-semibold text-charcoal mb-4">Auto-offline Settings</h4>
+                                <div class="space-y-4">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <div class="text-body-md font-medium">Go offline after work hours</div>
+                                            <div class="text-body-sm text-gray-600">Automatically stop receiving requests</div>
+                                        </div>
+                                        <label class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" checked class="sr-only peer">
+                                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-hot-pink"></div>
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <div class="text-body-md font-medium">Break reminders</div>
+                                            <div class="text-body-sm text-gray-600">Remind to take breaks after 4 hours</div>
+                                        </div>
+                                        <label class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" class="sr-only peer">
+                                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-hot-pink"></div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Security Settings -->
+                    <div class="tesla-card">
+                        <h3 class="text-title-lg font-semibold text-charcoal mb-6">Security & Privacy</h3>
+                        
+                        <div class="space-y-6">
+                            <!-- Password -->
+                            <div>
+                                <h4 class="text-title-md font-semibold text-charcoal mb-4">Password & Authentication</h4>
+                                <div class="space-y-4">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <div class="text-body-md font-medium">Change password</div>
+                                            <div class="text-body-sm text-gray-600">Last changed 3 months ago</div>
+                                        </div>
+                                        <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md text-sm">Change</button>
+                                    </div>
+                                    
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <div class="text-body-md font-medium">Two-factor authentication</div>
+                                            <div class="text-body-sm text-gray-600">Add extra security to your account</div>
+                                        </div>
+                                        <button class="px-4 py-2 bg-hot-pink text-white rounded-md text-sm">Enable</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Privacy Settings -->
+                            <div class="border-t border-gray-200 pt-6">
+                                <h4 class="text-title-md font-semibold text-charcoal mb-4">Privacy Settings</h4>
+                                <div class="space-y-4">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <div class="text-body-md font-medium">Location tracking</div>
+                                            <div class="text-body-sm text-gray-600">Allow location tracking during trips</div>
+                                        </div>
+                                        <label class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" checked class="sr-only peer">
+                                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-hot-pink"></div>
+                                        </label>
+                                    </div>
+                                    
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <div class="text-body-md font-medium">Share profile with clients</div>
+                                            <div class="text-body-sm text-gray-600">Show your name and rating to clients</div>
+                                        </div>
+                                        <label class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" checked class="sr-only peer">
+                                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-hot-pink"></div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Data Management -->
+                            <div class="border-t border-gray-200 pt-6">
+                                <h4 class="text-title-md font-semibold text-charcoal mb-4">Data Management</h4>
+                                <div class="space-y-4">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <div class="text-body-md font-medium">Download my data</div>
+                                            <div class="text-body-sm text-gray-600">Get a copy of your account data</div>
+                                        </div>
+                                        <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md text-sm">Request</button>
+                                    </div>
+                                    
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <div class="text-body-md font-medium">Delete account</div>
+                                            <div class="text-body-sm text-gray-600">Permanently delete your account</div>
+                                        </div>
+                                        <button class="px-4 py-2 bg-error-red text-white rounded-md text-sm">Delete</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Save Button -->
+                    <div class="flex justify-end">
+                        <button class="px-6 py-3 bg-hot-pink text-white rounded-md font-medium">Save All Changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. DOCUMENT UPLOAD PAGE -->
+        <div id="upload-page" class="page-content" style="display: none;">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-charcoal mb-2">Document Upload Page</h1>
+                <p class="text-gray-600">Upload and manage your driver verification documents</p>
+            </div>
+
+            <!-- Upload Progress Overview -->
+            <div class="tesla-card mb-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-title-lg font-semibold text-charcoal">Document Upload Progress</h3>
+                    <span class="text-body-sm text-gray-500">3 of 4 documents uploaded</span>
+                </div>
+                
+                <div class="w-full bg-gray-200 rounded-full h-3 mb-4">
+                    <div class="progress-bar" style="width: 75%;"></div>
+                </div>
+                
+                <div class="text-body-sm text-gray-600">
+                    You're almost done! Please upload your vehicle insurance document to complete verification.
+                </div>
+            </div>
+
+            <!-- Document Categories -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                <!-- Driver's License -->
+                <div class="tesla-card">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-title-md font-semibold text-charcoal">Driver's License</h3>
+                        <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
+                            ✅ Uploaded
+                        </span>
+                    </div>
+                    
+                    <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                                <span class="text-green-600 text-xl">📄</span>
+                            </div>
+                            <div>
+                                <div class="text-body-md font-medium">drivers_license_front.jpg</div>
+                                <div class="text-body-sm text-gray-600">Uploaded Jan 10, 2024</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-body-sm text-gray-600 mb-4">
+                        Requirements: Clear photo of front and back, valid and not expired
+                    </div>
+                    
+                    <button class="w-full py-2 bg-gray-200 text-gray-700 rounded-md text-sm">Replace Document</button>
+                </div>
+
+                <!-- Vehicle Registration -->
+                <div class="tesla-card">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-title-md font-semibold text-charcoal">Vehicle Registration</h3>
+                        <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
+                            ✅ Uploaded
+                        </span>
+                    </div>
+                    
+                    <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                                <span class="text-green-600 text-xl">🚗</span>
+                            </div>
+                            <div>
+                                <div class="text-body-md font-medium">vehicle_registration.pdf</div>
+                                <div class="text-body-sm text-gray-600">Uploaded Jan 10, 2024</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-body-sm text-gray-600 mb-4">
+                        Requirements: Valid registration certificate, vehicle must be registered in your name
+                    </div>
+                    
+                    <button class="w-full py-2 bg-gray-200 text-gray-700 rounded-md text-sm">Replace Document</button>
+                </div>
+
+                <!-- Vehicle Insurance -->
+                <div class="tesla-card">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-title-md font-semibold text-charcoal">Vehicle Insurance</h3>
+                        <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium">
+                            ⏳ Required
+                        </span>
+                    </div>
+                    
+                    <!-- Upload Zone -->
+                    <div class="upload-zone border-2 border-dashed border-gray-300 rounded-lg p-8 text-center mb-4">
+                        <div class="w-16 h-16 bg-hot-pink bg-opacity-10 rounded-lg flex items-center justify-center mx-auto mb-4">
+                            <span class="text-hot-pink text-2xl">📋</span>
+                        </div>
+                        <h4 class="text-title-md font-semibold text-charcoal mb-2">Upload Insurance Certificate</h4>
+                        <p class="text-body-sm text-gray-600 mb-4">
+                            Drag and drop your file here, or click to browse
+                        </p>
+                        <button class="px-4 py-2 bg-hot-pink text-white rounded-md text-sm">Browse Files</button>
+                        <input type="file" class="hidden" accept=".pdf,.jpg,.jpeg,.png">
+                    </div>
+                    
+                    <div class="text-body-sm text-gray-600">
+                        Requirements: Valid comprehensive insurance, cross-border coverage required
+                    </div>
+                </div>
+
+                <!-- Background Check -->
+                <div class="tesla-card">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-title-md font-semibold text-charcoal">Background Check</h3>
+                        <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
+                            ✅ Uploaded
+                        </span>
+                    </div>
+                    
+                    <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                                <span class="text-green-600 text-xl">🛡️</span>
+                            </div>
+                            <div>
+                                <div class="text-body-md font-medium">background_check.pdf</div>
+                                <div class="text-body-sm text-gray-600">Uploaded Jan 12, 2024</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-body-sm text-gray-600 mb-4">
+                        Requirements: Clean criminal record check from authorized agency
+                    </div>
+                    
+                    <button class="w-full py-2 bg-gray-200 text-gray-700 rounded-md text-sm">Replace Document</button>
+                </div>
+            </div>
+
+            <!-- Upload Guidelines -->
+            <div class="tesla-card mb-8">
+                <h3 class="text-title-lg font-semibold text-charcoal mb-6">Upload Guidelines</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="text-title-md font-semibold text-charcoal mb-3">File Requirements</h4>
+                        <ul class="space-y-2 text-body-sm text-gray-600">
+                            <li class="flex items-center">
+                                <span class="w-2 h-2 bg-hot-pink rounded-full mr-3"></span>
+                                Maximum file size: 10MB
+                            </li>
+                            <li class="flex items-center">
+                                <span class="w-2 h-2 bg-hot-pink rounded-full mr-3"></span>
+                                Supported formats: PDF, JPG, PNG
+                            </li>
+                            <li class="flex items-center">
+                                <span class="w-2 h-2 bg-hot-pink rounded-full mr-3"></span>
+                                High resolution and clear text
+                            </li>
+                            <li class="flex items-center">
+                                <span class="w-2 h-2 bg-hot-pink rounded-full mr-3"></span>
+                                No blurred or cropped images
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h4 class="text-title-md font-semibold text-charcoal mb-3">Processing Time</h4>
+                        <ul class="space-y-2 text-body-sm text-gray-600">
+                            <li class="flex items-center">
+                                <span class="w-2 h-2 bg-electric-blue rounded-full mr-3"></span>
+                                Documents reviewed within 24-48 hours
+                            </li>
+                            <li class="flex items-center">
+                                <span class="w-2 h-2 bg-electric-blue rounded-full mr-3"></span>
+                                Email notifications for status updates
+                            </li>
+                            <li class="flex items-center">
+                                <span class="w-2 h-2 bg-electric-blue rounded-full mr-3"></span>
+                                Expedited review for complete submissions
+                            </li>
+                            <li class="flex items-center">
+                                <span class="w-2 h-2 bg-electric-blue rounded-full mr-3"></span>
+                                Resubmission allowed if rejected
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Uploads -->
+            <div class="tesla-card">
+                <h3 class="text-title-lg font-semibold text-charcoal mb-6">Recent Upload Activity</h3>
+                
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                                <span class="text-green-600">✅</span>
+                            </div>
+                            <div>
+                                <div class="text-body-md font-medium">Background Check - Approved</div>
+                                <div class="text-body-sm text-gray-600">Jan 12, 2024 at 2:30 PM</div>
+                            </div>
+                        </div>
+                        <button class="text-hot-pink text-sm">View Details</button>
+                    </div>
+                    
+                    <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                                <span class="text-green-600">✅</span>
+                            </div>
+                            <div>
+                                <div class="text-body-md font-medium">Vehicle Registration - Approved</div>
+                                <div class="text-body-sm text-gray-600">Jan 10, 2024 at 4:15 PM</div>
+                            </div>
+                        </div>
+                        <button class="text-hot-pink text-sm">View Details</button>
+                    </div>
+                    
+                    <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                                <span class="text-green-600">✅</span>
+                            </div>
+                            <div>
+                                <div class="text-body-md font-medium">Driver's License - Approved</div>
+                                <div class="text-body-sm text-gray-600">Jan 10, 2024 at 9:45 AM</div>
+                            </div>
+                        </div>
+                        <button class="text-hot-pink text-sm">View Details</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. DOCUMENT VERIFICATION PAGE -->
+        <div id="verification-page" class="page-content" style="display: none;">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-charcoal mb-2">Document Verification Page</h1>
+                <p class="text-gray-600">Track your verification status and compliance requirements</p>
+            </div>
+
+            <!-- Verification Status Overview -->
+            <div class="tesla-card mb-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-title-lg font-semibold text-charcoal">Verification Status</h3>
+                    <span class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm font-medium">
+                        ⏳ In Progress
+                    </span>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <span class="text-green-600 text-2xl">✅</span>
+                        </div>
+                        <div class="text-title-sm font-semibold text-charcoal">3 Approved</div>
+                        <div class="text-body-sm text-gray-600">Documents verified</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <span class="text-yellow-600 text-2xl">⏳</span>
+                        </div>
+                        <div class="text-title-sm font-semibold text-charcoal">1 Pending</div>
+                        <div class="text-body-sm text-gray-600">Under review</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <span class="text-gray-600 text-2xl">📋</span>
+                        </div>
+                        <div class="text-title-sm font-semibold text-charcoal">0 Missing</div>
+                        <div class="text-body-sm text-gray-600">All submitted</div>
+                    </div>
+                </div>
+                
+                <div class="w-full bg-gray-200 rounded-full h-3 mb-4">
+                    <div class="progress-bar" style="width: 75%;"></div>
+                </div>
+                
+                <div class="text-center">
+                    <div class="text-body-md text-gray-600 mb-2">
+                        Verification Progress: 75% Complete
+                    </div>
+                    <div class="text-body-sm text-gray-500">
+                        Estimated completion: 1-2 business days
+                    </div>
+                </div>
+            </div>
+
+            <!-- Verification Timeline -->
+            <div class="tesla-card mb-8">
+                <h3 class="text-title-lg font-semibold text-charcoal mb-6">Verification Timeline</h3>
+                
+                <div class="relative">
+                    <!-- Timeline Line -->
+                    <div class="absolute left-6 top-0 bottom-0 w-0.5 bg-gray-300"></div>
+                    
+                    <div class="space-y-6">
+                        <!-- Step 1 - Completed -->
+                        <div class="flex items-start">
+                            <div class="relative">
+                                <div class="w-12 h-12 bg-success-green rounded-full flex items-center justify-center">
+                                    <span class="text-white text-lg">✓</span>
+                                </div>
+                            </div>
+                            <div class="ml-4 flex-1">
+                                <h4 class="text-title-md font-semibold text-charcoal">Documents Submitted</h4>
+                                <p class="text-body-sm text-gray-600">All required documents uploaded successfully</p>
+                                <div class="text-body-sm text-success-green font-medium">Completed - Jan 12, 2024</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 2 - Completed -->
+                        <div class="flex items-start">
+                            <div class="relative">
+                                <div class="w-12 h-12 bg-success-green rounded-full flex items-center justify-center">
+                                    <span class="text-white text-lg">✓</span>
+                                </div>
+                            </div>
+                            <div class="ml-4 flex-1">
+                                <h4 class="text-title-md font-semibold text-charcoal">Initial Review</h4>
+                                <p class="text-body-sm text-gray-600">Documents format and quality validation</p>
+                                <div class="text-body-sm text-success-green font-medium">Completed - Jan 12, 2024</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 3 - In Progress -->
+                        <div class="flex items-start">
+                            <div class="relative">
+                                <div class="w-12 h-12 bg-warning-amber rounded-full flex items-center justify-center">
+                                    <div class="status-indicator bg-warning-amber"></div>
+                                </div>
+                            </div>
+                            <div class="ml-4 flex-1">
+                                <h4 class="text-title-md font-semibold text-charcoal">Background Verification</h4>
+                                <p class="text-body-sm text-gray-600">Conducting background checks and document authentication</p>
+                                <div class="text-body-sm text-warning-amber font-medium">In Progress - Started Jan 13, 2024</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 4 - Pending -->
+                        <div class="flex items-start">
+                            <div class="relative">
+                                <div class="w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center">
+                                    <span class="text-gray-600 text-lg">4</span>
+                                </div>
+                            </div>
+                            <div class="ml-4 flex-1">
+                                <h4 class="text-title-md font-semibold text-gray-600">Final Approval</h4>
+                                <p class="text-body-sm text-gray-600">Final review and account activation</p>
+                                <div class="text-body-sm text-gray-500">Pending</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Document Status Details -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <!-- Approved Documents -->
+                <div class="tesla-card">
+                    <h3 class="text-title-lg font-semibold text-charcoal mb-6">Approved Documents</h3>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-4 bg-green-50 border border-green-200 rounded-lg">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-success-green rounded-lg flex items-center justify-center mr-3">
+                                    <span class="text-white">📄</span>
+                                </div>
+                                <div>
+                                    <div class="text-body-md font-medium">Driver's License</div>
+                                    <div class="text-body-sm text-gray-600">Verified on Jan 10, 2024</div>
+                                </div>
+                            </div>
+                            <span class="px-2 py-1 bg-success-green text-white rounded-full text-xs">✓ Approved</span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between p-4 bg-green-50 border border-green-200 rounded-lg">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-success-green rounded-lg flex items-center justify-center mr-3">
+                                    <span class="text-white">🚗</span>
+                                </div>
+                                <div>
+                                    <div class="text-body-md font-medium">Vehicle Registration</div>
+                                    <div class="text-body-sm text-gray-600">Verified on Jan 10, 2024</div>
+                                </div>
+                            </div>
+                            <span class="px-2 py-1 bg-success-green text-white rounded-full text-xs">✓ Approved</span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between p-4 bg-green-50 border border-green-200 rounded-lg">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-success-green rounded-lg flex items-center justify-center mr-3">
+                                    <span class="text-white">🛡️</span>
+                                </div>
+                                <div>
+                                    <div class="text-body-md font-medium">Background Check</div>
+                                    <div class="text-body-sm text-gray-600">Verified on Jan 12, 2024</div>
+                                </div>
+                            </div>
+                            <span class="px-2 py-1 bg-success-green text-white rounded-full text-xs">✓ Approved</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pending Documents -->
+                <div class="tesla-card">
+                    <h3 class="text-title-lg font-semibold text-charcoal mb-6">Pending Review</h3>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-warning-amber rounded-lg flex items-center justify-center mr-3">
+                                    <span class="text-white">📋</span>
+                                </div>
+                                <div>
+                                    <div class="text-body-md font-medium">Vehicle Insurance</div>
+                                    <div class="text-body-sm text-gray-600">Submitted on Jan 13, 2024</div>
+                                </div>
+                            </div>
+                            <span class="px-2 py-1 bg-warning-amber text-white rounded-full text-xs">⏳ Reviewing</span>
+                        </div>
+                        
+                        <div class="p-4 border-2 border-dashed border-gray-300 rounded-lg text-center">
+                            <div class="text-gray-500 mb-2">All documents submitted</div>
+                            <div class="text-body-sm text-gray-600">
+                                Great job! You've uploaded all required documents. 
+                                We'll notify you once the review is complete.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Compliance Checklist -->
+            <div class="tesla-card mb-8">
+                <h3 class="text-title-lg font-semibold text-charcoal mb-6">Compliance Checklist</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Driver Requirements -->
+                    <div>
+                        <h4 class="text-title-md font-semibold text-charcoal mb-4">Driver Requirements</h4>
+                        <div class="space-y-3">
+                            <div class="flex items-center">
+                                <span class="w-6 h-6 bg-success-green rounded-full flex items-center justify-center mr-3">
+                                    <span class="text-white text-xs">✓</span>
+                                </span>
+                                <span class="text-body-md">Valid driver's license (HK/Mainland)</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-6 h-6 bg-success-green rounded-full flex items-center justify-center mr-3">
+                                    <span class="text-white text-xs">✓</span>
+                                </span>
+                                <span class="text-body-md">Minimum 3 years driving experience</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-6 h-6 bg-success-green rounded-full flex items-center justify-center mr-3">
+                                    <span class="text-white text-xs">✓</span>
+                                </span>
+                                <span class="text-body-md">Clean criminal background check</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-6 h-6 bg-success-green rounded-full flex items-center justify-center mr-3">
+                                    <span class="text-white text-xs">✓</span>
+                                </span>
+                                <span class="text-body-md">Age 25-65 years old</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Vehicle Requirements -->
+                    <div>
+                        <h4 class="text-title-md font-semibold text-charcoal mb-4">Vehicle Requirements</h4>
+                        <div class="space-y-3">
+                            <div class="flex items-center">
+                                <span class="w-6 h-6 bg-success-green rounded-full flex items-center justify-center mr-3">
+                                    <span class="text-white text-xs">✓</span>
+                                </span>
+                                <span class="text-body-md">Valid vehicle registration</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-6 h-6 bg-warning-amber rounded-full flex items-center justify-center mr-3">
+                                    <span class="text-white text-xs">⏳</span>
+                                </span>
+                                <span class="text-body-md">Comprehensive insurance coverage</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-6 h-6 bg-success-green rounded-full flex items-center justify-center mr-3">
+                                    <span class="text-white text-xs">✓</span>
+                                </span>
+                                <span class="text-body-md">Vehicle year 2018 or newer</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-6 h-6 bg-success-green rounded-full flex items-center justify-center mr-3">
+                                    <span class="text-white text-xs">✓</span>
+                                </span>
+                                <span class="text-body-md">Cross-border permit (if applicable)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Next Steps -->
+            <div class="tesla-card">
+                <h3 class="text-title-lg font-semibold text-charcoal mb-6">Next Steps</h3>
+                
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
+                    <div class="flex items-start">
+                        <div class="w-10 h-10 bg-electric-blue rounded-lg flex items-center justify-center mr-3 mt-1">
+                            <span class="text-white">ℹ️</span>
+                        </div>
+                        <div>
+                            <h4 class="text-title-md font-semibold text-charcoal mb-2">What happens next?</h4>
+                            <div class="text-body-md text-gray-700 space-y-2">
+                                <p>1. Our verification team will review your insurance document within 24-48 hours</p>
+                                <p>2. You'll receive an email notification once the review is complete</p>
+                                <p>3. If approved, your driver account will be activated immediately</p>
+                                <p>4. You can start accepting trip requests right away</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex gap-4">
+                    <button class="px-4 py-2 bg-hot-pink text-white rounded-md">Contact Support</button>
+                    <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md">View FAQ</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Page Navigation
+        document.getElementById('pageSelector').addEventListener('change', function() {
+            const pages = ['earnings-page', 'settings-page', 'upload-page', 'verification-page'];
+            const selectedPage = this.value + '-page';
+            
+            pages.forEach(page => {
+                document.getElementById(page).style.display = 'none';
+            });
+            
+            document.getElementById(selectedPage).style.display = 'block';
+            
+            // Initialize charts for earnings page
+            if (selectedPage === 'earnings-page') {
+                initializeEarningsChart();
+            }
+        });
+
+        // Initialize Earnings Chart
+        function initializeEarningsChart() {
+            const ctx = document.getElementById('earningsChart');
+            if (ctx) {
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                        datasets: [{
+                            label: 'Daily Earnings (HK$)',
+                            data: [1200, 900, 1500, 800, 1100, 1800, 1240],
+                            borderColor: '#FF69B4',
+                            backgroundColor: 'rgba(255, 105, 180, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: 'rgba(0,0,0,0.05)'
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // Drag and Drop File Upload
+        document.addEventListener('DOMContentLoaded', function() {
+            const uploadZones = document.querySelectorAll('.upload-zone');
+            
+            uploadZones.forEach(zone => {
+                zone.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    this.classList.add('dragover');
+                });
+                
+                zone.addEventListener('dragleave', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('dragover');
+                });
+                
+                zone.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('dragover');
+                    
+                    const files = e.dataTransfer.files;
+                    if (files.length > 0) {
+                        // Handle file upload
+                        console.log('Files dropped:', files);
+                        // Simulate upload process
+                        this.innerHTML = `
+                            <div class="w-16 h-16 bg-success-green bg-opacity-10 rounded-lg flex items-center justify-center mx-auto mb-4">
+                                <span class="text-success-green text-2xl">✅</span>
+                            </div>
+                            <h4 class="text-title-md font-semibold text-charcoal mb-2">Upload Successful</h4>
+                            <p class="text-body-sm text-gray-600 mb-4">
+                                ${files[0].name} has been uploaded successfully
+                            </p>
+                        `;
+                    }
+                });
+            });
+        });
+
+        // Initialize the earnings page by default
+        initializeEarningsChart();
+    </script>
+</body>
+</html>

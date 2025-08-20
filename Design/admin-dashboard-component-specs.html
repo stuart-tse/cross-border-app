@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Component Specifications & User Flows</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+        }
+        
+        .spec-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            margin-bottom: 24px;
+        }
+        
+        .spec-header {
+            background: linear-gradient(135deg, #171A20 0%, #2A2D35 100%);
+            color: white;
+            border-radius: 12px 12px 0 0;
+            padding: 20px 24px;
+        }
+        
+        .component-preview {
+            border: 2px dashed #E0E0E0;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 16px 0;
+            background: #FAFAFA;
+        }
+        
+        .code-block {
+            background: #1E1E1E;
+            color: #D4D4D4;
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+        }
+        
+        .flow-step {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            margin-bottom: 12px;
+            position: relative;
+        }
+        
+        .flow-step::after {
+            content: '↓';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #FF69B4;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        .flow-step:last-child::after {
+            display: none;
+        }
+        
+        .step-number {
+            width: 32px;
+            height: 32px;
+            background: #FF69B4;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 16px;
+        }
+        
+        .wireframe-container {
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 20px;
+            background: white;
+            margin: 16px 0;
+        }
+        
+        .wireframe-element {
+            background: #F5F5F5;
+            border: 1px solid #E0E0E0;
+            border-radius: 4px;
+            margin: 8px 0;
+            position: relative;
+        }
+        
+        .wireframe-header {
+            height: 60px;
+            background: #E0E0E0;
+        }
+        
+        .wireframe-sidebar {
+            width: 200px;
+            height: 400px;
+            background: #F5F5F5;
+            display: inline-block;
+            vertical-align: top;
+        }
+        
+        .wireframe-content {
+            width: calc(100% - 220px);
+            height: 400px;
+            background: #FAFAFA;
+            display: inline-block;
+            margin-left: 20px;
+            vertical-align: top;
+        }
+        
+        .wireframe-table {
+            height: 200px;
+            background: white;
+            border: 1px solid #E0E0E0;
+            margin: 12px;
+        }
+        
+        .wireframe-row {
+            height: 24px;
+            border-bottom: 1px solid #E0E0E0;
+            margin: 4px 8px;
+            background: #F8F8F8;
+        }
+        
+        .accessibility-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            background: #00D563;
+            color: white;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin: 2px;
+        }
+        
+        .responsive-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+            margin: 16px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .responsive-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <div class="container mx-auto px-6 py-8 max-w-7xl">
+        <header class="mb-8">
+            <h1 class="text-4xl font-bold text-gray-900 mb-4">CrossBorder Admin Dashboard</h1>
+            <h2 class="text-2xl text-gray-600">Component Specifications & Design System</h2>
+            <p class="text-gray-500 mt-2">Tesla-inspired design with Light Pink accents (#FF69B4)</p>
+        </header>
+
+        <!-- Table of Contents -->
+        <div class="spec-card">
+            <div class="spec-header">
+                <h2 class="text-xl font-bold">📋 Table of Contents</h2>
+            </div>
+            <div class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <a href="#component-architecture" class="block p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                        <h3 class="font-semibold text-gray-900">Component Architecture</h3>
+                        <p class="text-sm text-gray-600">Reusable components and structure</p>
+                    </a>
+                    <a href="#data-tables" class="block p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                        <h3 class="font-semibold text-gray-900">Data Tables</h3>
+                        <p class="text-sm text-gray-600">Advanced filtering and sorting</p>
+                    </a>
+                    <a href="#user-flows" class="block p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                        <h3 class="font-semibold text-gray-900">User Flows</h3>
+                        <p class="text-sm text-gray-600">Management workflows</p>
+                    </a>
+                    <a href="#modal-designs" class="block p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                        <h3 class="font-semibold text-gray-900">Modal Designs</h3>
+                        <p class="text-sm text-gray-600">User detail and editing interfaces</p>
+                    </a>
+                    <a href="#responsive-design" class="block p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                        <h3 class="font-semibold text-gray-900">Responsive Design</h3>
+                        <p class="text-sm text-gray-600">Mobile and tablet layouts</p>
+                    </a>
+                    <a href="#accessibility" class="block p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                        <h3 class="font-semibold text-gray-900">Accessibility</h3>
+                        <p class="text-sm text-gray-600">WCAG 2.1 AA compliance</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Component Architecture -->
+        <section id="component-architecture" class="spec-card">
+            <div class="spec-header">
+                <h2 class="text-xl font-bold">🏗️ Component Architecture</h2>
+                <p class="text-gray-300 mt-1">Reusable components for the admin dashboard</p>
+            </div>
+            <div class="p-6">
+                <h3 class="text-lg font-semibold mb-4">Core Components Structure</h3>
+                
+                <div class="code-block mb-6">
+<pre>
+src/
+├── components/
+│   ├── admin/
+│   │   ├── dashboard/
+│   │   │   ├── AdminDashboard.tsx          # Main dashboard container
+│   │   │   ├── MetricsGrid.tsx             # KPI metrics display
+│   │   │   ├── ActivityFeed.tsx            # Recent activity timeline
+│   │   │   └── SystemStatus.tsx            # System health indicators
+│   │   ├── users/
+│   │   │   ├── UserManagementTable.tsx     # Unified user table
+│   │   │   ├── UserDetailModal.tsx         # User profile modal
+│   │   │   ├── UserFilters.tsx             # Search and filter controls
+│   │   │   ├── BulkActions.tsx             # Bulk operation controls
+│   │   │   └── UserActions.tsx             # Individual user actions
+│   │   ├── data-table/
+│   │   │   ├── DataTable.tsx               # Reusable table component
+│   │   │   ├── TableHeader.tsx             # Sortable headers
+│   │   │   ├── TableRow.tsx                # Row with actions
+│   │   │   ├── TablePagination.tsx         # Pagination controls
+│   │   │   └── TableFilters.tsx            # Filter interface
+│   │   └── modals/
+│   │       ├── UserEditModal.tsx           # User editing interface
+│   │       ├── VerificationModal.tsx       # Document verification
+│   │       ├── BulkActionModal.tsx         # Bulk operation confirmation
+│   │       └── ConfirmationModal.tsx       # Generic confirmation
+│   └── ui/
+│       ├── Badge.tsx                       # Status badges
+│       ├── ActionMenu.tsx                  # Dropdown action menu
+│       ├── SearchInput.tsx                 # Enhanced search input
+│       ├── FilterChip.tsx                  # Filter selection chips
+│       └── ProgressBar.tsx                 # Progress indicators
+</pre>
+                </div>
+
+                <h3 class="text-lg font-semibold mb-4">Component Props Interface</h3>
+                
+                <div class="code-block mb-6">
+<pre>
+// UserManagementTable.tsx
+interface UserManagementTableProps {
+  userType: 'CLIENT' | 'DRIVER' | 'BLOG_EDITOR';
+  users: User[];
+  loading: boolean;
+  onUserSelect: (userId: string) => void;
+  onBulkAction: (action: string, userIds: string[]) => void;
+  onFilter: (filters: UserFilters) => void;
+  onSort: (field: string, direction: 'asc' | 'desc') => void;
+  pagination: PaginationConfig;
+}
+
+// UserDetailModal.tsx
+interface UserDetailModalProps {
+  user: User | null;
+  isOpen: boolean;
+  onClose: () => void;
+  onSave: (updates: Partial&lt;User&gt;) => void;
+  userType: UserType;
+  readonly?: boolean;
+}
+
+// DataTable.tsx
+interface DataTableProps&lt;T&gt; {
+  data: T[];
+  columns: TableColumn&lt;T&gt;[];
+  loading?: boolean;
+  selectable?: boolean;
+  sortable?: boolean;
+  pagination?: PaginationConfig;
+  onRowClick?: (item: T) => void;
+  onSelectionChange?: (selectedIds: string[]) => void;
+  className?: string;
+}
+</pre>
+                </div>
+
+                <h3 class="text-lg font-semibold mb-4">State Management Pattern</h3>
+                
+                <div class="code-block">
+<pre>
+// useAdminDashboard.ts - Custom hook for state management
+interface AdminDashboardState {
+  users: {
+    clients: User[];
+    drivers: User[];
+    blogEditors: User[];
+  };
+  filters: {
+    search: string;
+    status: string[];
+    dateRange: DateRange;
+    userType: UserType[];
+  };
+  ui: {
+    selectedUsers: string[];
+    activeModal: string | null;
+    loading: boolean;
+    error: string | null;
+  };
+  metrics: DashboardMetrics;
+}
+
+// Actions
+const useAdminDashboard = () => {
+  const [state, dispatch] = useReducer(adminReducer, initialState);
+  
+  return {
+    ...state,
+    actions: {
+      loadUsers: (type: UserType) => void;
+      updateUser: (userId: string, updates: Partial&lt;User&gt;) => void;
+      bulkAction: (action: string, userIds: string[]) => void;
+      setFilters: (filters: Partial&lt;UserFilters&gt;) => void;
+      selectUsers: (userIds: string[]) => void;
+      openModal: (modal: string, data?: any) => void;
+      closeModal: () => void;
+    }
+  };
+};
+</pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Data Tables -->
+        <section id="data-tables" class="spec-card">
+            <div class="spec-header">
+                <h2 class="text-xl font-bold">📊 Advanced Data Tables</h2>
+                <p class="text-gray-300 mt-1">Comprehensive table functionality with filtering, sorting, and actions</p>
+            </div>
+            <div class="p-6">
+                
+                <h3 class="text-lg font-semibold mb-4">Table Features</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div class="p-4 bg-gray-50 rounded-lg">
+                        <h4 class="font-semibold text-gray-900 mb-2">Filtering & Search</h4>
+                        <ul class="text-sm text-gray-600 space-y-1">
+                            <li>• Global search across all fields</li>
+                            <li>• Column-specific filters</li>
+                            <li>• Date range selection</li>
+                            <li>• Status multi-select</li>
+                            <li>• Save filter presets</li>
+                        </ul>
+                    </div>
+                    <div class="p-4 bg-gray-50 rounded-lg">
+                        <h4 class="font-semibold text-gray-900 mb-2">Sorting & Selection</h4>
+                        <ul class="text-sm text-gray-600 space-y-1">
+                            <li>• Multi-column sorting</li>
+                            <li>• Bulk row selection</li>
+                            <li>• Select all/none controls</li>
+                            <li>• Sort state persistence</li>
+                            <li>• Custom sort functions</li>
+                        </ul>
+                    </div>
+                    <div class="p-4 bg-gray-50 rounded-lg">
+                        <h4 class="font-semibold text-gray-900 mb-2">Actions & Export</h4>
+                        <ul class="text-sm text-gray-600 space-y-1">
+                            <li>• Individual row actions</li>
+                            <li>• Bulk operations</li>
+                            <li>• CSV/PDF export</li>
+                            <li>• Print formatting</li>
+                            <li>• Action permissions</li>
+                        </ul>
+                    </div>
+                    <div class="p-4 bg-gray-50 rounded-lg">
+                        <h4 class="font-semibold text-gray-900 mb-2">Performance</h4>
+                        <ul class="text-sm text-gray-600 space-y-1">
+                            <li>• Virtual scrolling for large datasets</li>
+                            <li>• Lazy loading</li>
+                            <li>• Optimistic updates</li>
+                            <li>• Debounced search</li>
+                            <li>• Memoized components</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3 class="text-lg font-semibold mb-4">Table Configuration Example</h3>
+                
+                <div class="code-block mb-6">
+<pre>
+// Client table configuration
+const clientTableConfig: TableConfig = {
+  columns: [
+    {
+      key: 'name',
+      title: 'Client',
+      sortable: true,
+      filterable: true,
+      render: (user) => (
+        &lt;UserCell 
+          user={user} 
+          showAvatar={true}
+          showPhone={true}
+        /&gt;
+      )
+    },
+    {
+      key: 'email',
+      title: 'Email',
+      sortable: true,
+      filterable: true,
+      width: '200px'
+    },
+    {
+      key: 'membershipTier',
+      title: 'Membership',
+      sortable: true,
+      filterable: true,
+      render: (user) => (
+        &lt;MembershipBadge tier={user.clientProfile?.membershipTier} /&gt;
+      ),
+      filter: {
+        type: 'multiselect',
+        options: ['BASIC', 'PREMIUM', 'VIP']
+      }
+    },
+    {
+      key: 'totalTrips',
+      title: 'Trips',
+      sortable: true,
+      width: '80px',
+      render: (user) => user.clientProfile?.totalTrips || 0
+    },
+    {
+      key: 'loyaltyPoints',
+      title: 'Points',
+      sortable: true,
+      width: '100px',
+      render: (user) => user.clientProfile?.loyaltyPoints || 0
+    },
+    {
+      key: 'status',
+      title: 'Status',
+      sortable: true,
+      filterable: true,
+      render: (user) => (
+        &lt;StatusBadge 
+          status={user.isActive ? 'active' : 'inactive'}
+          verified={user.isVerified}
+        /&gt;
+      ),
+      filter: {
+        type: 'multiselect',
+        options: ['active', 'inactive', 'suspended']
+      }
+    },
+    {
+      key: 'actions',
+      title: 'Actions',
+      width: '120px',
+      render: (user) => (
+        &lt;TableActions
+          actions={[
+            { label: 'View Profile', icon: 'eye', onClick: () => openProfile(user.id) },
+            { label: 'Edit Details', icon: 'edit', onClick: () => editUser(user.id) },
+            { label: 'View Bookings', icon: 'calendar', onClick: () => viewBookings(user.id) },
+            { type: 'divider' },
+            { label: 'Upgrade Tier', icon: 'arrow-up', onClick: () => upgradeTier(user.id) },
+            { label: 'Suspend', icon: 'ban', danger: true, onClick: () => suspendUser(user.id) }
+          ]}
+        /&gt;
+      )
+    }
+  ],
+  bulkActions: [
+    { label: 'Export Selected', icon: 'download', action: 'export' },
+    { label: 'Send Notification', icon: 'bell', action: 'notify' },
+    { label: 'Upgrade to Premium', icon: 'star', action: 'upgrade' },
+    { type: 'divider' },
+    { label: 'Suspend Accounts', icon: 'ban', danger: true, action: 'suspend' }
+  ],
+  defaultSort: { field: 'createdAt', direction: 'desc' },
+  pageSize: 25,
+  exportFormats: ['csv', 'excel', 'pdf']
+};
+</pre>
+                </div>
+
+                <h3 class="text-lg font-semibold mb-4">Advanced Filter Interface</h3>
+                
+                <div class="component-preview">
+                    <div class="flex flex-wrap items-center gap-4 p-4 bg-white rounded-lg border">
+                        <div class="flex-1 min-w-64">
+                            <input 
+                                type="text" 
+                                placeholder="Search users by name, email, or phone..." 
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                            >
+                        </div>
+                        <select class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500">
+                            <option>All Statuses</option>
+                            <option>Active</option>
+                            <option>Inactive</option>
+                            <option>Suspended</option>
+                        </select>
+                        <select class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500">
+                            <option>All Tiers</option>
+                            <option>VIP</option>
+                            <option>Premium</option>
+                            <option>Basic</option>
+                        </select>
+                        <button class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700">
+                            More Filters
+                        </button>
+                        <button class="px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600">
+                            Export
+                        </button>
+                    </div>
+                    
+                    <!-- Active Filters -->
+                    <div class="flex flex-wrap gap-2 mt-3">
+                        <span class="inline-flex items-center px-3 py-1 bg-pink-100 text-pink-800 text-sm rounded-full">
+                            Status: Active
+                            <button class="ml-2 text-pink-600 hover:text-pink-800">×</button>
+                        </span>
+                        <span class="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
+                            Tier: VIP
+                            <button class="ml-2 text-blue-600 hover:text-blue-800">×</button>
+                        </span>
+                        <button class="text-sm text-gray-500 hover:text-gray-700">Clear all</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- User Flows -->
+        <section id="user-flows" class="spec-card">
+            <div class="spec-header">
+                <h2 class="text-xl font-bold">🔄 User Management Flows</h2>
+                <p class="text-gray-300 mt-1">Step-by-step workflows for common admin tasks</p>
+            </div>
+            <div class="p-6">
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Driver Verification Flow -->
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">Driver Verification Flow</h3>
+                        
+                        <div class="flow-step">
+                            <div class="step-number">1</div>
+                            <div>
+                                <h4 class="font-medium">Review Application</h4>
+                                <p class="text-sm text-gray-600">Admin opens driver profile and reviews personal information</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flow-step">
+                            <div class="step-number">2</div>
+                            <div>
+                                <h4 class="font-medium">Verify Documents</h4>
+                                <p class="text-sm text-gray-600">Check license, insurance, vehicle registration, and ID documents</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flow-step">
+                            <div class="step-number">3</div>
+                            <div>
+                                <h4 class="font-medium">Background Check</h4>
+                                <p class="text-sm text-gray-600">Review any criminal record checks or reference validations</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flow-step">
+                            <div class="step-number">4</div>
+                            <div>
+                                <h4 class="font-medium">Decision & Notification</h4>
+                                <p class="text-sm text-gray-600">Approve/reject application and send automated notification to driver</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Client Tier Management Flow -->
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">Client Tier Management Flow</h3>
+                        
+                        <div class="flow-step">
+                            <div class="step-number">1</div>
+                            <div>
+                                <h4 class="font-medium">Review Client History</h4>
+                                <p class="text-sm text-gray-600">Analyze trip frequency, spending patterns, and loyalty points</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flow-step">
+                            <div class="step-number">2</div>
+                            <div>
+                                <h4 class="font-medium">Check Eligibility</h4>
+                                <p class="text-sm text-gray-600">Verify tier upgrade/downgrade criteria and thresholds</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flow-step">
+                            <div class="step-number">3</div>
+                            <div>
+                                <h4 class="font-medium">Update Membership</h4>
+                                <p class="text-sm text-gray-600">Change tier and update associated benefits and pricing</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flow-step">
+                            <div class="step-number">4</div>
+                            <div>
+                                <h4 class="font-medium">Communication</h4>
+                                <p class="text-sm text-gray-600">Send tier change notification and welcome package if upgraded</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="text-lg font-semibold mb-4 mt-8">Bulk Operations Flow</h3>
+                
+                <div class="bg-gray-50 p-6 rounded-lg">
+                    <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-center">
+                        <div class="text-center">
+                            <div class="w-12 h-12 bg-pink-500 text-white rounded-full flex items-center justify-center mx-auto mb-2 font-bold">1</div>
+                            <h4 class="font-medium text-sm">Select Users</h4>
+                            <p class="text-xs text-gray-600">Choose multiple users via checkboxes</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-12 h-12 bg-pink-500 text-white rounded-full flex items-center justify-center mx-auto mb-2 font-bold">2</div>
+                            <h4 class="font-medium text-sm">Choose Action</h4>
+                            <p class="text-xs text-gray-600">Select bulk operation from dropdown</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-12 h-12 bg-pink-500 text-white rounded-full flex items-center justify-center mx-auto mb-2 font-bold">3</div>
+                            <h4 class="font-medium text-sm">Confirm</h4>
+                            <p class="text-xs text-gray-600">Review action details and confirm</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-12 h-12 bg-pink-500 text-white rounded-full flex items-center justify-center mx-auto mb-2 font-bold">4</div>
+                            <h4 class="font-medium text-sm">Process</h4>
+                            <p class="text-xs text-gray-600">Execute action with progress indicator</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-12 h-12 bg-pink-500 text-white rounded-full flex items-center justify-center mx-auto mb-2 font-bold">5</div>
+                            <h4 class="font-medium text-sm">Results</h4>
+                            <p class="text-xs text-gray-600">Show success/error summary</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modal Designs -->
+        <section id="modal-designs" class="spec-card">
+            <div class="spec-header">
+                <h2 class="text-xl font-bold">🪟 Modal Interface Designs</h2>
+                <p class="text-gray-300 mt-1">User detail views and editing interfaces</p>
+            </div>
+            <div class="p-6">
+                
+                <h3 class="text-lg font-semibold mb-4">Driver Verification Modal</h3>
+                
+                <div class="component-preview">
+                    <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg">
+                        <!-- Modal Header -->
+                        <div class="flex items-center justify-between p-6 border-b">
+                            <div>
+                                <h3 class="text-xl font-bold">Driver Verification - Li Wei</h3>
+                                <p class="text-sm text-gray-600">License #: HK123456789</p>
+                            </div>
+                            <button class="text-gray-400 hover:text-gray-600">✕</button>
+                        </div>
+                        
+                        <!-- Modal Body -->
+                        <div class="p-6">
+                            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                                <!-- Personal Info -->
+                                <div class="lg:col-span-1">
+                                    <h4 class="font-semibold mb-3">Personal Information</h4>
+                                    <div class="space-y-3 text-sm">
+                                        <div>
+                                            <label class="text-gray-600">Full Name</label>
+                                            <p class="font-medium">Li Wei</p>
+                                        </div>
+                                        <div>
+                                            <label class="text-gray-600">Phone</label>
+                                            <p class="font-medium">+852 6543 2109</p>
+                                        </div>
+                                        <div>
+                                            <label class="text-gray-600">Email</label>
+                                            <p class="font-medium">li.wei@email.com</p>
+                                        </div>
+                                        <div>
+                                            <label class="text-gray-600">Languages</label>
+                                            <p class="font-medium">English, Cantonese, Mandarin</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Documents -->
+                                <div class="lg:col-span-2">
+                                    <h4 class="font-semibold mb-3">Verification Documents</h4>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div class="border rounded-lg p-4">
+                                            <div class="flex items-center justify-between mb-2">
+                                                <h5 class="font-medium">Driving License</h5>
+                                                <span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded">Pending</span>
+                                            </div>
+                                            <div class="bg-gray-100 h-32 rounded mb-2 flex items-center justify-center">
+                                                <span class="text-gray-500">License Image</span>
+                                            </div>
+                                            <div class="flex space-x-2">
+                                                <button class="flex-1 px-3 py-1 bg-green-500 text-white text-xs rounded">Approve</button>
+                                                <button class="flex-1 px-3 py-1 bg-red-500 text-white text-xs rounded">Reject</button>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="border rounded-lg p-4">
+                                            <div class="flex items-center justify-between mb-2">
+                                                <h5 class="font-medium">Vehicle Registration</h5>
+                                                <span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded">Pending</span>
+                                            </div>
+                                            <div class="bg-gray-100 h-32 rounded mb-2 flex items-center justify-center">
+                                                <span class="text-gray-500">Registration Document</span>
+                                            </div>
+                                            <div class="flex space-x-2">
+                                                <button class="flex-1 px-3 py-1 bg-green-500 text-white text-xs rounded">Approve</button>
+                                                <button class="flex-1 px-3 py-1 bg-red-500 text-white text-xs rounded">Reject</button>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="border rounded-lg p-4">
+                                            <div class="flex items-center justify-between mb-2">
+                                                <h5 class="font-medium">Insurance (HK)</h5>
+                                                <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded">Approved</span>
+                                            </div>
+                                            <div class="bg-gray-100 h-32 rounded mb-2 flex items-center justify-center">
+                                                <span class="text-gray-500">Insurance Certificate</span>
+                                            </div>
+                                            <p class="text-xs text-gray-600">Approved on 2024-01-15</p>
+                                        </div>
+                                        
+                                        <div class="border rounded-lg p-4">
+                                            <div class="flex items-center justify-between mb-2">
+                                                <h5 class="font-medium">ID Card</h5>
+                                                <span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded">Pending</span>
+                                            </div>
+                                            <div class="bg-gray-100 h-32 rounded mb-2 flex items-center justify-center">
+                                                <span class="text-gray-500">ID Card Image</span>
+                                            </div>
+                                            <div class="flex space-x-2">
+                                                <button class="flex-1 px-3 py-1 bg-green-500 text-white text-xs rounded">Approve</button>
+                                                <button class="flex-1 px-3 py-1 bg-red-500 text-white text-xs rounded">Reject</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Admin Notes -->
+                            <div class="mt-6">
+                                <h4 class="font-semibold mb-3">Admin Notes</h4>
+                                <textarea 
+                                    class="w-full p-3 border border-gray-300 rounded-lg" 
+                                    rows="3" 
+                                    placeholder="Add verification notes..."
+                                ></textarea>
+                            </div>
+                        </div>
+                        
+                        <!-- Modal Footer -->
+                        <div class="p-6 border-t bg-gray-50 flex justify-between">
+                            <button class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100">
+                                Close
+                            </button>
+                            <div class="space-x-3">
+                                <button class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">
+                                    Reject Application
+                                </button>
+                                <button class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
+                                    Approve Driver
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="text-lg font-semibold mb-4 mt-8">Client Edit Modal</h3>
+                
+                <div class="component-preview">
+                    <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-lg">
+                        <!-- Modal Header -->
+                        <div class="flex items-center justify-between p-6 border-b">
+                            <div>
+                                <h3 class="text-xl font-bold">Edit Client - Michael Chen</h3>
+                                <p class="text-sm text-gray-600">VIP Member since 2023</p>
+                            </div>
+                            <button class="text-gray-400 hover:text-gray-600">✕</button>
+                        </div>
+                        
+                        <!-- Modal Body -->
+                        <div class="p-6">
+                            <form class="space-y-6">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                                        <input type="text" value="Michael Chen" class="w-full p-3 border border-gray-300 rounded-lg">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                        <input type="email" value="michael.chen@email.com" class="w-full p-3 border border-gray-300 rounded-lg">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                                        <input type="tel" value="+852 9876 5432" class="w-full p-3 border border-gray-300 rounded-lg">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Membership Tier</label>
+                                        <select class="w-full p-3 border border-gray-300 rounded-lg">
+                                            <option>Basic</option>
+                                            <option>Premium</option>
+                                            <option selected>VIP</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Emergency Contact</label>
+                                    <input type="text" value="Jane Chen (+852 8765 4321)" class="w-full p-3 border border-gray-300 rounded-lg">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Special Requests</label>
+                                    <textarea 
+                                        class="w-full p-3 border border-gray-300 rounded-lg" 
+                                        rows="3"
+                                        placeholder="Any special requirements or preferences..."
+                                    >Prefers luxury vehicles, always requests child seat for 6-year-old daughter</textarea>
+                                </div>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Loyalty Points</label>
+                                        <input type="number" value="2450" class="w-full p-3 border border-gray-300 rounded-lg">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Account Status</label>
+                                        <select class="w-full p-3 border border-gray-300 rounded-lg">
+                                            <option selected>Active</option>
+                                            <option>Inactive</option>
+                                            <option>Suspended</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Verified</label>
+                                        <select class="w-full p-3 border border-gray-300 rounded-lg">
+                                            <option selected>Yes</option>
+                                            <option>No</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <!-- Modal Footer -->
+                        <div class="p-6 border-t bg-gray-50 flex justify-end space-x-3">
+                            <button class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100">
+                                Cancel
+                            </button>
+                            <button class="px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600">
+                                Save Changes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Responsive Design -->
+        <section id="responsive-design" class="spec-card">
+            <div class="spec-header">
+                <h2 class="text-xl font-bold">📱 Responsive Design Specifications</h2>
+                <p class="text-gray-300 mt-1">Mobile-first approach with progressive enhancement</p>
+            </div>
+            <div class="p-6">
+                
+                <h3 class="text-lg font-semibold mb-4">Breakpoint Strategy</h3>
+                
+                <div class="responsive-grid mb-6">
+                    <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                        <h4 class="font-semibold text-green-800">Mobile (320px - 767px)</h4>
+                        <ul class="text-sm text-green-700 mt-2 space-y-1">
+                            <li>• Collapsible sidebar becomes drawer</li>
+                            <li>• Stack cards vertically</li>
+                            <li>• Horizontal scroll for tables</li>
+                            <li>• Touch-friendly buttons (44px min)</li>
+                            <li>• Simplified navigation</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                        <h4 class="font-semibold text-blue-800">Tablet (768px - 1023px)</h4>
+                        <ul class="text-sm text-blue-700 mt-2 space-y-1">
+                            <li>• 2-column layout for cards</li>
+                            <li>• Persistent sidebar with icons</li>
+                            <li>• Condensed table view</li>
+                            <li>• Optimized modal sizes</li>
+                            <li>• Touch and mouse support</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="p-4 bg-purple-50 border border-purple-200 rounded-lg">
+                        <h4 class="font-semibold text-purple-800">Desktop (1024px+)</h4>
+                        <ul class="text-sm text-purple-700 mt-2 space-y-1">
+                            <li>• Full sidebar navigation</li>
+                            <li>• Multi-column grid layouts</li>
+                            <li>• Full-featured data tables</li>
+                            <li>• Hover states and tooltips</li>
+                            <li>• Keyboard navigation</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3 class="text-lg font-semibold mb-4">Mobile Table Adaptations</h3>
+                
+                <div class="component-preview">
+                    <h4 class="font-medium mb-3">Desktop View (Standard Table)</h4>
+                    <div class="overflow-x-auto border rounded-lg">
+                        <table class="w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-4 py-3 text-left text-sm font-medium text-gray-900">Client</th>
+                                    <th class="px-4 py-3 text-left text-sm font-medium text-gray-900">Email</th>
+                                    <th class="px-4 py-3 text-left text-sm font-medium text-gray-900">Tier</th>
+                                    <th class="px-4 py-3 text-left text-sm font-medium text-gray-900">Trips</th>
+                                    <th class="px-4 py-3 text-left text-sm font-medium text-gray-900">Status</th>
+                                    <th class="px-4 py-3 text-left text-sm font-medium text-gray-900">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white">
+                                <tr class="border-t">
+                                    <td class="px-4 py-3">
+                                        <div class="flex items-center space-x-3">
+                                            <div class="w-8 h-8 bg-pink-500 text-white rounded-full flex items-center justify-center text-sm font-bold">MC</div>
+                                            <span class="font-medium">Michael Chen</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-3 text-sm">michael.chen@email.com</td>
+                                    <td class="px-4 py-3">
+                                        <span class="px-2 py-1 bg-pink-100 text-pink-800 text-xs rounded-full">VIP</span>
+                                    </td>
+                                    <td class="px-4 py-3 text-sm">127</td>
+                                    <td class="px-4 py-3">
+                                        <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">Active</span>
+                                    </td>
+                                    <td class="px-4 py-3">
+                                        <button class="text-gray-600 hover:text-gray-900">⋮</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <h4 class="font-medium mb-3 mt-6">Mobile View (Card Layout)</h4>
+                    <div class="space-y-3">
+                        <div class="bg-white border rounded-lg p-4">
+                            <div class="flex items-start justify-between mb-3">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-pink-500 text-white rounded-full flex items-center justify-center font-bold">MC</div>
+                                    <div>
+                                        <h4 class="font-medium">Michael Chen</h4>
+                                        <p class="text-sm text-gray-600">michael.chen@email.com</p>
+                                    </div>
+                                </div>
+                                <button class="text-gray-400 hover:text-gray-600">⋮</button>
+                            </div>
+                            <div class="grid grid-cols-3 gap-4 text-center">
+                                <div>
+                                    <span class="block text-xs text-gray-500">Tier</span>
+                                    <span class="px-2 py-1 bg-pink-100 text-pink-800 text-xs rounded-full">VIP</span>
+                                </div>
+                                <div>
+                                    <span class="block text-xs text-gray-500">Trips</span>
+                                    <span class="font-medium">127</span>
+                                </div>
+                                <div>
+                                    <span class="block text-xs text-gray-500">Status</span>
+                                    <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">Active</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Accessibility -->
+        <section id="accessibility" class="spec-card">
+            <div class="spec-header">
+                <h2 class="text-xl font-bold">♿ Accessibility Specifications</h2>
+                <p class="text-gray-300 mt-1">WCAG 2.1 AA compliance and inclusive design</p>
+            </div>
+            <div class="p-6">
+                
+                <h3 class="text-lg font-semibold mb-4">Accessibility Features</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div class="space-y-4">
+                        <h4 class="font-semibold">Keyboard Navigation</h4>
+                        <div class="space-y-2">
+                            <div class="accessibility-badge">Tab Order</div>
+                            <div class="accessibility-badge">Skip Links</div>
+                            <div class="accessibility-badge">Focus Indicators</div>
+                            <div class="accessibility-badge">Keyboard Shortcuts</div>
+                        </div>
+                        
+                        <h4 class="font-semibold">Visual Design</h4>
+                        <div class="space-y-2">
+                            <div class="accessibility-badge">4.5:1 Contrast Ratio</div>
+                            <div class="accessibility-badge">Scalable Text (200%)</div>
+                            <div class="accessibility-badge">Color Independence</div>
+                            <div class="accessibility-badge">Motion Reduction</div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <h4 class="font-semibold">Screen Reader Support</h4>
+                        <div class="space-y-2">
+                            <div class="accessibility-badge">ARIA Labels</div>
+                            <div class="accessibility-badge">Semantic HTML</div>
+                            <div class="accessibility-badge">Live Regions</div>
+                            <div class="accessibility-badge">Descriptive Links</div>
+                        </div>
+                        
+                        <h4 class="font-semibold">User Control</h4>
+                        <div class="space-y-2">
+                            <div class="accessibility-badge">Pause Auto-updates</div>
+                            <div class="accessibility-badge">Error Prevention</div>
+                            <div class="accessibility-badge">Undo Actions</div>
+                            <div class="accessibility-badge">Help & Context</div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="text-lg font-semibold mb-4">Implementation Examples</h3>
+                
+                <div class="code-block">
+<pre>
+// Accessible Data Table
+&lt;table 
+  role="table" 
+  aria-label="User management table"
+  aria-describedby="table-help"
+&gt;
+  &lt;caption id="table-help" className="sr-only"&gt;
+    User management table with 1,247 users. Use arrow keys to navigate, 
+    Enter to select, and Tab to access actions.
+  &lt;/caption&gt;
+  
+  &lt;thead&gt;
+    &lt;tr role="row"&gt;
+      &lt;th 
+        role="columnheader"
+        aria-sort="ascending"
+        tabIndex={0}
+        onClick={handleSort}
+        onKeyDown={handleKeyDown}
+      &gt;
+        &lt;span&gt;Name&lt;/span&gt;
+        &lt;span aria-hidden="true"&gt;↑&lt;/span&gt;
+        &lt;span className="sr-only"&gt;sorted ascending&lt;/span&gt;
+      &lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  
+  &lt;tbody&gt;
+    &lt;tr 
+      role="row"
+      aria-selected="false"
+      tabIndex={0}
+      onClick={handleRowClick}
+      onKeyDown={handleRowKeyDown}
+    &gt;
+      &lt;td role="gridcell"&gt;
+        &lt;UserCell user={user} /&gt;
+      &lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+// Status Badge with Accessibility
+&lt;span 
+  className="status-badge status-active"
+  role="status"
+  aria-label={`Account status: ${status}`}
+&gt;
+  &lt;span aria-hidden="true"&gt;●&lt;/span&gt;
+  {status}
+&lt;/span&gt;
+
+// Modal with Focus Management
+const UserModal = ({ isOpen, onClose }) =&gt; {
+  const modalRef = useRef();
+  const previousFocus = useRef();
+  
+  useEffect(() =&gt; {
+    if (isOpen) {
+      previousFocus.current = document.activeElement;
+      modalRef.current?.focus();
+    } else {
+      previousFocus.current?.focus();
+    }
+  }, [isOpen]);
+  
+  return (
+    &lt;div 
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+      ref={modalRef}
+      tabIndex={-1}
+    &gt;
+      &lt;h2 id="modal-title"&gt;User Details&lt;/h2&gt;
+      {/* Modal content */}
+    &lt;/div&gt;
+  );
+};
+</pre>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+</body>
+</html>

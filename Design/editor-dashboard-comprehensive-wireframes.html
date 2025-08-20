@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor Dashboard - Comprehensive Wireframes & Specifications</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: #1f2937;
+            background: #f8fafc;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: #111827;
+            border-bottom: 4px solid #3b82f6;
+            padding-bottom: 0.75rem;
+        }
+
+        .page-description {
+            font-size: 1.125rem;
+            color: #6b7280;
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        /* Wireframe Styles */
+        .wireframe {
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            background: #fafbfc;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            min-height: 600px;
+            position: relative;
+        }
+
+        .wireframe-title {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: #3b82f6;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        /* Layout Components */
+        .layout-header {
+            height: 80px;
+            background: #ffffff;
+            border: 2px solid #d1d5db;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            padding: 0 1.5rem;
+            justify-content: space-between;
+        }
+
+        .layout-sidebar {
+            width: 280px;
+            background: #f8fafc;
+            border: 2px solid #d1d5db;
+            border-radius: 8px;
+            padding: 1.5rem;
+            float: left;
+            height: 500px;
+            margin-right: 1.5rem;
+        }
+
+        .layout-main {
+            background: #ffffff;
+            border: 2px solid #d1d5db;
+            border-radius: 8px;
+            padding: 1.5rem;
+            overflow: hidden;
+            min-height: 500px;
+        }
+
+        .layout-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .layout-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .layout-grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .layout-grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        /* UI Components */
+        .component-box {
+            background: #f1f5f9;
+            border: 1px dashed #9ca3af;
+            border-radius: 6px;
+            padding: 1rem;
+            text-align: center;
+            color: #6b7280;
+            font-size: 0.875rem;
+            font-weight: 500;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .component-metric {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+
+        .component-metric::before {
+            content: attr(data-title);
+            position: absolute;
+            top: 8px;
+            left: 12px;
+            font-size: 0.75rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .component-card {
+            background: #ffffff;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .component-chart {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border: 2px solid #93c5fd;
+            border-radius: 8px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1e40af;
+            font-weight: 600;
+        }
+
+        .component-table {
+            background: #ffffff;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1rem;
+            min-height: 200px;
+        }
+
+        .component-editor {
+            background: #ffffff;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1rem;
+            min-height: 400px;
+            position: relative;
+        }
+
+        .component-toolbar {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            height: 50px;
+        }
+
+        .component-form {
+            background: #ffffff;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        /* Navigation */
+        .nav-item {
+            background: #f1f5f9;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .nav-item.active {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+
+        /* Buttons */
+        .btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            margin: 0.25rem;
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+
+        .btn-success {
+            background: #10b981;
+        }
+
+        .btn-warning {
+            background: #f59e0b;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+        }
+
+        /* Form Elements */
+        .form-input {
+            background: #ffffff;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 0.75rem;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        /* Status Indicators */
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-published { background: #dcfce7; color: #166534; }
+        .status-draft { background: #fef3c7; color: #92400e; }
+        .status-scheduled { background: #dbeafe; color: #1e40af; }
+
+        /* Media Elements */
+        .media-thumbnail {
+            background: #f3f4f6;
+            border: 2px dashed #9ca3af;
+            border-radius: 8px;
+            width: 80px;
+            height: 80px;
+            display: inline-block;
+            margin: 0.5rem;
+        }
+
+        .media-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+        }
+
+        /* International Elements */
+        .global-indicator {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        /* Responsive Indicators */
+        .responsive-note {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            border-radius: 6px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-size: 0.875rem;
+            color: #92400e;
+        }
+
+        /* Specifications */
+        .spec-list {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .spec-list h4 {
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: #374151;
+        }
+
+        .spec-list ul {
+            list-style: none;
+        }
+
+        .spec-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .spec-list li:last-child {
+            border-bottom: none;
+        }
+
+        .spec-list li strong {
+            color: #374151;
+        }
+
+        /* Code Snippets */
+        .code-block {
+            background: #1f2937;
+            color: #f9fafb;
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+
+        /* Clear fix for floated elements */
+        .clearfix::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        @media (max-width: 768px) {
+            .layout-sidebar {
+                width: 100%;
+                float: none;
+                margin-right: 0;
+                margin-bottom: 1.5rem;
+                height: auto;
+            }
+            
+            .layout-grid-2,
+            .layout-grid-3,
+            .layout-grid-4 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header style="text-align: center; margin-bottom: 3rem;">
+            <h1 style="font-size: 3rem; font-weight: 900; color: #111827; margin-bottom: 1rem;">
+                Editor Dashboard System
+            </h1>
+            <p style="font-size: 1.25rem; color: #6b7280; max-width: 800px; margin: 0 auto;">
+                Comprehensive wireframes and specifications for a cross-border content management system
+            </p>
+        </header>
+
+        <!-- Page 1: Editor Dashboard (Main) -->
+        <section class="page-section">
+            <h2 class="page-title">1. Editor Dashboard (Main)</h2>
+            <p class="page-description">
+                Central command center providing editors with key metrics, recent activity, and quick action access. 
+                Focus on content performance across international markets and streamlined workflow management.
+            </p>
+
+            <div class="wireframe">
+                <div class="wireframe-title">Desktop Layout - 1200px+</div>
+                
+                <!-- Header -->
+                <div class="layout-header">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="width: 40px; height: 40px; background: #3b82f6; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">CB</div>
+                        <div>
+                            <div style="font-weight: 600;">Cross-Border Editor</div>
+                            <div style="font-size: 0.875rem; color: #6b7280;">Content Management</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div class="global-indicator">🌍 Global Editor</div>
+                        <div style="width: 40px; height: 40px; background: #f3f4f6; border-radius: 50%; border: 2px solid #e5e7eb;"></div>
+                    </div>
+                </div>
+
+                <div class="clearfix">
+                    <!-- Sidebar -->
+                    <div class="layout-sidebar">
+                        <div style="margin-bottom: 1.5rem;">
+                            <h3 style="font-size: 1rem; font-weight: 600; margin-bottom: 1rem; color: #374151;">Navigation</h3>
+                            <div class="nav-item active">📊 Dashboard</div>
+                            <div class="nav-item">✏️ Create Post</div>
+                            <div class="nav-item">📝 Posts</div>
+                            <div class="nav-item">👤 Profile</div>
+                            <div class="nav-item">📁 Media Library</div>
+                            <div class="nav-item">📈 Analytics</div>
+                            <div class="nav-item">⚙️ Settings</div>
+                        </div>
+                        
+                        <div>
+                            <h3 style="font-size: 1rem; font-weight: 600; margin-bottom: 1rem; color: #374151;">Quick Actions</h3>
+                            <button class="btn" style="width: 100%; margin-bottom: 0.5rem;">New Post</button>
+                            <button class="btn btn-secondary" style="width: 100%; margin-bottom: 0.5rem;">Upload Media</button>
+                            <button class="btn btn-secondary" style="width: 100%;">View Analytics</button>
+                        </div>
+                    </div>
+
+                    <!-- Main Content -->
+                    <div class="layout-main">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                            <div>
+                                <h1 style="font-size: 1.875rem; font-weight: 700; color: #111827;">Good morning, Editor!</h1>
+                                <p style="color: #6b7280;">Here's your content overview for today</p>
+                            </div>
+                            <button class="btn btn-success">Create New Post</button>
+                        </div>
+
+                        <!-- Metrics Grid -->
+                        <div class="layout-grid-4" style="margin-bottom: 2rem;">
+                            <div class="component-metric" data-title="Published Posts">
+                                <div style="font-size: 2rem; font-weight: 700; color: #111827;">24</div>
+                                <div style="font-size: 0.875rem; color: #10b981;">+12% this month</div>
+                            </div>
+                            <div class="component-metric" data-title="Total Views">
+                                <div style="font-size: 2rem; font-weight: 700; color: #111827;">8.2K</div>
+                                <div style="font-size: 0.875rem; color: #10b981;">+18% this month</div>
+                            </div>
+                            <div class="component-metric" data-title="Engagement Rate">
+                                <div style="font-size: 2rem; font-weight: 700; color: #111827;">4.8%</div>
+                                <div style="font-size: 0.875rem; color: #f59e0b;">-2% this month</div>
+                            </div>
+                            <div class="component-metric" data-title="Global Reach">
+                                <div style="font-size: 2rem; font-weight: 700; color: #111827;">12</div>
+                                <div style="font-size: 0.875rem; color: #6b7280;">Countries</div>
+                            </div>
+                        </div>
+
+                        <!-- Content Grid -->
+                        <div class="layout-grid-2">
+                            <div class="component-card">
+                                <h3 style="font-weight: 600; margin-bottom: 1rem;">Recent Posts</h3>
+                                <div style="border-bottom: 1px solid #e5e7eb; padding: 0.75rem 0;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <div>
+                                            <div style="font-weight: 500;">Cross-Border Travel Guide 2024</div>
+                                            <div style="font-size: 0.875rem; color: #6b7280;">2 hours ago</div>
+                                        </div>
+                                        <span class="status-badge status-published">Published</span>
+                                    </div>
+                                </div>
+                                <div style="border-bottom: 1px solid #e5e7eb; padding: 0.75rem 0;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <div>
+                                            <div style="font-weight: 500;">International Business Etiquette</div>
+                                            <div style="font-size: 0.875rem; color: #6b7280;">1 day ago</div>
+                                        </div>
+                                        <span class="status-badge status-draft">Draft</span>
+                                    </div>
+                                </div>
+                                <div style="padding: 0.75rem 0;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <div>
+                                            <div style="font-weight: 500;">Currency Exchange Tips</div>
+                                            <div style="font-size: 0.875rem; color: #6b7280;">3 days ago</div>
+                                        </div>
+                                        <span class="status-badge status-scheduled">Scheduled</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="component-card">
+                                <h3 style="font-weight: 600; margin-bottom: 1rem;">Performance Overview</h3>
+                                <div class="component-chart">
+                                    Content Performance Chart
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="responsive-note">
+                <strong>Mobile Responsive Behavior:</strong> On mobile devices (≤768px), the sidebar collapses into a hamburger menu, metrics stack vertically, and the two-column layout becomes single-column for optimal readability.
+            </div>
+
+            <div class="spec-list">
+                <h4>Technical Specifications</h4>
+                <ul>
+                    <li><strong>Layout:</strong> Sidebar (280px) + Main content area with responsive grid</li>
+                    <li><strong>Metrics Cards:</strong> 4-column grid on desktop, stacked on mobile</li>
+                    <li><strong>Data Updates:</strong> Real-time metrics with WebSocket connections</li>
+                    <li><strong>Navigation:</strong> Persistent sidebar with active state indication</li>
+                    <li><strong>Quick Actions:</strong> Contextual buttons for common tasks</li>
+                    <li><strong>International Features:</strong> Global content indicator, multi-region analytics</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Page 2: Create Post -->
+        <section class="page-section">
+            <h2 class="page-title">2. Create Post</h2>
+            <p class="page-description">
+                Rich content creation interface with advanced editing capabilities, media management, SEO optimization, 
+                and international publishing options. Designed for efficient content creation workflow.
+            </p>
+
+            <div class="wireframe">
+                <div class="wireframe-title">Create Post Interface</div>
+                
+                <!-- Header -->
+                <div class="layout-header">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <button class="btn btn-secondary">← Back to Dashboard</button>
+                        <h2 style="font-weight: 600; color: #111827;">Create New Post</h2>
+                    </div>
+                    <div style="display: flex; gap: 0.75rem;">
+                        <button class="btn btn-secondary">Save Draft</button>
+                        <button class="btn btn-warning">Schedule</button>
+                        <button class="btn btn-success">Publish</button>
+                    </div>
+                </div>
+
+                <div class="layout-grid-2" style="margin-top: 1.5rem;">
+                    <!-- Main Editor -->
+                    <div style="grid-column: 1 / -1;">
+                        <div class="component-form">
+                            <div class="form-input" style="margin-bottom: 1.5rem; font-size: 1.25rem; font-weight: 600;">
+                                Post Title Goes Here...
+                            </div>
+                            
+                            <div style="margin-bottom: 1.5rem;">
+                                <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Slug</label>
+                                <div class="form-input" style="background: #f8fafc; color: #6b7280;">
+                                    /post-title-goes-here
+                                </div>
+                            </div>
+
+                            <div class="component-editor">
+                                <div class="component-toolbar">
+                                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                                        <button style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 4px; background: white;">B</button>
+                                        <button style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 4px; background: white;">I</button>
+                                        <button style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 4px; background: white;">U</button>
+                                        <div style="width: 1px; height: 20px; background: #d1d5db; margin: 0 0.5rem;"></div>
+                                        <button style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 4px; background: white;">📷</button>
+                                        <button style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 4px; background: white;">🔗</button>
+                                        <button style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 4px; background: white;">📋</button>
+                                    </div>
+                                </div>
+                                <div style="padding: 1rem; color: #6b7280; font-style: italic;">
+                                    Start writing your content here... Rich text editor with full formatting capabilities.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sidebar Options -->
+                    <div>
+                        <!-- Publish Settings -->
+                        <div class="component-card" style="margin-bottom: 1.5rem;">
+                            <h4 style="font-weight: 600; margin-bottom: 1rem;">Publish Settings</h4>
+                            <div style="margin-bottom: 1rem;">
+                                <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Status</label>
+                                <select class="form-input">
+                                    <option>Draft</option>
+                                    <option>Published</option>
+                                    <option>Scheduled</option>
+                                </select>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Publish Date</label>
+                                <input type="datetime-local" class="form-input">
+                            </div>
+                            <div>
+                                <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Visibility</label>
+                                <select class="form-input">
+                                    <option>Public</option>
+                                    <option>Private</option>
+                                    <option>Password Protected</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Categories & Tags -->
+                        <div class="component-card" style="margin-bottom: 1.5rem;">
+                            <h4 style="font-weight: 600; margin-bottom: 1rem;">Categories & Tags</h4>
+                            <div style="margin-bottom: 1rem;">
+                                <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Category</label>
+                                <select class="form-input">
+                                    <option>Travel Guides</option>
+                                    <option>Business</option>
+                                    <option>Culture</option>
+                                    <option>Transportation</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Tags</label>
+                                <input class="form-input" placeholder="Add tags separated by commas">
+                            </div>
+                        </div>
+
+                        <!-- International Settings -->
+                        <div class="component-card" style="margin-bottom: 1.5rem;">
+                            <h4 style="font-weight: 600; margin-bottom: 1rem;">🌍 International</h4>
+                            <div style="margin-bottom: 1rem;">
+                                <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Primary Language</label>
+                                <select class="form-input">
+                                    <option>🇺🇸 English</option>
+                                    <option>🇯🇵 Japanese</option>
+                                    <option>🇰🇷 Korean</option>
+                                    <option>🇨🇳 Chinese</option>
+                                </select>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Target Regions</label>
+                                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                                    <span class="status-badge status-published">North America</span>
+                                    <span class="status-badge status-published">Asia Pacific</span>
+                                    <span class="status-badge" style="background: #f3f4f6; color: #6b7280;">Europe</span>
+                                </div>
+                            </div>
+                            <div>
+                                <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: 500; color: #374151;">
+                                    <input type="checkbox" checked>
+                                    Enable auto-translation
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SEO & Media -->
+                    <div>
+                        <!-- Featured Image -->
+                        <div class="component-card" style="margin-bottom: 1.5rem;">
+                            <h4 style="font-weight: 600; margin-bottom: 1rem;">Featured Image</h4>
+                            <div style="border: 2px dashed #d1d5db; border-radius: 8px; padding: 2rem; text-align: center; background: #f9fafb;">
+                                <div style="margin-bottom: 1rem;">📷</div>
+                                <div style="color: #6b7280; margin-bottom: 1rem;">Drop image here or click to upload</div>
+                                <button class="btn btn-secondary">Choose Image</button>
+                            </div>
+                        </div>
+
+                        <!-- SEO Settings -->
+                        <div class="component-card" style="margin-bottom: 1.5rem;">
+                            <h4 style="font-weight: 600; margin-bottom: 1rem;">SEO Optimization</h4>
+                            <div style="margin-bottom: 1rem;">
+                                <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Meta Title</label>
+                                <input class="form-input" placeholder="SEO-optimized title">
+                                <div style="font-size: 0.75rem; color: #6b7280;">60 characters recommended</div>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Meta Description</label>
+                                <textarea class="form-input" rows="3" placeholder="Brief description for search engines"></textarea>
+                                <div style="font-size: 0.75rem; color: #6b7280;">160 characters recommended</div>
+                            </div>
+                            <div>
+                                <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Focus Keyword</label>
+                                <input class="form-input" placeholder="Primary SEO keyword">
+                            </div>
+                        </div>
+
+                        <!-- Social Sharing -->
+                        <div class="component-card">
+                            <h4 style="font-weight: 600; margin-bottom: 1rem;">Social Sharing</h4>
+                            <div style="margin-bottom: 1rem;">
+                                <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Social Title</label>
+                                <input class="form-input" placeholder="Title for social media">
+                            </div>
+                            <div>
+                                <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Social Description</label>
+                                <textarea class="form-input" rows="2" placeholder="Description for social media"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="spec-list">
+                <h4>Create Post Specifications</h4>
+                <ul>
+                    <li><strong>Rich Text Editor:</strong> WYSIWYG editor with media embed, formatting, and code blocks</li>
+                    <li><strong>Auto-save:</strong> Content automatically saved every 30 seconds</li>
+                    <li><strong>Media Upload:</strong> Drag-and-drop support for images, videos, and documents</li>
+                    <li><strong>SEO Tools:</strong> Real-time SEO score and optimization suggestions</li>
+                    <li><strong>International Support:</strong> Multi-language content and region targeting</li>
+                    <li><strong>Scheduling:</strong> Advanced scheduling with timezone support</li>
+                    <li><strong>Preview Mode:</strong> Live preview across different devices and regions</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Page 3: Post Page -->
+        <section class="page-section">
+            <h2 class="page-title">3. Post Page</h2>
+            <p class="page-description">
+                Individual post management interface with edit capabilities, analytics insights, comment moderation, 
+                and performance tracking. Comprehensive view of post lifecycle and engagement metrics.
+            </p>
+
+            <div class="wireframe">
+                <div class="wireframe-title">Post Management Interface</div>
+                
+                <!-- Header -->
+                <div class="layout-header">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <button class="btn btn-secondary">← Back to Posts</button>
+                        <div>
+                            <h2 style="font-weight: 600; color: #111827;">Cross-Border Travel Guide 2024</h2>
+                            <div style="display: flex; align-items: center; gap: 1rem; margin-top: 0.25rem;">
+                                <span class="status-badge status-published">Published</span>
+                                <span style="font-size: 0.875rem; color: #6b7280;">Published 2 hours ago</span>
+                                <div class="global-indicator">🌍 Global Content</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 0.75rem;">
+                        <button class="btn btn-secondary">Preview</button>
+                        <button class="btn">Edit Post</button>
+                        <button class="btn btn-danger">Delete</button>
+                    </div>
+                </div>
+
+                <div class="layout-grid-3" style="margin-top: 1.5rem;">
+                    <!-- Performance Metrics -->
+                    <div style="grid-column: 1 / -1;">
+                        <div class="component-card" style="margin-bottom: 1.5rem;">
+                            <h3 style="font-weight: 600; margin-bottom: 1rem;">Performance Overview</h3>
+                            <div class="layout-grid-4">
+                                <div class="component-metric" data-title="Total Views">
+                                    <div style="font-size: 1.5rem; font-weight: 700; color: #111827;">1,247</div>
+                                    <div style="font-size: 0.75rem; color: #10b981;">+23% today</div>
+                                </div>
+                                <div class="component-metric" data-title="Unique Visitors">
+                                    <div style="font-size: 1.5rem; font-weight: 700; color: #111827;">892</div>
+                                    <div style="font-size: 0.75rem; color: #10b981;">+18% today</div>
+                                </div>
+                                <div class="component-metric" data-title="Engagement Rate">
+                                    <div style="font-size: 1.5rem; font-weight: 700; color: #111827;">6.2%</div>
+                                    <div style="font-size: 0.75rem; color: #f59e0b;">-1% today</div>
+                                </div>
+                                <div class="component-metric" data-title="Share Count">
+                                    <div style="font-size: 1.5rem; font-weight: 700; color: #111827;">34</div>
+                                    <div style="font-size: 0.75rem; color: #10b981;">+5 today</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Content Preview -->
+                    <div style="grid-column: span 2;">
+                        <div class="component-card" style="margin-bottom: 1.5rem;">
+                            <h3 style="font-weight: 600; margin-bottom: 1rem;">Content Preview</h3>
+                            <div style="border: 1px solid #e5e7eb; border-radius: 8px; padding: 1.5rem; background: #fafbfc;">
+                                <div style="width: 100%; height: 200px; background: #e5e7eb; border-radius: 8px; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; color: #6b7280;">
+                                    Featured Image Preview
+                                </div>
+                                <h4 style="font-weight: 600; margin-bottom: 0.5rem;">Cross-Border Travel Guide 2024</h4>
+                                <p style="color: #6b7280; font-size: 0.875rem; line-height: 1.6;">
+                                    Essential tips and guidelines for international travelers crossing borders safely and efficiently. 
+                                    Learn about documentation requirements, customs procedures, and cultural considerations...
+                                </p>
+                                <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+                                    <span class="status-badge" style="background: #ddd6fe; color: #7c3aed;">Travel</span>
+                                    <span class="status-badge" style="background: #ddd6fe; color: #7c3aed;">International</span>
+                                    <span class="status-badge" style="background: #ddd6fe; color: #7c3aed;">Guide</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Analytics Chart -->
+                        <div class="component-card">
+                            <h3 style="font-weight: 600; margin-bottom: 1rem;">Traffic Analytics</h3>
+                            <div class="component-chart">
+                                Views Over Time Chart
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Post Details & Actions -->
+                    <div>
+                        <!-- Post Information -->
+                        <div class="component-card" style="margin-bottom: 1.5rem;">
+                            <h4 style="font-weight: 600; margin-bottom: 1rem;">Post Details</h4>
+                            <div style="font-size: 0.875rem; line-height: 1.6;">
+                                <div style="margin-bottom: 0.75rem;">
+                                    <strong>Author:</strong> John Editor
+                                </div>
+                                <div style="margin-bottom: 0.75rem;">
+                                    <strong>Created:</strong> Jan 15, 2024
+                                </div>
+                                <div style="margin-bottom: 0.75rem;">
+                                    <strong>Last Modified:</strong> Jan 15, 2024
+                                </div>
+                                <div style="margin-bottom: 0.75rem;">
+                                    <strong>Word Count:</strong> 1,247 words
+                                </div>
+                                <div style="margin-bottom: 0.75rem;">
+                                    <strong>Reading Time:</strong> 5 min
+                                </div>
+                                <div>
+                                    <strong>Languages:</strong> EN, JP, KR
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SEO Score -->
+                        <div class="component-card" style="margin-bottom: 1.5rem;">
+                            <h4 style="font-weight: 600; margin-bottom: 1rem;">SEO Score</h4>
+                            <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                                <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #10b981 0%, #059669 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.25rem;">
+                                    87
+                                </div>
+                                <div style="margin-left: 1rem;">
+                                    <div style="font-weight: 500; color: #10b981;">Excellent</div>
+                                    <div style="font-size: 0.875rem; color: #6b7280;">SEO Optimized</div>
+                                </div>
+                            </div>
+                            <div style="font-size: 0.875rem;">
+                                <div style="margin-bottom: 0.5rem;">✅ Title optimized</div>
+                                <div style="margin-bottom: 0.5rem;">✅ Meta description</div>
+                                <div style="margin-bottom: 0.5rem;">✅ Keywords used</div>
+                                <div style="color: #f59e0b;">⚠️ Add alt text to images</div>
+                            </div>
+                        </div>
+
+                        <!-- Quick Actions -->
+                        <div class="component-card">
+                            <h4 style="font-weight: 600; margin-bottom: 1rem;">Quick Actions</h4>
+                            <button class="btn" style="width: 100%; margin-bottom: 0.5rem;">Edit Content</button>
+                            <button class="btn btn-secondary" style="width: 100%; margin-bottom: 0.5rem;">Duplicate Post</button>
+                            <button class="btn btn-secondary" style="width: 100%; margin-bottom: 0.5rem;">Share Post</button>
+                            <button class="btn btn-warning" style="width: 100%; margin-bottom: 0.5rem;">Archive</button>
+                            <button class="btn btn-danger" style="width: 100%;">Delete Post</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comments Section -->
+                <div class="component-card" style="margin-top: 1.5rem;">
+                    <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 1rem;">
+                        <h3 style="font-weight: 600;">Comments & Engagement</h3>
+                        <span class="status-badge" style="background: #dbeafe; color: #1e40af;">12 Comments</span>
+                    </div>
+                    
+                    <div style="border: 1px solid #e5e7eb; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.75rem;">
+                            <div style="display: flex; gap: 0.75rem;">
+                                <div style="width: 40px; height: 40px; background: #f3f4f6; border-radius: 50%;"></div>
+                                <div>
+                                    <div style="font-weight: 500;">Sarah Chen</div>
+                                    <div style="font-size: 0.875rem; color: #6b7280;">2 hours ago</div>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button class="btn btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Reply</button>
+                                <button class="btn btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Moderate</button>
+                            </div>
+                        </div>
+                        <p style="color: #374151; font-size: 0.875rem;">
+                            Great guide! Very helpful information about border crossing procedures. 
+                            The section on documentation requirements was particularly useful.
+                        </p>
+                    </div>
+
+                    <div style="border: 1px solid #e5e7eb; border-radius: 8px; padding: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.75rem;">
+                            <div style="display: flex; gap: 0.75rem;">
+                                <div style="width: 40px; height: 40px; background: #f3f4f6; border-radius: 50%;"></div>
+                                <div>
+                                    <div style="font-weight: 500;">Mike Rodriguez</div>
+                                    <div style="font-size: 0.875rem; color: #6b7280;">5 hours ago</div>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button class="btn btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Reply</button>
+                                <button class="btn btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Moderate</button>
+                            </div>
+                        </div>
+                        <p style="color: #374151; font-size: 0.875rem;">
+                            Could you add more information about customs declarations? 
+                            I'm traveling to Asia next month and want to be prepared.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="spec-list">
+                <h4>Post Page Specifications</h4>
+                <ul>
+                    <li><strong>Analytics Integration:</strong> Real-time view tracking with detailed metrics</li>
+                    <li><strong>SEO Monitoring:</strong> Live SEO score with improvement suggestions</li>
+                    <li><strong>Comment Management:</strong> Moderation tools with spam filtering</li>
+                    <li><strong>Performance Tracking:</strong> Engagement metrics and social sharing data</li>
+                    <li><strong>Content Actions:</strong> Quick edit, duplicate, and sharing options</li>
+                    <li><strong>International Insights:</strong> Region-specific performance data</li>
+                    <li><strong>Revision History:</strong> Track changes and revert to previous versions</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Continue with remaining pages... -->
+        <!-- [Due to length limits, I'll continue with the remaining pages in the next part] -->
+
+    </div>
+</body>
+</html>

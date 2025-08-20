@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Implementation Roadmap & Analytics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+        }
+        
+        .roadmap-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            margin-bottom: 24px;
+        }
+        
+        .roadmap-header {
+            background: linear-gradient(135deg, #171A20 0%, #2A2D35 100%);
+            color: white;
+            border-radius: 12px 12px 0 0;
+            padding: 20px 24px;
+        }
+        
+        .phase-timeline {
+            position: relative;
+            padding-left: 40px;
+        }
+        
+        .phase-timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #FF69B4;
+        }
+        
+        .phase-item {
+            position: relative;
+            padding: 20px 0;
+            border-left: 2px solid transparent;
+        }
+        
+        .phase-item::before {
+            content: '';
+            position: absolute;
+            left: -21px;
+            top: 30px;
+            width: 16px;
+            height: 16px;
+            background: white;
+            border: 3px solid #FF69B4;
+            border-radius: 50%;
+        }
+        
+        .phase-completed::before {
+            background: #FF69B4;
+        }
+        
+        .priority-high {
+            border-left: 4px solid #FF4B4B;
+            background: rgba(255, 75, 75, 0.05);
+        }
+        
+        .priority-medium {
+            border-left: 4px solid #FFB800;
+            background: rgba(255, 184, 0, 0.05);
+        }
+        
+        .priority-low {
+            border-left: 4px solid #00D563;
+            background: rgba(0, 213, 99, 0.05);
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            margin-bottom: 24px;
+        }
+        
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .metric-item {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        
+        .metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #FF69B4;
+            margin-bottom: 8px;
+        }
+        
+        .metric-label {
+            color: #666;
+            font-size: 0.875rem;
+        }
+        
+        .metric-change {
+            font-size: 0.75rem;
+            margin-top: 4px;
+        }
+        
+        .metric-change.positive {
+            color: #00D563;
+        }
+        
+        .metric-change.negative {
+            color: #FF4B4B;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .status-planned {
+            background: rgba(189, 189, 189, 0.2);
+            color: #757575;
+        }
+        
+        .status-development {
+            background: rgba(255, 184, 0, 0.2);
+            color: #FF8800;
+        }
+        
+        .status-testing {
+            background: rgba(0, 102, 204, 0.2);
+            color: #0066CC;
+        }
+        
+        .status-completed {
+            background: rgba(0, 213, 99, 0.2);
+            color: #00A651;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #E0E0E0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 12px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #FF69B4, #FFB6C1);
+            transition: width 0.3s ease;
+        }
+        
+        @media (max-width: 768px) {
+            .metric-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <div class="container mx-auto px-6 py-8 max-w-7xl">
+        <header class="mb-8">
+            <h1 class="text-4xl font-bold text-gray-900 mb-4">Admin Dashboard Implementation</h1>
+            <h2 class="text-2xl text-gray-600">Roadmap, Analytics Design & Technical Specifications</h2>
+            <p class="text-gray-500 mt-2">Complete implementation guide for the CrossBorder admin dashboard</p>
+        </header>
+
+        <!-- Project Overview -->
+        <div class="roadmap-card">
+            <div class="roadmap-header">
+                <h2 class="text-xl font-bold">📊 Project Overview</h2>
+                <p class="text-gray-300 mt-1">Current status and key metrics</p>
+            </div>
+            <div class="p-6">
+                <div class="metric-grid">
+                    <div class="metric-item">
+                        <div class="metric-value">85%</div>
+                        <div class="metric-label">Design Complete</div>
+                        <div class="metric-change positive">+15% this week</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-value">24</div>
+                        <div class="metric-label">Components Designed</div>
+                        <div class="metric-change positive">+8 this sprint</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-value">12</div>
+                        <div class="metric-label">User Flows Defined</div>
+                        <div class="metric-change positive">+4 completed</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-value">6</div>
+                        <div class="metric-label">Weeks Estimated</div>
+                        <div class="metric-change">Development time</div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2">
+                        <h3 class="text-lg font-semibold mb-4">Key Features Summary</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                <span class="font-medium">User Management System</span>
+                                <span class="status-badge status-completed">Designed</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                <span class="font-medium">Advanced Data Tables</span>
+                                <span class="status-badge status-completed">Designed</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                <span class="font-medium">Verification Workflows</span>
+                                <span class="status-badge status-completed">Designed</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                <span class="font-medium">Analytics Dashboard</span>
+                                <span class="status-badge status-development">In Progress</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                <span class="font-medium">Mobile Responsive Design</span>
+                                <span class="status-badge status-completed">Designed</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">Technology Stack</h3>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Frontend:</span>
+                                <span class="font-medium">Next.js 15 + TypeScript</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Styling:</span>
+                                <span class="font-medium">Tailwind CSS</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Database:</span>
+                                <span class="font-medium">PostgreSQL + Prisma</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Auth:</span>
+                                <span class="font-medium">Multi-role system</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Design:</span>
+                                <span class="font-medium">Tesla-inspired + Pink</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Implementation Roadmap -->
+        <div class="roadmap-card">
+            <div class="roadmap-header">
+                <h2 class="text-xl font-bold">🚀 Implementation Roadmap</h2>
+                <p class="text-gray-300 mt-1">6-week development timeline</p>
+            </div>
+            <div class="p-6">
+                <div class="phase-timeline">
+                    
+                    <!-- Phase 1 -->
+                    <div class="phase-item phase-completed">
+                        <div class="feature-card priority-high">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-semibold">Phase 1: Foundation & Core Components</h3>
+                                <div class="flex items-center space-x-3">
+                                    <span class="status-badge status-completed">Completed</span>
+                                    <span class="text-sm text-gray-500">Week 1</span>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <h4 class="font-medium mb-2">Core Infrastructure</h4>
+                                    <ul class="text-sm space-y-1">
+                                        <li>✅ Admin layout component</li>
+                                        <li>✅ Navigation sidebar</li>
+                                        <li>✅ Responsive header</li>
+                                        <li>✅ Route protection</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium mb-2">UI Components</h4>
+                                    <ul class="text-sm space-y-1">
+                                        <li>✅ Button variants</li>
+                                        <li>✅ Status badges</li>
+                                        <li>✅ Input components</li>
+                                        <li>✅ Modal base</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 100%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Phase 2 -->
+                    <div class="phase-item">
+                        <div class="feature-card priority-high">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-semibold">Phase 2: Data Tables & User Management</h3>
+                                <div class="flex items-center space-x-3">
+                                    <span class="status-badge status-planned">Planned</span>
+                                    <span class="text-sm text-gray-500">Week 2-3</span>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <h4 class="font-medium mb-2">Data Table System</h4>
+                                    <ul class="text-sm space-y-1">
+                                        <li>🔲 Reusable DataTable component</li>
+                                        <li>🔲 Sorting & filtering</li>
+                                        <li>🔲 Pagination controls</li>
+                                        <li>🔲 Bulk selection</li>
+                                        <li>🔲 Export functionality</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium mb-2">User Management</h4>
+                                    <ul class="text-sm space-y-1">
+                                        <li>🔲 Client table & actions</li>
+                                        <li>🔲 Driver table & actions</li>
+                                        <li>🔲 Blog editor table</li>
+                                        <li>🔲 User detail modals</li>
+                                        <li>🔲 Bulk operations</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 15%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Phase 3 -->
+                    <div class="phase-item">
+                        <div class="feature-card priority-medium">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-semibold">Phase 3: Verification System & Workflows</h3>
+                                <div class="flex items-center space-x-3">
+                                    <span class="status-badge status-planned">Planned</span>
+                                    <span class="text-sm text-gray-500">Week 3-4</span>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <h4 class="font-medium mb-2">Driver Verification</h4>
+                                    <ul class="text-sm space-y-1">
+                                        <li>🔲 Document upload viewer</li>
+                                        <li>🔲 Approval/rejection workflow</li>
+                                        <li>🔲 Verification status tracking</li>
+                                        <li>🔲 Admin notes system</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium mb-2">Editor Management</h4>
+                                    <ul class="text-sm space-y-1">
+                                        <li>🔲 Editor application review</li>
+                                        <li>🔲 Permission management</li>
+                                        <li>🔲 Content approval flow</li>
+                                        <li>🔲 Activity tracking</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Phase 4 -->
+                    <div class="phase-item">
+                        <div class="feature-card priority-medium">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-semibold">Phase 4: Analytics & Reporting</h3>
+                                <div class="flex items-center space-x-3">
+                                    <span class="status-badge status-planned">Planned</span>
+                                    <span class="text-sm text-gray-500">Week 4-5</span>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <h4 class="font-medium mb-2">Dashboard Analytics</h4>
+                                    <ul class="text-sm space-y-1">
+                                        <li>🔲 KPI metrics display</li>
+                                        <li>🔲 User growth charts</li>
+                                        <li>🔲 Revenue analytics</li>
+                                        <li>🔲 Performance monitoring</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium mb-2">Reports & Export</h4>
+                                    <ul class="text-sm space-y-1">
+                                        <li>🔲 User activity reports</li>
+                                        <li>🔲 Financial summaries</li>
+                                        <li>🔲 CSV/PDF export</li>
+                                        <li>🔲 Scheduled reports</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Phase 5 -->
+                    <div class="phase-item">
+                        <div class="feature-card priority-low">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-semibold">Phase 5: Advanced Features & Polish</h3>
+                                <div class="flex items-center space-x-3">
+                                    <span class="status-badge status-planned">Planned</span>
+                                    <span class="text-sm text-gray-500">Week 5-6</span>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <h4 class="font-medium mb-2">Enhanced Features</h4>
+                                    <ul class="text-sm space-y-1">
+                                        <li>🔲 Real-time notifications</li>
+                                        <li>🔲 Advanced search</li>
+                                        <li>🔲 Audit logging</li>
+                                        <li>🔲 System configuration</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium mb-2">UX Improvements</h4>
+                                    <ul class="text-sm space-y-1">
+                                        <li>🔲 Loading states</li>
+                                        <li>🔲 Error handling</li>
+                                        <li>🔲 Accessibility testing</li>
+                                        <li>🔲 Performance optimization</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Phase 6 -->
+                    <div class="phase-item">
+                        <div class="feature-card priority-low">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-semibold">Phase 6: Testing & Deployment</h3>
+                                <div class="flex items-center space-x-3">
+                                    <span class="status-badge status-planned">Planned</span>
+                                    <span class="text-sm text-gray-500">Week 6</span>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <h4 class="font-medium mb-2">Quality Assurance</h4>
+                                    <ul class="text-sm space-y-1">
+                                        <li>🔲 Unit testing</li>
+                                        <li>🔲 Integration testing</li>
+                                        <li>🔲 User acceptance testing</li>
+                                        <li>🔲 Performance testing</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium mb-2">Deployment</h4>
+                                    <ul class="text-sm space-y-1">
+                                        <li>🔲 Staging deployment</li>
+                                        <li>🔲 Production deployment</li>
+                                        <li>🔲 Monitoring setup</li>
+                                        <li>🔲 Documentation</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Dashboard Design -->
+        <div class="roadmap-card">
+            <div class="roadmap-header">
+                <h2 class="text-xl font-bold">📈 Analytics Dashboard Design</h2>
+                <p class="text-gray-300 mt-1">Data visualization and KPI monitoring</p>
+            </div>
+            <div class="p-6">
+                
+                <!-- KPI Overview -->
+                <h3 class="text-lg font-semibold mb-4">Key Performance Indicators</h3>
+                <div class="metric-grid mb-8">
+                    <div class="metric-item">
+                        <div class="metric-value">1,247</div>
+                        <div class="metric-label">Total Users</div>
+                        <div class="metric-change positive">+12% vs last month</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-value">HK$2.5M</div>
+                        <div class="metric-label">Monthly Revenue</div>
+                        <div class="metric-change positive">+15% vs last month</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-value">8,562</div>
+                        <div class="metric-label">Completed Trips</div>
+                        <div class="metric-change positive">+8% vs last month</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-value">89</div>
+                        <div class="metric-label">Active Drivers</div>
+                        <div class="metric-change positive">+3 new this week</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-value">4.8</div>
+                        <div class="metric-label">Average Rating</div>
+                        <div class="metric-change positive">+0.1 vs last month</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-value">99.8%</div>
+                        <div class="metric-label">System Uptime</div>
+                        <div class="metric-change">Last 30 days</div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                    <!-- User Growth Chart -->
+                    <div class="chart-container">
+                        <h4 class="text-lg font-semibold mb-4">User Growth Trend</h4>
+                        <canvas id="userGrowthChart" width="400" height="200"></canvas>
+                    </div>
+
+                    <!-- Revenue Chart -->
+                    <div class="chart-container">
+                        <h4 class="text-lg font-semibold mb-4">Monthly Revenue</h4>
+                        <canvas id="revenueChart" width="400" height="200"></canvas>
+                    </div>
+
+                    <!-- User Distribution -->
+                    <div class="chart-container">
+                        <h4 class="text-lg font-semibold mb-4">User Type Distribution</h4>
+                        <canvas id="userDistributionChart" width="400" height="200"></canvas>
+                    </div>
+
+                    <!-- Trip Status -->
+                    <div class="chart-container">
+                        <h4 class="text-lg font-semibold mb-4">Trip Status Overview</h4>
+                        <canvas id="tripStatusChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+
+                <!-- Real-time Metrics -->
+                <h3 class="text-lg font-semibold mb-4">Real-time System Metrics</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="chart-container">
+                        <h4 class="font-semibold mb-3">Active Users (Live)</h4>
+                        <div class="text-center">
+                            <div class="text-4xl font-bold text-pink-500 mb-2" id="liveUsers">267</div>
+                            <div class="text-sm text-gray-600">Users online now</div>
+                            <div class="mt-4">
+                                <div class="flex justify-between text-xs text-gray-500 mb-1">
+                                    <span>Clients: 189</span>
+                                    <span>Drivers: 78</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="bg-pink-500 h-2 rounded-full" style="width: 71%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <h4 class="font-semibold mb-3">System Performance</h4>
+                        <div class="space-y-3">
+                            <div>
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span>CPU Usage</span>
+                                    <span>34%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="bg-green-500 h-2 rounded-full" style="width: 34%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span>Memory Usage</span>
+                                    <span>67%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="bg-yellow-500 h-2 rounded-full" style="width: 67%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span>Response Time</span>
+                                    <span>89ms</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="bg-green-500 h-2 rounded-full" style="width: 22%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <h4 class="font-semibold mb-3">Recent Alerts</h4>
+                        <div class="space-y-3">
+                            <div class="flex items-start space-x-3">
+                                <div class="w-2 h-2 bg-yellow-500 rounded-full mt-2"></div>
+                                <div>
+                                    <p class="text-sm font-medium">High Support Volume</p>
+                                    <p class="text-xs text-gray-600">35% increase in tickets</p>
+                                    <p class="text-xs text-gray-500">2 hours ago</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <div class="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
+                                <div>
+                                    <p class="text-sm font-medium">Revenue Milestone</p>
+                                    <p class="text-xs text-gray-600">Monthly target reached</p>
+                                    <p class="text-xs text-gray-500">4 hours ago</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <div class="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
+                                <div>
+                                    <p class="text-sm font-medium">System Update</p>
+                                    <p class="text-xs text-gray-600">Database optimization completed</p>
+                                    <p class="text-xs text-gray-500">6 hours ago</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technical Specifications -->
+        <div class="roadmap-card">
+            <div class="roadmap-header">
+                <h2 class="text-xl font-bold">⚙️ Technical Implementation Guide</h2>
+                <p class="text-gray-300 mt-1">Development specifications and best practices</p>
+            </div>
+            <div class="p-6">
+                
+                <h3 class="text-lg font-semibold mb-4">File Structure</h3>
+                <div class="bg-gray-900 text-gray-100 p-4 rounded-lg mb-6 text-sm font-mono">
+<pre>
+src/app/[locale]/dashboard/admin/
+├── page.tsx                    # Main admin dashboard
+├── users/
+│   ├── page.tsx               # User management overview
+│   ├── clients/
+│   │   ├── page.tsx          # Client management
+│   │   └── [id]/
+│   │       └── page.tsx      # Client detail page
+│   ├── drivers/
+│   │   ├── page.tsx          # Driver management
+│   │   ├── verification/
+│   │   │   └── page.tsx      # Verification queue
+│   │   └── [id]/
+│   │       └── page.tsx      # Driver detail page
+│   └── editors/
+│       ├── page.tsx          # Blog editor management
+│       └── [id]/
+│           └── page.tsx      # Editor detail page
+├── analytics/
+│   ├── page.tsx              # Analytics dashboard
+│   ├── reports/
+│   │   └── page.tsx          # Report generation
+│   └── metrics/
+│       └── page.tsx          # System metrics
+└── settings/
+    ├── page.tsx              # Admin settings
+    ├── system/
+    │   └── page.tsx          # System configuration
+    └── permissions/
+        └── page.tsx          # Role permissions
+</pre>
+                </div>
+
+                <h3 class="text-lg font-semibold mb-4">API Endpoints</h3>
+                <div class="space-y-4">
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h4 class="font-semibold mb-2">User Management APIs</h4>
+                        <div class="space-y-2 text-sm font-mono">
+                            <div><span class="text-green-600">GET</span> /api/admin/users - List all users with filters</div>
+                            <div><span class="text-blue-600">PUT</span> /api/admin/users/[id] - Update user details</div>
+                            <div><span class="text-red-600">DELETE</span> /api/admin/users/[id] - Deactivate user</div>
+                            <div><span class="text-yellow-600">POST</span> /api/admin/users/bulk - Bulk operations</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h4 class="font-semibold mb-2">Verification APIs</h4>
+                        <div class="space-y-2 text-sm font-mono">
+                            <div><span class="text-green-600">GET</span> /api/admin/verification/pending - Pending verifications</div>
+                            <div><span class="text-blue-600">PUT</span> /api/admin/verification/[id]/approve - Approve verification</div>
+                            <div><span class="text-blue-600">PUT</span> /api/admin/verification/[id]/reject - Reject verification</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h4 class="font-semibold mb-2">Analytics APIs</h4>
+                        <div class="space-y-2 text-sm font-mono">
+                            <div><span class="text-green-600">GET</span> /api/admin/analytics/metrics - Dashboard metrics</div>
+                            <div><span class="text-green-600">GET</span> /api/admin/analytics/charts - Chart data</div>
+                            <div><span class="text-green-600">GET</span> /api/admin/analytics/reports - Generate reports</div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="text-lg font-semibold mb-4 mt-6">State Management Pattern</h3>
+                <div class="bg-gray-900 text-gray-100 p-4 rounded-lg text-sm">
+<pre>
+// Admin Dashboard Context
+const AdminContext = createContext();
+
+const AdminProvider = ({ children }) => {
+  const [state, dispatch] = useReducer(adminReducer, {
+    users: { clients: [], drivers: [], editors: [] },
+    metrics: { totalUsers: 0, revenue: 0, trips: 0 },
+    filters: { search: '', status: 'all', dateRange: null },
+    ui: { loading: false, selectedUsers: [], activeModal: null }
+  });
+
+  return (
+    &lt;AdminContext.Provider value={{ state, dispatch }}&gt;
+      {children}
+    &lt;/AdminContext.Provider&gt;
+  );
+};
+
+// Usage in components
+const { state, dispatch } = useContext(AdminContext);
+</pre>
+                </div>
+
+                <h3 class="text-lg font-semibold mb-4 mt-6">Performance Optimization</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h4 class="font-semibold mb-2">Frontend Optimization</h4>
+                        <ul class="text-sm space-y-1">
+                            <li>• React.memo for expensive components</li>
+                            <li>• Virtual scrolling for large tables</li>
+                            <li>• Debounced search inputs</li>
+                            <li>• Image lazy loading</li>
+                            <li>• Code splitting by route</li>
+                        </ul>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h4 class="font-semibold mb-2">Backend Optimization</h4>
+                        <ul class="text-sm space-y-1">
+                            <li>• Database query optimization</li>
+                            <li>• Prisma query batching</li>
+                            <li>• Redis caching for metrics</li>
+                            <li>• API response compression</li>
+                            <li>• Connection pooling</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3 class="text-lg font-semibold mb-4 mt-6">Security Considerations</h3>
+                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                    <ul class="space-y-2 text-sm">
+                        <li>• Role-based access control (RBAC) for all admin functions</li>
+                        <li>• Audit logging for all admin actions</li>
+                        <li>• Rate limiting on sensitive endpoints</li>
+                        <li>• CSRF protection on state-changing operations</li>
+                        <li>• Input validation and sanitization</li>
+                        <li>• Secure file upload handling for documents</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Chart initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            // User Growth Chart
+            const userGrowthCtx = document.getElementById('userGrowthChart').getContext('2d');
+            new Chart(userGrowthCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Total Users',
+                        data: [850, 920, 1050, 1150, 1200, 1247],
+                        borderColor: '#FF69B4',
+                        backgroundColor: 'rgba(255, 105, 180, 0.1)',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: false },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+            // Revenue Chart
+            const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+            new Chart(revenueCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Revenue (HK$)',
+                        data: [1800000, 2100000, 2300000, 2200000, 2400000, 2500000],
+                        backgroundColor: '#FF69B4'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { 
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'HK$' + (value / 1000000).toFixed(1) + 'M';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // User Distribution Pie Chart
+            const userDistCtx = document.getElementById('userDistributionChart').getContext('2d');
+            new Chart(userDistCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Clients', 'Drivers', 'Blog Editors'],
+                    datasets: [{
+                        data: [1089, 89, 69],
+                        backgroundColor: ['#FF69B4', '#FFB6C1', '#FF1493']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+
+            // Trip Status Chart
+            const tripStatusCtx = document.getElementById('tripStatusChart').getContext('2d');
+            new Chart(tripStatusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Completed', 'In Progress', 'Pending', 'Cancelled'],
+                    datasets: [{
+                        data: [7890, 234, 167, 271],
+                        backgroundColor: ['#00D563', '#0066CC', '#FFB800', '#FF4B4B']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+
+            // Simulate real-time updates
+            setInterval(() => {
+                const liveUsersElement = document.getElementById('liveUsers');
+                const currentCount = parseInt(liveUsersElement.textContent);
+                const change = Math.floor(Math.random() * 10) - 5; // -5 to +5
+                const newCount = Math.max(200, Math.min(300, currentCount + change));
+                liveUsersElement.textContent = newCount;
+            }, 3000);
+        });
+    </script>
+
+</body>
+</html>

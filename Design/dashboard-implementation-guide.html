@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Implementation Guide - CrossBorder</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #171A20;
+            background: #FAFAFA;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: #171A20;
+            text-align: center;
+        }
+        
+        h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin: 3rem 0 1.5rem 0;
+            color: #171A20;
+            border-bottom: 3px solid #FF69B4;
+            padding-bottom: 0.5rem;
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem 0;
+            color: #171A20;
+        }
+        
+        h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.75rem 0;
+            color: #FF69B4;
+        }
+        
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border: 1px solid #F4F4F4;
+        }
+        
+        .code-block {
+            background: #F8F9FA;
+            border: 1px solid #E9ECEF;
+            border-radius: 8px;
+            padding: 1.5rem;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+            position: relative;
+        }
+        
+        .code-header {
+            background: #FF69B4;
+            color: white;
+            padding: 0.5rem 1rem;
+            margin: -1.5rem -1.5rem 1rem -1.5rem;
+            border-radius: 8px 8px 0 0;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        
+        .feature-list {
+            list-style: none;
+            margin: 1rem 0;
+        }
+        
+        .feature-list li {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .feature-list li::before {
+            content: "✓";
+            color: #00D563;
+            font-weight: bold;
+        }
+        
+        .warning-box {
+            background: #FFF3CD;
+            border: 1px solid #FFB800;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .warning-box::before {
+            content: "⚠️ ";
+            font-weight: bold;
+        }
+        
+        .info-box {
+            background: #E3F2FD;
+            border: 1px solid #0066CC;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .info-box::before {
+            content: "💡 ";
+            font-weight: bold;
+        }
+        
+        .success-box {
+            background: #E8F5E8;
+            border: 1px solid #00D563;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .success-box::before {
+            content: "✅ ";
+            font-weight: bold;
+        }
+        
+        .step-number {
+            background: #FF69B4;
+            color: white;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 1rem;
+        }
+        
+        .implementation-step {
+            display: flex;
+            align-items: flex-start;
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: #FFF0F5;
+            border-radius: 8px;
+            border-left: 4px solid #FF69B4;
+        }
+        
+        .file-tree {
+            background: #F8F9FA;
+            border: 1px solid #E9ECEF;
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: monospace;
+            margin: 1rem 0;
+        }
+        
+        .file-tree .folder::before {
+            content: "📁 ";
+        }
+        
+        .file-tree .file::before {
+            content: "📄 ";
+        }
+        
+        .file-tree .component::before {
+            content: "⚛️ ";
+        }
+        
+        .indent-1 { margin-left: 1rem; }
+        .indent-2 { margin-left: 2rem; }
+        .indent-3 { margin-left: 3rem; }
+        
+        .route-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        
+        .route-table th,
+        .route-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #F4F4F4;
+        }
+        
+        .route-table th {
+            background: #F8F9FA;
+            font-weight: 600;
+            color: #171A20;
+        }
+        
+        .route-table .role {
+            background: #FF69B4;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+        
+        .route-table .client { background: #FF69B4; }
+        .route-table .driver { background: #0066CC; }
+        .route-table .editor { background: #00D563; }
+        .route-table .admin { background: #FF4B4B; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛠️ Dashboard Implementation Guide</h1>
+        <p style="text-align: center; font-size: 1.125rem; color: #757575; margin-bottom: 3rem;">
+            Step-by-step implementation guide to fix "Access Denied" issue and create role-specific dashboards
+        </p>
+
+        <!-- Problem Analysis -->
+        <div class="section">
+            <h2>🔍 Problem Analysis</h2>
+            
+            <h3>Current Issue</h3>
+            <div class="warning-box">
+                <strong>Access Denied After Login:</strong> Users successfully authenticate but receive "Access Denied" when trying to access dashboard areas. This suggests a routing or authorization issue between authentication and dashboard access.
+            </div>
+            
+            <h3>Root Cause Analysis</h3>
+            <ul class="feature-list">
+                <li>Missing role-based routing logic in dashboard middleware</li>
+                <li>Incomplete dashboard page implementations for all user roles</li>
+                <li>Navigation not updating to show "Dashboard" link after authentication</li>
+                <li>Possible withAuth HOC not properly handling role permissions</li>
+                <li>Dashboard layout components may not exist for ADMIN role</li>
+            </ul>
+            
+            <h3>Current Dashboard Routes</h3>
+            <table class="route-table">
+                <thead>
+                    <tr>
+                        <th>Role</th>
+                        <th>Route</th>
+                        <th>File Location</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="route-table role client">CLIENT</span></td>
+                        <td>/dashboard/client</td>
+                        <td>src/app/[locale]/dashboard/client/page.tsx</td>
+                        <td>✅ Exists</td>
+                    </tr>
+                    <tr>
+                        <td><span class="route-table role driver">DRIVER</span></td>
+                        <td>/dashboard/driver</td>
+                        <td>src/app/[locale]/dashboard/driver/page.tsx</td>
+                        <td>✅ Exists</td>
+                    </tr>
+                    <tr>
+                        <td><span class="route-table role editor">BLOG_EDITOR</span></td>
+                        <td>/dashboard/editor</td>
+                        <td>src/app/[locale]/dashboard/editor/page.tsx</td>
+                        <td>✅ Exists</td>
+                    </tr>
+                    <tr>
+                        <td><span class="route-table role admin">ADMIN</span></td>
+                        <td>/dashboard/admin</td>
+                        <td>src/app/[locale]/dashboard/admin/page.tsx</td>
+                        <td>❌ Missing</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Implementation Steps -->
+        <div class="section">
+            <h2>🚀 Implementation Steps</h2>
+            
+            <div class="implementation-step">
+                <div class="step-number">1</div>
+                <div>
+                    <h4>Create Missing Admin Dashboard</h4>
+                    <p>The ADMIN role dashboard page is missing, which could cause the "Access Denied" error for admin users.</p>
+                </div>
+            </div>
+            
+            <div class="implementation-step">
+                <div class="step-number">2</div>
+                <div>
+                    <h4>Update Header Navigation Logic</h4>
+                    <p>Modify the Header component to show "Dashboard" instead of "Login" when user is authenticated.</p>
+                </div>
+            </div>
+            
+            <div class="implementation-step">
+                <div class="step-number">3</div>
+                <div>
+                    <h4>Create Dashboard Routing Middleware</h4>
+                    <p>Implement proper role-based routing to redirect users to correct dashboard after login.</p>
+                </div>
+            </div>
+            
+            <div class="implementation-step">
+                <div class="step-number">4</div>
+                <div>
+                    <h4>Enhance Authentication Flow</h4>
+                    <p>Update AuthContext to handle dashboard redirects and role verification.</p>
+                </div>
+            </div>
+            
+            <div class="implementation-step">
+                <div class="step-number">5</div>
+                <div>
+                    <h4>Create Reusable Dashboard Components</h4>
+                    <p>Build shared dashboard layout and widget components for consistency.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 1: Admin Dashboard -->
+        <div class="section">
+            <h2>1️⃣ Create Admin Dashboard</h2>
+            
+            <div class="code-block">
+                <div class="code-header">src/app/[locale]/dashboard/admin/page.tsx</div>
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { useAuth, withAuth } from '@/lib/context/AuthContext';
+import { Card } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
+import { cn } from '@/lib/utils';
+
+interface SystemStats {
+  totalUsers: number;
+  activeDrivers: number;
+  todaysTrips: number;
+  systemUptime: number;
+}
+
+interface PendingAction {
+  id: string;
+  type: 'driver_verification' | 'blog_approval' | 'support_ticket';
+  title: string;
+  description: string;
+  urgency: 'low' | 'medium' | 'high';
+  count: number;
+}
+
+interface SystemHealth {
+  apiResponseTime: number;
+  databaseLoad: number;
+  activeSessions: number;
+  errorRate: number;
+}
+
+const AdminDashboard: React.FC = () => {
+  const { user } = useAuth();
+  const [stats, setStats] = useState&lt;SystemStats&gt;({
+    totalUsers: 1247,
+    activeDrivers: 89,
+    todaysTrips: 156,
+    systemUptime: 99.2,
+  });
+  
+  const [pendingActions, setPendingActions] = useState&lt;PendingAction[]&gt;([
+    {
+      id: '1',
+      type: 'driver_verification',
+      title: 'Driver Verifications',
+      description: 'Require document review',
+      urgency: 'high',
+      count: 3,
+    },
+    {
+      id: '2',
+      type: 'blog_approval',
+      title: 'Blog Posts',
+      description: 'Awaiting approval',
+      urgency: 'medium',
+      count: 2,
+    },
+    {
+      id: '3',
+      type: 'support_ticket',
+      title: 'Support Tickets',
+      description: 'High priority',
+      urgency: 'high',
+      count: 5,
+    },
+  ]);
+  
+  const [systemHealth, setSystemHealth] = useState&lt;SystemHealth&gt;({
+    apiResponseTime: 45,
+    databaseLoad: 12,
+    activeSessions: 234,
+    errorRate: 0.1,
+  });
+
+  const getUrgencyColor = (urgency: 'low' | 'medium' | 'high') =&gt; {
+    switch (urgency) {
+      case 'high': return 'text-error-red';
+      case 'medium': return 'text-warning-amber';
+      case 'low': return 'text-electric-blue';
+      default: return 'text-gray-600';
+    }
+  };
+
+  const getActionIcon = (type: PendingAction['type']) =&gt; {
+    switch (type) {
+      case 'driver_verification': return '⚠️';
+      case 'blog_approval': return '📝';
+      case 'support_ticket': return '💬';
+      default: return '📋';
+    }
+  };
+
+  return (
+    &lt;div className="min-h-screen bg-gray-50 py-8"&gt;
+      &lt;div className="container mx-auto px-4 max-w-7xl"&gt;
+        {/* Header */}
+        &lt;motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex items-center justify-between mb-8"
+        &gt;
+          &lt;div&gt;
+            &lt;h1 className="text-headline-lg font-bold text-charcoal"&gt;
+              System Administration
+            &lt;/h1&gt;
+            &lt;p className="text-body-lg text-gray-600"&gt;
+              Monitor and manage the CrossBorder platform
+            &lt;/p&gt;
+          &lt;/div&gt;
+          &lt;div className="flex items-center space-x-2"&gt;
+            &lt;div className="w-3 h-3 bg-success-green rounded-full animate-pulse"&gt;&lt;/div&gt;
+            &lt;span className="text-body-md font-medium text-success-green"&gt;
+              All Systems Operational
+            &lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/motion.div&gt;
+
+        {/* System Overview Stats */}
+        &lt;motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8"
+        &gt;
+          &lt;Card className="text-center"&gt;
+            &lt;div className="text-display-sm font-bold text-hot-pink"&gt;
+              {stats.totalUsers.toLocaleString()}
+            &lt;/div&gt;
+            &lt;div className="text-body-md text-gray-600"&gt;Total Users&lt;/div&gt;
+          &lt;/Card&gt;
+          
+          &lt;Card className="text-center"&gt;
+            &lt;div className="text-display-sm font-bold text-electric-blue"&gt;
+              {stats.activeDrivers}
+            &lt;/div&gt;
+            &lt;div className="text-body-md text-gray-600"&gt;Active Drivers&lt;/div&gt;
+          &lt;/Card&gt;
+          
+          &lt;Card className="text-center"&gt;
+            &lt;div className="text-display-sm font-bold text-success-green"&gt;
+              {stats.todaysTrips}
+            &lt;/div&gt;
+            &lt;div className="text-body-md text-gray-600"&gt;Today's Trips&lt;/div&gt;
+          &lt;/Card&gt;
+          
+          &lt;Card className="text-center"&gt;
+            &lt;div className="text-display-sm font-bold text-warning-amber"&gt;
+              {stats.systemUptime}%
+            &lt;/div&gt;
+            &lt;div className="text-body-md text-gray-600"&gt;System Uptime&lt;/div&gt;
+          &lt;/Card&gt;
+        &lt;/motion.div&gt;
+
+        {/* Main Content Grid */}
+        &lt;div className="grid grid-cols-1 lg:grid-cols-3 gap-8"&gt;
+          {/* Pending Actions */}
+          &lt;motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="lg:col-span-2"
+          &gt;
+            &lt;Card&gt;
+              &lt;h2 className="text-title-lg font-semibold text-charcoal mb-6"&gt;
+                Pending Actions
+              &lt;/h2&gt;
+              
+              &lt;div className="space-y-4"&gt;
+                {pendingActions.map((action) =&gt; (
+                  &lt;div
+                    key={action.id}
+                    className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow"
+                  &gt;
+                    &lt;div className="flex items-center space-x-3"&gt;
+                      &lt;span className="text-2xl"&gt;{getActionIcon(action.type)}&lt;/span&gt;
+                      &lt;div&gt;
+                        &lt;h3 className="text-title-sm font-medium text-charcoal"&gt;
+                          {action.count} {action.title}
+                        &lt;/h3&gt;
+                        &lt;p className="text-body-sm text-gray-500"&gt;{action.description}&lt;/p&gt;
+                      &lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;div className="flex items-center space-x-3"&gt;
+                      &lt;span className={cn(
+                        'px-2 py-1 rounded-full text-xs font-medium',
+                        action.urgency === 'high' && 'bg-red-100 text-error-red',
+                        action.urgency === 'medium' && 'bg-yellow-100 text-warning-amber',
+                        action.urgency === 'low' && 'bg-blue-100 text-electric-blue'
+                      )}&gt;
+                        {action.urgency.toUpperCase()}
+                      &lt;/span&gt;
+                      &lt;Button variant="primary" size="sm"&gt;
+                        Review
+                      &lt;/Button&gt;
+                    &lt;/div&gt;
+                  &lt;/div&gt;
+                ))}
+              &lt;/div&gt;
+            &lt;/Card&gt;
+          &lt;/motion.section&gt;
+
+          {/* System Health */}
+          &lt;motion.aside
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.3 }}
+            className="space-y-6"
+          &gt;
+            &lt;Card&gt;
+              &lt;h3 className="text-title-md font-semibold text-charcoal mb-4"&gt;
+                System Health
+              &lt;/h3&gt;
+              &lt;div className="space-y-3"&gt;
+                &lt;div className="flex justify-between"&gt;
+                  &lt;span className="text-body-sm text-gray-600"&gt;API Response Time&lt;/span&gt;
+                  &lt;span className="text-body-md font-semibold text-success-green"&gt;
+                    {systemHealth.apiResponseTime}ms
+                  &lt;/span&gt;
+                &lt;/div&gt;
+                &lt;div className="flex justify-between"&gt;
+                  &lt;span className="text-body-sm text-gray-600"&gt;Database Load&lt;/span&gt;
+                  &lt;span className="text-body-md font-semibold text-success-green"&gt;
+                    {systemHealth.databaseLoad}%
+                  &lt;/span&gt;
+                &lt;/div&gt;
+                &lt;div className="flex justify-between"&gt;
+                  &lt;span className="text-body-sm text-gray-600"&gt;Active Sessions&lt;/span&gt;
+                  &lt;span className="text-body-md font-semibold"&gt;
+                    {systemHealth.activeSessions}
+                  &lt;/span&gt;
+                &lt;/div&gt;
+                &lt;div className="flex justify-between"&gt;
+                  &lt;span className="text-body-sm text-gray-600"&gt;Error Rate&lt;/span&gt;
+                  &lt;span className="text-body-md font-semibold text-success-green"&gt;
+                    {systemHealth.errorRate}%
+                  &lt;/span&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+            &lt;/Card&gt;
+
+            &lt;Card&gt;
+              &lt;h3 className="text-title-md font-semibold text-charcoal mb-4"&gt;
+                Quick Actions
+              &lt;/h3&gt;
+              &lt;div className="space-y-3"&gt;
+                &lt;Button variant="secondary" size="sm" className="w-full"&gt;
+                  User Management
+                &lt;/Button&gt;
+                &lt;Button variant="secondary" size="sm" className="w-full"&gt;
+                  System Settings
+                &lt;/Button&gt;
+                &lt;Button variant="secondary" size="sm" className="w-full"&gt;
+                  Security Logs
+                &lt;/Button&gt;
+                &lt;Button variant="secondary" size="sm" className="w-full"&gt;
+                  Backup Management
+                &lt;/Button&gt;
+              &lt;/div&gt;
+            &lt;/Card&gt;
+          &lt;/motion.aside&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default withAuth(AdminDashboard, ['admin']);
+            </div>
+        </div>
+
+        <!-- Step 2: Update Header Navigation -->
+        <div class="section">
+            <h2>2️⃣ Update Header Navigation Logic</h2>
+            
+            <div class="info-box">
+                <strong>Current Issue:</strong> The Header component shows "Login" even when user is authenticated. We need to dynamically show "Dashboard" based on authentication state.
+            </div>
+            
+            <div class="code-block">
+                <div class="code-header">src/components/layout/Header.tsx (Updated Navigation Logic)</div>
+// Add this function to get role-specific dashboard route
+const getDashboardRoute = useCallback((userRole: UserType): string => {
+  switch (userRole) {
+    case 'client': return '/dashboard/client';
+    case 'driver': return '/dashboard/driver';
+    case 'blog_editor': return '/dashboard/editor';
+    case 'admin': return '/dashboard/admin';
+    default: return '/dashboard/client';
+  }
+}, []);
+
+// Update NAV_ITEMS to be dynamic based on authentication
+const navigationItems = useMemo(() => {
+  const baseItems = [
+    { label: 'Home', href: '/', description: 'Premium cross-border vehicle services overview' },
+    { label: 'Booking', href: '/booking', description: 'Interactive 4-step booking process', highlight: true },
+    { label: 'Blog', href: '/blog', description: 'Cross-border travel magazine and insights' },
+  ];
+
+  // Add Dashboard or Login based on authentication state
+  if (isAuthenticated && user) {
+    baseItems.push({
+      label: 'Dashboard',
+      href: getDashboardRoute(user.roles[0]?.role || 'client'),
+      description: 'Personal dashboard and account management'
+    });
+  } else {
+    baseItems.push({
+      label: 'Login',
+      href: '/login',
+      description: 'Multi-user authentication system'
+    });
+  }
+
+  return baseItems;
+}, [isAuthenticated, user, getDashboardRoute]);
+
+// Update the navigation rendering to use dynamic items
+&lt;nav className="hidden lg:flex items-center space-x-8"&gt;
+  {navigationItems.map((item) =&gt; (
+    &lt;motion.div
+      key={item.href}
+      className="relative"
+      whileHover={{ y: -2 }}
+      transition={{ duration: 0.2 }}
+    &gt;
+      &lt;Link
+        href={item.href}
+        className={cn(
+          'relative px-3 py-2 rounded text-sm font-medium transition-all duration-200',
+          pathname === item.href
+            ? 'text-[#FF69B4] bg-[#FFF0F5]'
+            : 'text-[#171A20] hover:text-[#FF69B4] hover:bg-[#FFF0F5]'
+        )}
+      &gt;
+        {item.label}
+        {item.highlight && (
+          &lt;span className="absolute -top-2 -right-2 bg-success-green text-white text-xs px-1 py-0.5 rounded-full"&gt;
+            New
+          &lt;/span&gt;
+        )}
+      &lt;/Link&gt;
+    &lt;/motion.div&gt;
+  ))}
+&lt;/nav&gt;
+            </div>
+        </div>
+
+        <!-- Step 3: Dashboard Routing Middleware -->
+        <div class="section">
+            <h2>3️⃣ Create Dashboard Routing Middleware</h2>
+            
+            <div class="code-block">
+                <div class="code-header">src/lib/middleware/dashboardRouter.ts</div>
+import { NextRequest, NextResponse } from 'next/server';
+import { getUserFromToken } from '@/lib/auth/utils';
+import type { UserType } from '@/types/auth';
+
+export interface DashboardRoute {
+  role: UserType;
+  path: string;
+  fallback?: string;
+}
+
+export const DASHBOARD_ROUTES: DashboardRoute[] = [
+  { role: 'client', path: '/dashboard/client' },
+  { role: 'driver', path: '/dashboard/driver' },
+  { role: 'blog_editor', path: '/dashboard/editor' },
+  { role: 'admin', path: '/dashboard/admin' },
+];
+
+export function getDashboardPath(userRole: UserType): string {
+  const route = DASHBOARD_ROUTES.find(r => r.role === userRole);
+  return route?.path || '/dashboard/client';
+}
+
+export function isValidDashboardAccess(userRole: UserType, requestedPath: string): boolean {
+  const allowedPath = getDashboardPath(userRole);
+  return requestedPath.startsWith(allowedPath);
+}
+
+export async function dashboardMiddleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  
+  // Check if accessing dashboard route
+  if (!pathname.includes('/dashboard/')) {
+    return NextResponse.next();
+  }
+  
+  try {
+    // Get user from authentication token
+    const user = await getUserFromToken(request);
+    
+    if (!user) {
+      // Redirect to login if not authenticated
+      const loginUrl = new URL('/login', request.url);
+      loginUrl.searchParams.set('redirectTo', pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+    
+    // Get user's primary role
+    const userRole = user.roles[0]?.role;
+    if (!userRole) {
+      throw new Error('User has no assigned roles');
+    }
+    
+    // Check if accessing correct dashboard for role
+    if (!isValidDashboardAccess(userRole, pathname)) {
+      // Redirect to correct dashboard
+      const correctPath = getDashboardPath(userRole);
+      const redirectUrl = new URL(correctPath, request.url);
+      return NextResponse.redirect(redirectUrl);
+    }
+    
+    // Add user info to request headers for pages to access
+    const response = NextResponse.next();
+    response.headers.set('x-user-role', userRole);
+    response.headers.set('x-user-id', user.id);
+    
+    return response;
+    
+  } catch (error) {
+    console.error('Dashboard middleware error:', error);
+    
+    // Redirect to login with error message
+    const loginUrl = new URL('/login', request.url);
+    loginUrl.searchParams.set('error', 'access_denied');
+    loginUrl.searchParams.set('redirectTo', pathname);
+    return NextResponse.redirect(loginUrl);
+  }
+}
+            </div>
+            
+            <div class="code-block">
+                <div class="code-header">src/middleware.ts (Updated)</div>
+import { NextRequest } from 'next/server';
+import { dashboardMiddleware } from '@/lib/middleware/dashboardRouter';
+
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  
+  // Handle dashboard routes
+  if (pathname.includes('/dashboard/')) {
+    return await dashboardMiddleware(request);
+  }
+  
+  // Handle other middleware as needed
+  return NextResponse.next();
+}
+
+export const config = {
+  matcher: [
+    '/dashboard/:path*',
+    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+  ],
+};
+            </div>
+        </div>
+
+        <!-- Step 4: Enhanced Authentication Flow -->
+        <div class="section">
+            <h2>4️⃣ Enhanced Authentication Flow</h2>
+            
+            <div class="code-block">
+                <div class="code-header">src/lib/context/AuthContext.tsx (Enhanced)</div>
+// Add dashboard redirect function to AuthContext
+const redirectToDashboard = useCallback((userRole: UserType) => {
+  const dashboardPath = getDashboardPath(userRole);
+  router.push(dashboardPath);
+}, [router]);
+
+// Update login function to handle dashboard redirect
+const login = useCallback(async (credentials: LoginRequest) => {
+  try {
+    setLoading(true);
+    setError(null);
+    
+    const response = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(credentials),
+    });
+    
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(data.message || 'Login failed');
+    }
+    
+    if (data.success && data.user) {
+      setUser(data.user);
+      setIsAuthenticated(true);
+      
+      // Get redirect URL from query params or default to dashboard
+      const urlParams = new URLSearchParams(window.location.search);
+      const redirectTo = urlParams.get('redirectTo');
+      
+      if (redirectTo) {
+        router.push(redirectTo);
+      } else {
+        // Redirect to appropriate dashboard based on user role
+        const userRole = data.user.roles[0]?.role || 'client';
+        redirectToDashboard(userRole);
+      }
+      
+      toast.success('Welcome back!');
+    } else {
+      throw new Error('Login response missing user data');
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Login failed';
+    setError(message);
+    toast.error(message);
+  } finally {
+    setLoading(false);
+  }
+}, [redirectToDashboard, router]);
+
+// Update context value to include dashboard redirect
+const contextValue = {
+  // ... existing values
+  redirectToDashboard,
+  getDashboardPath,
+};
+            </div>
+        </div>
+
+        <!-- Step 5: Reusable Dashboard Components -->
+        <div class="section">
+            <h2>5️⃣ Reusable Dashboard Components</h2>
+            
+            <div class="file-tree">
+<div class="folder">src/components/dashboard/</div>
+<div class="component indent-1">DashboardLayout.tsx</div>
+<div class="component indent-1">DashboardSidebar.tsx</div>
+<div class="component indent-1">DashboardHeader.tsx</div>
+<div class="component indent-1">DashboardWidget.tsx</div>
+<div class="component indent-1">StatsCard.tsx</div>
+<div class="component indent-1">QuickActions.tsx</div>
+<div class="component indent-1">NotificationPanel.tsx</div>
+<div class="file indent-1">index.ts</div>
+            </div>
+            
+            <div class="code-block">
+                <div class="code-header">src/components/dashboard/DashboardLayout.tsx</div>
+'use client';
+
+import React from 'react';
+import { motion } from 'framer-motion';
+import { DashboardSidebar } from './DashboardSidebar';
+import { DashboardHeader } from './DashboardHeader';
+import type { UserType } from '@/types/auth';
+
+interface DashboardLayoutProps {
+  userRole: UserType;
+  children: React.ReactNode;
+  title: string;
+  subtitle?: string;
+  headerActions?: React.ReactNode;
+}
+
+export const DashboardLayout: React.FC&lt;DashboardLayoutProps&gt; = ({
+  userRole,
+  children,
+  title,
+  subtitle,
+  headerActions
+}) => {
+  return (
+    &lt;div className="min-h-screen bg-gray-50 flex"&gt;
+      {/* Sidebar */}
+      &lt;DashboardSidebar userRole={userRole} /&gt;
+      
+      {/* Main Content */}
+      &lt;div className="flex-1 flex flex-col overflow-hidden"&gt;
+        &lt;DashboardHeader 
+          title={title}
+          subtitle={subtitle}
+          userRole={userRole}
+          actions={headerActions}
+        /&gt;
+        
+        &lt;main className="flex-1 overflow-y-auto"&gt;
+          &lt;motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="container mx-auto px-4 py-8 max-w-7xl"
+          &gt;
+            {children}
+          &lt;/motion.div&gt;
+        &lt;/main&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  );
+};
+            </div>
+            
+            <div class="code-block">
+                <div class="code-header">src/components/dashboard/DashboardSidebar.tsx</div>
+'use client';
+
+import React from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { motion } from 'framer-motion';
+import { cn } from '@/lib/utils';
+import { DASHBOARD_NAV_ITEMS } from '@/lib/constants';
+import type { UserType } from '@/types/auth';
+
+interface DashboardSidebarProps {
+  userRole: UserType;
+}
+
+export const DashboardSidebar: React.FC&lt;DashboardSidebarProps&gt; = ({ userRole }) => {
+  const pathname = usePathname();
+  const navItems = DASHBOARD_NAV_ITEMS[userRole] || [];
+
+  const getRoleColor = (role: UserType) => {
+    switch (role) {
+      case 'client': return 'text-hot-pink';
+      case 'driver': return 'text-electric-blue';
+      case 'blog_editor': return 'text-success-green';
+      case 'admin': return 'text-error-red';
+      default: return 'text-hot-pink';
+    }
+  };
+
+  return (
+    &lt;motion.aside
+      initial={{ x: -250 }}
+      animate={{ x: 0 }}
+      transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+      className="w-64 bg-charcoal text-white flex flex-col"
+    &gt;
+      {/* Logo */}
+      &lt;div className="p-6 border-b border-gray-700"&gt;
+        &lt;div className="flex items-center gap-2"&gt;
+          &lt;div className="w-2 h-2 bg-hot-pink rounded-full"&gt;&lt;/div&gt;
+          &lt;span className="font-bold text-lg"&gt;CrossBorder&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div className={cn('text-sm mt-1 capitalize font-medium', getRoleColor(userRole))}&gt;
+          {userRole.replace('_', ' ')} Dashboard
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      {/* Navigation */}
+      &lt;nav className="flex-1 p-4"&gt;
+        &lt;ul className="space-y-2"&gt;
+          {navItems.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              &lt;li key={item.href}&gt;
+                &lt;Link
+                  href={item.href}
+                  className={cn(
+                    'flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200',
+                    isActive
+                      ? 'bg-hot-pink text-white'
+                      : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                  )}
+                &gt;
+                  &lt;span className="text-lg"&gt;{item.icon}&lt;/span&gt;
+                  &lt;span className="font-medium"&gt;{item.label}&lt;/span&gt;
+                &lt;/Link&gt;
+              &lt;/li&gt;
+            );
+          })}
+        &lt;/ul&gt;
+      &lt;/nav&gt;
+    &lt;/motion.aside&gt;
+  );
+};
+            </div>
+        </div>
+
+        <!-- Testing & Validation -->
+        <div class="section">
+            <h2>🧪 Testing & Validation</h2>
+            
+            <h3>Testing Checklist</h3>
+            <ul class="feature-list">
+                <li>Test login flow redirects to correct dashboard for each role</li>
+                <li>Verify "Dashboard" link appears in navigation when authenticated</li>
+                <li>Test direct URL access to dashboard routes requires authentication</li>
+                <li>Verify role-based access control (client cannot access admin dashboard)</li>
+                <li>Test logout redirects to homepage and shows "Login" in navigation</li>
+                <li>Test error handling for invalid tokens or missing roles</li>
+            </ul>
+            
+            <h3>Manual Testing Steps</h3>
+            <div class="implementation-step">
+                <div class="step-number">1</div>
+                <div>
+                    <h4>Test Client Flow</h4>
+                    <ol style="list-style: decimal; margin-left: 2rem;">
+                        <li>Register/login as CLIENT role</li>
+                        <li>Verify redirect to /dashboard/client</li>
+                        <li>Check navigation shows "Dashboard" link</li>
+                        <li>Test dashboard widgets load correctly</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <div class="implementation-step">
+                <div class="step-number">2</div>
+                <div>
+                    <h4>Test Role-Based Access</h4>
+                    <ol style="list-style: decimal; margin-left: 2rem;">
+                        <li>Login as CLIENT</li>
+                        <li>Try to access /dashboard/admin directly</li>
+                        <li>Should redirect to /dashboard/client</li>
+                        <li>Repeat for all role combinations</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <div class="implementation-step">
+                <div class="step-number">3</div>
+                <div>
+                    <h4>Test Error Scenarios</h4>
+                    <ol style="list-style: decimal; margin-left: 2rem;">
+                        <li>Access dashboard without authentication</li>
+                        <li>Should redirect to login with redirectTo parameter</li>
+                        <li>Test with invalid/expired tokens</li>
+                        <li>Test with user having no roles assigned</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <!-- Deployment Checklist -->
+        <div class="section">
+            <h2>🚀 Deployment Checklist</h2>
+            
+            <div class="success-box">
+                <strong>Before deploying:</strong> Ensure all components are tested and the authentication flow works correctly.
+            </div>
+            
+            <h3>Pre-Deployment Steps</h3>
+            <ul class="feature-list">
+                <li>Create and test admin dashboard page</li>
+                <li>Update Header component navigation logic</li>
+                <li>Implement dashboard routing middleware</li>
+                <li>Update AuthContext with dashboard redirects</li>
+                <li>Test all user role flows manually</li>
+                <li>Verify responsive design on mobile/tablet</li>
+                <li>Run accessibility audit (WCAG 2.1 AA)</li>
+                <li>Performance test dashboard loading times</li>
+            </ul>
+            
+            <h3>Environment Configuration</h3>
+            <div class="code-block">
+                <div class="code-header">Environment Variables to Verify</div>
+# Authentication
+NEXTAUTH_SECRET=your-secret-key
+NEXTAUTH_URL=your-domain-url
+
+# Database
+DATABASE_URL=your-database-connection
+
+# API Keys (if needed)
+API_BASE_URL=your-api-endpoint
+
+# Feature Flags
+ENABLE_ADMIN_DASHBOARD=true
+ENABLE_REAL_TIME_UPDATES=true
+            </div>
+            
+            <h3>Post-Deployment Monitoring</h3>
+            <ul class="feature-list">
+                <li>Monitor authentication success/failure rates</li>
+                <li>Track dashboard page load times</li>
+                <li>Watch for 403/404 errors on dashboard routes</li>
+                <li>Monitor user flow through login → dashboard</li>
+                <li>Check mobile responsiveness in production</li>
+                <li>Verify role-based access control in live environment</li>
+            </ul>
+        </div>
+
+        <div style="text-align: center; margin: 3rem 0; padding: 2rem; background: linear-gradient(135deg, #FF69B4, #FF1493); border-radius: 12px; color: white;">
+            <h2 style="margin-top: 0; color: white;">✅ Implementation Complete</h2>
+            <p style="font-size: 1.125rem; margin-bottom: 0;">
+                Following this implementation guide will resolve the "Access Denied" issue and create a comprehensive, 
+                Tesla-inspired dashboard system with proper role-based access control and navigation.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

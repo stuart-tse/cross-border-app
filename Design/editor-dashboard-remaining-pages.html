@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor Dashboard - Remaining Pages (4-7)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: #1f2937;
+            background: #f8fafc;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: #111827;
+            border-bottom: 4px solid #3b82f6;
+            padding-bottom: 0.75rem;
+        }
+
+        .page-description {
+            font-size: 1.125rem;
+            color: #6b7280;
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        /* Wireframe Styles */
+        .wireframe {
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            background: #fafbfc;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            min-height: 600px;
+            position: relative;
+        }
+
+        .wireframe-title {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: #3b82f6;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        /* Layout Components */
+        .layout-header {
+            height: 80px;
+            background: #ffffff;
+            border: 2px solid #d1d5db;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            padding: 0 1.5rem;
+            justify-content: space-between;
+        }
+
+        .layout-sidebar {
+            width: 280px;
+            background: #f8fafc;
+            border: 2px solid #d1d5db;
+            border-radius: 8px;
+            padding: 1.5rem;
+            float: left;
+            height: 500px;
+            margin-right: 1.5rem;
+        }
+
+        .layout-main {
+            background: #ffffff;
+            border: 2px solid #d1d5db;
+            border-radius: 8px;
+            padding: 1.5rem;
+            overflow: hidden;
+            min-height: 500px;
+        }
+
+        .layout-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .layout-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .layout-grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .layout-grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        /* UI Components */
+        .component-box {
+            background: #f1f5f9;
+            border: 1px dashed #9ca3af;
+            border-radius: 6px;
+            padding: 1rem;
+            text-align: center;
+            color: #6b7280;
+            font-size: 0.875rem;
+            font-weight: 500;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .component-metric {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+
+        .component-metric::before {
+            content: attr(data-title);
+            position: absolute;
+            top: 8px;
+            left: 12px;
+            font-size: 0.75rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .component-card {
+            background: #ffffff;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .component-chart {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border: 2px solid #93c5fd;
+            border-radius: 8px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1e40af;
+            font-weight: 600;
+        }
+
+        .component-table {
+            background: #ffffff;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1rem;
+            min-height: 200px;
+        }
+
+        .component-form {
+            background: #ffffff;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        /* Navigation */
+        .nav-item {
+            background: #f1f5f9;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .nav-item.active {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+
+        /* Buttons */
+        .btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            margin: 0.25rem;
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+
+        .btn-success {
+            background: #10b981;
+        }
+
+        .btn-warning {
+            background: #f59e0b;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+        }
+
+        /* Form Elements */
+        .form-input {
+            background: #ffffff;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 0.75rem;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        /* Status Indicators */
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-published { background: #dcfce7; color: #166534; }
+        .status-draft { background: #fef3c7; color: #92400e; }
+        .status-scheduled { background: #dbeafe; color: #1e40af; }
+
+        /* Media Elements */
+        .media-thumbnail {
+            background: #f3f4f6;
+            border: 2px dashed #9ca3af;
+            border-radius: 8px;
+            width: 80px;
+            height: 80px;
+            display: inline-block;
+            margin: 0.5rem;
+        }
+
+        .media-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+        }
+
+        /* International Elements */
+        .global-indicator {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        /* Responsive Indicators */
+        .responsive-note {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            border-radius: 6px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-size: 0.875rem;
+            color: #92400e;
+        }
+
+        /* Specifications */
+        .spec-list {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .spec-list h4 {
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: #374151;
+        }
+
+        .spec-list ul {
+            list-style: none;
+        }
+
+        .spec-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .spec-list li:last-child {
+            border-bottom: none;
+        }
+
+        .spec-list li strong {
+            color: #374151;
+        }
+
+        /* Clear fix for floated elements */
+        .clearfix::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        /* Profile specific styles */
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            background: #e5e7eb;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #6b7280;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            text-align: center;
+        }
+
+        .profile-stat {
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 8px;
+        }
+
+        /* Analytics specific styles */
+        .analytics-filter {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        /* Settings specific styles */
+        .settings-section {
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .settings-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .toggle-switch {
+            width: 44px;
+            height: 24px;
+            background: #d1d5db;
+            border-radius: 12px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .toggle-switch.active {
+            background: #3b82f6;
+        }
+
+        .toggle-switch::after {
+            content: "";
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.2s;
+        }
+
+        .toggle-switch.active::after {
+            transform: translateX(20px);
+        }
+
+        @media (max-width: 768px) {
+            .layout-sidebar {
+                width: 100%;
+                float: none;
+                margin-right: 0;
+                margin-bottom: 1.5rem;
+                height: auto;
+            }
+            
+            .layout-grid-2,
+            .layout-grid-3,
+            .layout-grid-4 {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header style="text-align: center; margin-bottom: 3rem;">
+            <h1 style="font-size: 3rem; font-weight: 900; color: #111827; margin-bottom: 1rem;">
+                Editor Dashboard - Remaining Pages
+            </h1>
+            <p style="font-size: 1.25rem; color: #6b7280; max-width: 800px; margin: 0 auto;">
+                Profile, Media Library, Analytics, and Settings interfaces for comprehensive content management
+            </p>
+        </header>
+
+        <!-- Page 4: Profile -->
+        <section class="page-section">
+            <h2 class="page-title">4. Profile</h2>
+            <p class="page-description">
+                Comprehensive editor profile management with personal information, professional bio, 
+                social media links, content statistics, and account settings. Designed for personal branding 
+                and professional networking in the international content space.
+            </p>
+
+            <div class="wireframe">
+                <div class="wireframe-title">Profile Management Interface</div>
+                
+                <!-- Header -->
+                <div class="layout-header">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <button class="btn btn-secondary">← Back to Dashboard</button>
+                        <h2 style="font-weight: 600; color: #111827;">Editor Profile</h2>
+                    </div>
+                    <div style="display: flex; gap: 0.75rem;">
+                        <button class="btn btn-secondary">Preview Profile</button>
+                        <button class="btn">Save Changes</button>
+                    </div>
+                </div>
+
+                <div class="layout-grid-3" style="margin-top: 1.5rem;">
+                    <!-- Profile Overview -->
+                    <div>
+                        <div class="component-card">
+                            <div class="profile-avatar">👤</div>
+                            <div style="text-align: center;">
+                                <h3 style="font-weight: 600; margin-bottom: 0.5rem;">John Editor</h3>
+                                <p style="color: #6b7280; margin-bottom: 1rem;">International Content Creator</p>
+                                <div class="global-indicator">🌍 Global Editor</div>
+                            </div>
+                        </div>
+
+                        <div class="component-card" style="margin-top: 1rem;">
+                            <h4 style="font-weight: 600; margin-bottom: 1rem;">Content Statistics</h4>
+                            <div class="profile-stats">
+                                <div class="profile-stat">
+                                    <div style="font-size: 1.25rem; font-weight: 700; color: #111827;">47</div>
+                                    <div style="font-size: 0.875rem; color: #6b7280;">Posts</div>
+                                </div>
+                                <div class="profile-stat">
+                                    <div style="font-size: 1.25rem; font-weight: 700; color: #111827;">12.4K</div>
+                                    <div style="font-size: 0.875rem; color: #6b7280;">Views</div>
+                                </div>
+                                <div class="profile-stat">
+                                    <div style="font-size: 1.25rem; font-weight: 700; color: #111827;">4.7</div>
+                                    <div style="font-size: 0.875rem; color: #6b7280;">Avg Rating</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="component-card" style="margin-top: 1rem;">
+                            <h4 style="font-weight: 600; margin-bottom: 1rem;">Languages</h4>
+                            <div style="display: flex; flex-wrap: gap: 0.5rem;">
+                                <span class="status-badge status-published">🇺🇸 English</span>
+                                <span class="status-badge status-published">🇯🇵 Japanese</span>
+                                <span class="status-badge status-draft">🇰🇷 Korean</span>
+                                <span class="status-badge status-draft">🇨🇳 Chinese</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Personal Information -->
+                    <div>
+                        <div class="component-card">
+                            <h4 style="font-weight: 600; margin-bottom: 1rem;">Personal Information</h4>
+                            <form class="component-form" style="border: none; padding: 0;">
+                                <div style="margin-bottom: 1rem;">
+                                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Full Name</label>
+                                    <input class="form-input" value="John Editor" type="text">
+                                </div>
+                                <div style="margin-bottom: 1rem;">
+                                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Email</label>
+                                    <input class="form-input" value="john@example.com" type="email">
+                                </div>
+                                <div style="margin-bottom: 1rem;">
+                                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Location</label>
+                                    <input class="form-input" value="Tokyo, Japan" type="text">
+                                </div>
+                                <div style="margin-bottom: 1rem;">
+                                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Timezone</label>
+                                    <select class="form-input">
+                                        <option>Asia/Tokyo (UTC+9)</option>
+                                        <option>America/New_York (UTC-5)</option>
+                                        <option>Europe/London (UTC+0)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Phone</label>
+                                    <input class="form-input" value="+81 90-1234-5678" type="tel">
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="component-card" style="margin-top: 1rem;">
+                            <h4 style="font-weight: 600; margin-bottom: 1rem;">Social Media Links</h4>
+                            <form class="component-form" style="border: none; padding: 0;">
+                                <div style="margin-bottom: 1rem;">
+                                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">LinkedIn</label>
+                                    <input class="form-input" placeholder="https://linkedin.com/in/username" type="url">
+                                </div>
+                                <div style="margin-bottom: 1rem;">
+                                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Twitter</label>
+                                    <input class="form-input" placeholder="https://twitter.com/username" type="url">
+                                </div>
+                                <div>
+                                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Website</label>
+                                    <input class="form-input" placeholder="https://yourwebsite.com" type="url">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Professional Bio -->
+                    <div>
+                        <div class="component-card">
+                            <h4 style="font-weight: 600; margin-bottom: 1rem;">Professional Bio</h4>
+                            <form class="component-form" style="border: none; padding: 0;">
+                                <div style="margin-bottom: 1rem;">
+                                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Job Title</label>
+                                    <input class="form-input" value="International Content Creator" type="text">
+                                </div>
+                                <div style="margin-bottom: 1rem;">
+                                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Company</label>
+                                    <input class="form-input" value="Cross-Border Media" type="text">
+                                </div>
+                                <div style="margin-bottom: 1rem;">
+                                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Biography</label>
+                                    <textarea class="form-input" rows="6" placeholder="Tell us about your professional background, expertise, and interests...">Experienced content creator specializing in cross-border business and travel content. Over 5 years of experience creating engaging content for international audiences.</textarea>
+                                </div>
+                                <div>
+                                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Expertise Areas</label>
+                                    <input class="form-input" placeholder="Travel, Business, Culture, Technology..." type="text">
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="component-card" style="margin-top: 1rem;">
+                            <h4 style="font-weight: 600; margin-bottom: 1rem;">Profile Visibility</h4>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                <div>
+                                    <div style="font-weight: 500;">Public Profile</div>
+                                    <div style="font-size: 0.875rem; color: #6b7280;">Allow others to view your profile</div>
+                                </div>
+                                <div class="toggle-switch active"></div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                <div>
+                                    <div style="font-weight: 500;">Show Statistics</div>
+                                    <div style="font-size: 0.875rem; color: #6b7280;">Display content metrics publicly</div>
+                                </div>
+                                <div class="toggle-switch active"></div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <div style="font-weight: 500;">Contact Information</div>
+                                    <div style="font-size: 0.875rem; color: #6b7280;">Show email and social links</div>
+                                </div>
+                                <div class="toggle-switch"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="spec-list">
+                <h4>Profile Page Specifications</h4>
+                <ul>
+                    <li><strong>Avatar Upload:</strong> Support for image upload with crop and resize functionality</li>
+                    <li><strong>Multi-language Support:</strong> Profile information in multiple languages</li>
+                    <li><strong>Social Integration:</strong> Connect and verify social media accounts</li>
+                    <li><strong>Privacy Controls:</strong> Granular visibility settings for profile elements</li>
+                    <li><strong>Professional Network:</strong> Connect with other international content creators</li>
+                    <li><strong>Content Portfolio:</strong> Showcase best work and achievements</li>
+                    <li><strong>Real-time Updates:</strong> Instant sync across all platform integrations</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Page 5: Media Library -->
+        <section class="page-section">
+            <h2 class="page-title">5. Media Library</h2>
+            <p class="page-description">
+                Comprehensive media asset management system with upload capabilities, organization tools, 
+                search functionality, and optimization features. Designed for efficient media workflow 
+                and international content requirements.
+            </p>
+
+            <div class="wireframe">
+                <div class="wireframe-title">Media Library Interface</div>
+                
+                <!-- Header -->
+                <div class="layout-header">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <h2 style="font-weight: 600; color: #111827;">Media Library</h2>
+                        <span style="color: #6b7280; font-size: 0.875rem;">2,847 files • 8.2 GB used</span>
+                    </div>
+                    <div style="display: flex; gap: 0.75rem;">
+                        <button class="btn btn-secondary">📁 New Folder</button>
+                        <button class="btn">📤 Upload Files</button>
+                    </div>
+                </div>
+
+                <!-- Toolbar -->
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; gap: 1rem; align-items: center;">
+                        <input type="search" placeholder="Search files..." style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px; width: 300px;">
+                        <select style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px;">
+                            <option>All Types</option>
+                            <option>Images</option>
+                            <option>Videos</option>
+                            <option>Documents</option>
+                            <option>Audio</option>
+                        </select>
+                        <select style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px;">
+                            <option>All Folders</option>
+                            <option>Blog Images</option>
+                            <option>Product Photos</option>
+                            <option>Documents</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px; background: white;">📊</button>
+                        <button style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px; background: white;">📋</button>
+                        <button style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px; background: #3b82f6; color: white;">🔲</button>
+                    </div>
+                </div>
+
+                <div class="layout-grid-2">
+                    <!-- File Browser -->
+                    <div style="grid-column: 1 / -1;">
+                        <!-- Breadcrumb -->
+                        <div style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: #6b7280;">
+                            <span>📁 Root</span>
+                            <span>></span>
+                            <span>Blog Images</span>
+                            <span>></span>
+                            <span style="color: #111827; font-weight: 500;">Travel Guides</span>
+                        </div>
+
+                        <!-- Media Grid -->
+                        <div class="media-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem;">
+                            <!-- Folder -->
+                            <div style="border: 2px solid #e5e7eb; border-radius: 8px; padding: 1rem; background: white; cursor: pointer;">
+                                <div style="text-align: center; margin-bottom: 0.75rem;">
+                                    <div style="font-size: 3rem;">📁</div>
+                                </div>
+                                <div style="font-weight: 500; font-size: 0.875rem; text-align: center;">Asian Destinations</div>
+                                <div style="font-size: 0.75rem; color: #6b7280; text-align: center;">24 files</div>
+                            </div>
+
+                            <!-- Image File -->
+                            <div style="border: 2px solid #e5e7eb; border-radius: 8px; padding: 0; background: white; cursor: pointer; overflow: hidden;">
+                                <div style="height: 120px; background: linear-gradient(135deg, #fef3c7 0%, #f59e0b 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem;">
+                                    🏔️
+                                </div>
+                                <div style="padding: 0.75rem;">
+                                    <div style="font-weight: 500; font-size: 0.875rem; margin-bottom: 0.25rem;">mountain-view.jpg</div>
+                                    <div style="font-size: 0.75rem; color: #6b7280;">2.4 MB • 1920x1080</div>
+                                </div>
+                            </div>
+
+                            <!-- Video File -->
+                            <div style="border: 2px solid #e5e7eb; border-radius: 8px; padding: 0; background: white; cursor: pointer; overflow: hidden; position: relative;">
+                                <div style="height: 120px; background: linear-gradient(135deg, #dbeafe 0%, #3b82f6 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem;">
+                                    🎥
+                                </div>
+                                <div style="position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.7); color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem;">
+                                    2:34
+                                </div>
+                                <div style="padding: 0.75rem;">
+                                    <div style="font-weight: 500; font-size: 0.875rem; margin-bottom: 0.25rem;">travel-guide.mp4</div>
+                                    <div style="font-size: 0.75rem; color: #6b7280;">45.2 MB • 1920x1080</div>
+                                </div>
+                            </div>
+
+                            <!-- Document File -->
+                            <div style="border: 2px solid #e5e7eb; border-radius: 8px; padding: 0; background: white; cursor: pointer; overflow: hidden;">
+                                <div style="height: 120px; background: linear-gradient(135deg, #dcfce7 0%, #10b981 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem;">
+                                    📄
+                                </div>
+                                <div style="padding: 0.75rem;">
+                                    <div style="font-weight: 500; font-size: 0.875rem; margin-bottom: 0.25rem;">visa-requirements.pdf</div>
+                                    <div style="font-size: 0.75rem; color: #6b7280;">1.2 MB • PDF</div>
+                                </div>
+                            </div>
+
+                            <!-- Audio File -->
+                            <div style="border: 2px solid #e5e7eb; border-radius: 8px; padding: 0; background: white; cursor: pointer; overflow: hidden;">
+                                <div style="height: 120px; background: linear-gradient(135deg, #fce7f3 0%, #ec4899 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem;">
+                                    🎵
+                                </div>
+                                <div style="padding: 0.75rem;">
+                                    <div style="font-weight: 500; font-size: 0.875rem; margin-bottom: 0.25rem;">podcast-intro.mp3</div>
+                                    <div style="font-size: 0.75rem; color: #6b7280;">8.5 MB • 5:23</div>
+                                </div>
+                            </div>
+
+                            <!-- More Files... -->
+                            <div style="border: 2px solid #e5e7eb; border-radius: 8px; padding: 0; background: white; cursor: pointer; overflow: hidden;">
+                                <div style="height: 120px; background: linear-gradient(135deg, #ede9fe 0%, #8b5cf6 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem;">
+                                    🌆
+                                </div>
+                                <div style="padding: 0.75rem;">
+                                    <div style="font-weight: 500; font-size: 0.875rem; margin-bottom: 0.25rem;">city-skyline.jpg</div>
+                                    <div style="font-size: 0.75rem; color: #6b7280;">3.1 MB • 2560x1440</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pagination -->
+                        <div style="margin-top: 2rem; display: flex; justify-content: between; align-items: center;">
+                            <div style="color: #6b7280; font-size: 0.875rem;">
+                                Showing 1-12 of 247 files
+                            </div>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button class="btn btn-secondary">← Previous</button>
+                                <button class="btn btn-secondary">1</button>
+                                <button class="btn">2</button>
+                                <button class="btn btn-secondary">3</button>
+                                <button class="btn btn-secondary">Next →</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upload Area (when no files selected) -->
+                <div style="margin-top: 2rem; border: 2px dashed #d1d5db; border-radius: 12px; padding: 3rem; text-align: center; background: #fafbfc;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">📤</div>
+                    <h3 style="font-weight: 600; margin-bottom: 0.5rem;">Drag and drop files here</h3>
+                    <p style="color: #6b7280; margin-bottom: 1.5rem;">or click to browse and select files</p>
+                    <button class="btn">Choose Files</button>
+                </div>
+            </div>
+
+            <div class="spec-list">
+                <h4>Media Library Specifications</h4>
+                <ul>
+                    <li><strong>File Support:</strong> Images (JPG, PNG, GIF, WebP), Videos (MP4, WebM), Documents (PDF, DOC), Audio (MP3, WAV)</li>
+                    <li><strong>Bulk Operations:</strong> Multi-select, batch delete, move, and organize</li>
+                    <li><strong>Search & Filter:</strong> Advanced search with metadata, tags, and file properties</li>
+                    <li><strong>Image Optimization:</strong> Automatic compression and multiple size variants</li>
+                    <li><strong>CDN Integration:</strong> Global content delivery for international audiences</li>
+                    <li><strong>Storage Analytics:</strong> Usage tracking and optimization suggestions</li>
+                    <li><strong>Access Control:</strong> Permission-based file sharing and collaboration</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Page 6: Analytics -->
+        <section class="page-section">
+            <h2 class="page-title">6. Analytics</h2>
+            <p class="page-description">
+                Comprehensive analytics dashboard providing insights into content performance, audience engagement, 
+                SEO metrics, and international reach. Data-driven insights to optimize content strategy 
+                and improve cross-border audience engagement.
+            </p>
+
+            <div class="wireframe">
+                <div class="wireframe-title">Analytics Dashboard</div>
+                
+                <!-- Header -->
+                <div class="layout-header">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <h2 style="font-weight: 600; color: #111827;">Content Analytics</h2>
+                        <div class="global-indicator">🌍 Global Insights</div>
+                    </div>
+                    <div style="display: flex; gap: 0.75rem;">
+                        <button class="btn btn-secondary">📊 Export Report</button>
+                        <button class="btn btn-secondary">📧 Schedule Report</button>
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="analytics-filter">
+                    <span style="font-weight: 500;">Time Period:</span>
+                    <select style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px;">
+                        <option>Last 30 Days</option>
+                        <option>Last 7 Days</option>
+                        <option>Last 90 Days</option>
+                        <option>Custom Range</option>
+                    </select>
+                    <span style="font-weight: 500;">Content Type:</span>
+                    <select style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px;">
+                        <option>All Content</option>
+                        <option>Blog Posts</option>
+                        <option>Travel Guides</option>
+                        <option>Business Articles</option>
+                    </select>
+                    <span style="font-weight: 500;">Region:</span>
+                    <select style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px;">
+                        <option>🌍 Global</option>
+                        <option>🇺🇸 North America</option>
+                        <option>🇯🇵 Asia Pacific</option>
+                        <option>🇪🇺 Europe</option>
+                    </select>
+                </div>
+
+                <!-- Key Metrics -->
+                <div class="layout-grid-4" style="margin-bottom: 2rem;">
+                    <div class="component-metric" data-title="Total Views">
+                        <div style="font-size: 2rem; font-weight: 700; color: #111827;">24.7K</div>
+                        <div style="font-size: 0.875rem; color: #10b981;">+18% vs last month</div>
+                    </div>
+                    <div class="component-metric" data-title="Unique Visitors">
+                        <div style="font-size: 2rem; font-weight: 700; color: #111827;">18.2K</div>
+                        <div style="font-size: 0.875rem; color: #10b981;">+23% vs last month</div>
+                    </div>
+                    <div class="component-metric" data-title="Engagement Rate">
+                        <div style="font-size: 2rem; font-weight: 700; color: #111827;">6.8%</div>
+                        <div style="font-size: 0.875rem; color: #f59e0b;">-2% vs last month</div>
+                    </div>
+                    <div class="component-metric" data-title="Avg. Session">
+                        <div style="font-size: 2rem; font-weight: 700; color: #111827;">3:24</div>
+                        <div style="font-size: 0.875rem; color: #10b981;">+8% vs last month</div>
+                    </div>
+                </div>
+
+                <!-- Charts and Data -->
+                <div class="layout-grid-2" style="margin-bottom: 2rem;">
+                    <div class="component-card">
+                        <h3 style="font-weight: 600; margin-bottom: 1rem;">Traffic Overview</h3>
+                        <div class="component-chart" style="height: 300px;">
+                            Line Chart: Views & Visitors Over Time
+                        </div>
+                    </div>
+
+                    <div class="component-card">
+                        <h3 style="font-weight: 600; margin-bottom: 1rem;">Top Performing Content</h3>
+                        <div style="space-y: 1rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 0.5rem;">
+                                <div>
+                                    <div style="font-weight: 500; font-size: 0.875rem;">Cross-Border Travel Guide 2024</div>
+                                    <div style="font-size: 0.75rem; color: #6b7280;">Published 3 days ago</div>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="font-weight: 600;">2,847</div>
+                                    <div style="font-size: 0.75rem; color: #6b7280;">views</div>
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 0.5rem;">
+                                <div>
+                                    <div style="font-weight: 500; font-size: 0.875rem;">International Business Etiquette</div>
+                                    <div style="font-size: 0.75rem; color: #6b7280;">Published 1 week ago</div>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="font-weight: 600;">1,924</div>
+                                    <div style="font-size: 0.75rem; color: #6b7280;">views</div>
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 0.5rem;">
+                                <div>
+                                    <div style="font-weight: 500; font-size: 0.875rem;">Currency Exchange Tips</div>
+                                    <div style="font-size: 0.75rem; color: #6b7280;">Published 2 weeks ago</div>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="font-weight: 600;">1,653</div>
+                                    <div style="font-size: 0.75rem; color: #6b7280;">views</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Geographic and Demographics -->
+                <div class="layout-grid-3">
+                    <div class="component-card">
+                        <h3 style="font-weight: 600; margin-bottom: 1rem;">Geographic Distribution</h3>
+                        <div style="space-y: 0.75rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <span>🇺🇸</span>
+                                    <span style="font-size: 0.875rem;">United States</span>
+                                </div>
+                                <span style="font-weight: 600;">34.2%</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <span>🇯🇵</span>
+                                    <span style="font-size: 0.875rem;">Japan</span>
+                                </div>
+                                <span style="font-weight: 600;">28.7%</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <span>🇰🇷</span>
+                                    <span style="font-size: 0.875rem;">South Korea</span>
+                                </div>
+                                <span style="font-weight: 600;">18.1%</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <span>🇨🇳</span>
+                                    <span style="font-size: 0.875rem;">China</span>
+                                </div>
+                                <span style="font-weight: 600;">12.4%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="component-card">
+                        <h3 style="font-weight: 600; margin-bottom: 1rem;">Device Breakdown</h3>
+                        <div class="component-chart" style="height: 200px;">
+                            Pie Chart: Mobile vs Desktop vs Tablet
+                        </div>
+                    </div>
+
+                    <div class="component-card">
+                        <h3 style="font-weight: 600; margin-bottom: 1rem;">SEO Performance</h3>
+                        <div style="space-y: 1rem;">
+                            <div style="margin-bottom: 1rem;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <span style="font-size: 0.875rem;">Organic Search</span>
+                                    <span style="font-weight: 600;">67%</span>
+                                </div>
+                                <div style="background: #e5e7eb; height: 8px; border-radius: 4px;">
+                                    <div style="background: #10b981; height: 8px; border-radius: 4px; width: 67%;"></div>
+                                </div>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <span style="font-size: 0.875rem;">Direct Traffic</span>
+                                    <span style="font-weight: 600;">23%</span>
+                                </div>
+                                <div style="background: #e5e7eb; height: 8px; border-radius: 4px;">
+                                    <div style="background: #3b82f6; height: 8px; border-radius: 4px; width: 23%;"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <span style="font-size: 0.875rem;">Social Media</span>
+                                    <span style="font-weight: 600;">10%</span>
+                                </div>
+                                <div style="background: #e5e7eb; height: 8px; border-radius: 4px;">
+                                    <div style="background: #f59e0b; height: 8px; border-radius: 4px; width: 10%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="spec-list">
+                <h4>Analytics Page Specifications</h4>
+                <ul>
+                    <li><strong>Real-time Data:</strong> Live analytics with WebSocket connections for immediate insights</li>
+                    <li><strong>Custom Reports:</strong> Build and save custom analytics reports with specific metrics</li>
+                    <li><strong>Geographic Intelligence:</strong> Detailed location-based performance analysis</li>
+                    <li><strong>SEO Tracking:</strong> Keyword rankings, search visibility, and optimization opportunities</li>
+                    <li><strong>Comparative Analysis:</strong> Period-over-period comparisons and trend analysis</li>
+                    <li><strong>Export Options:</strong> PDF, CSV, and Excel report exports</li>
+                    <li><strong>Alert System:</strong> Notifications for significant metric changes or thresholds</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Page 7: Settings -->
+        <section class="page-section">
+            <h2 class="page-title">7. Settings</h2>
+            <p class="page-description">
+                Comprehensive settings and preferences management for account configuration, content preferences, 
+                notification settings, security options, and international localization. Centralized control 
+                for all platform customizations and configurations.
+            </p>
+
+            <div class="wireframe">
+                <div class="wireframe-title">Settings Interface</div>
+                
+                <!-- Header -->
+                <div class="layout-header">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <h2 style="font-weight: 600; color: #111827;">Settings & Preferences</h2>
+                    </div>
+                    <div style="display: flex; gap: 0.75rem;">
+                        <button class="btn btn-secondary">Reset to Defaults</button>
+                        <button class="btn">Save Changes</button>
+                    </div>
+                </div>
+
+                <div class="clearfix">
+                    <!-- Settings Navigation -->
+                    <div class="layout-sidebar">
+                        <h3 style="font-size: 1rem; font-weight: 600; margin-bottom: 1rem; color: #374151;">Settings Menu</h3>
+                        <div class="nav-item active">⚙️ General</div>
+                        <div class="nav-item">🔔 Notifications</div>
+                        <div class="nav-item">🎨 Appearance</div>
+                        <div class="nav-item">📝 Content</div>
+                        <div class="nav-item">🌍 International</div>
+                        <div class="nav-item">🔒 Security</div>
+                        <div class="nav-item">💾 Data & Privacy</div>
+                        <div class="nav-item">🔌 Integrations</div>
+                    </div>
+
+                    <!-- Settings Content -->
+                    <div class="layout-main">
+                        <!-- General Settings -->
+                        <div class="settings-section">
+                            <h3 style="font-weight: 600; margin-bottom: 1rem;">General Settings</h3>
+                            
+                            <div style="margin-bottom: 1.5rem;">
+                                <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Language</label>
+                                <select class="form-input" style="width: auto; min-width: 200px;">
+                                    <option>🇺🇸 English</option>
+                                    <option>🇯🇵 日本語</option>
+                                    <option>🇰🇷 한국어</option>
+                                    <option>🇨🇳 中文</option>
+                                </select>
+                            </div>
+
+                            <div style="margin-bottom: 1.5rem;">
+                                <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Time Zone</label>
+                                <select class="form-input" style="width: auto; min-width: 250px;">
+                                    <option>Asia/Tokyo (UTC+9)</option>
+                                    <option>America/New_York (UTC-5)</option>
+                                    <option>Europe/London (UTC+0)</option>
+                                    <option>Asia/Shanghai (UTC+8)</option>
+                                </select>
+                            </div>
+
+                            <div style="margin-bottom: 1.5rem;">
+                                <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Date Format</label>
+                                <select class="form-input" style="width: auto; min-width: 200px;">
+                                    <option>MM/DD/YYYY</option>
+                                    <option>DD/MM/YYYY</option>
+                                    <option>YYYY-MM-DD</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Notification Settings -->
+                        <div class="settings-section">
+                            <h3 style="font-weight: 600; margin-bottom: 1rem;">Notification Preferences</h3>
+                            
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                <div>
+                                    <div style="font-weight: 500;">Email Notifications</div>
+                                    <div style="font-size: 0.875rem; color: #6b7280;">Receive email updates about your content</div>
+                                </div>
+                                <div class="toggle-switch active"></div>
+                            </div>
+
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                <div>
+                                    <div style="font-weight: 500;">Comment Notifications</div>
+                                    <div style="font-size: 0.875rem; color: #6b7280;">Get notified when someone comments on your posts</div>
+                                </div>
+                                <div class="toggle-switch active"></div>
+                            </div>
+
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                <div>
+                                    <div style="font-weight: 500;">Performance Alerts</div>
+                                    <div style="font-size: 0.875rem; color: #6b7280;">Alerts for significant traffic or engagement changes</div>
+                                </div>
+                                <div class="toggle-switch active"></div>
+                            </div>
+
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                <div>
+                                    <div style="font-weight: 500;">Weekly Summary</div>
+                                    <div style="font-size: 0.875rem; color: #6b7280;">Weekly analytics and performance summary</div>
+                                </div>
+                                <div class="toggle-switch"></div>
+                            </div>
+                        </div>
+
+                        <!-- Content Settings -->
+                        <div class="settings-section">
+                            <h3 style="font-weight: 600; margin-bottom: 1rem;">Content Preferences</h3>
+                            
+                            <div style="margin-bottom: 1.5rem;">
+                                <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Default Content Language</label>
+                                <select class="form-input" style="width: auto; min-width: 200px;">
+                                    <option>English</option>
+                                    <option>Japanese</option>
+                                    <option>Korean</option>
+                                    <option>Chinese</option>
+                                </select>
+                            </div>
+
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                <div>
+                                    <div style="font-weight: 500;">Auto-save</div>
+                                    <div style="font-size: 0.875rem; color: #6b7280;">Automatically save content while editing</div>
+                                </div>
+                                <div class="toggle-switch active"></div>
+                            </div>
+
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                <div>
+                                    <div style="font-weight: 500;">SEO Suggestions</div>
+                                    <div style="font-size: 0.875rem; color: #6b7280;">Show SEO optimization suggestions while writing</div>
+                                </div>
+                                <div class="toggle-switch active"></div>
+                            </div>
+
+                            <div style="margin-bottom: 1.5rem;">
+                                <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Image Quality</label>
+                                <select class="form-input" style="width: auto; min-width: 200px;">
+                                    <option>High (Original)</option>
+                                    <option>Medium (Optimized)</option>
+                                    <option>Low (Compressed)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Security Settings -->
+                        <div class="settings-section">
+                            <h3 style="font-weight: 600; margin-bottom: 1rem;">Security & Privacy</h3>
+                            
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                <div>
+                                    <div style="font-weight: 500;">Two-Factor Authentication</div>
+                                    <div style="font-size: 0.875rem; color: #6b7280;">Add an extra layer of security to your account</div>
+                                </div>
+                                <button class="btn btn-secondary">Enable 2FA</button>
+                            </div>
+
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                <div>
+                                    <div style="font-weight: 500;">Session Management</div>
+                                    <div style="font-size: 0.875rem; color: #6b7280;">View and manage active sessions</div>
+                                </div>
+                                <button class="btn btn-secondary">Manage Sessions</button>
+                            </div>
+
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                <div>
+                                    <div style="font-weight: 500;">Privacy Mode</div>
+                                    <div style="font-size: 0.875rem; color: #6b7280;">Hide your online status and activity</div>
+                                </div>
+                                <div class="toggle-switch"></div>
+                            </div>
+                        </div>
+
+                        <!-- International Settings -->
+                        <div class="settings-section">
+                            <h3 style="font-weight: 600; margin-bottom: 1rem;">🌍 International Settings</h3>
+                            
+                            <div style="margin-bottom: 1.5rem;">
+                                <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Target Markets</label>
+                                <div style="display: flex; flex-wrap: gap: 0.5rem;">
+                                    <span class="status-badge status-published">🇺🇸 North America</span>
+                                    <span class="status-badge status-published">🇯🇵 Asia Pacific</span>
+                                    <span class="status-badge" style="background: #f3f4f6; color: #6b7280;">🇪🇺 Europe</span>
+                                    <span class="status-badge" style="background: #f3f4f6; color: #6b7280;">🌍 Global</span>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                <div>
+                                    <div style="font-weight: 500;">Auto-translation</div>
+                                    <div style="font-size: 0.875rem; color: #6b7280;">Automatically translate content for different regions</div>
+                                </div>
+                                <div class="toggle-switch active"></div>
+                            </div>
+
+                            <div style="margin-bottom: 1.5rem;">
+                                <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Currency Display</label>
+                                <select class="form-input" style="width: auto; min-width: 200px;">
+                                    <option>USD ($)</option>
+                                    <option>JPY (¥)</option>
+                                    <option>KRW (₩)</option>
+                                    <option>CNY (¥)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="spec-list">
+                <h4>Settings Page Specifications</h4>
+                <ul>
+                    <li><strong>Modular Interface:</strong> Organized sections with clear navigation and search</li>
+                    <li><strong>Real-time Preview:</strong> Instant preview of setting changes before saving</li>
+                    <li><strong>Bulk Actions:</strong> Apply settings across multiple content items or accounts</li>
+                    <li><strong>Import/Export:</strong> Backup and restore settings configurations</li>
+                    <li><strong>Role-based Access:</strong> Different setting levels based on user permissions</li>
+                    <li><strong>Change History:</strong> Track and revert setting modifications</li>
+                    <li><strong>Smart Defaults:</strong> Intelligent default settings based on user behavior</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Navigation System Overview -->
+        <section class="page-section">
+            <h2 class="page-title">Navigation System & Responsive Specifications</h2>
+            <p class="page-description">
+                Comprehensive navigation architecture and responsive design specifications ensuring seamless 
+                user experience across all devices and screen sizes with international accessibility considerations.
+            </p>
+
+            <div class="wireframe">
+                <div class="wireframe-title">Navigation Architecture</div>
+                
+                <!-- Desktop Navigation -->
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="font-weight: 600; margin-bottom: 1rem;">Desktop Navigation (≥1024px)</h3>
+                    <div style="border: 2px solid #e5e7eb; border-radius: 8px; padding: 1rem; background: white;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <div style="display: flex; align-items: center; gap: 2rem;">
+                                <div style="font-weight: 700; color: #3b82f6;">CrossBorder</div>
+                                <nav style="display: flex; gap: 1.5rem;">
+                                    <a href="#" style="text-decoration: none; color: #3b82f6; font-weight: 500;">Dashboard</a>
+                                    <a href="#" style="text-decoration: none; color: #374151;">Create</a>
+                                    <a href="#" style="text-decoration: none; color: #374151;">Posts</a>
+                                    <a href="#" style="text-decoration: none; color: #374151;">Media</a>
+                                    <a href="#" style="text-decoration: none; color: #374151;">Analytics</a>
+                                </nav>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <div class="global-indicator">🌍 Global</div>
+                                <div style="width: 32px; height: 32px; background: #f3f4f6; border-radius: 50%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mobile Navigation -->
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="font-weight: 600; margin-bottom: 1rem;">Mobile Navigation (≤768px)</h3>
+                    <div style="border: 2px solid #e5e7eb; border-radius: 8px; padding: 1rem; background: white;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <button style="background: none; border: none; font-size: 1.25rem;">☰</button>
+                                <div style="font-weight: 700; color: #3b82f6;">CrossBorder</div>
+                            </div>
+                            <div style="width: 32px; height: 32px; background: #f3f4f6; border-radius: 50%;"></div>
+                        </div>
+                        <!-- Mobile Menu (Hidden by default) -->
+                        <div style="border-top: 1px solid #e5e7eb; padding-top: 1rem; display: none;">
+                            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                                <a href="#" style="text-decoration: none; color: #3b82f6; font-weight: 500; padding: 0.75rem; background: #f8fafc; border-radius: 6px;">📊 Dashboard</a>
+                                <a href="#" style="text-decoration: none; color: #374151; padding: 0.75rem;">✏️ Create Post</a>
+                                <a href="#" style="text-decoration: none; color: #374151; padding: 0.75rem;">📝 Posts</a>
+                                <a href="#" style="text-decoration: none; color: #374151; padding: 0.75rem;">📁 Media Library</a>
+                                <a href="#" style="text-decoration: none; color: #374151; padding: 0.75rem;">📈 Analytics</a>
+                                <a href="#" style="text-decoration: none; color: #374151; padding: 0.75rem;">⚙️ Settings</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Responsive Breakpoints -->
+                <div>
+                    <h3 style="font-weight: 600; margin-bottom: 1rem;">Responsive Breakpoints & Behaviors</h3>
+                    <div class="layout-grid-2">
+                        <div class="component-card">
+                            <h4 style="font-weight: 600; margin-bottom: 0.75rem;">Breakpoint Specifications</h4>
+                            <div style="font-family: Monaco, monospace; font-size: 0.875rem; line-height: 1.6;">
+                                <div>• xs: ≤640px (Mobile Portrait)</div>
+                                <div>• sm: 641px-768px (Mobile Landscape)</div>
+                                <div>• md: 769px-1024px (Tablet)</div>
+                                <div>• lg: 1025px-1280px (Desktop)</div>
+                                <div>• xl: ≥1281px (Large Desktop)</div>
+                            </div>
+                        </div>
+                        <div class="component-card">
+                            <h4 style="font-weight: 600; margin-bottom: 0.75rem;">Layout Adaptations</h4>
+                            <div style="font-size: 0.875rem; line-height: 1.6;">
+                                <div>• Mobile: Collapsible hamburger menu</div>
+                                <div>• Tablet: Condensed sidebar navigation</div>
+                                <div>• Desktop: Full sidebar + top navigation</div>
+                                <div>• Grid systems: 1-4 columns responsive</div>
+                                <div>• Typography: Fluid scale adjustments</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="spec-list">
+                <h4>Navigation & Responsive Specifications</h4>
+                <ul>
+                    <li><strong>Accessibility:</strong> WCAG 2.1 AA compliant with keyboard navigation and screen reader support</li>
+                    <li><strong>International UX:</strong> RTL language support, culturally appropriate icon usage</li>
+                    <li><strong>Performance:</strong> Lazy loading for mobile, progressive enhancement</li>
+                    <li><strong>Touch Targets:</strong> Minimum 44px touch targets for mobile interfaces</li>
+                    <li><strong>Gesture Support:</strong> Swipe navigation on mobile and tablet devices</li>
+                    <li><strong>Context Awareness:</strong> Adaptive navigation based on user role and permissions</li>
+                    <li><strong>Offline Support:</strong> Basic navigation functionality available offline</li>
+                </ul>
+            </div>
+        </section>
+
+    </div>
+</body>
+</html>

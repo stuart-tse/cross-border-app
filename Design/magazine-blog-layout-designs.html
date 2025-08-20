@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magazine-Style Blog Layout Designs</title>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #fafafa;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .layout-section {
+            background: white;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        .section-header {
+            background: linear-gradient(135deg, #171A20 0%, #2A2D35 100%);
+            color: white;
+            padding: 20px 30px;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        .layout-content {
+            padding: 30px;
+        }
+        .device-frame {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            margin: 20px 0;
+            overflow: hidden;
+            background: white;
+        }
+        .desktop-frame {
+            max-width: 1200px;
+        }
+        .nav-bar {
+            background: white;
+            border-bottom: 1px solid #f0f0f0;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-weight: 700;
+            color: #171A20;
+            font-size: 18px;
+        }
+        .logo .accent {
+            color: #FF69B4;
+        }
+        .nav-items {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .nav-item {
+            color: #171A20;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        .nav-item:hover, .nav-item.active {
+            color: #FF69B4;
+            background: #FFF0F5;
+        }
+        .blog-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: #fafafa;
+        }
+        .blog-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+        .blog-title {
+            font-size: 40px;
+            font-weight: 700;
+            color: #171A20;
+            margin-bottom: 12px;
+        }
+        .blog-subtitle {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 24px;
+        }
+        .blog-search-bar {
+            max-width: 500px;
+            margin: 0 auto;
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            padding: 12px 50px 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: #FF69B4;
+            box-shadow: 0 0 0 3px rgba(255, 105, 180, 0.1);
+        }
+        .search-icon {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+        .blog-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 48px;
+            margin-top: 48px;
+        }
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+        .featured-section {
+            margin-bottom: 48px;
+        }
+        .featured-article {
+            position: relative;
+            height: 400px;
+            background: linear-gradient(135deg, #FFB6C1, #FF69B4);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .featured-article:hover {
+            transform: translateY(-4px);
+        }
+        .featured-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(transparent 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.8) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 32px;
+            color: white;
+        }
+        .featured-badge {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 105, 180, 0.9);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .featured-category {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            opacity: 0.9;
+        }
+        .featured-title {
+            font-size: 32px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 8px;
+        }
+        .featured-excerpt {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 16px;
+        }
+        .featured-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        .author-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FF69B4;
+            font-weight: bold;
+            font-size: 10px;
+        }
+        .article-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 32px;
+        }
+        .article-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .article-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+        }
+        .article-image {
+            height: 200px;
+            background: linear-gradient(135deg, #FFB6C1, #FF69B4);
+            position: relative;
+        }
+        .article-category-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #FF69B4;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .article-content {
+            padding: 24px;
+        }
+        .article-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #171A20;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+        .article-excerpt {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+        .article-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #999;
+        }
+        .article-date {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .read-time {
+            color: #FF69B4;
+            font-weight: 500;
+        }
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+        .sidebar-widget {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+        }
+        .widget-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #171A20;
+            margin-bottom: 16px;
+        }
+        .category-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .category-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .category-item:hover, .category-item.active {
+            background: #FFF0F5;
+            color: #FF69B4;
+        }
+        .category-name {
+            font-weight: 500;
+        }
+        .category-count {
+            font-size: 12px;
+            color: #999;
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 10px;
+        }
+        .category-item.active .category-count {
+            background: #FF69B4;
+            color: white;
+        }
+        .tag-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .tag {
+            padding: 4px 8px;
+            background: #f0f0f0;
+            color: #666;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .tag:hover, .tag.active {
+            background: #FF69B4;
+            color: white;
+        }
+        .popular-articles {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .popular-item {
+            display: flex;
+            gap: 12px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 6px;
+            transition: background 0.2s ease;
+        }
+        .popular-item:hover {
+            background: #FFF0F5;
+        }
+        .popular-image {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #FFB6C1, #FF69B4);
+            border-radius: 6px;
+            flex-shrink: 0;
+        }
+        .popular-content {
+            flex: 1;
+        }
+        .popular-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #171A20;
+            line-height: 1.3;
+            margin-bottom: 4px;
+        }
+        .popular-meta {
+            font-size: 11px;
+            color: #999;
+        }
+        .newsletter-signup {
+            background: linear-gradient(135deg, #FF69B4, #FF1493);
+            color: white;
+            text-align: center;
+            padding: 24px;
+            border-radius: 12px;
+        }
+        .newsletter-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .newsletter-desc {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-bottom: 16px;
+        }
+        .newsletter-form {
+            display: flex;
+            gap: 8px;
+        }
+        .newsletter-input {
+            flex: 1;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        .newsletter-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .newsletter-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        .list-view {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        .list-article {
+            display: flex;
+            gap: 20px;
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .list-article:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        }
+        .list-image {
+            width: 150px;
+            height: 100px;
+            background: linear-gradient(135deg, #FFB6C1, #FF69B4);
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+        .list-content {
+            flex: 1;
+        }
+        .list-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #171A20;
+            margin-bottom: 8px;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-top: 48px;
+        }
+        .page-btn {
+            padding: 8px 12px;
+            border: 1px solid #e0e0e0;
+            background: white;
+            color: #666;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+        .page-btn:hover, .page-btn.active {
+            background: #FF69B4;
+            color: white;
+            border-color: #FF69B4;
+        }
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        @media (max-width: 768px) {
+            .blog-layout {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+            .article-grid {
+                grid-template-columns: 1fr;
+            }
+            .blog-title {
+                font-size: 28px;
+            }
+            .featured-title {
+                font-size: 24px;
+            }
+            .list-article {
+                flex-direction: column;
+            }
+            .list-image {
+                width: 100%;
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Magazine Homepage Layout -->
+        <div class="layout-section">
+            <div class="section-header">📰 Magazine-Style Blog Homepage Layout</div>
+            <div class="layout-content">
+                <div class="device-frame desktop-frame">
+                    <div class="nav-bar">
+                        <div class="logo">
+                            <span class="accent">●</span> CrossBorder
+                        </div>
+                        <nav>
+                            <ul class="nav-items">
+                                <li><a href="#" class="nav-item">Home</a></li>
+                                <li><a href="#" class="nav-item">Booking</a></li>
+                                <li><a href="#" class="nav-item active">Blog</a></li>
+                                <li><a href="#" class="nav-item">Login</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    
+                    <div class="blog-container">
+                        <!-- Blog Header -->
+                        <div class="blog-header">
+                            <div class="blog-title">Cross-Border Travel Magazine</div>
+                            <div class="blog-subtitle">Expert insights, travel guides, and industry updates for Hong Kong - China travel</div>
+                            <div class="blog-search-bar">
+                                <input type="text" class="search-input" placeholder="Search articles, guides, and tips...">
+                                <div class="search-icon">🔍</div>
+                            </div>
+                        </div>
+
+                        <!-- Featured Article -->
+                        <div class="featured-section">
+                            <div class="featured-article">
+                                <div class="featured-badge">Featured</div>
+                                <div class="featured-overlay">
+                                    <div class="featured-category">Travel Guide</div>
+                                    <div class="featured-title">Complete Guide to Cross-Border Travel in 2024</div>
+                                    <div class="featured-excerpt">Everything you need to know about traveling between Hong Kong and Mainland China, including new regulations, documentation requirements, and insider tips from local experts.</div>
+                                    <div class="featured-meta">
+                                        <div class="author-avatar">JD</div>
+                                        <span>By John Doe</span>
+                                        <span>•</span>
+                                        <span>March 15, 2024</span>
+                                        <span>•</span>
+                                        <span>8 min read</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Main Content Area -->
+                        <div class="blog-layout">
+                            <!-- Article Grid -->
+                            <div class="main-content">
+                                <!-- Category Filters -->
+                                <div style="display: flex; gap: 12px; margin-bottom: 32px; align-items: center; flex-wrap: wrap;">
+                                    <span style="font-weight: 600; color: #171A20; margin-right: 8px;">Categories:</span>
+                                    <div class="tag active">All Articles</div>
+                                    <div class="tag">Travel Tips</div>
+                                    <div class="tag">Regulations</div>
+                                    <div class="tag">Business Travel</div>
+                                    <div class="tag">Border Crossings</div>
+                                    <div class="tag">Vehicle Services</div>
+                                </div>
+
+                                <div class="article-grid">
+                                    <div class="article-card">
+                                        <div class="article-image">
+                                            <div class="article-category-badge">Regulations</div>
+                                        </div>
+                                        <div class="article-content">
+                                            <div class="article-title">New Border Crossing Procedures: What Travelers Need to Know</div>
+                                            <div class="article-excerpt">Recent updates to border crossing procedures between Hong Kong and Mainland China. Learn about new documentation requirements and processing times.</div>
+                                            <div class="article-meta">
+                                                <div class="article-date">
+                                                    <span>📅</span>
+                                                    <span>March 10, 2024</span>
+                                                </div>
+                                                <div class="read-time">5 min read</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="article-card">
+                                        <div class="article-image">
+                                            <div class="article-category-badge">Business</div>
+                                        </div>
+                                        <div class="article-content">
+                                            <div class="article-title">Optimizing Business Travel Routes: Time and Cost Savings</div>
+                                            <div class="article-excerpt">Discover the most efficient routes for business travelers, including peak hour strategies and cost-effective travel planning tips.</div>
+                                            <div class="article-meta">
+                                                <div class="article-date">
+                                                    <span>📅</span>
+                                                    <span>March 8, 2024</span>
+                                                </div>
+                                                <div class="read-time">7 min read</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="article-card">
+                                        <div class="article-image">
+                                            <div class="article-category-badge">Travel Tips</div>
+                                        </div>
+                                        <div class="article-content">
+                                            <div class="article-title">Essential Documents Checklist for Cross-Border Travel</div>
+                                            <div class="article-excerpt">A comprehensive checklist of all required documents, permits, and identification needed for smooth border crossings.</div>
+                                            <div class="article-meta">
+                                                <div class="article-date">
+                                                    <span>📅</span>
+                                                    <span>March 5, 2024</span>
+                                                </div>
+                                                <div class="read-time">4 min read</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="article-card">
+                                        <div class="article-image">
+                                            <div class="article-category-badge">Vehicle Services</div>
+                                        </div>
+                                        <div class="article-content">
+                                            <div class="article-title">Choosing the Right Vehicle for Your Cross-Border Journey</div>
+                                            <div class="article-excerpt">Compare different vehicle options, from business class sedans to luxury SUVs, and find the perfect match for your travel needs.</div>
+                                            <div class="article-meta">
+                                                <div class="article-date">
+                                                    <span>📅</span>
+                                                    <span>March 3, 2024</span>
+                                                </div>
+                                                <div class="read-time">6 min read</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Pagination -->
+                                <div class="pagination">
+                                    <button class="page-btn" disabled>← Previous</button>
+                                    <button class="page-btn active">1</button>
+                                    <button class="page-btn">2</button>
+                                    <button class="page-btn">3</button>
+                                    <button class="page-btn">4</button>
+                                    <button class="page-btn">Next →</button>
+                                </div>
+                            </div>
+
+                            <!-- Sidebar -->
+                            <div class="sidebar">
+                                <!-- Categories Widget -->
+                                <div class="sidebar-widget">
+                                    <div class="widget-title">Categories</div>
+                                    <div class="category-list">
+                                        <div class="category-item active">
+                                            <div class="category-name">All Articles</div>
+                                            <div class="category-count">24</div>
+                                        </div>
+                                        <div class="category-item">
+                                            <div class="category-name">Travel Tips</div>
+                                            <div class="category-count">8</div>
+                                        </div>
+                                        <div class="category-item">
+                                            <div class="category-name">Regulations</div>
+                                            <div class="category-count">6</div>
+                                        </div>
+                                        <div class="category-item">
+                                            <div class="category-name">Business Travel</div>
+                                            <div class="category-count">5</div>
+                                        </div>
+                                        <div class="category-item">
+                                            <div class="category-name">Border Crossings</div>
+                                            <div class="category-count">3</div>
+                                        </div>
+                                        <div class="category-item">
+                                            <div class="category-name">Vehicle Services</div>
+                                            <div class="category-count">2</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Popular Articles Widget -->
+                                <div class="sidebar-widget">
+                                    <div class="widget-title">Popular This Month</div>
+                                    <div class="popular-articles">
+                                        <div class="popular-item">
+                                            <div class="popular-image"></div>
+                                            <div class="popular-content">
+                                                <div class="popular-title">Hong Kong to Shenzhen: The Complete Guide</div>
+                                                <div class="popular-meta">15,432 views • 8 min read</div>
+                                            </div>
+                                        </div>
+                                        <div class="popular-item">
+                                            <div class="popular-image"></div>
+                                            <div class="popular-content">
+                                                <div class="popular-title">Business Travel Essentials</div>
+                                                <div class="popular-meta">12,876 views • 6 min read</div>
+                                            </div>
+                                        </div>
+                                        <div class="popular-item">
+                                            <div class="popular-image"></div>
+                                            <div class="popular-content">
+                                                <div class="popular-title">Border Crossing Best Practices</div>
+                                                <div class="popular-meta">9,543 views • 5 min read</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Tags Widget -->
+                                <div class="sidebar-widget">
+                                    <div class="widget-title">Popular Tags</div>
+                                    <div class="tag-cloud">
+                                        <div class="tag">Hong Kong</div>
+                                        <div class="tag">Shenzhen</div>
+                                        <div class="tag">Guangzhou</div>
+                                        <div class="tag">Business</div>
+                                        <div class="tag">Tourism</div>
+                                        <div class="tag">Documents</div>
+                                        <div class="tag">Permits</div>
+                                        <div class="tag">Transportation</div>
+                                        <div class="tag">Airport</div>
+                                        <div class="tag">Customs</div>
+                                    </div>
+                                </div>
+
+                                <!-- Newsletter Signup Widget -->
+                                <div class="newsletter-signup">
+                                    <div class="newsletter-title">Stay Updated</div>
+                                    <div class="newsletter-desc">Get the latest travel tips and industry updates delivered to your inbox</div>
+                                    <div class="newsletter-form">
+                                        <input type="email" class="newsletter-input" placeholder="Enter email">
+                                        <button class="newsletter-btn">Subscribe</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- List View Layout -->
+        <div class="layout-section">
+            <div class="section-header">📋 Alternative List View Layout</div>
+            <div class="layout-content">
+                <div class="device-frame desktop-frame">
+                    <div class="nav-bar">
+                        <div class="logo">
+                            <span class="accent">●</span> CrossBorder
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 16px;">
+                            <div style="font-size: 14px; color: #666;">View:</div>
+                            <div style="display: flex; gap: 4px;">
+                                <button style="padding: 6px 8px; border: 1px solid #e0e0e0; background: white; border-radius: 4px; cursor: pointer;">⊞</button>
+                                <button style="padding: 6px 8px; border: 1px solid #FF69B4; background: #FFF0F5; color: #FF69B4; border-radius: 4px; cursor: pointer;">☰</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="blog-container">
+                        <div class="blog-header">
+                            <div class="blog-title">Travel Articles & Guides</div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px;">
+                                <div style="color: #666;">Showing 1-10 of 24 articles</div>
+                                <select style="padding: 8px 12px; border: 1px solid #e0e0e0; border-radius: 4px;">
+                                    <option>Sort by: Latest</option>
+                                    <option>Sort by: Most Popular</option>
+                                    <option>Sort by: A-Z</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="list-view">
+                            <div class="list-article">
+                                <div class="list-image"></div>
+                                <div class="list-content">
+                                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                                        <div class="tag">Travel Guide</div>
+                                        <div style="font-size: 12px; color: #999;">March 15, 2024</div>
+                                    </div>
+                                    <div class="list-title">Complete Guide to Cross-Border Travel in 2024</div>
+                                    <div class="article-excerpt">Everything you need to know about traveling between Hong Kong and Mainland China, including new regulations, documentation requirements, and insider tips from local experts. This comprehensive guide covers all aspects of cross-border travel.</div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px;">
+                                        <div style="font-size: 12px; color: #999;">By John Doe • 8 min read • 15,432 views</div>
+                                        <div style="font-size: 12px; color: #FF69B4; font-weight: 500;">Read More →</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="list-article">
+                                <div class="list-image"></div>
+                                <div class="list-content">
+                                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                                        <div class="tag">Regulations</div>
+                                        <div style="font-size: 12px; color: #999;">March 10, 2024</div>
+                                    </div>
+                                    <div class="list-title">New Border Crossing Procedures: What Travelers Need to Know</div>
+                                    <div class="article-excerpt">Recent updates to border crossing procedures between Hong Kong and Mainland China. Learn about new documentation requirements and processing times that came into effect in 2024.</div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px;">
+                                        <div style="font-size: 12px; color: #999;">By Sarah Wong • 5 min read • 12,876 views</div>
+                                        <div style="font-size: 12px; color: #FF69B4; font-weight: 500;">Read More →</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="list-article">
+                                <div class="list-image"></div>
+                                <div class="list-content">
+                                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                                        <div class="tag">Business</div>
+                                        <div style="font-size: 12px; color: #999;">March 8, 2024</div>
+                                    </div>
+                                    <div class="list-title">Optimizing Business Travel Routes: Time and Cost Savings</div>
+                                    <div class="article-excerpt">Discover the most efficient routes for business travelers, including peak hour strategies and cost-effective travel planning tips that can save both time and money.</div>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px;">
+                                        <div style="font-size: 12px; color: #999;">By Michael Chen • 7 min read • 9,543 views</div>
+                                        <div style="font-size: 12px; color: #FF69B4; font-weight: 500;">Read More →</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pagination">
+                            <button class="page-btn" disabled>← Previous</button>
+                            <button class="page-btn active">1</button>
+                            <button class="page-btn">2</button>
+                            <button class="page-btn">3</button>
+                            <button class="page-btn">Next →</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Blog Layout -->
+        <div class="layout-section">
+            <div class="section-header">📱 Mobile Blog Layout</div>
+            <div class="layout-content">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
+                    <div class="device-frame" style="max-width: 375px; margin: 0 auto;">
+                        <div class="nav-bar" style="padding: 12px 16px;">
+                            <div class="logo" style="font-size: 16px;">
+                                <span class="accent">●</span> CrossBorder
+                            </div>
+                            <div style="font-size: 18px;">☰</div>
+                        </div>
+                        
+                        <div style="padding: 16px; background: #fafafa;">
+                            <div style="text-align: center; margin-bottom: 24px;">
+                                <div style="font-size: 24px; font-weight: 700; color: #171A20; margin-bottom: 8px;">Travel Magazine</div>
+                                <div style="font-size: 14px; color: #666;">Expert travel insights</div>
+                            </div>
+
+                            <!-- Mobile Search -->
+                            <div style="position: relative; margin-bottom: 24px;">
+                                <input type="text" style="width: 100%; padding: 10px 40px 10px 12px; border: 2px solid #e0e0e0; border-radius: 20px; font-size: 14px; box-sizing: border-box;" placeholder="Search articles...">
+                                <div style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: #666;">🔍</div>
+                            </div>
+
+                            <!-- Mobile Featured Article -->
+                            <div style="position: relative; height: 200px; background: linear-gradient(135deg, #FFB6C1, #FF69B4); border-radius: 8px; overflow: hidden; margin-bottom: 24px;">
+                                <div style="position: absolute; top: 12px; left: 12px; background: rgba(255, 105, 180, 0.9); color: white; padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: 600;">FEATURED</div>
+                                <div style="position: absolute; inset: 0; background: linear-gradient(transparent 0%, rgba(0,0,0,0.8) 100%); display: flex; flex-direction: column; justify-content: flex-end; padding: 16px; color: white;">
+                                    <div style="font-size: 18px; font-weight: 700; line-height: 1.2; margin-bottom: 4px;">2024 Travel Guide</div>
+                                    <div style="font-size: 12px; opacity: 0.9;">March 15 • 8 min read</div>
+                                </div>
+                            </div>
+
+                            <!-- Mobile Category Tags -->
+                            <div style="display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 4px;">
+                                <div style="background: #FF69B4; color: white; padding: 6px 12px; border-radius: 15px; font-size: 12px; white-space: nowrap;">All</div>
+                                <div style="background: #f0f0f0; color: #666; padding: 6px 12px; border-radius: 15px; font-size: 12px; white-space: nowrap;">Tips</div>
+                                <div style="background: #f0f0f0; color: #666; padding: 6px 12px; border-radius: 15px; font-size: 12px; white-space: nowrap;">Business</div>
+                                <div style="background: #f0f0f0; color: #666; padding: 6px 12px; border-radius: 15px; font-size: 12px; white-space: nowrap;">Regulations</div>
+                            </div>
+
+                            <!-- Mobile Article Cards -->
+                            <div style="display: flex; flex-direction: column; gap: 16px;">
+                                <div style="background: white; border-radius: 8px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+                                    <div style="display: flex; gap: 12px;">
+                                        <div style="width: 80px; height: 60px; background: linear-gradient(135deg, #FFB6C1, #FF69B4); border-radius: 6px; flex-shrink: 0;"></div>
+                                        <div style="flex: 1;">
+                                            <div style="font-size: 14px; font-weight: 600; color: #171A20; line-height: 1.3; margin-bottom: 4px;">New Border Procedures</div>
+                                            <div style="font-size: 11px; color: #999; margin-bottom: 4px;">March 10 • 5 min read</div>
+                                            <div style="font-size: 11px; color: #FF69B4; font-weight: 500;">Regulations</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div style="background: white; border-radius: 8px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+                                    <div style="display: flex; gap: 12px;">
+                                        <div style="width: 80px; height: 60px; background: linear-gradient(135deg, #FFB6C1, #FF69B4); border-radius: 6px; flex-shrink: 0;"></div>
+                                        <div style="flex: 1;">
+                                            <div style="font-size: 14px; font-weight: 600; color: #171A20; line-height: 1.3; margin-bottom: 4px;">Business Travel Tips</div>
+                                            <div style="font-size: 11px; color: #999; margin-bottom: 4px;">March 8 • 7 min read</div>
+                                            <div style="font-size: 11px; color: #FF69B4; font-weight: 500;">Business</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Mobile Load More -->
+                            <div style="text-align: center; margin-top: 24px;">
+                                <button style="background: #FF69B4; color: white; border: none; padding: 12px 24px; border-radius: 6px; font-size: 14px; cursor: pointer;">Load More Articles</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SEO & Performance Features -->
+        <div class="layout-section">
+            <div class="section-header">🚀 SEO & Performance Features</div>
+            <div class="layout-content">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
+                    <div style="background: #F0F8FF; padding: 20px; border-radius: 8px; border: 2px solid #0066CC;">
+                        <h3 style="margin-top: 0; color: #0066CC;">📊 SEO Optimization</h3>
+                        <ul style="margin: 0; font-size: 14px;">
+                            <li>Meta title and description optimization</li>
+                            <li>Schema markup for articles</li>
+                            <li>Open Graph and Twitter Card tags</li>
+                            <li>Semantic HTML structure</li>
+                            <li>Clean URL slugs</li>
+                            <li>Internal linking strategy</li>
+                            <li>Image alt text optimization</li>
+                            <li>Loading speed optimization</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="background: #F0FFF0; padding: 20px; border-radius: 8px; border: 2px solid #00D563;">
+                        <h3 style="margin-top: 0; color: #00D563;">⚡ Performance Features</h3>
+                        <ul style="margin: 0; font-size: 14px;">
+                            <li>Lazy loading for images</li>
+                            <li>Optimized image formats (WebP)</li>
+                            <li>CDN delivery for assets</li>
+                            <li>Minified CSS and JavaScript</li>
+                            <li>Caching strategies</li>
+                            <li>Progressive loading</li>
+                            <li>Mobile-first optimization</li>
+                            <li>Core Web Vitals compliance</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="background: #FFF0F5; padding: 20px; border-radius: 8px; border: 2px solid #FF69B4;">
+                        <h3 style="margin-top: 0; color: #FF69B4;">🎯 User Experience</h3>
+                        <ul style="margin: 0; font-size: 14px;">
+                            <li>Infinite scroll or pagination options</li>
+                            <li>Advanced search with filters</li>
+                            <li>Related articles recommendations</li>
+                            <li>Reading progress indicators</li>
+                            <li>Social sharing integration</li>
+                            <li>Newsletter subscription</li>
+                            <li>Comment system integration</li>
+                            <li>Personalized content suggestions</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="background: #FFF8E7; padding: 20px; border-radius: 8px; border: 2px solid #FFB800;">
+                        <h3 style="margin-top: 0; color: #FFB800;">📈 Analytics Integration</h3>
+                        <ul style="margin: 0; font-size: 14px;">
+                            <li>Google Analytics 4 tracking</li>
+                            <li>Article performance metrics</li>
+                            <li>User engagement tracking</li>
+                            <li>Conversion funnel analysis</li>
+                            <li>A/B testing capabilities</li>
+                            <li>Heat map integration</li>
+                            <li>Real-time visitor tracking</li>
+                            <li>Content optimization insights</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

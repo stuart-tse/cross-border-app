@@ -1,0 +1,1670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Car Management Wireframes - Cross-Border Transportation App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #171A20;
+            background: #FAFAFA;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        h1, h2, h3 {
+            margin-bottom: 1rem;
+            color: #171A20;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 2rem;
+            background: linear-gradient(45deg, #FF69B4, #FF1493);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h2 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-top: 3rem;
+            border-bottom: 2px solid #FF69B4;
+            padding-bottom: 0.5rem;
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #FF1493;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .wireframe-section {
+            background: white;
+            border: 1px solid #E0E0E0;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        }
+
+        .device-mockup {
+            width: 375px;
+            background: white;
+            border: 8px solid #333;
+            border-radius: 25px;
+            padding: 20px 15px;
+            margin: 0 auto 2rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            position: relative;
+        }
+
+        .device-mockup::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: #333;
+            border-radius: 2px;
+        }
+
+        .device-screen {
+            background: #F8F9FA;
+            border-radius: 8px;
+            min-height: 600px;
+            overflow: hidden;
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 15px;
+            background: #000;
+            color: white;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .nav-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: white;
+            border-bottom: 1px solid #E0E0E0;
+        }
+
+        .nav-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #171A20;
+        }
+
+        .nav-button {
+            background: #FF69B4;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            background: #666;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+
+        .content-area {
+            padding: 15px;
+        }
+
+        .vehicle-card {
+            background: white;
+            border: 1px solid #E0E0E0;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .vehicle-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .vehicle-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #171A20;
+            margin-bottom: 4px;
+        }
+
+        .vehicle-subtitle {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+            margin: 2px;
+        }
+
+        .status-active { background: #E8F5E8; color: #2E7D2E; }
+        .status-expiring { background: #FFF3CD; color: #856404; }
+        .status-expired { background: #F8D7DA; color: #721C24; }
+        .status-maintenance { background: #E3F2FD; color: #1565C0; }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 6px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #D0D0D0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #D0D0D0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 12px center;
+            background-repeat: no-repeat;
+            background-size: 16px;
+            padding-right: 40px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .checkbox {
+            margin-right: 8px;
+        }
+
+        .checkbox-label {
+            font-size: 14px;
+            color: #333;
+        }
+
+        .upload-zone {
+            border: 2px dashed #FF69B4;
+            border-radius: 12px;
+            padding: 30px 15px;
+            text-align: center;
+            background: #FFF0F5;
+            color: #FF1493;
+            margin: 15px 0;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .photo-placeholder {
+            aspect-ratio: 1;
+            background: #F0F0F0;
+            border: 1px solid #D0D0D0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #999;
+        }
+
+        .photo-uploaded {
+            background: #E8F5E8;
+            color: #2E7D2E;
+        }
+
+        .button-primary {
+            background: #FF69B4;
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        .button-secondary {
+            background: transparent;
+            color: #FF69B4;
+            border: 1px solid #FF69B4;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            width: 100%;
+            margin: 5px 0;
+        }
+
+        .button-small {
+            background: #0066CC;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .progress-bar {
+            background: #E0E0E0;
+            height: 6px;
+            border-radius: 3px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #FF69B4, #FF1493);
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .progress-step {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #E0E0E0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            position: relative;
+        }
+
+        .progress-step.active {
+            background: #FF69B4;
+        }
+
+        .progress-step.completed {
+            background: #00D563;
+        }
+
+        .progress-step::after {
+            content: '';
+            position: absolute;
+            right: -50px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 2px;
+            background: #E0E0E0;
+        }
+
+        .progress-step:last-child::after {
+            display: none;
+        }
+
+        .notification-item {
+            background: white;
+            border-left: 4px solid #FF69B4;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .notification-urgent {
+            border-left-color: #FF4B4B;
+            background: #FFF5F5;
+        }
+
+        .notification-header {
+            font-size: 14px;
+            font-weight: 600;
+            color: #171A20;
+            margin-bottom: 5px;
+        }
+
+        .notification-body {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .notification-time {
+            font-size: 11px;
+            color: #999;
+        }
+
+        .notification-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .document-item {
+            background: white;
+            border: 1px solid #E0E0E0;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+        }
+
+        .document-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .document-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #171A20;
+        }
+
+        .document-info {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .document-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .tab-bar {
+            display: flex;
+            background: #F0F0F0;
+            border-radius: 8px;
+            margin: 15px 0;
+            padding: 4px;
+        }
+
+        .tab-item {
+            flex: 1;
+            padding: 10px 8px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 500;
+            color: #666;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .tab-item.active {
+            background: white;
+            color: #FF1493;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #E0E0E0;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0 20px;
+        }
+
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 11px;
+            color: #666;
+        }
+
+        .bottom-nav-item.active {
+            color: #FF69B4;
+        }
+
+        .bottom-nav-icon {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 4px;
+            background: currentColor;
+            border-radius: 4px;
+        }
+
+        .floating-action {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            background: #FF69B4;
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 24px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(375px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .accessibility-indicator {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #00D563;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .device-mockup {
+                width: 100%;
+                max-width: 375px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📱 Mobile Car Management Wireframes</h1>
+        <p style="text-align: center; font-size: 1.1rem; color: #616161; margin-bottom: 3rem;">
+            Responsive mobile interface designs for cross-border transportation vehicle management
+        </p>
+
+        <h2>🏠 1. Vehicle Dashboard - Mobile Overview</h2>
+
+        <div class="wireframe-section">
+            <h3>1.1 Primary Dashboard View</h3>
+            <div class="comparison-grid">
+                <div class="device-mockup">
+                    <div class="accessibility-indicator">WCAG AA</div>
+                    <div class="device-screen">
+                        <div class="status-bar">
+                            <span>9:41 AM</span>
+                            <span>📶 🔋 100%</span>
+                        </div>
+                        
+                        <div class="nav-header">
+                            <div class="nav-title">🚗 My Vehicles</div>
+                            <button class="nav-button">+ Add</button>
+                        </div>
+
+                        <div class="content-area">
+                            <!-- Search & Filter -->
+                            <div class="form-group">
+                                <input type="text" class="form-input" placeholder="🔍 Search vehicles..." />
+                            </div>
+
+                            <!-- Summary Cards -->
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;">
+                                <div style="background: #E8F5E8; padding: 15px; border-radius: 12px; text-align: center;">
+                                    <div style="font-size: 24px; font-weight: 700; color: #2E7D2E;">3</div>
+                                    <div style="font-size: 12px; color: #2E7D2E;">Active Vehicles</div>
+                                </div>
+                                <div style="background: #FFF3CD; padding: 15px; border-radius: 12px; text-align: center;">
+                                    <div style="font-size: 24px; font-weight: 700; color: #856404;">1</div>
+                                    <div style="font-size: 12px; color: #856404;">Needs Attention</div>
+                                </div>
+                            </div>
+
+                            <!-- Vehicle Cards -->
+                            <div class="vehicle-card">
+                                <div class="vehicle-header">
+                                    <div>
+                                        <div class="vehicle-title">2023 BMW X5</div>
+                                        <div class="vehicle-subtitle">HK-BC-1234 • Executive</div>
+                                        <div style="margin-top: 8px;">
+                                            <span class="status-badge status-active">✅ Active</span>
+                                            <span class="status-badge status-expiring">⚠️ Permit Expiring</span>
+                                        </div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <div style="font-size: 12px; color: #666;">Last Service</div>
+                                        <div style="font-size: 14px; font-weight: 500;">Jan 10, 2024</div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 8px; margin-top: 12px;">
+                                    <button class="button-small">View</button>
+                                    <button class="button-small" style="background: #FF69B4;">Manage</button>
+                                </div>
+                            </div>
+
+                            <div class="vehicle-card">
+                                <div class="vehicle-header">
+                                    <div>
+                                        <div class="vehicle-title">2022 Mercedes E-Class</div>
+                                        <div class="vehicle-subtitle">HK-DE-5678 • Business</div>
+                                        <div style="margin-top: 8px;">
+                                            <span class="status-badge status-active">✅ Active</span>
+                                        </div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <div style="font-size: 12px; color: #666;">Next Service</div>
+                                        <div style="font-size: 14px; font-weight: 500;">Mar 15, 2024</div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 8px; margin-top: 12px;">
+                                    <button class="button-small">View</button>
+                                    <button class="button-small" style="background: #FF69B4;">Manage</button>
+                                </div>
+                            </div>
+
+                            <div class="vehicle-card" style="border-color: #FF4B4B;">
+                                <div class="vehicle-header">
+                                    <div>
+                                        <div class="vehicle-title">2021 Toyota Alphard</div>
+                                        <div class="vehicle-subtitle">HK-FG-9012 • Premium</div>
+                                        <div style="margin-top: 8px;">
+                                            <span class="status-badge status-expired">❌ Documents Expired</span>
+                                        </div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <div style="font-size: 12px; color: #FF4B4B;">Action Required</div>
+                                        <button class="button-small" style="background: #FF4B4B;">Renew Now</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Floating Action Button -->
+                    <button class="floating-action">+</button>
+
+                    <!-- Bottom Navigation -->
+                    <div class="bottom-nav">
+                        <div class="bottom-nav-item active">
+                            <div class="bottom-nav-icon"></div>
+                            <span>Vehicles</span>
+                        </div>
+                        <div class="bottom-nav-item">
+                            <div class="bottom-nav-icon"></div>
+                            <span>Trips</span>
+                        </div>
+                        <div class="bottom-nav-item">
+                            <div class="bottom-nav-icon"></div>
+                            <span>Earnings</span>
+                        </div>
+                        <div class="bottom-nav-item">
+                            <div class="bottom-nav-icon"></div>
+                            <span>Profile</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alternative Compact View -->
+                <div class="device-mockup">
+                    <div class="accessibility-indicator">Compact</div>
+                    <div class="device-screen">
+                        <div class="status-bar">
+                            <span>9:41 AM</span>
+                            <span>📶 🔋 100%</span>
+                        </div>
+                        
+                        <div class="nav-header">
+                            <div class="nav-icon">←</div>
+                            <div class="nav-title">Vehicles (3)</div>
+                            <div class="nav-icon">⋮</div>
+                        </div>
+
+                        <div class="content-area">
+                            <!-- Quick Actions -->
+                            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                                <button class="button-primary" style="flex: 1;">+ Add Vehicle</button>
+                                <button class="button-secondary" style="flex: 1;">🔔 Alerts (1)</button>
+                            </div>
+
+                            <!-- List View -->
+                            <div style="background: white; border-radius: 12px; padding: 10px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 8px; border-bottom: 1px solid #F0F0F0;">
+                                    <div>
+                                        <div style="font-size: 16px; font-weight: 600;">BMW X5</div>
+                                        <div style="font-size: 12px; color: #666;">HK-BC-1234</div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <span class="status-badge status-active" style="font-size: 10px;">Active</span>
+                                        <div style="font-size: 11px; color: #FF4B4B; margin-top: 4px;">Permit expiring</div>
+                                    </div>
+                                </div>
+                                
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 8px; border-bottom: 1px solid #F0F0F0;">
+                                    <div>
+                                        <div style="font-size: 16px; font-weight: 600;">Mercedes E-Class</div>
+                                        <div style="font-size: 12px; color: #666;">HK-DE-5678</div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <span class="status-badge status-active" style="font-size: 10px;">Active</span>
+                                        <div style="font-size: 11px; color: #666; margin-top: 4px;">All good</div>
+                                    </div>
+                                </div>
+                                
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 8px;">
+                                    <div>
+                                        <div style="font-size: 16px; font-weight: 600;">Toyota Alphard</div>
+                                        <div style="font-size: 12px; color: #666;">HK-FG-9012</div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <span class="status-badge status-expired" style="font-size: 10px;">Expired</span>
+                                        <div style="font-size: 11px; color: #FF4B4B; margin-top: 4px;">Action needed</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2>➕ 2. Add Vehicle Flow - Mobile</h2>
+
+        <div class="wireframe-section">
+            <h3>2.1 Step 1: Basic Information</h3>
+            <div class="comparison-grid">
+                <div class="device-mockup">
+                    <div class="accessibility-indicator">Step 1/4</div>
+                    <div class="device-screen">
+                        <div class="status-bar">
+                            <span>9:41 AM</span>
+                            <span>📶 🔋 100%</span>
+                        </div>
+                        
+                        <div class="nav-header">
+                            <div class="nav-icon">←</div>
+                            <div class="nav-title">Add Vehicle</div>
+                            <button class="nav-button" style="font-size: 12px; padding: 6px 10px;">Save Draft</button>
+                        </div>
+
+                        <div class="content-area">
+                            <!-- Progress Indicator -->
+                            <div class="progress-steps">
+                                <div class="progress-step active">1</div>
+                                <div class="progress-step">2</div>
+                                <div class="progress-step">3</div>
+                                <div class="progress-step">4</div>
+                            </div>
+
+                            <h3 style="margin-bottom: 20px;">Basic Information</h3>
+
+                            <div class="form-group">
+                                <label class="form-label">Vehicle Make</label>
+                                <select class="form-select">
+                                    <option>BMW</option>
+                                    <option>Mercedes-Benz</option>
+                                    <option>Toyota</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Model</label>
+                                <input type="text" class="form-input" placeholder="e.g., X5" />
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                <div class="form-group">
+                                    <label class="form-label">Year</label>
+                                    <select class="form-select">
+                                        <option>2024</option>
+                                        <option>2023</option>
+                                        <option>2022</option>
+                                        <option>2021</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Color</label>
+                                    <select class="form-select">
+                                        <option>Space Gray</option>
+                                        <option>Black</option>
+                                        <option>White</option>
+                                        <option>Other</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">License Plate</label>
+                                <input type="text" class="form-input" placeholder="HK-BC-1234" />
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">VIN Number</label>
+                                <input type="text" class="form-input" placeholder="17-character VIN" />
+                                <div style="font-size: 12px; color: #666; margin-top: 4px;">
+                                    Found on dashboard or driver's side door
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Current Mileage (km)</label>
+                                <input type="number" class="form-input" placeholder="28,450" />
+                            </div>
+
+                            <button class="button-primary" style="margin-top: 20px;">Continue to Features</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="device-mockup">
+                    <div class="accessibility-indicator">Step 2/4</div>
+                    <div class="device-screen">
+                        <div class="status-bar">
+                            <span>9:41 AM</span>
+                            <span>📶 🔋 100%</span>
+                        </div>
+                        
+                        <div class="nav-header">
+                            <div class="nav-icon">←</div>
+                            <div class="nav-title">Vehicle Features</div>
+                            <button class="nav-button" style="font-size: 12px; padding: 6px 10px;">Save Draft</button>
+                        </div>
+
+                        <div class="content-area">
+                            <!-- Progress Indicator -->
+                            <div class="progress-steps">
+                                <div class="progress-step completed">✓</div>
+                                <div class="progress-step active">2</div>
+                                <div class="progress-step">3</div>
+                                <div class="progress-step">4</div>
+                            </div>
+
+                            <h3 style="margin-bottom: 20px;">Features & Specifications</h3>
+
+                            <div class="form-group">
+                                <label class="form-label">Vehicle Category</label>
+                                <select class="form-select">
+                                    <option>Executive</option>
+                                    <option>Business</option>
+                                    <option>Economy</option>
+                                    <option>Luxury</option>
+                                </select>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                <div class="form-group">
+                                    <label class="form-label">Max Passengers</label>
+                                    <select class="form-select">
+                                        <option>4</option>
+                                        <option>6</option>
+                                        <option>8</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Fuel Type</label>
+                                    <select class="form-select">
+                                        <option>Hybrid</option>
+                                        <option>Petrol</option>
+                                        <option>Electric</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Standard Features</label>
+                                <div style="background: #F8F9FA; padding: 15px; border-radius: 8px;">
+                                    <div class="checkbox-group">
+                                        <input type="checkbox" class="checkbox" checked />
+                                        <label class="checkbox-label">Air Conditioning</label>
+                                    </div>
+                                    <div class="checkbox-group">
+                                        <input type="checkbox" class="checkbox" checked />
+                                        <label class="checkbox-label">GPS Navigation</label>
+                                    </div>
+                                    <div class="checkbox-group">
+                                        <input type="checkbox" class="checkbox" checked />
+                                        <label class="checkbox-label">Wi-Fi Hotspot</label>
+                                    </div>
+                                    <div class="checkbox-group">
+                                        <input type="checkbox" class="checkbox" checked />
+                                        <label class="checkbox-label">USB Charging Ports</label>
+                                    </div>
+                                    <div class="checkbox-group">
+                                        <input type="checkbox" class="checkbox" />
+                                        <label class="checkbox-label">Rear Entertainment System</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Premium Features</label>
+                                <div style="background: #FFF0F5; padding: 15px; border-radius: 8px;">
+                                    <div class="checkbox-group">
+                                        <input type="checkbox" class="checkbox" checked />
+                                        <label class="checkbox-label">Leather Interior</label>
+                                    </div>
+                                    <div class="checkbox-group">
+                                        <input type="checkbox" class="checkbox" checked />
+                                        <label class="checkbox-label">Premium Sound System</label>
+                                    </div>
+                                    <div class="checkbox-group">
+                                        <input type="checkbox" class="checkbox" />
+                                        <label class="checkbox-label">Massage Seats</label>
+                                    </div>
+                                    <div class="checkbox-group">
+                                        <input type="checkbox" class="checkbox" />
+                                        <label class="checkbox-label">Panoramic Sunroof</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                                <button class="button-secondary" style="flex: 1;">Back</button>
+                                <button class="button-primary" style="flex: 2;">Continue to Photos</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3>2.2 Step 3: Photo Upload</h3>
+            <div class="comparison-grid">
+                <div class="device-mockup">
+                    <div class="accessibility-indicator">Step 3/4</div>
+                    <div class="device-screen">
+                        <div class="status-bar">
+                            <span>9:41 AM</span>
+                            <span>📶 🔋 100%</span>
+                        </div>
+                        
+                        <div class="nav-header">
+                            <div class="nav-icon">←</div>
+                            <div class="nav-title">Vehicle Photos</div>
+                            <button class="nav-button" style="font-size: 12px; padding: 6px 10px;">Save Draft</button>
+                        </div>
+
+                        <div class="content-area">
+                            <!-- Progress Indicator -->
+                            <div class="progress-steps">
+                                <div class="progress-step completed">✓</div>
+                                <div class="progress-step completed">✓</div>
+                                <div class="progress-step active">3</div>
+                                <div class="progress-step">4</div>
+                            </div>
+
+                            <h3 style="margin-bottom: 20px;">Vehicle Photos</h3>
+
+                            <!-- Upload Zone -->
+                            <div class="upload-zone">
+                                <div class="upload-icon">📷</div>
+                                <div style="font-weight: 600; margin-bottom: 5px;">Take or Upload Photos</div>
+                                <div style="font-size: 12px; margin-bottom: 15px;">Minimum 4 photos required</div>
+                                <div style="display: flex; gap: 10px;">
+                                    <button style="background: #FF69B4; color: white; border: none; padding: 8px 15px; border-radius: 6px; font-size: 14px; flex: 1;">
+                                        📷 Camera
+                                    </button>
+                                    <button style="background: transparent; color: #FF69B4; border: 1px solid #FF69B4; padding: 8px 15px; border-radius: 6px; font-size: 14px; flex: 1;">
+                                        📁 Gallery
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Photo Grid -->
+                            <div class="photo-grid">
+                                <div class="photo-placeholder photo-uploaded">
+                                    <div style="text-align: center;">
+                                        <div>✓</div>
+                                        <div style="font-size: 10px; margin-top: 4px;">Front View</div>
+                                    </div>
+                                </div>
+                                <div class="photo-placeholder photo-uploaded">
+                                    <div style="text-align: center;">
+                                        <div>✓</div>
+                                        <div style="font-size: 10px; margin-top: 4px;">Rear View</div>
+                                    </div>
+                                </div>
+                                <div class="photo-placeholder">
+                                    <div style="text-align: center;">
+                                        <div>📷</div>
+                                        <div style="font-size: 10px; margin-top: 4px;">Side View</div>
+                                    </div>
+                                </div>
+                                <div class="photo-placeholder">
+                                    <div style="text-align: center;">
+                                        <div>📷</div>
+                                        <div style="font-size: 10px; margin-top: 4px;">Interior</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Progress -->
+                            <div style="background: #F8F9FA; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                    <span style="font-size: 14px; font-weight: 500;">Upload Progress</span>
+                                    <span style="font-size: 14px; color: #666;">2 of 4</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 50%;"></div>
+                                </div>
+                            </div>
+
+                            <!-- Tips -->
+                            <div style="background: #E3F2FD; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                                <div style="font-size: 14px; font-weight: 600; color: #1565C0; margin-bottom: 8px;">📝 Photo Tips</div>
+                                <ul style="font-size: 12px; color: #1565C0; margin-left: 15px;">
+                                    <li>Take photos in good lighting</li>
+                                    <li>Include license plate clearly</li>
+                                    <li>Show overall vehicle condition</li>
+                                    <li>Avoid reflections and shadows</li>
+                                </ul>
+                            </div>
+
+                            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                                <button class="button-secondary" style="flex: 1;">Back</button>
+                                <button class="button-primary" style="flex: 2;">Continue to Documents</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="device-mockup">
+                    <div class="accessibility-indicator">Step 4/4</div>
+                    <div class="device-screen">
+                        <div class="status-bar">
+                            <span>9:41 AM</span>
+                            <span>📶 🔋 100%</span>
+                        </div>
+                        
+                        <div class="nav-header">
+                            <div class="nav-icon">←</div>
+                            <div class="nav-title">Documents</div>
+                            <button class="nav-button" style="font-size: 12px; padding: 6px 10px;">Save Draft</button>
+                        </div>
+
+                        <div class="content-area">
+                            <!-- Progress Indicator -->
+                            <div class="progress-steps">
+                                <div class="progress-step completed">✓</div>
+                                <div class="progress-step completed">✓</div>
+                                <div class="progress-step completed">✓</div>
+                                <div class="progress-step active">4</div>
+                            </div>
+
+                            <h3 style="margin-bottom: 20px;">Required Documents</h3>
+
+                            <!-- Document Upload Items -->
+                            <div style="space-y: 15px;">
+                                <div style="background: white; border: 1px solid #E0E0E0; border-radius: 12px; padding: 15px; margin-bottom: 15px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                        <div style="font-size: 15px; font-weight: 600;">📋 Vehicle Registration</div>
+                                        <span style="background: #E8F5E8; color: #2E7D2E; padding: 4px 8px; border-radius: 12px; font-size: 11px;">Required</span>
+                                    </div>
+                                    <button style="background: #F8F9FA; border: 1px solid #D0D0D0; padding: 12px; border-radius: 8px; width: 100%; text-align: center; font-size: 14px;">
+                                        📄 Upload Registration Document
+                                    </button>
+                                </div>
+
+                                <div style="background: white; border: 1px solid #E0E0E0; border-radius: 12px; padding: 15px; margin-bottom: 15px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                        <div style="font-size: 15px; font-weight: 600;">🛡️ Insurance Certificate</div>
+                                        <span style="background: #E8F5E8; color: #2E7D2E; padding: 4px 8px; border-radius: 12px; font-size: 11px;">Required</span>
+                                    </div>
+                                    <button style="background: #F8F9FA; border: 1px solid #D0D0D0; padding: 12px; border-radius: 8px; width: 100%; text-align: center; font-size: 14px;">
+                                        📄 Upload Insurance Certificate
+                                    </button>
+                                </div>
+
+                                <div style="background: white; border: 1px solid #FFB800; border-radius: 12px; padding: 15px; margin-bottom: 15px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                        <div style="font-size: 15px; font-weight: 600;">🌏 Cross-Border Permit</div>
+                                        <span style="background: #FFF3CD; color: #856404; padding: 4px 8px; border-radius: 12px; font-size: 11px;">Optional</span>
+                                    </div>
+                                    <button style="background: #F8F9FA; border: 1px solid #D0D0D0; padding: 12px; border-radius: 8px; width: 100%; text-align: center; font-size: 14px;">
+                                        📄 Upload Permit (Add Later)
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Note -->
+                            <div style="background: #FFF0F5; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                                <div style="font-size: 14px; font-weight: 600; color: #FF1493; margin-bottom: 8px;">💡 Quick Setup</div>
+                                <div style="font-size: 12px; color: #FF1493;">
+                                    You can add cross-border permits and additional documents later from the vehicle management page.
+                                </div>
+                            </div>
+
+                            <div style="display: flex; gap: 10px; margin-top: 30px;">
+                                <button class="button-secondary" style="flex: 1;">Back</button>
+                                <button class="button-primary" style="flex: 2;">Complete Setup</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2>📋 3. Document Management - Mobile</h2>
+
+        <div class="wireframe-section">
+            <h3>3.1 Document Overview</h3>
+            <div class="comparison-grid">
+                <div class="device-mockup">
+                    <div class="accessibility-indicator">Documents</div>
+                    <div class="device-screen">
+                        <div class="status-bar">
+                            <span>9:41 AM</span>
+                            <span>📶 🔋 100%</span>
+                        </div>
+                        
+                        <div class="nav-header">
+                            <div class="nav-icon">←</div>
+                            <div class="nav-title">BMW X5 Documents</div>
+                            <button class="nav-button">+ Add</button>
+                        </div>
+
+                        <div class="content-area">
+                            <!-- Status Summary -->
+                            <div style="background: linear-gradient(135deg, #FF69B4, #FF1493); color: white; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                                <div style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">Document Status</div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; text-align: center;">
+                                    <div>
+                                        <div style="font-size: 24px; font-weight: 700;">6</div>
+                                        <div style="font-size: 12px; opacity: 0.9;">Active</div>
+                                    </div>
+                                    <div>
+                                        <div style="font-size: 24px; font-weight: 700;">1</div>
+                                        <div style="font-size: 12px; opacity: 0.9;">Expiring</div>
+                                    </div>
+                                    <div>
+                                        <div style="font-size: 24px; font-weight: 700;">0</div>
+                                        <div style="font-size: 12px; opacity: 0.9;">Expired</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Urgent Alert -->
+                            <div style="background: #FFF5F5; border: 1px solid #FFC9C9; border-radius: 12px; padding: 15px; margin-bottom: 20px;">
+                                <div style="display: flex; align-items: center; margin-bottom: 8px;">
+                                    <div style="font-size: 20px; margin-right: 10px;">⚠️</div>
+                                    <div style="font-size: 15px; font-weight: 600; color: #DC2626;">Urgent: Document Expiring</div>
+                                </div>
+                                <div style="font-size: 13px; color: #DC2626; margin-bottom: 10px;">
+                                    Customs Permit expires in 12 days
+                                </div>
+                                <button class="button-small" style="background: #DC2626;">Start Renewal</button>
+                            </div>
+
+                            <!-- Document List -->
+                            <div class="document-item">
+                                <div class="document-header">
+                                    <div class="document-title">🌏 Mainland Permit</div>
+                                    <span class="status-badge status-active">Active</span>
+                                </div>
+                                <div class="document-info">
+                                    Permit #: GD-HK-2024-001234<br>
+                                    Expires: Nov 30, 2025 (365 days)
+                                </div>
+                                <div class="document-actions">
+                                    <button class="button-small">View</button>
+                                    <button class="button-small" style="background: #FF69B4;">Edit</button>
+                                </div>
+                            </div>
+
+                            <div class="document-item">
+                                <div class="document-header">
+                                    <div class="document-title">🌍 International Permit</div>
+                                    <span class="status-badge status-active">Active</span>
+                                </div>
+                                <div class="document-info">
+                                    Permit #: IDP-HK-2024-567<br>
+                                    Expires: Dec 31, 2024 (145 days)
+                                </div>
+                                <div class="document-actions">
+                                    <button class="button-small">View</button>
+                                    <button class="button-small" style="background: #FF69B4;">Edit</button>
+                                </div>
+                            </div>
+
+                            <div class="document-item" style="border-color: #FFB800;">
+                                <div class="document-header">
+                                    <div class="document-title">📋 Customs Permit</div>
+                                    <span class="status-badge status-expiring">Expiring Soon</span>
+                                </div>
+                                <div class="document-info">
+                                    Permit #: CP-HK-2024-345<br>
+                                    Expires: Jul 15, 2024 (12 days)
+                                </div>
+                                <div class="document-actions">
+                                    <button class="button-small" style="background: #FFB800;">Renew Now</button>
+                                </div>
+                            </div>
+
+                            <div class="document-item">
+                                <div class="document-header">
+                                    <div class="document-title">🛡️ Insurance Certificate</div>
+                                    <span class="status-badge status-active">Active</span>
+                                </div>
+                                <div class="document-info">
+                                    Policy #: AIA-CV-2024-567890<br>
+                                    Expires: Dec 31, 2024 (145 days)
+                                </div>
+                                <div class="document-actions">
+                                    <button class="button-small">View</button>
+                                    <button class="button-small" style="background: #FF69B4;">Edit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="device-mockup">
+                    <div class="accessibility-indicator">Add Document</div>
+                    <div class="device-screen">
+                        <div class="status-bar">
+                            <span>9:41 AM</span>
+                            <span>📶 🔋 100%</span>
+                        </div>
+                        
+                        <div class="nav-header">
+                            <div class="nav-icon">←</div>
+                            <div class="nav-title">Add Document</div>
+                            <div class="nav-icon">💾</div>
+                        </div>
+
+                        <div class="content-area">
+                            <h3 style="margin-bottom: 20px;">New Document</h3>
+
+                            <div class="form-group">
+                                <label class="form-label">Document Type</label>
+                                <select class="form-select">
+                                    <option>Select document type...</option>
+                                    <option>🌏 Mainland Permit</option>
+                                    <option>🌍 International Permit</option>
+                                    <option>📋 Customs Permit</option>
+                                    <option>🚛 Commercial License</option>
+                                    <option>🛡️ Insurance Certificate</option>
+                                    <option>📄 Other</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Document Number</label>
+                                <input type="text" class="form-input" placeholder="Enter permit/license number" />
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Issuing Authority</label>
+                                <input type="text" class="form-input" placeholder="e.g., Hong Kong Transport Department" />
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                <div class="form-group">
+                                    <label class="form-label">Issue Date</label>
+                                    <input type="date" class="form-input" />
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Expiry Date</label>
+                                    <input type="date" class="form-input" />
+                                </div>
+                            </div>
+
+                            <!-- Upload Area -->
+                            <div class="form-group">
+                                <label class="form-label">Upload Document</label>
+                                <div style="border: 2px dashed #D0D0D0; border-radius: 12px; padding: 30px 15px; text-align: center; background: #F8F9FA;">
+                                    <div style="font-size: 36px; margin-bottom: 10px;">📄</div>
+                                    <div style="font-weight: 600; margin-bottom: 5px;">Upload or Scan Document</div>
+                                    <div style="font-size: 12px; color: #666; margin-bottom: 15px;">PDF, JPG, PNG (Max 10MB)</div>
+                                    <div style="display: flex; gap: 10px;">
+                                        <button style="background: #0066CC; color: white; border: none; padding: 10px 15px; border-radius: 8px; font-size: 14px; flex: 1;">
+                                            📷 Scan
+                                        </button>
+                                        <button style="background: transparent; color: #0066CC; border: 1px solid #0066CC; padding: 10px 15px; border-radius: 8px; font-size: 14px; flex: 1;">
+                                            📁 Browse
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Notification Settings -->
+                            <div class="form-group">
+                                <div style="background: #E3F2FD; padding: 15px; border-radius: 8px;">
+                                    <div style="font-size: 14px; font-weight: 600; color: #1565C0; margin-bottom: 8px;">🔔 Reminder Settings</div>
+                                    <div class="checkbox-group">
+                                        <input type="checkbox" class="checkbox" checked />
+                                        <label class="checkbox-label">Notify me 30 days before expiry</label>
+                                    </div>
+                                    <div class="checkbox-group">
+                                        <input type="checkbox" class="checkbox" checked />
+                                        <label class="checkbox-label">Send urgent alerts 7 days before expiry</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button class="button-primary" style="margin-top: 30px;">Save Document</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2>🔔 4. Notifications - Mobile</h2>
+
+        <div class="wireframe-section">
+            <h3>4.1 Notification Center</h3>
+            <div class="comparison-grid">
+                <div class="device-mockup">
+                    <div class="accessibility-indicator">Alerts</div>
+                    <div class="device-screen">
+                        <div class="status-bar">
+                            <span>9:41 AM</span>
+                            <span>📶 🔋 100%</span>
+                        </div>
+                        
+                        <div class="nav-header">
+                            <div class="nav-icon">←</div>
+                            <div class="nav-title">Notifications</div>
+                            <button class="nav-button" style="font-size: 12px; padding: 6px 10px;">Mark All Read</button>
+                        </div>
+
+                        <div class="content-area">
+                            <!-- Filter Tabs -->
+                            <div class="tab-bar">
+                                <div class="tab-item active">All</div>
+                                <div class="tab-item">Urgent</div>
+                                <div class="tab-item">Documents</div>
+                                <div class="tab-item">Maintenance</div>
+                            </div>
+
+                            <!-- Notifications List -->
+                            <div class="notification-item notification-urgent">
+                                <div class="notification-header">⚠️ Document Expiring Soon</div>
+                                <div class="notification-body">
+                                    Your Customs Permit for BMW X5 (HK-BC-1234) expires in 12 days. Renew now to avoid service interruption.
+                                </div>
+                                <div class="notification-time">2 hours ago</div>
+                                <div class="notification-actions">
+                                    <button class="button-small" style="background: #FF4B4B;">Start Renewal</button>
+                                    <button class="button-small" style="background: transparent; color: #666; border: 1px solid #D0D0D0;">Dismiss</button>
+                                </div>
+                            </div>
+
+                            <div class="notification-item">
+                                <div class="notification-header">📅 Maintenance Reminder</div>
+                                <div class="notification-body">
+                                    Mercedes E-Class (HK-DE-5678) is due for routine service in 5 days. Schedule your appointment now.
+                                </div>
+                                <div class="notification-time">1 day ago</div>
+                                <div class="notification-actions">
+                                    <button class="button-small" style="background: #0066CC;">Schedule Service</button>
+                                    <button class="button-small" style="background: transparent; color: #666; border: 1px solid #D0D0D0;">Later</button>
+                                </div>
+                            </div>
+
+                            <div class="notification-item" style="background: #F8FFF8;">
+                                <div class="notification-header">✅ Document Renewed Successfully</div>
+                                <div class="notification-body">
+                                    International Permit for Toyota Alphard has been successfully renewed. Valid until Dec 31, 2025.
+                                </div>
+                                <div class="notification-time">3 days ago</div>
+                            </div>
+
+                            <div class="notification-item">
+                                <div class="notification-header">📊 Monthly Vehicle Report</div>
+                                <div class="notification-body">
+                                    Your February vehicle performance report is ready. View earnings, trips, and maintenance summary.
+                                </div>
+                                <div class="notification-time">1 week ago</div>
+                                <div class="notification-actions">
+                                    <button class="button-small" style="background: #FF69B4;">View Report</button>
+                                </div>
+                            </div>
+
+                            <div class="notification-item">
+                                <div class="notification-header">🆕 New Feature Available</div>
+                                <div class="notification-body">
+                                    Try our new AI-powered document scanner for faster document processing and OCR extraction.
+                                </div>
+                                <div class="notification-time">2 weeks ago</div>
+                                <div class="notification-actions">
+                                    <button class="button-small" style="background: #00D563;">Try It</button>
+                                    <button class="button-small" style="background: transparent; color: #666; border: 1px solid #D0D0D0;">Later</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="device-mockup">
+                    <div class="accessibility-indicator">Push Notification</div>
+                    <div class="device-screen">
+                        <div class="status-bar">
+                            <span>9:41 AM</span>
+                            <span>📶 🔋 100%</span>
+                        </div>
+                        
+                        <!-- Lock Screen Notification -->
+                        <div style="background: linear-gradient(135deg, #1F1F1F, #333); color: white; padding: 20px; margin: 20px 0; border-radius: 12px;">
+                            <div style="text-align: center; font-size: 18px; margin-bottom: 20px;">🔒 iPhone</div>
+                            <div style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 15px; border-radius: 12px; margin-bottom: 10px;">
+                                <div style="display: flex; align-items: center; margin-bottom: 8px;">
+                                    <div style="width: 30px; height: 30px; background: #FF69B4; border-radius: 8px; margin-right: 10px; display: flex; align-items: center; justify-content: center;">
+                                        🚗
+                                    </div>
+                                    <div>
+                                        <div style="font-size: 14px; font-weight: 600;">Cross-Border Transport</div>
+                                        <div style="font-size: 12px; opacity: 0.8;">now</div>
+                                    </div>
+                                </div>
+                                <div style="font-size: 14px; font-weight: 600; margin-bottom: 4px;">Document Expiring Soon ⚠️</div>
+                                <div style="font-size: 13px; opacity: 0.9;">
+                                    Your Customs Permit for BMW X5 expires in 12 days. Tap to renew now.
+                                </div>
+                            </div>
+                            <div style="text-align: center; font-size: 16px; opacity: 0.7;">Swipe up to unlock</div>
+                        </div>
+
+                        <!-- Banner Notification -->
+                        <div style="background: rgba(255,105,180,0.95); color: white; padding: 15px; margin: 20px 0; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+                            <div style="display: flex; align-items: center;">
+                                <div style="width: 40px; height: 40px; background: white; border-radius: 10px; margin-right: 12px; display: flex; align-items: center; justify-content: center;">
+                                    🚗
+                                </div>
+                                <div style="flex: 1;">
+                                    <div style="font-size: 14px; font-weight: 600; margin-bottom: 2px;">Cross-Border Transport</div>
+                                    <div style="font-size: 13px; opacity: 0.95;">Document expiring in 12 days</div>
+                                </div>
+                                <div style="font-size: 18px; opacity: 0.8;">×</div>
+                            </div>
+                        </div>
+
+                        <!-- In-App Notification -->
+                        <div style="background: white; border: 1px solid #E0E0E0; border-radius: 12px; padding: 15px; margin: 20px 0; box-shadow: 0 4px 16px rgba(0,0,0,0.1);">
+                            <div style="display: flex; align-items: start;">
+                                <div style="width: 8px; height: 8px; background: #FF4B4B; border-radius: 50%; margin-right: 12px; margin-top: 6px;"></div>
+                                <div style="flex: 1;">
+                                    <div style="font-size: 15px; font-weight: 600; color: #171A20; margin-bottom: 5px;">
+                                        Document Action Required
+                                    </div>
+                                    <div style="font-size: 13px; color: #666; margin-bottom: 12px;">
+                                        Customs Permit expires in 12 days. Click here to start the renewal process.
+                                    </div>
+                                    <div style="display: flex; gap: 10px;">
+                                        <button style="background: #FF69B4; color: white; border: none; padding: 8px 15px; border-radius: 6px; font-size: 12px;">
+                                            Renew Now
+                                        </button>
+                                        <button style="background: transparent; color: #666; border: 1px solid #D0D0D0; padding: 8px 15px; border-radius: 6px; font-size: 12px;">
+                                            Remind Later
+                                        </button>
+                                    </div>
+                                </div>
+                                <div style="color: #999; font-size: 18px; cursor: pointer;">×</div>
+                            </div>
+                        </div>
+
+                        <!-- Notification Settings Preview -->
+                        <div style="background: #F8F9FA; border: 1px solid #E0E0E0; border-radius: 12px; padding: 15px; margin: 20px 0;">
+                            <div style="font-size: 14px; font-weight: 600; color: #171A20; margin-bottom: 10px;">
+                                ⚙️ Notification Preferences
+                            </div>
+                            <div style="font-size: 12px; color: #666; margin-bottom: 10px;">
+                                You'll receive alerts via push notification, email, and dashboard.
+                            </div>
+                            <button style="background: #0066CC; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-size: 12px;">
+                                Manage Settings
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2>⚙️ 5. Settings & Preferences - Mobile</h2>
+
+        <div class="wireframe-section">
+            <h3>5.1 Notification Settings</h3>
+            <div class="device-mockup" style="margin: 0 auto;">
+                <div class="accessibility-indicator">Settings</div>
+                <div class="device-screen">
+                    <div class="status-bar">
+                        <span>9:41 AM</span>
+                        <span>📶 🔋 100%</span>
+                    </div>
+                    
+                    <div class="nav-header">
+                        <div class="nav-icon">←</div>
+                        <div class="nav-title">Notification Settings</div>
+                        <div class="nav-icon">💾</div>
+                    </div>
+
+                    <div class="content-area">
+                        <!-- Delivery Methods -->
+                        <div style="background: white; border-radius: 12px; padding: 15px; margin-bottom: 20px;">
+                            <h4 style="font-size: 16px; font-weight: 600; margin-bottom: 15px;">📱 Delivery Methods</h4>
+                            
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #F0F0F0;">
+                                <div>
+                                    <div style="font-size: 14px; font-weight: 500;">Push Notifications</div>
+                                    <div style="font-size: 12px; color: #666;">Instant alerts on your device</div>
+                                </div>
+                                <div style="width: 44px; height: 24px; background: #FF69B4; border-radius: 12px; position: relative;">
+                                    <div style="width: 20px; height: 20px; background: white; border-radius: 10px; position: absolute; right: 2px; top: 2px;"></div>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #F0F0F0;">
+                                <div>
+                                    <div style="font-size: 14px; font-weight: 500;">Email Alerts</div>
+                                    <div style="font-size: 12px; color: #666;">Detailed notifications via email</div>
+                                </div>
+                                <div style="width: 44px; height: 24px; background: #FF69B4; border-radius: 12px; position: relative;">
+                                    <div style="width: 20px; height: 20px; background: white; border-radius: 10px; position: absolute; right: 2px; top: 2px;"></div>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #F0F0F0;">
+                                <div>
+                                    <div style="font-size: 14px; font-weight: 500;">SMS Notifications</div>
+                                    <div style="font-size: 12px; color: #666;">Text messages for urgent alerts</div>
+                                </div>
+                                <div style="width: 44px; height: 24px; background: #E0E0E0; border-radius: 12px; position: relative;">
+                                    <div style="width: 20px; height: 20px; background: white; border-radius: 10px; position: absolute; left: 2px; top: 2px;"></div>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0;">
+                                <div>
+                                    <div style="font-size: 14px; font-weight: 500;">Dashboard Alerts</div>
+                                    <div style="font-size: 12px; color: #666;">Show alerts in app dashboard</div>
+                                </div>
+                                <div style="width: 44px; height: 24px; background: #FF69B4; border-radius: 12px; position: relative;">
+                                    <div style="width: 20px; height: 20px; background: white; border-radius: 10px; position: absolute; right: 2px; top: 2px;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Timing Preferences -->
+                        <div style="background: white; border-radius: 12px; padding: 15px; margin-bottom: 20px;">
+                            <h4 style="font-size: 16px; font-weight: 600; margin-bottom: 15px;">⏰ Timing Preferences</h4>
+
+                            <div class="form-group">
+                                <label class="form-label">Document Expiry Warning</label>
+                                <select class="form-select">
+                                    <option>30 days before</option>
+                                    <option>45 days before</option>
+                                    <option>60 days before</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Maintenance Reminder</label>
+                                <select class="form-select">
+                                    <option>14 days before</option>
+                                    <option>21 days before</option>
+                                    <option>30 days before</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Insurance Alert</label>
+                                <select class="form-select">
+                                    <option>45 days before</option>
+                                    <option>60 days before</option>
+                                    <option>90 days before</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Quiet Hours</label>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                    <input type="time" class="form-input" value="22:00" />
+                                    <input type="time" class="form-input" value="08:00" />
+                                </div>
+                                <div style="font-size: 12px; color: #666; margin-top: 4px;">
+                                    No notifications during these hours
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Notification Types -->
+                        <div style="background: white; border-radius: 12px; padding: 15px; margin-bottom: 20px;">
+                            <h4 style="font-size: 16px; font-weight: 600; margin-bottom: 15px;">🔔 Alert Types</h4>
+
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0;">
+                                <span style="font-size: 14px;">📋 Document Expiring</span>
+                                <div style="width: 44px; height: 24px; background: #FF69B4; border-radius: 12px; position: relative;">
+                                    <div style="width: 20px; height: 20px; background: white; border-radius: 10px; position: absolute; right: 2px; top: 2px;"></div>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0;">
+                                <span style="font-size: 14px;">🔧 Maintenance Due</span>
+                                <div style="width: 44px; height: 24px; background: #FF69B4; border-radius: 12px; position: relative;">
+                                    <div style="width: 20px; height: 20px; background: white; border-radius: 10px; position: absolute; right: 2px; top: 2px;"></div>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0;">
+                                <span style="font-size: 14px;">🛡️ Insurance Expiring</span>
+                                <div style="width: 44px; height: 24px; background: #FF69B4; border-radius: 12px; position: relative;">
+                                    <div style="width: 20px; height: 20px; background: white; border-radius: 10px; position: absolute; right: 2px; top: 2px;"></div>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0;">
+                                <span style="font-size: 14px;">📊 Performance Reports</span>
+                                <div style="width: 44px; height: 24px; background: #E0E0E0; border-radius: 12px; position: relative;">
+                                    <div style="width: 20px; height: 20px; background: white; border-radius: 10px; position: absolute; left: 2px; top: 2px;"></div>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0;">
+                                <span style="font-size: 14px;">🆕 Feature Updates</span>
+                                <div style="width: 44px; height: 24px; background: #E0E0E0; border-radius: 12px; position: relative;">
+                                    <div style="width: 20px; height: 20px; background: white; border-radius: 10px; position: absolute; left: 2px; top: 2px;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="button-primary">Save Preferences</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin: 3rem 0; color: #616161; background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.08);">
+            <h3 style="color: #FF1493; margin-bottom: 1rem;">📱 Mobile-First Design Principles</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1.5rem 0;">
+                <div style="background: #E8F5E8; padding: 1rem; border-radius: 8px;">
+                    <strong>👍 Touch-Friendly</strong><br>
+                    <small>44px minimum touch targets, optimized gestures</small>
+                </div>
+                <div style="background: #E3F2FD; padding: 1rem; border-radius: 8px;">
+                    <strong>📊 Progressive Disclosure</strong><br>
+                    <small>Show essential info first, details on demand</small>
+                </div>
+                <div style="background: #FFF3E0; padding: 1rem; border-radius: 8px;">
+                    <strong>⚡ Performance Optimized</strong><br>
+                    <small>Lazy loading, image compression, offline support</small>
+                </div>
+                <div style="background: #F3E5F5; padding: 1rem; border-radius: 8px;">
+                    <strong>♿ Accessible</strong><br>
+                    <small>Screen reader support, high contrast, keyboard navigation</small>
+                </div>
+            </div>
+            <p style="margin-top: 1.5rem; font-style: italic;">These mobile wireframes ensure drivers can efficiently manage their vehicles and documents from anywhere, with intuitive touch interfaces optimized for various screen sizes and usage contexts.</p>
+        </div>
+    </div>
+</body>
+</html>
