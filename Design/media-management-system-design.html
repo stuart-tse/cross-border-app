@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Management System Design - Cross-Border App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: #1f2937;
+            background: #f8fafc;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 1.875rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #111827;
+            border-bottom: 3px solid #3b82f6;
+            padding-bottom: 0.5rem;
+        }
+
+        .subsection-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem 0;
+            color: #374151;
+        }
+
+        /* Design System Colors */
+        :root {
+            --primary-blue: #3b82f6;
+            --success-green: #10b981;
+            --warning-amber: #f59e0b;
+            --danger-red: #ef4444;
+            --hot-pink: #ec4899;
+            --electric-blue: #0ea5e9;
+            --charcoal: #111827;
+            --gray-600: #4b5563;
+            --gray-300: #d1d5db;
+            --gray-200: #e5e7eb;
+            --gray-100: #f3f4f6;
+            --gray-50: #f9fafb;
+        }
+
+        /* Upload Area Styles */
+        .upload-container {
+            position: relative;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border: 2px dashed var(--primary-blue);
+            border-radius: 16px;
+            padding: 3rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .upload-container:hover {
+            border-color: var(--electric-blue);
+            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+            transform: translateY(-2px);
+        }
+
+        .upload-container.dragover {
+            border-color: var(--success-green);
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            border-style: solid;
+        }
+
+        .upload-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--primary-blue);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            margin: 0 auto 1.5rem;
+        }
+
+        .upload-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--charcoal);
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-subtitle {
+            font-size: 1rem;
+            color: var(--gray-600);
+            margin-bottom: 1.5rem;
+        }
+
+        .upload-specs {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            margin-bottom: 2rem;
+        }
+
+        .upload-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .upload-button:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+        }
+
+        /* Image Preview & Editor */
+        .image-editor {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .image-preview-container {
+            background: white;
+            border: 1px solid var(--gray-300);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .image-preview {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: var(--gray-100);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-600);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .image-preview:hover .image-overlay {
+            opacity: 1;
+        }
+
+        .overlay-button {
+            padding: 0.75rem;
+            background: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .overlay-button:hover {
+            transform: scale(1.05);
+        }
+
+        /* Image Controls */
+        .image-controls {
+            background: white;
+            border: 1px solid var(--gray-300);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .control-section {
+            margin-bottom: 2rem;
+        }
+
+        .control-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--charcoal);
+            margin-bottom: 1rem;
+        }
+
+        .control-field {
+            margin-bottom: 1rem;
+        }
+
+        .field-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--charcoal);
+            margin-bottom: 0.5rem;
+        }
+
+        .field-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .field-input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .field-textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* Control Buttons */
+        .control-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .control-btn {
+            padding: 0.75rem;
+            border: 1px solid var(--gray-300);
+            background: white;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .control-btn:hover {
+            border-color: var(--primary-blue);
+            background: var(--gray-50);
+        }
+
+        .control-btn.active {
+            border-color: var(--primary-blue);
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        /* Media Library Grid */
+        .media-library {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .library-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .library-filters {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .filter-button {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--gray-300);
+            background: white;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-button:hover {
+            background: var(--gray-50);
+        }
+
+        .filter-button.active {
+            background: var(--primary-blue);
+            color: white;
+            border-color: var(--primary-blue);
+        }
+
+        .library-search {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .search-input {
+            padding: 0.5rem;
+            border: 1px solid var(--gray-300);
+            border-radius: 6px;
+            font-size: 0.875rem;
+            width: 200px;
+        }
+
+        .media-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1rem;
+        }
+
+        .media-item {
+            background: white;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .media-item:hover {
+            border-color: var(--primary-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .media-thumbnail {
+            aspect-ratio: 16/10;
+            background: var(--gray-100);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--gray-600);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .media-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .media-info {
+            padding: 0.75rem;
+        }
+
+        .media-name {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--charcoal);
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .media-details {
+            font-size: 0.75rem;
+            color: var(--gray-600);
+        }
+
+        .media-actions {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            display: flex;
+            gap: 0.25rem;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .media-item:hover .media-actions {
+            opacity: 1;
+        }
+
+        .action-button {
+            width: 28px;
+            height: 28px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            transition: all 0.2s ease;
+        }
+
+        .action-button:hover {
+            background: white;
+            transform: scale(1.1);
+        }
+
+        /* Upload Progress */
+        .upload-progress {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border: 1px solid var(--gray-300);
+        }
+
+        .progress-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--gray-50);
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+        }
+
+        .progress-thumbnail {
+            width: 60px;
+            height: 60px;
+            background: var(--gray-200);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--gray-600);
+        }
+
+        .progress-details {
+            flex: 1;
+        }
+
+        .progress-name {
+            font-weight: 500;
+            color: var(--charcoal);
+            margin-bottom: 0.25rem;
+        }
+
+        .progress-bar-container {
+            background: var(--gray-200);
+            height: 4px;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 0.25rem;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--primary-blue);
+            transition: width 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .progress-status {
+            font-size: 0.75rem;
+            color: var(--gray-600);
+        }
+
+        /* Image Editing Tools */
+        .editing-toolbar {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 1rem;
+            background: var(--gray-50);
+            border-top: 1px solid var(--gray-300);
+        }
+
+        .tool-button {
+            padding: 0.75rem;
+            background: white;
+            border: 1px solid var(--gray-300);
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .tool-button:hover {
+            background: var(--gray-100);
+            border-color: var(--primary-blue);
+        }
+
+        .tool-button.active {
+            background: var(--primary-blue);
+            color: white;
+            border-color: var(--primary-blue);
+        }
+
+        /* Feature Cards */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .feature-card {
+            background: white;
+            border: 1px solid var(--gray-300);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .feature-card:hover {
+            border-color: var(--primary-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--primary-blue);
+            color: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--charcoal);
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-description {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            line-height: 1.6;
+        }
+
+        /* Code Snippet Styles */
+        .code-snippet {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .code-snippet .keyword { color: #7c3aed; }
+        .code-snippet .string { color: #10b981; }
+        .code-snippet .comment { color: #6b7280; }
+        .code-snippet .property { color: #f59e0b; }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .image-editor {
+                grid-template-columns: 1fr;
+            }
+            
+            .image-controls {
+                order: -1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .section {
+                padding: 1.5rem;
+            }
+            
+            .upload-container {
+                padding: 2rem;
+            }
+            
+            .library-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: stretch;
+            }
+            
+            .library-search {
+                justify-content: stretch;
+            }
+            
+            .search-input {
+                width: 100%;
+            }
+            
+            .media-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+
+            .control-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header style="text-align: center; margin-bottom: 3rem;">
+            <h1 style="font-size: 2.5rem; font-weight: 800; color: #111827; margin-bottom: 0.5rem;">
+                Media Management System Design
+            </h1>
+            <p style="font-size: 1.125rem; color: #6b7280;">
+                Professional media upload, editing, and management system with CDN integration and optimization
+            </p>
+        </header>
+
+        <!-- 1. Featured Image Upload System -->
+        <section class="section">
+            <h2 class="section-title">1. Featured Image Upload System</h2>
+            
+            <div class="upload-container">
+                <div class="upload-icon">
+                    🖼️
+                </div>
+                <div class="upload-title">Upload Featured Image</div>
+                <div class="upload-subtitle">
+                    Drag and drop your image here, or click to browse
+                </div>
+                <div class="upload-specs">
+                    Supports: JPG, PNG, WebP, SVG, GIF<br>
+                    Maximum size: 10MB<br>
+                    Recommended: 1200×630px for optimal social media sharing
+                </div>
+                <button class="upload-button">
+                    📁 Choose Image
+                </button>
+            </div>
+
+            <h3 class="subsection-title">Upload Features & Capabilities</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">☁️</div>
+                    <div class="feature-title">Cloud Storage Integration</div>
+                    <div class="feature-description">Automatic upload to CDN with global distribution, ensuring fast image delivery worldwide with 99.9% uptime guarantee.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-title">Smart Optimization</div>
+                    <div class="feature-description">Automatic compression, WebP conversion, and responsive image generation for optimal performance across all devices.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <div class="feature-title">Format Detection</div>
+                    <div class="feature-description">Intelligent format detection with automatic conversion suggestions and optimization recommendations for each image type.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-title">SEO Enhancement</div>
+                    <div class="feature-description">Automatic alt text suggestions using AI, filename optimization, and structured data generation for better search visibility.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Image Editor & Controls -->
+        <section class="section">
+            <h2 class="section-title">2. Built-in Image Editor</h2>
+            
+            <div class="image-editor">
+                <div class="image-preview-container">
+                    <div class="image-preview">
+                        <img src="" alt="" style="display: none;">
+                        <div style="text-align: center; color: var(--gray-600);">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">🖼️</div>
+                            <div style="font-size: 1.125rem; font-weight: 500;">Featured Image Preview</div>
+                            <div style="font-size: 0.875rem;">1200×630px • JPG • 2.4MB</div>
+                        </div>
+                        <div class="image-overlay">
+                            <button class="overlay-button">
+                                ✂️ Crop
+                            </button>
+                            <button class="overlay-button">
+                                🔧 Edit
+                            </button>
+                            <button class="overlay-button">
+                                🎨 Filters
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="editing-toolbar">
+                        <button class="tool-button">
+                            ✂️ Crop
+                        </button>
+                        <button class="tool-button">
+                            📐 Resize
+                        </button>
+                        <button class="tool-button">
+                            🔄 Rotate
+                        </button>
+                        <button class="tool-button">
+                            🌈 Filters
+                        </button>
+                        <button class="tool-button">
+                            ⚡ Enhance
+                        </button>
+                        <button class="tool-button">
+                            💾 Save
+                        </button>
+                    </div>
+                </div>
+
+                <div class="image-controls">
+                    <div class="control-section">
+                        <div class="control-title">Image Information</div>
+                        <div class="control-field">
+                            <label class="field-label">Alt Text (Required for Accessibility)</label>
+                            <input class="field-input" type="text" placeholder="Descriptive text for screen readers" value="Cross-border travel planning guide with passport and map">
+                        </div>
+                        <div class="control-field">
+                            <label class="field-label">Caption (Optional)</label>
+                            <textarea class="field-input field-textarea" placeholder="Image caption for display">Essential items for cross-border travel planning including passport, visa documents, and route maps.</textarea>
+                        </div>
+                        <div class="control-field">
+                            <label class="field-label">Title</label>
+                            <input class="field-input" type="text" placeholder="Image title" value="Cross-Border Travel Essentials">
+                        </div>
+                    </div>
+
+                    <div class="control-section">
+                        <div class="control-title">Editing Tools</div>
+                        <div class="control-buttons">
+                            <button class="control-btn">
+                                ✂️ Crop & Resize
+                            </button>
+                            <button class="control-btn">
+                                🔄 Rotate & Flip
+                            </button>
+                            <button class="control-btn">
+                                🎨 Apply Filters
+                            </button>
+                            <button class="control-btn">
+                                ⚡ Auto-Enhance
+                            </button>
+                            <button class="control-btn">
+                                📱 Generate Sizes
+                            </button>
+                            <button class="control-btn">
+                                🔧 Advanced Edit
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="control-section">
+                        <div class="control-title">Optimization</div>
+                        <div style="padding: 1rem; background: var(--gray-50); border-radius: 8px; margin-bottom: 1rem;">
+                            <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 0.5rem;">
+                                <span style="font-size: 0.875rem; font-weight: 500;">File Size:</span>
+                                <span style="font-size: 0.875rem; color: var(--success-green);">2.4MB → 890KB (-63%)</span>
+                            </div>
+                            <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 0.5rem;">
+                                <span style="font-size: 0.875rem; font-weight: 500;">Format:</span>
+                                <span style="font-size: 0.875rem;">JPG + WebP</span>
+                            </div>
+                            <div style="display: flex; justify-content: between; align-items: center;">
+                                <span style="font-size: 0.875rem; font-weight: 500;">Quality:</span>
+                                <span style="font-size: 0.875rem;">85% (Recommended)</span>
+                            </div>
+                        </div>
+                        <div class="control-buttons">
+                            <button class="control-btn" style="background: var(--success-green); color: white; border-color: var(--success-green);">
+                                ✓ Apply Changes
+                            </button>
+                            <button class="control-btn" style="background: var(--danger-red); color: white; border-color: var(--danger-red);">
+                                🗑️ Remove Image
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Media Library Browser -->
+        <section class="section">
+            <h2 class="section-title">3. Media Library Browser</h2>
+            
+            <div class="media-library">
+                <div class="library-header">
+                    <div class="library-filters">
+                        <button class="filter-button active">All Media</button>
+                        <button class="filter-button">Images</button>
+                        <button class="filter-button">Videos</button>
+                        <button class="filter-button">Documents</button>
+                        <button class="filter-button">Recent</button>
+                    </div>
+                    
+                    <div class="library-search">
+                        <input class="search-input" type="text" placeholder="Search media files...">
+                        <button class="upload-button" style="padding: 0.5rem 1rem; font-size: 0.875rem;">
+                            📁 Upload New
+                        </button>
+                    </div>
+                </div>
+
+                <div class="media-grid">
+                    <div class="media-item">
+                        <div class="media-thumbnail">
+                            🖼️
+                        </div>
+                        <div class="media-actions">
+                            <button class="action-button" title="Select">✓</button>
+                            <button class="action-button" title="Edit">✏️</button>
+                            <button class="action-button" title="Delete">🗑️</button>
+                        </div>
+                        <div class="media-info">
+                            <div class="media-name">travel-guide-hero.jpg</div>
+                            <div class="media-details">1200×630 • 890KB • JPG</div>
+                        </div>
+                    </div>
+
+                    <div class="media-item">
+                        <div class="media-thumbnail">
+                            📹
+                        </div>
+                        <div class="media-actions">
+                            <button class="action-button" title="Select">✓</button>
+                            <button class="action-button" title="Edit">✏️</button>
+                            <button class="action-button" title="Delete">🗑️</button>
+                        </div>
+                        <div class="media-info">
+                            <div class="media-name">border-crossing-tips.mp4</div>
+                            <div class="media-details">1920×1080 • 15.2MB • MP4</div>
+                        </div>
+                    </div>
+
+                    <div class="media-item">
+                        <div class="media-thumbnail">
+                            🖼️
+                        </div>
+                        <div class="media-actions">
+                            <button class="action-button" title="Select">✓</button>
+                            <button class="action-button" title="Edit">✏️</button>
+                            <button class="action-button" title="Delete">🗑️</button>
+                        </div>
+                        <div class="media-info">
+                            <div class="media-name">passport-requirements.png</div>
+                            <div class="media-details">800×600 • 245KB • PNG</div>
+                        </div>
+                    </div>
+
+                    <div class="media-item">
+                        <div class="media-thumbnail">
+                            📄
+                        </div>
+                        <div class="media-actions">
+                            <button class="action-button" title="Select">✓</button>
+                            <button class="action-button" title="Edit">✏️</button>
+                            <button class="action-button" title="Delete">🗑️</button>
+                        </div>
+                        <div class="media-info">
+                            <div class="media-name">travel-checklist.pdf</div>
+                            <div class="media-details">A4 • 1.2MB • PDF</div>
+                        </div>
+                    </div>
+
+                    <div class="media-item">
+                        <div class="media-thumbnail">
+                            🖼️
+                        </div>
+                        <div class="media-actions">
+                            <button class="action-button" title="Select">✓</button>
+                            <button class="action-button" title="Edit">✏️</button>
+                            <button class="action-button" title="Delete">🗑️</button>
+                        </div>
+                        <div class="media-info">
+                            <div class="media-name">route-map-asia.svg</div>
+                            <div class="media-details">Vector • 156KB • SVG</div>
+                        </div>
+                    </div>
+
+                    <div class="media-item">
+                        <div class="media-thumbnail">
+                            🖼️
+                        </div>
+                        <div class="media-actions">
+                            <button class="action-button" title="Select">✓</button>
+                            <button class="action-button" title="Edit">✏️</button>
+                            <button class="action-button" title="Delete">🗑️</button>
+                        </div>
+                        <div class="media-info">
+                            <div class="media-name">customs-form.jpg</div>
+                            <div class="media-details">1024×768 • 567KB • JPG</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem; text-align: center; padding: 2rem; background: var(--gray-50); border-radius: 12px;">
+                    <div style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 1rem;">
+                        Showing 6 of 247 media files
+                    </div>
+                    <button class="filter-button" style="padding: 0.75rem 1.5rem;">
+                        Load More Files
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Upload Progress & Management -->
+        <section class="section">
+            <h2 class="section-title">4. Upload Progress & Management</h2>
+            
+            <div class="upload-progress">
+                <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 1rem; color: var(--charcoal);">
+                    Upload Queue (3 files)
+                </h3>
+
+                <div class="progress-item">
+                    <div class="progress-thumbnail">🖼️</div>
+                    <div class="progress-details">
+                        <div class="progress-name">business-travel-hero.jpg</div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" style="width: 75%;"></div>
+                        </div>
+                        <div class="progress-status">Uploading... 75% (2.1MB / 2.8MB)</div>
+                    </div>
+                    <button class="action-button" style="position: relative; opacity: 1;">
+                        ⏸️
+                    </button>
+                </div>
+
+                <div class="progress-item">
+                    <div class="progress-thumbnail">📹</div>
+                    <div class="progress-details">
+                        <div class="progress-name">visa-application-guide.mp4</div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" style="width: 100%; background: var(--success-green);"></div>
+                        </div>
+                        <div class="progress-status" style="color: var(--success-green);">✓ Upload complete - Processing...</div>
+                    </div>
+                    <button class="action-button" style="position: relative; opacity: 1;">
+                        ✓
+                    </button>
+                </div>
+
+                <div class="progress-item">
+                    <div class="progress-thumbnail">🖼️</div>
+                    <div class="progress-details">
+                        <div class="progress-name">airport-security-tips.png</div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" style="width: 0%;"></div>
+                        </div>
+                        <div class="progress-status">Queued (1.5MB)</div>
+                    </div>
+                    <button class="action-button" style="position: relative; opacity: 1;">
+                        ⏳
+                    </button>
+                </div>
+
+                <div style="margin-top: 1.5rem; padding: 1rem; background: #f0f9ff; border-radius: 8px; border: 1px solid #bfdbfe;">
+                    <div style="display: flex; justify-content: between; align-items: center; font-size: 0.875rem;">
+                        <span style="color: var(--primary-blue); font-weight: 500;">
+                            💡 Optimization in progress
+                        </span>
+                        <span style="color: var(--gray-600);">
+                            Total saved: 4.2MB (65% reduction)
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Advanced Media Features -->
+        <section class="section">
+            <h2 class="section-title">5. Advanced Media Features</h2>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <div class="feature-title">AI-Powered Alt Text</div>
+                    <div class="feature-description">Automatic generation of descriptive alt text using computer vision and context analysis for better accessibility and SEO.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📐</div>
+                    <div class="feature-title">Smart Cropping</div>
+                    <div class="feature-description">Intelligent focal point detection and automatic cropping for different aspect ratios, ensuring important content remains visible.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <div class="feature-title">Version Control</div>
+                    <div class="feature-description">Track all image modifications with rollback capability, maintaining edit history for collaborative content creation.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌍</div>
+                    <div class="feature-title">Global CDN</div>
+                    <div class="feature-description">Worldwide content delivery network ensuring fast image loading across all regions with edge caching and optimization.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">♿</div>
+                    <div class="feature-title">Accessibility Compliance</div>
+                    <div class="feature-description">WCAG 2.1 compliance checking, color contrast analysis, and accessibility scoring for inclusive content creation.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-title">Performance Analytics</div>
+                    <div class="feature-description">Track image performance metrics, loading times, and optimization impact across different devices and regions.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Technical Implementation -->
+        <section class="section">
+            <h2 class="section-title">6. Technical Implementation</h2>
+            
+            <h3 class="subsection-title">Upload Component Implementation</h3>
+            <div class="code-snippet">
+<span class="comment">// components/media/MediaUploader.tsx</span>
+<span class="keyword">import</span> React, { useState, useCallback } <span class="keyword">from</span> <span class="string">'react'</span>;
+<span class="keyword">import</span> { useDropzone } <span class="keyword">from</span> <span class="string">'react-dropzone'</span>;
+
+<span class="keyword">interface</span> MediaUploaderProps {
+  <span class="property">onUpload</span>: (<span class="property">files</span>: File[]) => <span class="keyword">void</span>;
+  <span class="property">maxFiles</span>?: <span class="keyword">number</span>;
+  <span class="property">maxSize</span>?: <span class="keyword">number</span>;
+  <span class="property">acceptedTypes</span>?: <span class="keyword">string</span>[];
+}
+
+<span class="keyword">const</span> MediaUploader: React.FC&lt;MediaUploaderProps&gt; = ({
+  <span class="property">onUpload</span>,
+  <span class="property">maxFiles</span> = <span class="keyword">1</span>,
+  <span class="property">maxSize</span> = <span class="keyword">10485760</span>, <span class="comment">// 10MB</span>
+  <span class="property">acceptedTypes</span> = [<span class="string">'image/jpeg'</span>, <span class="string">'image/png'</span>, <span class="string">'image/webp'</span>]
+}) => {
+  <span class="keyword">const</span> [<span class="property">uploading</span>, <span class="property">setUploading</span>] = useState(<span class="keyword">false</span>);
+  <span class="keyword">const</span> [<span class="property">progress</span>, <span class="property">setProgress</span>] = useState(<span class="keyword">0</span>);
+
+  <span class="keyword">const</span> <span class="property">onDrop</span> = useCallback(async (<span class="property">acceptedFiles</span>: File[]) => {
+    <span class="property">setUploading</span>(<span class="keyword">true</span>);
+    
+    <span class="keyword">try</span> {
+      <span class="keyword">const</span> <span class="property">uploadPromises</span> = acceptedFiles.map(<span class="property">file</span> => 
+        <span class="property">uploadFileWithProgress</span>(<span class="property">file</span>, <span class="property">setProgress</span>)
+      );
+      
+      <span class="keyword">const</span> <span class="property">uploadResults</span> = <span class="keyword">await</span> Promise.all(<span class="property">uploadPromises</span>);
+      <span class="property">onUpload</span>(<span class="property">uploadResults</span>);
+    } <span class="keyword">catch</span> (<span class="property">error</span>) {
+      console.error(<span class="string">'Upload failed:'</span>, <span class="property">error</span>);
+    } <span class="keyword">finally</span> {
+      <span class="property">setUploading</span>(<span class="keyword">false</span>);
+      <span class="property">setProgress</span>(<span class="keyword">0</span>);
+    }
+  }, [<span class="property">onUpload</span>]);
+
+  <span class="keyword">const</span> { <span class="property">getRootProps</span>, <span class="property">getInputProps</span>, <span class="property">isDragActive</span> } = useDropzone({
+    <span class="property">onDrop</span>,
+    <span class="property">maxFiles</span>,
+    <span class="property">maxSize</span>,
+    <span class="property">accept</span>: acceptedTypes.reduce((<span class="property">acc</span>, <span class="property">type</span>) => ({ ...<span class="property">acc</span>, [<span class="property">type</span>]: [] }), {})
+  });
+
+  <span class="keyword">return</span> (
+    &lt;<span class="keyword">div</span> 
+      {...getRootProps()} 
+      <span class="property">className</span>={`upload-container ${<span class="property">isDragActive</span> ? <span class="string">'dragover'</span> : <span class="string">''</span>}`}
+    &gt;
+      &lt;<span class="keyword">input</span> {...getInputProps()} /&gt;
+      {<span class="property">uploading</span> ? (
+        &lt;<span class="keyword">UploadProgress</span> <span class="property">progress</span>={<span class="property">progress</span>} /&gt;
+      ) : (
+        &lt;<span class="keyword">UploadPrompt</span> <span class="property">isDragActive</span>={<span class="property">isDragActive</span>} /&gt;
+      )}
+    &lt;/<span class="keyword">div</span>&gt;
+  );
+};
+            </div>
+
+            <h3 class="subsection-title">Image Processing Pipeline</h3>
+            <div class="code-snippet">
+<span class="comment">// utils/imageProcessing.ts</span>
+<span class="keyword">export</span> <span class="keyword">const</span> <span class="property">processImage</span> = <span class="keyword">async</span> (<span class="property">file</span>: File) => {
+  <span class="keyword">const</span> <span class="property">canvas</span> = document.createElement(<span class="string">'canvas'</span>);
+  <span class="keyword">const</span> <span class="property">ctx</span> = canvas.getContext(<span class="string">'2d'</span>)!;
+  <span class="keyword">const</span> <span class="property">img</span> = <span class="keyword">new</span> Image();
+  
+  <span class="keyword">return</span> <span class="keyword">new</span> Promise((<span class="property">resolve</span>) => {
+    <span class="property">img</span>.onload = () => {
+      <span class="comment">// Smart cropping to 16:9 aspect ratio</span>
+      <span class="keyword">const</span> <span class="property">targetRatio</span> = <span class="keyword">16</span> / <span class="keyword">9</span>;
+      <span class="keyword">const</span> <span class="property">sourceRatio</span> = <span class="property">img</span>.width / <span class="property">img</span>.height;
+      
+      <span class="keyword">let</span> <span class="property">cropWidth</span>, <span class="property">cropHeight</span>, <span class="property">cropX</span>, <span class="property">cropY</span>;
+      
+      <span class="keyword">if</span> (<span class="property">sourceRatio</span> > <span class="property">targetRatio</span>) {
+        <span class="property">cropHeight</span> = <span class="property">img</span>.height;
+        <span class="property">cropWidth</span> = <span class="property">cropHeight</span> * <span class="property">targetRatio</span>;
+        <span class="property">cropX</span> = (<span class="property">img</span>.width - <span class="property">cropWidth</span>) / <span class="keyword">2</span>;
+        <span class="property">cropY</span> = <span class="keyword">0</span>;
+      } <span class="keyword">else</span> {
+        <span class="property">cropWidth</span> = <span class="property">img</span>.width;
+        <span class="property">cropHeight</span> = <span class="property">cropWidth</span> / <span class="property">targetRatio</span>;
+        <span class="property">cropX</span> = <span class="keyword">0</span>;
+        <span class="property">cropY</span> = (<span class="property">img</span>.height - <span class="property">cropHeight</span>) / <span class="keyword">2</span>;
+      }
+      
+      canvas.width = <span class="keyword">1200</span>;
+      canvas.height = <span class="keyword">630</span>;
+      
+      <span class="property">ctx</span>.drawImage(
+        <span class="property">img</span>, 
+        <span class="property">cropX</span>, <span class="property">cropY</span>, <span class="property">cropWidth</span>, <span class="property">cropHeight</span>,
+        <span class="keyword">0</span>, <span class="keyword">0</span>, <span class="keyword">1200</span>, <span class="keyword">630</span>
+      );
+      
+      canvas.toBlob(<span class="property">resolve</span>, <span class="string">'image/webp'</span>, <span class="keyword">0.85</span>);
+    };
+    
+    <span class="property">img</span>.src = URL.createObjectURL(<span class="property">file</span>);
+  });
+};
+            </div>
+
+            <h3 class="subsection-title">Media API Integration</h3>
+            <div class="code-snippet">
+<span class="comment">// API Routes for Media Management</span>
+<span class="comment">// pages/api/media/upload.ts</span>
+<span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">async</span> <span class="keyword">function</span> <span class="property">handler</span>(<span class="property">req</span>: NextApiRequest, <span class="property">res</span>: NextApiResponse) {
+  <span class="keyword">if</span> (<span class="property">req</span>.method !== <span class="string">'POST'</span>) {
+    <span class="keyword">return</span> <span class="property">res</span>.status(<span class="keyword">405</span>).json({ message: <span class="string">'Method not allowed'</span> });
+  }
+
+  <span class="keyword">try</span> {
+    <span class="keyword">const</span> <span class="property">form</span> = <span class="keyword">new</span> IncomingForm();
+    <span class="keyword">const</span> [<span class="property">fields</span>, <span class="property">files</span>] = <span class="keyword">await</span> <span class="property">form</span>.parse(<span class="property">req</span>);
+    
+    <span class="keyword">const</span> <span class="property">file</span> = <span class="property">files</span>.file <span class="keyword">as</span> File;
+    <span class="keyword">const</span> <span class="property">optimizedFile</span> = <span class="keyword">await</span> <span class="property">optimizeImage</span>(<span class="property">file</span>);
+    
+    <span class="comment">// Upload to CDN</span>
+    <span class="keyword">const</span> <span class="property">cdnUrl</span> = <span class="keyword">await</span> <span class="property">uploadToCDN</span>(<span class="property">optimizedFile</span>);
+    
+    <span class="comment">// Generate alt text using AI</span>
+    <span class="keyword">const</span> <span class="property">altText</span> = <span class="keyword">await</span> <span class="property">generateAltText</span>(<span class="property">optimizedFile</span>);
+    
+    <span class="comment">// Save to database</span>
+    <span class="keyword">const</span> <span class="property">mediaRecord</span> = <span class="keyword">await</span> <span class="property">prisma</span>.media.create({
+      data: {
+        filename: <span class="property">file</span>.name,
+        url: <span class="property">cdnUrl</span>,
+        altText: <span class="property">altText</span>,
+        size: <span class="property">optimizedFile</span>.size,
+        mimeType: <span class="property">optimizedFile</span>.type,
+        userId: <span class="property">req</span>.user.id
+      }
+    });
+
+    <span class="property">res</span>.status(<span class="keyword">200</span>).json({ media: <span class="property">mediaRecord</span> });
+  } <span class="keyword">catch</span> (<span class="property">error</span>) {
+    <span class="property">res</span>.status(<span class="keyword">500</span>).json({ error: <span class="string">'Upload failed'</span> });
+  }
+}
+            </div>
+        </section>
+
+        <!-- Summary -->
+        <section class="section" style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border: 1px solid #0ea5e9;">
+            <h2 class="section-title" style="color: var(--electric-blue);">Media System Complete</h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+                <div>
+                    <h4 style="font-weight: 600; color: var(--charcoal); margin-bottom: 0.75rem;">Core Features</h4>
+                    <ul style="font-size: 0.875rem; color: var(--gray-600); line-height: 1.8; margin-left: 1.5rem;">
+                        <li>Drag & drop upload interface</li>
+                        <li>Built-in image editor with filters</li>
+                        <li>Automatic optimization & compression</li>
+                        <li>CDN integration for global delivery</li>
+                        <li>AI-powered alt text generation</li>
+                        <li>Media library with search & filtering</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 style="font-weight: 600; color: var(--charcoal); margin-bottom: 0.75rem;">Performance</h4>
+                    <ul style="font-size: 0.875rem; color: var(--gray-600); line-height: 1.8; margin-left: 1.5rem;">
+                        <li>Up to 65% file size reduction</li>
+                        <li>WebP format conversion</li>
+                        <li>Multiple responsive sizes</li>
+                        <li>Edge caching worldwide</li>
+                        <li>Lazy loading implementation</li>
+                        <li>Progressive image enhancement</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 style="font-weight: 600; color: var(--charcoal); margin-bottom: 0.75rem;">Accessibility & SEO</h4>
+                    <ul style="font-size: 0.875rem; color: var(--gray-600); line-height: 1.8; margin-left: 1.5rem;">
+                        <li>WCAG 2.1 AA compliance</li>
+                        <li>Automatic alt text suggestions</li>
+                        <li>Color contrast analysis</li>
+                        <li>Structured data generation</li>
+                        <li>SEO-optimized filenames</li>
+                        <li>Social media optimization</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="background: white; padding: 1.5rem; border-radius: 12px; margin-top: 2rem; border: 1px solid var(--primary-blue);">
+                <h4 style="font-weight: 600; color: var(--primary-blue); margin-bottom: 1rem;">Ready for Implementation</h4>
+                <p style="font-size: 0.875rem; color: var(--gray-600); line-height: 1.6;">
+                    This comprehensive media management system provides professional-grade tools for content creators while ensuring optimal performance, accessibility, and SEO benefits. The system handles everything from upload to optimization automatically, allowing users to focus on creating great content.
+                </p>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

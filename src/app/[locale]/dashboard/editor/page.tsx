@@ -8,6 +8,7 @@ import { Card, CardHeader, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { cn } from '@/lib/utils';
+import Link from 'next/link';
 
 interface BlogPost {
   id: string;
@@ -372,7 +373,7 @@ const BlogEditorDashboard: React.FC = () => {
                 </h1>
                 <nav aria-label="Breadcrumb">
                   <ol className="flex items-center gap-2 text-body-sm text-gray-500">
-                    <li><a href="/dashboard" className="hover:text-hot-pink">Dashboard</a></li>
+                    <li><Link href="/dashboard" className="hover:text-hot-pink">Dashboard</Link></li>
                     <li aria-hidden="true">•</li>
                     <li className="text-charcoal dark:text-white">Editor</li>
                   </ol>
@@ -691,7 +692,7 @@ const BlogEditorDashboard: React.FC = () => {
                       )}
                       {filters.search && (
                         <span className="inline-flex items-center gap-1 px-2 py-1 bg-warning-amber/10 text-warning-amber text-xs rounded-full">
-                          Search: "{filters.search}"
+                          Search: &ldquo;{filters.search}&rdquo;
                           <button onClick={() => handleFilterChange('search', '')} className="hover:bg-warning-amber/20 rounded-full p-0.5">✕</button>
                         </span>
                       )}
@@ -710,7 +711,7 @@ const BlogEditorDashboard: React.FC = () => {
                     </h3>
                     <p className="text-body-md text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto">
                       {filters.search || filters.status !== 'all' 
-                        ? 'Try adjusting your search terms or filters to find what you\'re looking for.'
+                        ? 'Try adjusting your search terms or filters to find what you are looking for.'
                         : 'Start creating engaging travel content for your audience.'
                       }
                     </p>

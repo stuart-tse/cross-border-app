@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CKEditor 5 Integration Specifications - Cross-Border App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: #1f2937;
+            background: #f8fafc;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 1.875rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #111827;
+            border-bottom: 3px solid #3b82f6;
+            padding-bottom: 0.5rem;
+        }
+
+        .subsection-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem 0;
+            color: #374151;
+        }
+
+        /* Design System Colors */
+        :root {
+            --primary-blue: #3b82f6;
+            --success-green: #10b981;
+            --warning-amber: #f59e0b;
+            --danger-red: #ef4444;
+            --hot-pink: #ec4899;
+            --electric-blue: #0ea5e9;
+            --charcoal: #111827;
+            --gray-600: #4b5563;
+            --gray-300: #d1d5db;
+            --gray-100: #f3f4f6;
+            --gray-50: #f9fafb;
+        }
+
+        /* Code Snippet Styles */
+        .code-snippet {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .code-snippet .keyword { color: #7c3aed; }
+        .code-snippet .string { color: #10b981; }
+        .code-snippet .comment { color: #6b7280; }
+        .code-snippet .property { color: #f59e0b; }
+        .code-snippet .type { color: #06b6d4; }
+
+        /* Component Specification Styles */
+        .component-spec {
+            border: 1px solid var(--gray-300);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            background: white;
+        }
+
+        .component-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--charcoal);
+            margin-bottom: 1rem;
+        }
+
+        .component-example {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        /* Feature Cards */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .feature-card {
+            background: white;
+            border: 1px solid var(--gray-300);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .feature-card:hover {
+            border-color: var(--primary-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--primary-blue);
+            color: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--charcoal);
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-description {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            line-height: 1.6;
+        }
+
+        /* CKEditor Mockup Styles */
+        .ckeditor-mockup {
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            overflow: hidden;
+            background: white;
+            margin: 1rem 0;
+        }
+
+        .ckeditor-toolbar {
+            background: var(--gray-100);
+            border-bottom: 1px solid var(--gray-300);
+            padding: 0.75rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.25rem;
+        }
+
+        .toolbar-group {
+            display: flex;
+            gap: 0.25rem;
+            padding-right: 0.75rem;
+            border-right: 1px solid var(--gray-300);
+            margin-right: 0.75rem;
+        }
+
+        .toolbar-group:last-child {
+            border-right: none;
+            margin-right: 0;
+            padding-right: 0;
+        }
+
+        .toolbar-button {
+            padding: 0.5rem;
+            background: white;
+            border: 1px solid var(--gray-300);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            min-width: 32px;
+            justify-content: center;
+        }
+
+        .toolbar-button:hover {
+            background: var(--gray-50);
+            border-color: var(--primary-blue);
+        }
+
+        .toolbar-button.active {
+            background: var(--primary-blue);
+            color: white;
+            border-color: var(--primary-blue);
+        }
+
+        .ckeditor-content {
+            padding: 1.5rem;
+            min-height: 400px;
+            background: white;
+        }
+
+        /* Plugin Configuration Styles */
+        .plugin-config {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .plugin-title {
+            font-weight: 600;
+            color: var(--charcoal);
+            margin-bottom: 0.5rem;
+        }
+
+        .plugin-description {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            margin-bottom: 0.75rem;
+        }
+
+        /* Implementation Step Styles */
+        .step-container {
+            display: grid;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: start;
+            gap: 1rem;
+            padding: 1rem;
+            background: white;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+        }
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary-blue);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-title {
+            font-weight: 600;
+            color: var(--charcoal);
+            margin-bottom: 0.25rem;
+        }
+
+        .step-description {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            line-height: 1.6;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .section {
+                padding: 1.5rem;
+            }
+            
+            .toolbar-group {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header style="text-align: center; margin-bottom: 3rem;">
+            <h1 style="font-size: 2.5rem; font-weight: 800; color: #111827; margin-bottom: 0.5rem;">
+                CKEditor 5 Integration Specifications
+            </h1>
+            <p style="font-size: 1.125rem; color: #6b7280;">
+                Comprehensive implementation guide for professional content editing with custom plugins and features
+            </p>
+        </header>
+
+        <!-- 1. CKEditor 5 Setup & Configuration -->
+        <section class="section">
+            <h2 class="section-title">1. CKEditor 5 Setup & Configuration</h2>
+            
+            <div class="component-spec">
+                <div class="component-title">Installation & Dependencies</div>
+                <div class="code-snippet">
+<span class="comment"># Install CKEditor 5 packages</span>
+npm install @ckeditor/ckeditor5-react @ckeditor/ckeditor5-build-classic
+
+<span class="comment"># Additional plugins for enhanced functionality</span>
+npm install @ckeditor/ckeditor5-image @ckeditor/ckeditor5-link
+npm install @ckeditor/ckeditor5-list @ckeditor/ckeditor5-heading
+npm install @ckeditor/ckeditor5-table @ckeditor/ckeditor5-media-embed
+npm install @ckeditor/ckeditor5-code-block @ckeditor/ckeditor5-word-count
+npm install @ckeditor/ckeditor5-autosave @ckeditor/ckeditor5-upload
+                </div>
+            </div>
+
+            <div class="component-spec">
+                <div class="component-title">Basic React Component Setup</div>
+                <div class="code-snippet">
+<span class="comment">// components/editor/CKEditorComponent.tsx</span>
+<span class="keyword">import</span> React, { useState, useEffect, useRef } <span class="keyword">from</span> <span class="string">'react'</span>;
+<span class="keyword">import</span> { CKEditor } <span class="keyword">from</span> <span class="string">'@ckeditor/ckeditor5-react'</span>;
+<span class="keyword">import</span> ClassicEditor <span class="keyword">from</span> <span class="string">'@ckeditor/ckeditor5-build-classic'</span>;
+
+<span class="keyword">interface</span> <span class="type">CKEditorProps</span> {
+  <span class="property">initialData</span>: <span class="type">string</span>;
+  <span class="property">onChange</span>: (<span class="property">data</span>: <span class="type">string</span>) => <span class="type">void</span>;
+  <span class="property">onWordCount</span>?: (<span class="property">words</span>: <span class="type">number</span>) => <span class="type">void</span>;
+  <span class="property">autoSave</span>?: <span class="type">boolean</span>;
+  <span class="property">placeholder</span>?: <span class="type">string</span>;
+}
+
+<span class="keyword">const</span> <span class="property">CKEditorComponent</span>: React.FC&lt;<span class="type">CKEditorProps</span>&gt; = ({
+  <span class="property">initialData</span>,
+  <span class="property">onChange</span>,
+  <span class="property">onWordCount</span>,
+  <span class="property">autoSave</span> = <span class="keyword">true</span>,
+  <span class="property">placeholder</span> = <span class="string">'Start writing your content...'</span>
+}) => {
+  <span class="keyword">const</span> [<span class="property">editor</span>, <span class="property">setEditor</span>] = useState&lt;<span class="type">any</span>&gt;(<span class="keyword">null</span>);
+  <span class="keyword">const</span> <span class="property">wordCountRef</span> = useRef&lt;<span class="type">number</span>&gt;(0);
+
+  <span class="keyword">const</span> <span class="property">editorConfig</span> = {
+    <span class="property">toolbar</span>: {
+      <span class="property">items</span>: [
+        <span class="string">'heading'</span>, <span class="string">'|'</span>,
+        <span class="string">'bold'</span>, <span class="string">'italic'</span>, <span class="string">'underline'</span>, <span class="string">'|'</span>,
+        <span class="string">'fontSize'</span>, <span class="string">'fontColor'</span>, <span class="string">'fontBackgroundColor'</span>, <span class="string">'|'</span>,
+        <span class="string">'link'</span>, <span class="string">'imageUpload'</span>, <span class="string">'mediaEmbed'</span>, <span class="string">'|'</span>,
+        <span class="string">'bulletedList'</span>, <span class="string">'numberedList'</span>, <span class="string">'|'</span>,
+        <span class="string">'outdent'</span>, <span class="string">'indent'</span>, <span class="string">'|'</span>,
+        <span class="string">'blockQuote'</span>, <span class="string">'codeBlock'</span>, <span class="string">'insertTable'</span>, <span class="string">'|'</span>,
+        <span class="string">'alignment'</span>, <span class="string">'|'</span>,
+        <span class="string">'undo'</span>, <span class="string">'redo'</span>, <span class="string">'|'</span>,
+        <span class="string">'sourceEditing'</span>
+      ],
+      <span class="property">shouldNotGroupWhenFull</span>: <span class="keyword">true</span>
+    },
+    <span class="property">placeholder</span>,
+    <span class="property">image</span>: {
+      <span class="property">toolbar</span>: [
+        <span class="string">'imageTextAlternative'</span>, <span class="string">'imageStyle:inline'</span>, 
+        <span class="string">'imageStyle:block'</span>, <span class="string">'imageStyle:side'</span>, <span class="string">'|'</span>,
+        <span class="string">'toggleImageCaption'</span>, <span class="string">'imageResize'</span>
+      ]
+    },
+    <span class="property">table</span>: {
+      <span class="property">contentToolbar</span>: [
+        <span class="string">'tableColumn'</span>, <span class="string">'tableRow'</span>, <span class="string">'mergeTableCells'</span>,
+        <span class="string">'tableProperties'</span>, <span class="string">'tableCellProperties'</span>
+      ]
+    },
+    <span class="property">link</span>: {
+      <span class="property">addTargetToExternalLinks</span>: <span class="keyword">true</span>,
+      <span class="property">defaultProtocol</span>: <span class="string">'https://'</span>
+    },
+    <span class="property">simpleUpload</span>: {
+      <span class="property">uploadUrl</span>: <span class="string">'/api/uploads/images'</span>,
+      <span class="property">headers</span>: {
+        <span class="string">'X-CSRF-TOKEN'</span>: <span class="string">'CSRF-Token'</span>
+      }
+    }
+  };
+
+  <span class="keyword">return</span> (
+    &lt;<span class="keyword">div</span> <span class="property">className</span>=<span class="string">"ckeditor-wrapper"</span>&gt;
+      &lt;<span class="keyword">CKEditor</span>
+        <span class="property">editor</span>={ClassicEditor}
+        <span class="property">config</span>={editorConfig}
+        <span class="property">data</span>={initialData}
+        <span class="property">onReady</span>={(editor) => {
+          setEditor(editor);
+          <span class="comment">// Setup word count tracking</span>
+          <span class="keyword">const</span> <span class="property">wordCount</span> = editor.plugins.get(<span class="string">'WordCount'</span>);
+          wordCount.on(<span class="string">'update'</span>, () => {
+            <span class="keyword">const</span> <span class="property">words</span> = wordCount.words;
+            wordCountRef.current = words;
+            onWordCount?.(words);
+          });
+        }}
+        <span class="property">onChange</span>={(event, editor) => {
+          <span class="keyword">const</span> <span class="property">data</span> = editor.getData();
+          onChange(data);
+        }}
+      /&gt;
+    &lt;/<span class="keyword">div</span>&gt;
+  );
+};
+
+<span class="keyword">export default</span> CKEditorComponent;
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Custom Plugins & Extensions -->
+        <section class="section">
+            <h2 class="section-title">2. Custom Plugins & Extensions</h2>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-title">SEO Helper Plugin</div>
+                    <div class="feature-description">Real-time keyword density analysis, readability scoring, and SEO recommendations integrated directly into the editor.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📝</div>
+                    <div class="feature-title">Content Templates</div>
+                    <div class="feature-description">Pre-built article templates for different content types (news, guides, reviews) with structured formatting.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔗</div>
+                    <div class="feature-title">Smart Linking</div>
+                    <div class="feature-description">Automatic internal linking suggestions, link validation, and cross-border content references.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-title">Analytics Integration</div>
+                    <div class="feature-description">Track content performance metrics, user engagement, and optimization opportunities directly in the editor.</div>
+                </div>
+            </div>
+
+            <div class="component-spec">
+                <div class="component-title">SEO Helper Plugin Implementation</div>
+                <div class="code-snippet">
+<span class="comment">// plugins/SEOHelperPlugin.ts</span>
+<span class="keyword">import</span> Plugin <span class="keyword">from</span> <span class="string">'@ckeditor/ckeditor5-core/src/plugin'</span>;
+<span class="keyword">import</span> ButtonView <span class="keyword">from</span> <span class="string">'@ckeditor/ckeditor5-ui/src/button/buttonview'</span>;
+
+<span class="keyword">export default class</span> <span class="type">SEOHelperPlugin</span> <span class="keyword">extends</span> <span class="type">Plugin</span> {
+    <span class="keyword">static</span> get <span class="property">pluginName</span>() {
+        <span class="keyword">return</span> <span class="string">'SEOHelper'</span>;
+    }
+
+    <span class="property">init</span>() {
+        <span class="keyword">const</span> <span class="property">editor</span> = <span class="keyword">this</span>.editor;
+        
+        <span class="comment">// Add SEO analysis button to toolbar</span>
+        editor.ui.componentFactory.add(<span class="string">'seoAnalysis'</span>, locale => {
+            <span class="keyword">const</span> <span class="property">view</span> = <span class="keyword">new</span> ButtonView(locale);
+            
+            view.set({
+                <span class="property">label</span>: <span class="string">'SEO Analysis'</span>,
+                <span class="property">icon</span>: <span class="string">'🎯'</span>,
+                <span class="property">tooltip</span>: <span class="keyword">true</span>
+            });
+            
+            view.on(<span class="string">'execute'</span>, () => {
+                <span class="keyword">this</span>._performSEOAnalysis();
+            });
+            
+            <span class="keyword">return</span> view;
+        });
+        
+        <span class="comment">// Listen for content changes</span>
+        editor.model.document.on(<span class="string">'change:data'</span>, () => {
+            <span class="keyword">this</span>._performRealTimeAnalysis();
+        });
+    }
+    
+    <span class="property">_performSEOAnalysis</span>() {
+        <span class="keyword">const</span> <span class="property">content</span> = <span class="keyword">this</span>.editor.getData();
+        <span class="keyword">const</span> <span class="property">analysis</span> = <span class="keyword">this</span>._analyzeSEO(content);
+        
+        <span class="comment">// Emit analysis results</span>
+        <span class="keyword">this</span>.fire(<span class="string">'seoAnalysis'</span>, analysis);
+    }
+    
+    <span class="property">_analyzeSEO</span>(content: <span class="type">string</span>) {
+        <span class="keyword">const</span> <span class="property">wordCount</span> = content.split(<span class="string">/\s+/</span>).length;
+        <span class="keyword">const</span> <span class="property">readingTime</span> = Math.ceil(wordCount / 200);
+        <span class="keyword">const</span> <span class="property">headings</span> = (content.match(/&lt;h[1-6][^&gt;]*&gt;/g) || []).length;
+        
+        <span class="keyword">return</span> {
+            <span class="property">wordCount</span>,
+            <span class="property">readingTime</span>,
+            <span class="property">headings</span>,
+            <span class="property">score</span>: <span class="keyword">this</span>._calculateSEOScore(wordCount, headings),
+            <span class="property">suggestions</span>: <span class="keyword">this</span>._generateSuggestions(wordCount, headings)
+        };
+    }
+}
+                </div>
+            </div>
+
+            <div class="component-spec">
+                <div class="component-title">Content Templates Plugin</div>
+                <div class="code-snippet">
+<span class="comment">// plugins/ContentTemplatesPlugin.ts</span>
+<span class="keyword">export default class</span> <span class="type">ContentTemplatesPlugin</span> <span class="keyword">extends</span> <span class="type">Plugin</span> {
+    <span class="keyword">static</span> get <span class="property">pluginName</span>() {
+        <span class="keyword">return</span> <span class="string">'ContentTemplates'</span>;
+    }
+
+    <span class="property">init</span>() {
+        <span class="keyword">const</span> <span class="property">editor</span> = <span class="keyword">this</span>.editor;
+        
+        <span class="comment">// Add templates dropdown</span>
+        editor.ui.componentFactory.add(<span class="string">'contentTemplates'</span>, locale => {
+            <span class="keyword">const</span> <span class="property">dropdownView</span> = createDropdown(locale);
+            
+            dropdownView.buttonView.set({
+                <span class="property">label</span>: <span class="string">'Templates'</span>,
+                <span class="property">icon</span>: <span class="string">'📝'</span>,
+                <span class="property">tooltip</span>: <span class="string">'Insert Content Template'</span>
+            });
+            
+            <span class="keyword">const</span> <span class="property">templates</span> = [
+                {
+                    <span class="property">name</span>: <span class="string">'Travel Guide'</span>,
+                    <span class="property">content</span>: <span class="keyword">this</span>._getTravelGuideTemplate()
+                },
+                {
+                    <span class="property">name</span>: <span class="string">'Business Article'</span>,
+                    <span class="property">content</span>: <span class="keyword">this</span>._getBusinessArticleTemplate()
+                },
+                {
+                    <span class="property">name</span>: <span class="string">'Route Analysis'</span>,
+                    <span class="property">content</span>: <span class="keyword">this</span>._getRouteAnalysisTemplate()
+                }
+            ];
+            
+            addListToDropdown(dropdownView, <span class="keyword">this</span>._getTemplateItems(templates));
+            
+            <span class="keyword">return</span> dropdownView;
+        });
+    }
+    
+    <span class="property">_getTravelGuideTemplate</span>() {
+        <span class="keyword">return</span> <span class="string">`
+            &lt;h2&gt;Introduction&lt;/h2&gt;
+            &lt;p&gt;Brief overview of the destination or topic...&lt;/p&gt;
+            
+            &lt;h2&gt;Key Information&lt;/h2&gt;
+            &lt;ul&gt;
+                &lt;li&gt;Important detail 1&lt;/li&gt;
+                &lt;li&gt;Important detail 2&lt;/li&gt;
+                &lt;li&gt;Important detail 3&lt;/li&gt;
+            &lt;/ul&gt;
+            
+            &lt;h2&gt;What to Expect&lt;/h2&gt;
+            &lt;p&gt;Detailed description of what readers can expect...&lt;/p&gt;
+            
+            &lt;h2&gt;Tips & Recommendations&lt;/h2&gt;
+            &lt;p&gt;Practical advice and recommendations...&lt;/p&gt;
+            
+            &lt;h2&gt;Conclusion&lt;/h2&gt;
+            &lt;p&gt;Summary and final thoughts...&lt;/p&gt;
+        `</span>;
+    }
+}
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Advanced Editor Features -->
+        <section class="section">
+            <h2 class="section-title">3. Advanced Editor Features</h2>
+            
+            <div class="ckeditor-mockup">
+                <div class="ckeditor-toolbar">
+                    <!-- Text Formatting Group -->
+                    <div class="toolbar-group">
+                        <div class="toolbar-button">H ▼</div>
+                        <div class="toolbar-button active"><strong>B</strong></div>
+                        <div class="toolbar-button"><em>I</em></div>
+                        <div class="toolbar-button"><u>U</u></div>
+                        <div class="toolbar-button">S</div>
+                    </div>
+                    
+                    <!-- Font Styling Group -->
+                    <div class="toolbar-group">
+                        <div class="toolbar-button">A ▼</div>
+                        <div class="toolbar-button">🎨</div>
+                        <div class="toolbar-button">🖍️</div>
+                    </div>
+                    
+                    <!-- Media Group -->
+                    <div class="toolbar-group">
+                        <div class="toolbar-button">🔗</div>
+                        <div class="toolbar-button">🖼️</div>
+                        <div class="toolbar-button">📹</div>
+                        <div class="toolbar-button">📄</div>
+                    </div>
+                    
+                    <!-- Lists & Structure Group -->
+                    <div class="toolbar-group">
+                        <div class="toolbar-button">• List</div>
+                        <div class="toolbar-button">1. List</div>
+                        <div class="toolbar-button">⬅️</div>
+                        <div class="toolbar-button">➡️</div>
+                    </div>
+                    
+                    <!-- Content Elements Group -->
+                    <div class="toolbar-group">
+                        <div class="toolbar-button">💬</div>
+                        <div class="toolbar-button">{ }</div>
+                        <div class="toolbar-button">📊</div>
+                        <div class="toolbar-button">➖</div>
+                    </div>
+                    
+                    <!-- Actions Group -->
+                    <div class="toolbar-group">
+                        <div class="toolbar-button">⬅️ Undo</div>
+                        <div class="toolbar-button">➡️ Redo</div>
+                        <div class="toolbar-button">🔍</div>
+                        <div class="toolbar-button">&lt; /&gt;</div>
+                    </div>
+                    
+                    <!-- SEO & Templates -->
+                    <div class="toolbar-group">
+                        <div class="toolbar-button">🎯 SEO</div>
+                        <div class="toolbar-button">📝 Templates</div>
+                    </div>
+                </div>
+                <div class="ckeditor-content">
+                    <h2>Sample Content with Rich Formatting</h2>
+                    <p>This is a <strong>bold text</strong> example with <em>italic formatting</em> and <u>underlined content</u>. The editor supports comprehensive text styling options.</p>
+                    
+                    <blockquote style="border-left: 4px solid #3b82f6; padding-left: 1rem; margin: 1rem 0; color: #6b7280;">
+                        "This is a beautiful blockquote that stands out from regular content and provides visual emphasis for important quotes or testimonials."
+                    </blockquote>
+                    
+                    <h3>Key Features List:</h3>
+                    <ul>
+                        <li><strong>Rich Text Formatting:</strong> Bold, italic, underline, strikethrough</li>
+                        <li><strong>Advanced Typography:</strong> Font sizes, colors, highlighting</li>
+                        <li><strong>Media Integration:</strong> Images, videos, embeds, file attachments</li>
+                        <li><strong>Structure Elements:</strong> Headings, lists, tables, code blocks</li>
+                        <li><strong>SEO Optimization:</strong> Real-time analysis and suggestions</li>
+                    </ul>
+                    
+                    <p style="background: #f0f9ff; padding: 1rem; border-radius: 8px; border: 1px solid #bfdbfe;">
+                        <strong>💡 Pro Tip:</strong> Use the SEO analysis tool to optimize your content for search engines while writing.
+                    </p>
+                    
+                    <div style="display: flex; justify-content: between; align-items: center; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #e5e7eb; font-size: 0.875rem; color: #6b7280;">
+                        <span>Words: 156 | Characters: 892</span>
+                        <span>Reading time: ~1 minute</span>
+                        <span>SEO Score: 75/100</span>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">Feature Implementation Details</h3>
+            
+            <div class="step-container">
+                <div class="step-item">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <div class="step-title">Auto-Save Implementation</div>
+                        <div class="step-description">
+                            Implement auto-save functionality that saves content every 30 seconds to prevent data loss. Include visual indicators for save status and conflict resolution for concurrent editing.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step-item">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <div class="step-title">Media Upload & Optimization</div>
+                        <div class="step-description">
+                            Configure image upload with automatic compression, WebP conversion, and CDN integration. Support drag-and-drop, paste from clipboard, and URL insertion.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step-item">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <div class="step-title">Real-time Word Count & Analytics</div>
+                        <div class="step-description">
+                            Track word count, character count, reading time, and paragraph count in real-time. Display statistics in the sidebar for easy monitoring during content creation.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step-item">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <div class="step-title">Collaborative Editing Features</div>
+                        <div class="step-description">
+                            Implement real-time collaboration indicators, comments system, and version history. Include user presence indicators and conflict resolution for simultaneous editing.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Responsive & Mobile Optimizations -->
+        <section class="section">
+            <h2 class="section-title">4. Responsive & Mobile Optimizations</h2>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <div class="feature-title">Mobile Toolbar</div>
+                    <div class="feature-description">Collapsible toolbar with essential tools visible by default. Expandable sections for advanced formatting options.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">👆</div>
+                    <div class="feature-title">Touch Optimization</div>
+                    <div class="feature-description">Touch-friendly buttons (min 44px), improved selection handles, and gesture support for common actions.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎤</div>
+                    <div class="feature-title">Voice Input</div>
+                    <div class="feature-description">Speech-to-text integration for hands-free content creation on mobile devices with automatic punctuation.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📸</div>
+                    <div class="feature-title">Camera Integration</div>
+                    <div class="feature-description">Direct camera access for capturing and inserting images with automatic optimization and alt text suggestions.</div>
+                </div>
+            </div>
+
+            <div class="component-spec">
+                <div class="component-title">Mobile-First Configuration</div>
+                <div class="code-snippet">
+<span class="comment">// Mobile-optimized CKEditor configuration</span>
+<span class="keyword">const</span> <span class="property">mobileEditorConfig</span> = {
+  <span class="property">toolbar</span>: {
+    <span class="property">items</span>: [
+      <span class="comment">// Essential tools visible by default</span>
+      <span class="string">'bold'</span>, <span class="string">'italic'</span>, <span class="string">'|'</span>,
+      <span class="string">'heading'</span>, <span class="string">'|'</span>,
+      <span class="string">'link'</span>, <span class="string">'imageUpload'</span>, <span class="string">'|'</span>,
+      <span class="string">'bulletedList'</span>, <span class="string">'numberedList'</span>, <span class="string">'|'</span>,
+      <span class="string">'moreOptions'</span> <span class="comment">// Expandable menu for advanced tools</span>
+    ],
+    <span class="property">shouldNotGroupWhenFull</span>: <span class="keyword">false</span>
+  },
+  <span class="property">image</span>: {
+    <span class="property">upload</span>: {
+      <span class="property">types</span>: [<span class="string">'jpeg'</span>, <span class="string">'png'</span>, <span class="string">'gif'</span>, <span class="string">'webp'</span>]
+    },
+    <span class="property">toolbar</span>: [
+      <span class="string">'imageTextAlternative'</span>, <span class="string">'imageStyle:block'</span>, <span class="string">'imageStyle:side'</span>
+    ]
+  },
+  <span class="property">mediaEmbed</span>: {
+    <span class="property">previewsInData</span>: <span class="keyword">true</span>
+  },
+  <span class="comment">// Touch-optimized UI</span>
+  <span class="property">ui</span>: {
+    <span class="property">viewportOffset</span>: {
+      <span class="property">top</span>: 60 <span class="comment">// Account for mobile browser UI</span>
+    }
+  }
+};
+
+<span class="comment">// Responsive toolbar adjustment</span>
+<span class="keyword">const</span> <span class="property">getResponsiveConfig</span> = () => {
+  <span class="keyword">const</span> <span class="property">isMobile</span> = window.innerWidth &lt; 768;
+  <span class="keyword">const</span> <span class="property">isTablet</span> = window.innerWidth &lt; 1024 && window.innerWidth >= 768;
+  
+  <span class="keyword">if</span> (isMobile) {
+    <span class="keyword">return</span> mobileEditorConfig;
+  } <span class="keyword">else if</span> (isTablet) {
+    <span class="keyword">return</span> tabletEditorConfig;
+  }
+  <span class="keyword">return</span> desktopEditorConfig;
+};
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Performance & Optimization -->
+        <section class="section">
+            <h2 class="section-title">5. Performance & Optimization</h2>
+            
+            <div class="plugin-config">
+                <div class="plugin-title">Bundle Size Optimization</div>
+                <div class="plugin-description">
+                    Implement dynamic imports and lazy loading for CKEditor plugins to reduce initial bundle size and improve loading performance.
+                </div>
+                <div class="code-snippet">
+<span class="comment">// Dynamic import for CKEditor with lazy loading</span>
+<span class="keyword">const</span> <span class="property">CKEditorLazy</span> = React.lazy(() => 
+  <span class="keyword">import</span>(<span class="string">'./CKEditorComponent'</span>).then(<span class="property">module</span> => ({
+    <span class="property">default</span>: module.CKEditorComponent
+  }))
+);
+
+<span class="comment">// Usage with Suspense</span>
+<span class="keyword">const</span> <span class="property">PostEditor</span> = () => (
+  &lt;React.Suspense <span class="property">fallback</span>={&lt;<span class="property">EditorSkeleton</span> /&gt;}&gt;
+    &lt;<span class="property">CKEditorLazy</span> {...props} /&gt;
+  &lt;/React.Suspense&gt;
+);
+                </div>
+            </div>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-title">Lazy Loading</div>
+                    <div class="feature-description">Load CKEditor and plugins only when needed, reducing initial page load time by up to 40%.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💾</div>
+                    <div class="feature-title">Caching Strategy</div>
+                    <div class="feature-description">Implement service worker caching for editor assets and offline editing capabilities with local storage backup.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <div class="feature-title">Virtual Scrolling</div>
+                    <div class="feature-description">Handle large documents efficiently with virtual scrolling and progressive content loading.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📈</div>
+                    <div class="feature-title">Performance Monitoring</div>
+                    <div class="feature-description">Track editor performance metrics, render times, and user interaction patterns for optimization.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Accessibility Implementation -->
+        <section class="section">
+            <h2 class="section-title">6. Accessibility Implementation</h2>
+            
+            <div class="component-spec">
+                <div class="component-title">WCAG 2.1 AA Compliance</div>
+                <div class="step-container">
+                    <div class="step-item">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <div class="step-title">Keyboard Navigation</div>
+                            <div class="step-description">
+                                Full keyboard support with logical tab order, custom shortcuts (Ctrl+B, Ctrl+I), and escape key handling for modal dialogs and dropdowns.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="step-item">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <div class="step-title">Screen Reader Support</div>
+                            <div class="step-description">
+                                Proper ARIA labels, role assignments, and announcements for dynamic content changes. Live regions for status updates and error messages.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="step-item">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <div class="step-title">Color & Contrast</div>
+                            <div class="step-description">
+                                Minimum 4.5:1 contrast ratio for all text, color-blind friendly palette, and visual indicators beyond color for important information.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="step-item">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <div class="step-title">Focus Management</div>
+                            <div class="step-description">
+                                Clear focus indicators, focus trap for modal dialogs, and logical focus flow throughout the editor interface.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Summary -->
+        <section class="section" style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border: 1px solid #0ea5e9;">
+            <h2 class="section-title" style="color: var(--electric-blue);">Implementation Ready</h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+                <div>
+                    <h4 style="font-weight: 600; color: var(--charcoal); margin-bottom: 0.75rem;">Core Components</h4>
+                    <ul style="font-size: 0.875rem; color: var(--gray-600); line-height: 1.8; margin-left: 1.5rem;">
+                        <li>CKEditor 5 React component</li>
+                        <li>Custom plugin system</li>
+                        <li>SEO optimization tools</li>
+                        <li>Media management integration</li>
+                        <li>Auto-save functionality</li>
+                        <li>Responsive toolbar design</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 style="font-weight: 600; color: var(--charcoal); margin-bottom: 0.75rem;">Advanced Features</h4>
+                    <ul style="font-size: 0.875rem; color: var(--gray-600); line-height: 1.8; margin-left: 1.5rem;">
+                        <li>Real-time collaboration</li>
+                        <li>Content templates</li>
+                        <li>Voice input support</li>
+                        <li>Camera integration</li>
+                        <li>Performance optimization</li>
+                        <li>Accessibility compliance</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 style="font-weight: 600; color: var(--charcoal); margin-bottom: 0.75rem;">Integration Points</h4>
+                    <ul style="font-size: 0.875rem; color: var(--gray-600); line-height: 1.8; margin-left: 1.5rem;">
+                        <li>Next.js 15 compatibility</li>
+                        <li>TypeScript definitions</li>
+                        <li>API endpoint integration</li>
+                        <li>Database schema alignment</li>
+                        <li>CDN media optimization</li>
+                        <li>Analytics integration</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

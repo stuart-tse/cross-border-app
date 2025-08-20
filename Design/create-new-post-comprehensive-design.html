@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Post - Comprehensive Design Specifications</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: #1f2937;
+            background: #f8fafc;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 1.875rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #111827;
+            border-bottom: 3px solid #3b82f6;
+            padding-bottom: 0.5rem;
+        }
+
+        .subsection-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem 0;
+            color: #374151;
+        }
+
+        /* Design System Colors */
+        :root {
+            --primary-blue: #3b82f6;
+            --success-green: #10b981;
+            --warning-amber: #f59e0b;
+            --danger-red: #ef4444;
+            --hot-pink: #ec4899;
+            --electric-blue: #0ea5e9;
+            --charcoal: #111827;
+            --gray-600: #4b5563;
+            --gray-300: #d1d5db;
+            --gray-100: #f3f4f6;
+            --gray-50: #f9fafb;
+        }
+
+        /* Layout Wireframe Styles */
+        .wireframe-container {
+            border: 2px solid var(--primary-blue);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            background: #fafbfc;
+        }
+
+        .wireframe-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: var(--gray-50);
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .wireframe-grid {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 2rem;
+            margin: 1rem 0;
+        }
+
+        .wireframe-main {
+            background: white;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            padding: 1.5rem;
+            min-height: 600px;
+        }
+
+        .wireframe-sidebar {
+            background: white;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .wireframe-section {
+            border: 1px dashed var(--gray-300);
+            padding: 1rem;
+            margin: 0.75rem 0;
+            border-radius: 4px;
+            background: #fdfdfd;
+        }
+
+        .wireframe-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Component Specification Styles */
+        .component-spec {
+            border: 1px solid var(--gray-300);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            background: white;
+        }
+
+        .component-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--charcoal);
+            margin-bottom: 1rem;
+        }
+
+        .component-example {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        /* Form Element Styles */
+        .form-example {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .input-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--charcoal);
+        }
+
+        .input-field {
+            padding: 0.75rem;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            background: white;
+            transition: border-color 0.2s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .textarea-field {
+            min-height: 120px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        /* CKEditor Mockup Styles */
+        .ckeditor-mockup {
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            overflow: hidden;
+            background: white;
+        }
+
+        .ckeditor-toolbar {
+            background: var(--gray-100);
+            border-bottom: 1px solid var(--gray-300);
+            padding: 0.75rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.25rem;
+        }
+
+        .toolbar-button {
+            padding: 0.5rem;
+            background: white;
+            border: 1px solid var(--gray-300);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all 0.2s ease;
+        }
+
+        .toolbar-button:hover {
+            background: var(--gray-50);
+            border-color: var(--primary-blue);
+        }
+
+        .toolbar-separator {
+            width: 1px;
+            height: 24px;
+            background: var(--gray-300);
+            margin: 0 0.5rem;
+        }
+
+        .ckeditor-content {
+            padding: 1.5rem;
+            min-height: 400px;
+            background: white;
+        }
+
+        /* SEO Analysis Styles */
+        .seo-score {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border-radius: 12px;
+            margin: 1rem 0;
+        }
+
+        .score-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .score-excellent { background: var(--success-green); }
+        .score-good { background: var(--warning-amber); }
+        .score-poor { background: var(--danger-red); }
+
+        .seo-details {
+            flex: 1;
+        }
+
+        .seo-issues {
+            display: grid;
+            gap: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        .issue-item {
+            display: flex;
+            align-items: start;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+        }
+
+        .suggestion-item {
+            display: flex;
+            align-items: start;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 8px;
+        }
+
+        /* Media Upload Styles */
+        .media-upload-area {
+            border: 2px dashed var(--gray-300);
+            border-radius: 12px;
+            padding: 3rem;
+            text-align: center;
+            background: #fafbfc;
+            transition: all 0.2s ease;
+        }
+
+        .media-upload-area:hover {
+            border-color: var(--primary-blue);
+            background: #f0f9ff;
+        }
+
+        .media-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .media-item {
+            aspect-ratio: 1;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-100);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .media-item:hover {
+            border-color: var(--primary-blue);
+            background: #f0f9ff;
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.875rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--gray-100);
+            color: var(--gray-600);
+            border: 1px solid var(--gray-300);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-200);
+        }
+
+        .btn-success {
+            background: var(--success-green);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning-amber);
+            color: white;
+        }
+
+        /* Tab Styles */
+        .tab-navigation {
+            display: flex;
+            border-bottom: 1px solid var(--gray-300);
+            margin-bottom: 1.5rem;
+        }
+
+        .tab-button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--gray-600);
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .tab-button.active {
+            color: var(--primary-blue);
+            border-bottom-color: var(--primary-blue);
+        }
+
+        .tab-button:hover:not(.active) {
+            color: var(--charcoal);
+            background: var(--gray-50);
+        }
+
+        /* Badge Styles */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .badge-draft { background: #fef3c7; color: #92400e; }
+        .badge-published { background: #dcfce7; color: #166534; }
+        .badge-scheduled { background: #dbeafe; color: #1e40af; }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .wireframe-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .wireframe-sidebar {
+                order: -1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .section {
+                padding: 1.5rem;
+            }
+            
+            .wireframe-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: stretch;
+            }
+        }
+
+        /* Code Snippet Styles */
+        .code-snippet {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .code-snippet .keyword { color: #7c3aed; }
+        .code-snippet .string { color: #10b981; }
+        .code-snippet .comment { color: #6b7280; }
+        .code-snippet .property { color: #f59e0b; }
+
+        /* Interaction Flow Styles */
+        .flow-step {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: white;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            margin: 0.5rem 0;
+        }
+
+        .flow-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary-blue);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .flow-arrow {
+            margin: 0.5rem 0;
+            text-align: center;
+            color: var(--primary-blue);
+            font-size: 1.5rem;
+        }
+
+        /* Feature List Styles */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .feature-card {
+            background: white;
+            border: 1px solid var(--gray-300);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .feature-card:hover {
+            border-color: var(--primary-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--primary-blue);
+            color: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--charcoal);
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-description {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header style="text-align: center; margin-bottom: 3rem;">
+            <h1 style="font-size: 2.5rem; font-weight: 800; color: #111827; margin-bottom: 0.5rem;">
+                Create New Post - Comprehensive Design
+            </h1>
+            <p style="font-size: 1.125rem; color: #6b7280;">
+                Professional content creation interface with CKEditor integration, SEO optimization, and media management
+            </p>
+        </header>
+
+        <!-- 1. Layout Wireframes -->
+        <section class="section">
+            <h2 class="section-title">1. Layout Wireframes & Structure</h2>
+            
+            <div class="wireframe-container">
+                <h3 class="subsection-title">Desktop Layout (1200px+)</h3>
+                
+                <!-- Header -->
+                <div class="wireframe-header">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="font-weight: 600; color: var(--charcoal);">Create New Post</div>
+                        <div style="font-size: 0.875rem; color: var(--gray-600);">Auto-saving enabled</div>
+                    </div>
+                    <div style="display: flex; gap: 0.75rem;">
+                        <button class="btn btn-secondary">Save Draft</button>
+                        <button class="btn btn-primary">Publish</button>
+                    </div>
+                </div>
+
+                <!-- Main Layout -->
+                <div class="wireframe-grid">
+                    <!-- Main Content Area -->
+                    <div class="wireframe-main">
+                        <div class="wireframe-section">
+                            <div class="wireframe-label">Title Field</div>
+                            <div style="height: 40px; background: var(--gray-100); border-radius: 4px;"></div>
+                        </div>
+
+                        <div class="wireframe-section">
+                            <div class="wireframe-label">Tab Navigation</div>
+                            <div class="tab-navigation">
+                                <button class="tab-button active">✏️ Content</button>
+                                <button class="tab-button">🎯 SEO</button>
+                                <button class="tab-button">🖼️ Media</button>
+                                <button class="tab-button">⚙️ Settings</button>
+                            </div>
+                        </div>
+
+                        <!-- Content Tab -->
+                        <div class="wireframe-section">
+                            <div class="wireframe-label">Excerpt Field</div>
+                            <div style="height: 80px; background: var(--gray-100); border-radius: 4px; margin-bottom: 1rem;"></div>
+                            
+                            <div class="wireframe-label">CKEditor Rich Text Editor</div>
+                            <div class="ckeditor-mockup">
+                                <div class="ckeditor-toolbar">
+                                    <div class="toolbar-button">B</div>
+                                    <div class="toolbar-button">I</div>
+                                    <div class="toolbar-button">U</div>
+                                    <div class="toolbar-separator"></div>
+                                    <div class="toolbar-button">H1</div>
+                                    <div class="toolbar-button">H2</div>
+                                    <div class="toolbar-button">H3</div>
+                                    <div class="toolbar-separator"></div>
+                                    <div class="toolbar-button">🔗</div>
+                                    <div class="toolbar-button">🖼️</div>
+                                    <div class="toolbar-button">📹</div>
+                                    <div class="toolbar-separator"></div>
+                                    <div class="toolbar-button">• List</div>
+                                    <div class="toolbar-button">1. List</div>
+                                    <div class="toolbar-button">💬 Quote</div>
+                                    <div class="toolbar-separator"></div>
+                                    <div class="toolbar-button">{ } Code</div>
+                                    <div class="toolbar-button">📊 Table</div>
+                                    <div class="toolbar-button">📐 Special</div>
+                                </div>
+                                <div class="ckeditor-content">
+                                    <p style="color: var(--gray-600); font-style: italic;">Start writing your amazing content here...</p>
+                                    <p style="margin-top: 1rem; font-size: 0.875rem; color: var(--gray-600);">Word count: 0 | Reading time: 0 min</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sidebar -->
+                    <div class="wireframe-sidebar">
+                        <div class="wireframe-section">
+                            <div class="wireframe-label">Quick Stats</div>
+                            <div style="display: grid; gap: 0.75rem;">
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span style="font-size: 0.875rem;">Words:</span>
+                                    <span style="font-weight: 600;">0</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span style="font-size: 0.875rem;">SEO Score:</span>
+                                    <span style="font-weight: 600; color: var(--danger-red);">0%</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span style="font-size: 0.875rem;">Read Time:</span>
+                                    <span style="font-weight: 600;">0m</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="wireframe-section">
+                            <div class="wireframe-label">Publishing Options</div>
+                            <div style="display: grid; gap: 0.5rem;">
+                                <button class="btn btn-secondary" style="width: 100%;">Save Draft</button>
+                                <button class="btn btn-warning" style="width: 100%;">Schedule</button>
+                                <button class="btn btn-success" style="width: 100%;">Publish</button>
+                            </div>
+                        </div>
+
+                        <div class="wireframe-section">
+                            <div class="wireframe-label">Writing Tips</div>
+                            <div style="font-size: 0.875rem; color: var(--gray-600); line-height: 1.6;">
+                                <div style="margin: 0.5rem 0;">💡 Use engaging headlines</div>
+                                <div style="margin: 0.5rem 0;">💡 Add relevant keywords</div>
+                                <div style="margin: 0.5rem 0;">💡 Include media content</div>
+                                <div style="margin: 0.5rem 0;">💡 Optimize for SEO</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">Mobile Layout (< 768px)</h3>
+            <div style="background: var(--gray-50); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--gray-300);">
+                <div style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 1rem;">
+                    <strong>Mobile Adaptations:</strong>
+                </div>
+                <ul style="font-size: 0.875rem; color: var(--gray-600); line-height: 1.6; margin-left: 1.5rem;">
+                    <li>Stack sidebar content above main content</li>
+                    <li>Collapsible toolbar for CKEditor</li>
+                    <li>Touch-optimized button sizes (min 44px)</li>
+                    <li>Swipe gestures for tab navigation</li>
+                    <li>Floating action button for quick save</li>
+                    <li>Bottom sheet for publishing options</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 2. CKEditor Integration Specifications -->
+        <section class="section">
+            <h2 class="section-title">2. CKEditor 5 Integration & Rich Text Features</h2>
+            
+            <div class="component-spec">
+                <div class="component-title">CKEditor Configuration</div>
+                <div class="code-snippet">
+<span class="comment">// CKEditor 5 Custom Configuration</span>
+<span class="keyword">import</span> { ClassicEditor } <span class="keyword">from</span> <span class="string">'@ckeditor/ckeditor5-editor-classic'</span>;
+<span class="keyword">import</span> {
+    <span class="property">Essentials</span>, <span class="property">Bold</span>, <span class="property">Italic</span>, <span class="property">Underline</span>,
+    <span class="property">Heading</span>, <span class="property">Link</span>, <span class="property">Image</span>, <span class="property">ImageUpload</span>,
+    <span class="property">List</span>, <span class="property">BlockQuote</span>, <span class="property">Table</span>,
+    <span class="property">CodeBlock</span>, <span class="property">MediaEmbed</span>, <span class="property">Paragraph</span>,
+    <span class="property">Alignment</span>, <span class="property">FontSize</span>, <span class="property">FontColor</span>
+} <span class="keyword">from</span> <span class="string">'@ckeditor/ckeditor5-*'</span>;
+
+<span class="keyword">const</span> <span class="property">editorConfig</span> = {
+    <span class="property">plugins</span>: [
+        <span class="property">Essentials</span>, <span class="property">Bold</span>, <span class="property">Italic</span>, <span class="property">Underline</span>, <span class="property">Heading</span>,
+        <span class="property">Link</span>, <span class="property">Image</span>, <span class="property">ImageUpload</span>, <span class="property">List</span>,
+        <span class="property">BlockQuote</span>, <span class="property">Table</span>, <span class="property">CodeBlock</span>, <span class="property">MediaEmbed</span>
+    ],
+    <span class="property">toolbar</span>: {
+        <span class="property">items</span>: [
+            <span class="string">'heading'</span>, <span class="string">'|'</span>,
+            <span class="string">'bold'</span>, <span class="string">'italic'</span>, <span class="string">'underline'</span>, <span class="string">'|'</span>,
+            <span class="string">'fontSize'</span>, <span class="string">'fontColor'</span>, <span class="string">'|'</span>,
+            <span class="string">'link'</span>, <span class="string">'imageUpload'</span>, <span class="string">'mediaEmbed'</span>, <span class="string">'|'</span>,
+            <span class="string">'bulletedList'</span>, <span class="string">'numberedList'</span>, <span class="string">'|'</span>,
+            <span class="string">'blockQuote'</span>, <span class="string">'codeBlock'</span>, <span class="string">'insertTable'</span>, <span class="string">'|'</span>,
+            <span class="string">'alignment'</span>, <span class="string">'undo'</span>, <span class="string">'redo'</span>
+        ]
+    },
+    <span class="property">image</span>: {
+        <span class="property">toolbar</span>: [<span class="string">'imageTextAlternative'</span>, <span class="string">'imageStyle:full'</span>, <span class="string">'imageStyle:side'</span>]
+    },
+    <span class="property">simpleUpload</span>: {
+        <span class="property">uploadUrl</span>: <span class="string">'/api/uploads/images'</span>
+    }
+};
+                </div>
+            </div>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">✏️</div>
+                    <div class="feature-title">Rich Text Formatting</div>
+                    <div class="feature-description">Bold, italic, underline, strikethrough, and font styling options with consistent cross-platform rendering.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📝</div>
+                    <div class="feature-title">Structured Content</div>
+                    <div class="feature-description">Headings (H1-H6), paragraphs, lists, and proper document structure for better SEO.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🖼️</div>
+                    <div class="feature-title">Media Integration</div>
+                    <div class="feature-description">Image upload, video embedding, and media management with alt text and captions.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔗</div>
+                    <div class="feature-title">Smart Linking</div>
+                    <div class="feature-description">Link insertion with SEO attributes, internal linking suggestions, and link validation.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-title">Tables & Data</div>
+                    <div class="feature-description">Responsive table creation, data visualization, and structured content formatting.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💾</div>
+                    <div class="feature-title">Auto-save</div>
+                    <div class="feature-description">Real-time auto-save every 30 seconds with conflict resolution and version history.</div>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">Custom Plugins & Extensions</h3>
+            <div class="component-example">
+                <div style="display: grid; gap: 1rem;">
+                    <div style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem; background: #f0f9ff; border-radius: 6px;">
+                        <span style="font-weight: 600;">SEO Helper Plugin:</span>
+                        <span style="font-size: 0.875rem;">Real-time keyword density analysis and readability scoring</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem; background: #f0f9ff; border-radius: 6px;">
+                        <span style="font-weight: 600;">Content Templates:</span>
+                        <span style="font-size: 0.875rem;">Pre-built article templates for different content types</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem; background: #f0f9ff; border-radius: 6px;">
+                        <span style="font-weight: 600;">Cross-Reference Tool:</span>
+                        <span style="font-size: 0.875rem;">Internal linking suggestions and cross-border content references</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. SEO Optimization Interface -->
+        <section class="section">
+            <h2 class="section-title">3. SEO Optimization & Analysis</h2>
+            
+            <div class="component-spec">
+                <div class="component-title">Real-time SEO Analysis Dashboard</div>
+                
+                <!-- SEO Score Display -->
+                <div class="seo-score">
+                    <div class="score-circle score-good">72%</div>
+                    <div class="seo-details">
+                        <div style="font-size: 1.125rem; font-weight: 600; color: var(--charcoal);">SEO Score: Good</div>
+                        <div style="font-size: 0.875rem; color: var(--gray-600); margin: 0.25rem 0;">Your content is well-optimized with room for improvement</div>
+                        <div style="display: flex; gap: 1rem; margin-top: 0.75rem;">
+                            <span class="badge" style="background: #dcfce7; color: #166534;">✓ Title Length</span>
+                            <span class="badge" style="background: #fef3c7; color: #92400e;">⚠ Meta Description</span>
+                            <span class="badge" style="background: #fecaca; color: #991b1b;">✗ Keywords</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SEO Fields -->
+                <div class="form-example">
+                    <div class="input-group">
+                        <label class="input-label">SEO Title</label>
+                        <input class="input-field" type="text" placeholder="Custom SEO title (leave empty to use post title)" />
+                        <div style="font-size: 0.75rem; color: var(--gray-600); margin-top: 0.25rem;">
+                            45/60 characters • <span style="color: var(--success-green);">Optimal length</span>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label class="input-label">Meta Description</label>
+                        <textarea class="input-field textarea-field" placeholder="Brief description for search engines (120-160 characters)"></textarea>
+                        <div style="font-size: 0.75rem; color: var(--danger-red); margin-top: 0.25rem;">
+                            95/160 characters • <span>Too short, add more detail</span>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label class="input-label">URL Slug</label>
+                        <input class="input-field" type="text" placeholder="url-friendly-post-title" />
+                        <div style="font-size: 0.75rem; color: var(--gray-600); margin-top: 0.25rem;">
+                            Preview: /blog/comprehensive-seo-guide-2024
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label class="input-label">Focus Keywords</label>
+                        <input class="input-field" type="text" placeholder="SEO, content marketing, blog optimization" />
+                        <div style="font-size: 0.75rem; color: var(--gray-600); margin-top: 0.25rem;">
+                            Separate keywords with commas • Use 3-5 relevant keywords
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SEO Issues & Suggestions -->
+                <div style="margin-top: 2rem;">
+                    <h4 style="font-size: 1rem; font-weight: 600; color: var(--danger-red); margin-bottom: 0.75rem;">Issues to Fix</h4>
+                    <div class="seo-issues">
+                        <div class="issue-item">
+                            <span style="color: var(--danger-red);">⚠️</span>
+                            <div>
+                                <div style="font-weight: 500;">Meta description too short</div>
+                                <div style="font-size: 0.875rem; color: var(--gray-600);">Expand to 120-160 characters for better search visibility</div>
+                            </div>
+                        </div>
+                        <div class="issue-item">
+                            <span style="color: var(--danger-red);">⚠️</span>
+                            <div>
+                                <div style="font-weight: 500;">No focus keywords defined</div>
+                                <div style="font-size: 0.875rem; color: var(--gray-600);">Add 3-5 relevant keywords to improve search ranking</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h4 style="font-size: 1rem; font-weight: 600; color: var(--primary-blue); margin: 1.5rem 0 0.75rem 0;">Suggestions</h4>
+                    <div class="seo-issues">
+                        <div class="suggestion-item">
+                            <span style="color: var(--primary-blue);">💡</span>
+                            <div>
+                                <div style="font-weight: 500;">Add internal links</div>
+                                <div style="font-size: 0.875rem; color: var(--gray-600);">Link to 2-3 related posts to improve SEO and user engagement</div>
+                            </div>
+                        </div>
+                        <div class="suggestion-item">
+                            <span style="color: var(--primary-blue);">💡</span>
+                            <div>
+                                <div style="font-weight: 500;">Include alt text for images</div>
+                                <div style="font-size: 0.875rem; color: var(--gray-600);">Add descriptive alt text to all images for accessibility and SEO</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">Advanced SEO Features</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-title">Keyword Analysis</div>
+                    <div class="feature-description">Real-time keyword density analysis, LSI keyword suggestions, and competitor keyword research.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-title">Readability Score</div>
+                    <div class="feature-description">Flesch-Kincaid readability analysis with suggestions for improving content accessibility.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <div class="feature-title">SERP Preview</div>
+                    <div class="feature-description">Live preview of how your post will appear in Google search results with different devices.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <div class="feature-title">Social Media Preview</div>
+                    <div class="feature-description">Preview cards for Twitter, Facebook, LinkedIn with Open Graph and Twitter Card optimization.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Media Management System -->
+        <section class="section">
+            <h2 class="section-title">4. Media Management & Featured Image System</h2>
+            
+            <div class="component-spec">
+                <div class="component-title">Featured Image Upload & Editor</div>
+                
+                <div class="media-upload-area">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">🖼️</div>
+                    <div style="font-size: 1.125rem; font-weight: 600; color: var(--charcoal); margin-bottom: 0.5rem;">
+                        Upload Featured Image
+                    </div>
+                    <div style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 1.5rem;">
+                        Drag & drop your image here, or click to browse<br>
+                        Supports: JPG, PNG, WebP, SVG • Max size: 10MB • Recommended: 1200x630px
+                    </div>
+                    <button class="btn btn-primary">Choose Image</button>
+                </div>
+
+                <div style="margin: 2rem 0;">
+                    <div style="display: grid; grid-template-columns: 1fr 300px; gap: 2rem; align-items: start;">
+                        <!-- Image Preview -->
+                        <div style="aspect-ratio: 16/9; background: var(--gray-100); border-radius: 12px; border: 1px solid var(--gray-300); display: flex; align-items: center; justify-content: center; color: var(--gray-600);">
+                            <div style="text-align: center;">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🖼️</div>
+                                <div>Featured image preview</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Image Controls -->
+                        <div style="space-y: 1rem;">
+                            <div class="input-group">
+                                <label class="input-label">Alt Text</label>
+                                <input class="input-field" type="text" placeholder="Descriptive alt text for accessibility" />
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label">Caption</label>
+                                <textarea class="input-field" rows="2" placeholder="Optional image caption"></textarea>
+                            </div>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                                <button class="btn btn-secondary">Crop</button>
+                                <button class="btn btn-secondary">Resize</button>
+                                <button class="btn btn-secondary">Filters</button>
+                                <button class="btn btn-secondary">Replace</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">Media Library Integration</h3>
+            <div class="component-spec">
+                <div class="component-title">Media Library Browser</div>
+                
+                <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 1rem;">
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn btn-secondary">All Media</button>
+                        <button class="btn btn-secondary">Images</button>
+                        <button class="btn btn-secondary">Videos</button>
+                        <button class="btn btn-secondary">Documents</button>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                        <input class="input-field" type="text" placeholder="Search media..." style="width: 200px;" />
+                        <button class="btn btn-primary">Upload New</button>
+                    </div>
+                </div>
+
+                <div class="media-grid" style="grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));">
+                    <div class="media-item">
+                        <div style="font-size: 2rem;">🖼️</div>
+                    </div>
+                    <div class="media-item">
+                        <div style="font-size: 2rem;">📹</div>
+                    </div>
+                    <div class="media-item">
+                        <div style="font-size: 2rem;">🖼️</div>
+                    </div>
+                    <div class="media-item">
+                        <div style="font-size: 2rem;">📄</div>
+                    </div>
+                    <div class="media-item">
+                        <div style="font-size: 2rem;">🖼️</div>
+                    </div>
+                    <div class="media-item">
+                        <div style="font-size: 2rem;">🖼️</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">Media Features</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">☁️</div>
+                    <div class="feature-title">Cloud Storage</div>
+                    <div class="feature-description">Automatic upload to CDN with global distribution and optimized delivery for cross-border performance.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-title">Image Optimization</div>
+                    <div class="feature-description">Automatic compression, WebP conversion, and responsive image generation for all devices.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">✂️</div>
+                    <div class="feature-title">Built-in Editor</div>
+                    <div class="feature-description">Crop, resize, apply filters, and edit images directly in the browser without external tools.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">♿</div>
+                    <div class="feature-title">Accessibility</div>
+                    <div class="feature-description">Automatic alt text suggestions, WCAG compliance checking, and accessibility score tracking.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. User Interaction Flows -->
+        <section class="section">
+            <h2 class="section-title">5. User Interaction Flows</h2>
+            
+            <h3 class="subsection-title">Complete Post Creation Workflow</h3>
+            
+            <div style="background: var(--gray-50); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--gray-300);">
+                <div class="flow-step">
+                    <div class="flow-number">1</div>
+                    <div>
+                        <div style="font-weight: 600;">Enter Post Title</div>
+                        <div style="font-size: 0.875rem; color: var(--gray-600);">Auto-generates URL slug, triggers SEO analysis</div>
+                    </div>
+                </div>
+                <div class="flow-arrow">↓</div>
+                
+                <div class="flow-step">
+                    <div class="flow-number">2</div>
+                    <div>
+                        <div style="font-weight: 600;">Write Content</div>
+                        <div style="font-size: 0.875rem; color: var(--gray-600);">Use CKEditor with real-time word count, auto-save enabled</div>
+                    </div>
+                </div>
+                <div class="flow-arrow">↓</div>
+                
+                <div class="flow-step">
+                    <div class="flow-number">3</div>
+                    <div>
+                        <div style="font-weight: 600;">Add Featured Image</div>
+                        <div style="font-size: 0.875rem; color: var(--gray-600);">Upload, crop, and optimize image with alt text</div>
+                    </div>
+                </div>
+                <div class="flow-arrow">↓</div>
+                
+                <div class="flow-step">
+                    <div class="flow-number">4</div>
+                    <div>
+                        <div style="font-weight: 600;">Optimize SEO</div>
+                        <div style="font-size: 0.875rem; color: var(--gray-600);">Review SEO score, fix issues, add keywords</div>
+                    </div>
+                </div>
+                <div class="flow-arrow">↓</div>
+                
+                <div class="flow-step">
+                    <div class="flow-number">5</div>
+                    <div>
+                        <div style="font-weight: 600;">Configure Settings</div>
+                        <div style="font-size: 0.875rem; color: var(--gray-600);">Set category, tags, publication status, and schedule</div>
+                    </div>
+                </div>
+                <div class="flow-arrow">↓</div>
+                
+                <div class="flow-step">
+                    <div class="flow-number">6</div>
+                    <div>
+                        <div style="font-weight: 600;">Preview & Publish</div>
+                        <div style="font-size: 0.875rem; color: var(--gray-600);">Final preview, social media cards, then publish or schedule</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">Error Handling & Edge Cases</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">⚠️</div>
+                    <div class="feature-title">Network Issues</div>
+                    <div class="feature-description">Offline detection with local storage backup, connection retry logic, and conflict resolution.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💾</div>
+                    <div class="feature-title">Auto-save Recovery</div>
+                    <div class="feature-description">Automatic recovery from drafts, version comparison, and rollback capabilities.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <div class="feature-title">Concurrent Editing</div>
+                    <div class="feature-description">Real-time collaboration indicators, edit conflict resolution, and merge capabilities.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">❌</div>
+                    <div class="feature-title">Validation Errors</div>
+                    <div class="feature-description">Inline validation feedback, comprehensive error messages, and guided resolution steps.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Responsive Design Specifications -->
+        <section class="section">
+            <h2 class="section-title">6. Responsive Design Specifications</h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+                <div class="component-spec">
+                    <div class="component-title">Desktop (1200px+)</div>
+                    <ul style="font-size: 0.875rem; color: var(--gray-600); line-height: 1.8; margin-left: 1.5rem;">
+                        <li>Two-column layout with 3:1 ratio</li>
+                        <li>Full CKEditor toolbar visible</li>
+                        <li>Sidebar with quick stats and actions</li>
+                        <li>Large featured image preview</li>
+                        <li>Advanced SEO analysis dashboard</li>
+                        <li>Keyboard shortcuts enabled</li>
+                    </ul>
+                </div>
+                
+                <div class="component-spec">
+                    <div class="component-title">Tablet (768px - 1199px)</div>
+                    <ul style="font-size: 0.875rem; color: var(--gray-600); line-height: 1.8; margin-left: 1.5rem;">
+                        <li>Single column with collapsible sidebar</li>
+                        <li>Condensed CKEditor toolbar</li>
+                        <li>Touch-optimized interface elements</li>
+                        <li>Swipe gestures for tab navigation</li>
+                        <li>Optimized image upload flow</li>
+                        <li>Portrait/landscape adaptations</li>
+                    </ul>
+                </div>
+                
+                <div class="component-spec">
+                    <div class="component-title">Mobile (< 768px)</div>
+                    <ul style="font-size: 0.875rem; color: var(--gray-600); line-height: 1.8; margin-left: 1.5rem;">
+                        <li>Stacked content with priority ordering</li>
+                        <li>Minimal CKEditor with expandable toolbar</li>
+                        <li>Bottom sheet for publishing options</li>
+                        <li>Floating action buttons</li>
+                        <li>Camera integration for image capture</li>
+                        <li>Voice-to-text input support</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">Breakpoint System</h3>
+            <div class="code-snippet">
+<span class="comment">// Tailwind CSS Responsive Breakpoints</span>
+<span class="keyword">const</span> <span class="property">breakpoints</span> = {
+  <span class="property">sm</span>: <span class="string">'640px'</span>,    <span class="comment">// Small devices</span>
+  <span class="property">md</span>: <span class="string">'768px'</span>,    <span class="comment">// Medium devices</span>
+  <span class="property">lg</span>: <span class="string">'1024px'</span>,   <span class="comment">// Large devices</span>
+  <span class="property">xl</span>: <span class="string">'1280px'</span>,   <span class="comment">// Extra large</span>
+  <span class="property">2xl</span>: <span class="string">'1536px'</span>   <span class="comment">// 2X Extra large</span>
+};
+
+<span class="comment">// Usage in components</span>
+<span class="keyword">const</span> <span class="property">responsiveClasses</span> = <span class="string">"
+  grid grid-cols-1 
+  md:grid-cols-2 
+  lg:grid-cols-3 
+  xl:grid-cols-4
+  gap-4 md:gap-6 lg:gap-8
+"</span>;
+            </div>
+        </section>
+
+        <!-- 7. Implementation Roadmap -->
+        <section class="section">
+            <h2 class="section-title">7. Implementation Roadmap</h2>
+            
+            <div style="display: grid; gap: 1.5rem;">
+                <div class="component-spec">
+                    <div class="component-title">Phase 1: Core Infrastructure (Week 1-2)</div>
+                    <div style="display: grid; gap: 0.75rem; margin-top: 1rem;">
+                        <div class="flow-step">
+                            <div style="width: 24px; height: 24px; border-radius: 50%; background: var(--primary-blue); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.75rem;">1</div>
+                            <div>
+                                <div style="font-weight: 500;">Set up Next.js 15 page structure</div>
+                                <div style="font-size: 0.875rem; color: var(--gray-600);">Create route, layout, and basic components</div>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div style="width: 24px; height: 24px; border-radius: 50%; background: var(--primary-blue); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.75rem;">2</div>
+                            <div>
+                                <div style="font-weight: 500;">Integrate CKEditor 5</div>
+                                <div style="font-size: 0.875rem; color: var(--gray-600);">Configure editor with custom plugins and toolbar</div>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div style="width: 24px; height: 24px; border-radius: 50%; background: var(--primary-blue); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.75rem;">3</div>
+                            <div>
+                                <div style="font-weight: 500;">Database schema setup</div>
+                                <div style="font-size: 0.875rem; color: var(--gray-600);">Create post, media, and SEO data models</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="component-spec">
+                    <div class="component-title">Phase 2: Core Features (Week 3-4)</div>
+                    <div style="display: grid; gap: 0.75rem; margin-top: 1rem;">
+                        <div class="flow-step">
+                            <div style="width: 24px; height: 24px; border-radius: 50%; background: var(--warning-amber); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.75rem;">1</div>
+                            <div>
+                                <div style="font-weight: 500;">Form handling and validation</div>
+                                <div style="font-size: 0.875rem; color: var(--gray-600);">Title, excerpt, content fields with real-time validation</div>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div style="width: 24px; height: 24px; border-radius: 50%; background: var(--warning-amber); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.75rem;">2</div>
+                            <div>
+                                <div style="font-weight: 500;">Auto-save functionality</div>
+                                <div style="font-size: 0.875rem; color: var(--gray-600);">Local storage backup and server sync</div>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div style="width: 24px; height: 24px; border-radius: 50%; background: var(--warning-amber); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.75rem;">3</div>
+                            <div>
+                                <div style="font-weight: 500;">Basic SEO fields</div>
+                                <div style="font-size: 0.875rem; color: var(--gray-600);">Meta title, description, URL slug generation</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="component-spec">
+                    <div class="component-title">Phase 3: Advanced Features (Week 5-6)</div>
+                    <div style="display: grid; gap: 0.75rem; margin-top: 1rem;">
+                        <div class="flow-step">
+                            <div style="width: 24px; height: 24px; border-radius: 50%; background: var(--success-green); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.75rem;">1</div>
+                            <div>
+                                <div style="font-weight: 500;">Media management system</div>
+                                <div style="font-size: 0.875rem; color: var(--gray-600);">Upload, edit, and optimize images with CDN integration</div>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div style="width: 24px; height: 24px; border-radius: 50%; background: var(--success-green); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.75rem;">2</div>
+                            <div>
+                                <div style="font-weight: 500;">SEO analysis engine</div>
+                                <div style="font-size: 0.875rem; color: var(--gray-600);">Real-time scoring, keyword analysis, readability</div>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div style="width: 24px; height: 24px; border-radius: 50%; background: var(--success-green); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.75rem;">3</div>
+                            <div>
+                                <div style="font-weight: 500;">Publishing workflow</div>
+                                <div style="font-size: 0.875rem; color: var(--gray-600);">Draft, schedule, publish with preview functionality</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="component-spec">
+                    <div class="component-title">Phase 4: Polish & Testing (Week 7-8)</div>
+                    <div style="display: grid; gap: 0.75rem; margin-top: 1rem;">
+                        <div class="flow-step">
+                            <div style="width: 24px; height: 24px; border-radius: 50%; background: var(--hot-pink); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.75rem;">1</div>
+                            <div>
+                                <div style="font-weight: 500;">Responsive optimization</div>
+                                <div style="font-size: 0.875rem; color: var(--gray-600);">Mobile, tablet, desktop testing and refinement</div>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div style="width: 24px; height: 24px; border-radius: 50%; background: var(--hot-pink); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.75rem;">2</div>
+                            <div>
+                                <div style="font-weight: 500;">Accessibility audit</div>
+                                <div style="font-size: 0.875rem; color: var(--gray-600);">WCAG 2.1 compliance, screen reader testing</div>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div style="width: 24px; height: 24px; border-radius: 50%; background: var(--hot-pink); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.75rem;">3</div>
+                            <div>
+                                <div style="font-weight: 500;">Performance optimization</div>
+                                <div style="font-size: 0.875rem; color: var(--gray-600);">Bundle size optimization, loading states, caching</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. Technical Architecture -->
+        <section class="section">
+            <h2 class="section-title">8. Technical Architecture & Database Schema</h2>
+            
+            <h3 class="subsection-title">Database Schema</h3>
+            <div class="code-snippet">
+<span class="comment">// Prisma Schema for Post Management</span>
+<span class="keyword">model</span> <span class="property">Post</span> {
+  <span class="property">id</span>              <span class="string">String</span>   <span class="keyword">@id</span> <span class="keyword">@default</span>(cuid())
+  <span class="property">title</span>           <span class="string">String</span>
+  <span class="property">slug</span>            <span class="string">String</span>   <span class="keyword">@unique</span>
+  <span class="property">excerpt</span>         <span class="string">String?</span>
+  <span class="property">content</span>         <span class="string">String</span>   <span class="keyword">@db.Text</span>
+  <span class="property">featuredImage</span>   <span class="string">String?</span>
+  <span class="property">status</span>          <span class="string">PostStatus</span> <span class="keyword">@default</span>(DRAFT)
+  <span class="property">publishedAt</span>     <span class="string">DateTime?</span>
+  <span class="property">scheduledAt</span>     <span class="string">DateTime?</span>
+  <span class="property">createdAt</span>       <span class="string">DateTime</span> <span class="keyword">@default</span>(now())
+  <span class="property">updatedAt</span>       <span class="string">DateTime</span> <span class="keyword">@updatedAt</span>
+  
+  <span class="comment">// Author relationship</span>
+  <span class="property">authorId</span>        <span class="string">String</span>
+  <span class="property">author</span>          <span class="string">User</span>     <span class="keyword">@relation</span>(fields: [authorId], references: [id])
+  
+  <span class="comment">// SEO fields</span>
+  <span class="property">seo</span>             <span class="string">PostSEO?</span>
+  
+  <span class="comment">// Categories and tags</span>
+  <span class="property">category</span>        <span class="string">Category?</span> <span class="keyword">@relation</span>(fields: [categoryId], references: [id])
+  <span class="property">categoryId</span>      <span class="string">String?</span>
+  <span class="property">tags</span>            <span class="string">Tag[]</span>
+  
+  <span class="comment">// Media relationships</span>
+  <span class="property">media</span>           <span class="string">Media[]</span>
+  
+  <span class="comment">// Analytics</span>
+  <span class="property">views</span>           <span class="string">Int</span>      <span class="keyword">@default</span>(0)
+  <span class="property">likes</span>           <span class="string">Int</span>      <span class="keyword">@default</span>(0)
+}
+
+<span class="keyword">model</span> <span class="property">PostSEO</span> {
+  <span class="property">id</span>              <span class="string">String</span>   <span class="keyword">@id</span> <span class="keyword">@default</span>(cuid())
+  <span class="property">metaTitle</span>       <span class="string">String?</span>
+  <span class="property">metaDescription</span> <span class="string">String?</span>
+  <span class="property">keywords</span>        <span class="string">String[]</span>
+  <span class="property">ogTitle</span>         <span class="string">String?</span>
+  <span class="property">ogDescription</span>   <span class="string">String?</span>
+  <span class="property">ogImage</span>         <span class="string">String?</span>
+  <span class="property">twitterCard</span>     <span class="string">String?</span>
+  <span class="property">canonicalUrl</span>    <span class="string">String?</span>
+  <span class="property">seoScore</span>        <span class="string">Int</span>      <span class="keyword">@default</span>(0)
+  
+  <span class="property">post</span>            <span class="string">Post</span>     <span class="keyword">@relation</span>(fields: [postId], references: [id])
+  <span class="property">postId</span>          <span class="string">String</span>   <span class="keyword">@unique</span>
+}
+
+<span class="keyword">model</span> <span class="property">Media</span> {
+  <span class="property">id</span>              <span class="string">String</span>   <span class="keyword">@id</span> <span class="keyword">@default</span>(cuid())
+  <span class="property">filename</span>        <span class="string">String</span>
+  <span class="property">originalName</span>    <span class="string">String</span>
+  <span class="property">mimeType</span>        <span class="string">String</span>
+  <span class="property">size</span>            <span class="string">Int</span>
+  <span class="property">url</span>             <span class="string">String</span>
+  <span class="property">thumbnailUrl</span>    <span class="string">String?</span>
+  <span class="property">altText</span>         <span class="string">String?</span>
+  <span class="property">caption</span>         <span class="string">String?</span>
+  <span class="property">createdAt</span>       <span class="string">DateTime</span> <span class="keyword">@default</span>(now())
+  
+  <span class="property">posts</span>           <span class="string">Post[]</span>
+}
+
+<span class="keyword">enum</span> <span class="property">PostStatus</span> {
+  <span class="property">DRAFT</span>
+  <span class="property">PUBLISHED</span>
+  <span class="property">SCHEDULED</span>
+  <span class="property">ARCHIVED</span>
+}
+            </div>
+
+            <h3 class="subsection-title">API Endpoints</h3>
+            <div class="component-spec">
+                <div class="component-title">RESTful API Design</div>
+                <div style="display: grid; gap: 1rem; margin-top: 1rem;">
+                    <div style="background: #f8fafc; padding: 1rem; border-radius: 6px; border-left: 4px solid var(--success-green);">
+                        <div style="font-family: monospace; font-weight: 600; margin-bottom: 0.25rem;">POST /api/posts</div>
+                        <div style="font-size: 0.875rem; color: var(--gray-600);">Create new post with validation and auto-save</div>
+                    </div>
+                    <div style="background: #f8fafc; padding: 1rem; border-radius: 6px; border-left: 4px solid var(--primary-blue);">
+                        <div style="font-family: monospace; font-weight: 600; margin-bottom: 0.25rem;">GET /api/posts/[id]</div>
+                        <div style="font-size: 0.875rem; color: var(--gray-600);">Retrieve post with SEO and media data</div>
+                    </div>
+                    <div style="background: #f8fafc; padding: 1rem; border-radius: 6px; border-left: 4px solid var(--warning-amber);">
+                        <div style="font-family: monospace; font-weight: 600; margin-bottom: 0.25rem;">PUT /api/posts/[id]</div>
+                        <div style="font-size: 0.875rem; color: var(--gray-600);">Update post content, SEO, and publishing status</div>
+                    </div>
+                    <div style="background: #f8fafc; padding: 1rem; border-radius: 6px; border-left: 4px solid var(--danger-red);">
+                        <div style="font-family: monospace; font-weight: 600; margin-bottom: 0.25rem;">DELETE /api/posts/[id]</div>
+                        <div style="font-size: 0.875rem; color: var(--gray-600);">Soft delete post and related media</div>
+                    </div>
+                    <div style="background: #f8fafc; padding: 1rem; border-radius: 6px; border-left: 4px solid var(--electric-blue);">
+                        <div style="font-family: monospace; font-weight: 600; margin-bottom: 0.25rem;">POST /api/posts/[id]/seo-analysis</div>
+                        <div style="font-size: 0.875rem; color: var(--gray-600);">Generate real-time SEO analysis and suggestions</div>
+                    </div>
+                    <div style="background: #f8fafc; padding: 1rem; border-radius: 6px; border-left: 4px solid var(--hot-pink);">
+                        <div style="font-family: monospace; font-weight: 600; margin-bottom: 0.25rem;">POST /api/media/upload</div>
+                        <div style="font-size: 0.875rem; color: var(--gray-600);">Upload and optimize images with CDN integration</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Summary & Next Steps -->
+        <section class="section" style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border: 1px solid #0ea5e9;">
+            <h2 class="section-title" style="color: var(--electric-blue);">Summary & Implementation Next Steps</h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+                <div>
+                    <h4 style="font-weight: 600; color: var(--charcoal); margin-bottom: 0.75rem;">Key Design Principles</h4>
+                    <ul style="font-size: 0.875rem; color: var(--gray-600); line-height: 1.8; margin-left: 1.5rem;">
+                        <li>User-centered content creation workflow</li>
+                        <li>Real-time feedback and auto-save capabilities</li>
+                        <li>Comprehensive SEO optimization built-in</li>
+                        <li>Professional media management system</li>
+                        <li>Responsive design for all devices</li>
+                        <li>Accessibility-first approach (WCAG 2.1 AA)</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 style="font-weight: 600; color: var(--charcoal); margin-bottom: 0.75rem;">Technical Highlights</h4>
+                    <ul style="font-size: 0.875rem; color: var(--gray-600); line-height: 1.8; margin-left: 1.5rem;">
+                        <li>CKEditor 5 with custom plugins</li>
+                        <li>Next.js 15 with Server Components</li>
+                        <li>TypeScript for type safety</li>
+                        <li>Prisma ORM with PostgreSQL</li>
+                        <li>CDN integration for media optimization</li>
+                        <li>Real-time SEO analysis engine</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 style="font-weight: 600; color: var(--charcoal); margin-bottom: 0.75rem;">Success Metrics</h4>
+                    <ul style="font-size: 0.875rem; color: var(--gray-600); line-height: 1.8; margin-left: 1.5rem;">
+                        <li>95%+ content creation task completion</li>
+                        <li>Average SEO score improvement to 80+</li>
+                        <li>Sub 3-second page load times</li>
+                        <li>100% WCAG 2.1 AA compliance</li>
+                        <li>Cross-device consistency score 98%+</li>
+                        <li>User satisfaction rating 4.5/5+</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="background: white; padding: 1.5rem; border-radius: 12px; margin-top: 2rem; border: 1px solid var(--primary-blue);">
+                <h4 style="font-weight: 600; color: var(--primary-blue); margin-bottom: 1rem;">Ready for Development</h4>
+                <p style="font-size: 0.875rem; color: var(--gray-600); line-height: 1.6; margin-bottom: 1rem;">
+                    This comprehensive design specification provides everything needed to implement a professional-grade content creation system. The design balances sophisticated functionality with intuitive user experience, ensuring content creators can focus on writing great content while the system handles optimization, SEO, and technical details automatically.
+                </p>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <button class="btn btn-primary">Start Development</button>
+                    <button class="btn btn-secondary">Review Specifications</button>
+                    <button class="btn btn-secondary">Download Assets</button>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

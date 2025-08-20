@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth/next';
-import { authOptions } from '@/lib/auth/config';
+import { auth } from '@/lib/auth/config';
 import { UserType } from '@prisma/client';
 import { prisma } from '@/lib/database/client';
 
@@ -14,7 +13,7 @@ interface AdminProfileData {
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     
     if (!session) {
       return NextResponse.json(
@@ -87,7 +86,7 @@ export async function GET(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     
     if (!session) {
       return NextResponse.json(
@@ -194,7 +193,7 @@ export async function PUT(request: NextRequest) {
 // Get admin activity/audit log
 export async function PATCH(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     
     if (!session) {
       return NextResponse.json(

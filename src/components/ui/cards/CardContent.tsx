@@ -109,6 +109,7 @@ interface CardContentProps {
   footer?: React.ReactNode;
   actions?: React.ReactNode;
   className?: string;
+  children?: React.ReactNode;
 }
 
 export const CardContent: React.FC<CardContentProps> = ({

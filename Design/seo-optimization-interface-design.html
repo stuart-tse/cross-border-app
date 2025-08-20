@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEO Optimization Interface Design - Cross-Border App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: #1f2937;
+            background: #f8fafc;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 1.875rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #111827;
+            border-bottom: 3px solid #3b82f6;
+            padding-bottom: 0.5rem;
+        }
+
+        .subsection-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem 0;
+            color: #374151;
+        }
+
+        /* Design System Colors */
+        :root {
+            --primary-blue: #3b82f6;
+            --success-green: #10b981;
+            --warning-amber: #f59e0b;
+            --danger-red: #ef4444;
+            --hot-pink: #ec4899;
+            --electric-blue: #0ea5e9;
+            --charcoal: #111827;
+            --gray-600: #4b5563;
+            --gray-300: #d1d5db;
+            --gray-100: #f3f4f6;
+            --gray-50: #f9fafb;
+        }
+
+        /* SEO Score Dashboard */
+        .seo-dashboard {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            border: 1px solid #bfdbfe;
+        }
+
+        .seo-score-container {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 2rem;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .seo-score-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: conic-gradient(var(--primary-blue) 0deg, var(--primary-blue) 259deg, #e5e7eb 259deg, #e5e7eb 360deg);
+        }
+
+        .seo-score-inner {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .seo-score-value {
+            font-size: 1.875rem;
+            font-weight: 800;
+            color: var(--primary-blue);
+        }
+
+        .seo-score-label {
+            font-size: 0.75rem;
+            color: var(--gray-600);
+            margin-top: -0.25rem;
+        }
+
+        .seo-score-details {
+            flex: 1;
+        }
+
+        .seo-score-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--charcoal);
+            margin-bottom: 0.5rem;
+        }
+
+        .seo-score-subtitle {
+            font-size: 1rem;
+            color: var(--gray-600);
+            margin-bottom: 1rem;
+        }
+
+        .seo-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+        }
+
+        .seo-metric {
+            text-align: center;
+            padding: 0.75rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .metric-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--charcoal);
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            color: var(--gray-600);
+            margin-top: 0.25rem;
+        }
+
+        .seo-improvement-btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .seo-improvement-btn:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+        }
+
+        /* SEO Analysis Sections */
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .analysis-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid var(--gray-300);
+            transition: all 0.2s ease;
+        }
+
+        .analysis-card:hover {
+            border-color: var(--primary-blue);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .analysis-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .analysis-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: white;
+        }
+
+        .analysis-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--charcoal);
+        }
+
+        .analysis-status {
+            margin-left: auto;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-excellent { background: #dcfce7; color: #166534; }
+        .status-good { background: #fef3c7; color: #92400e; }
+        .status-needs-work { background: #fee2e2; color: #991b1b; }
+
+        /* SEO Fields */
+        .seo-field {
+            margin-bottom: 1.5rem;
+        }
+
+        .field-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--charcoal);
+            margin-bottom: 0.5rem;
+        }
+
+        .field-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .field-input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .field-textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .field-feedback {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+        }
+
+        .char-count {
+            color: var(--gray-600);
+        }
+
+        .char-count.warning { color: var(--warning-amber); }
+        .char-count.error { color: var(--danger-red); }
+        .char-count.good { color: var(--success-green); }
+
+        .field-suggestion {
+            color: var(--primary-blue);
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        /* Issues & Suggestions */
+        .issues-container {
+            display: grid;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .issue-item {
+            display: flex;
+            align-items: start;
+            gap: 0.75rem;
+            padding: 1rem;
+            border-radius: 8px;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+        }
+
+        .suggestion-item {
+            display: flex;
+            align-items: start;
+            gap: 0.75rem;
+            padding: 1rem;
+            border-radius: 8px;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+        }
+
+        .improvement-item {
+            display: flex;
+            align-items: start;
+            gap: 0.75rem;
+            padding: 1rem;
+            border-radius: 8px;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+        }
+
+        .item-icon {
+            font-size: 1.25rem;
+            margin-top: 0.125rem;
+        }
+
+        .item-content {
+            flex: 1;
+        }
+
+        .item-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .item-description {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            line-height: 1.5;
+        }
+
+        .item-action {
+            margin-top: 0.5rem;
+        }
+
+        .action-btn {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary { background: var(--primary-blue); color: white; }
+        .btn-secondary { background: var(--gray-100); color: var(--gray-600); }
+        .btn-success { background: var(--success-green); color: white; }
+
+        /* SERP Preview */
+        .serp-preview {
+            background: white;
+            border: 1px solid var(--gray-300);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .serp-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--charcoal);
+            margin-bottom: 1rem;
+        }
+
+        .serp-result {
+            background: #fafbfc;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: arial, sans-serif;
+        }
+
+        .serp-result-title {
+            color: #1a0dab;
+            font-size: 1.25rem;
+            font-weight: 400;
+            margin-bottom: 0.25rem;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .serp-result-url {
+            color: #006621;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .serp-result-description {
+            color: #4d5156;
+            font-size: 0.875rem;
+            line-height: 1.4;
+        }
+
+        /* Keyword Analysis */
+        .keyword-analysis {
+            display: grid;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .keyword-item {
+            display: flex;
+            align-items: center;
+            justify-content: between;
+            padding: 0.75rem 1rem;
+            background: var(--gray-50);
+            border-radius: 8px;
+            border: 1px solid var(--gray-300);
+        }
+
+        .keyword-text {
+            font-weight: 500;
+            color: var(--charcoal);
+        }
+
+        .keyword-metrics {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            font-size: 0.875rem;
+        }
+
+        .keyword-density {
+            color: var(--gray-600);
+        }
+
+        .keyword-status {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        /* Social Media Previews */
+        .social-previews {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .social-preview {
+            border: 1px solid var(--gray-300);
+            border-radius: 12px;
+            overflow: hidden;
+            background: white;
+        }
+
+        .social-header {
+            padding: 1rem;
+            background: var(--gray-50);
+            border-bottom: 1px solid var(--gray-300);
+            font-weight: 600;
+            color: var(--charcoal);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .social-content {
+            padding: 1rem;
+        }
+
+        .social-image {
+            width: 100%;
+            height: 120px;
+            background: var(--gray-100);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-600);
+            margin-bottom: 0.75rem;
+        }
+
+        .social-title {
+            font-weight: 600;
+            color: var(--charcoal);
+            margin-bottom: 0.25rem;
+            font-size: 0.875rem;
+        }
+
+        .social-description {
+            font-size: 0.75rem;
+            color: var(--gray-600);
+            line-height: 1.4;
+            margin-bottom: 0.5rem;
+        }
+
+        .social-domain {
+            font-size: 0.75rem;
+            color: var(--gray-600);
+            text-transform: uppercase;
+        }
+
+        /* Progress Bars */
+        .progress-container {
+            margin: 1rem 0;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--gray-200);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-blue);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-fill.excellent { background: var(--success-green); }
+        .progress-fill.good { background: var(--warning-amber); }
+        .progress-fill.poor { background: var(--danger-red); }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .section {
+                padding: 1.5rem;
+            }
+            
+            .seo-score-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 1rem;
+            }
+            
+            .analysis-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header style="text-align: center; margin-bottom: 3rem;">
+            <h1 style="font-size: 2.5rem; font-weight: 800; color: #111827; margin-bottom: 0.5rem;">
+                SEO Optimization Interface Design
+            </h1>
+            <p style="font-size: 1.125rem; color: #6b7280;">
+                Real-time SEO analysis, optimization tools, and content performance tracking for professional content creation
+            </p>
+        </header>
+
+        <!-- 1. SEO Dashboard Overview -->
+        <section class="section">
+            <h2 class="section-title">1. Real-time SEO Dashboard</h2>
+            
+            <div class="seo-dashboard">
+                <div class="seo-score-container">
+                    <div class="seo-score-circle">
+                        <div class="seo-score-inner">
+                            <div class="seo-score-value">72</div>
+                            <div class="seo-score-label">SEO SCORE</div>
+                        </div>
+                    </div>
+                    
+                    <div class="seo-score-details">
+                        <div class="seo-score-title">Good SEO Performance</div>
+                        <div class="seo-score-subtitle">Your content is well-optimized with room for improvement</div>
+                        
+                        <div class="seo-metrics">
+                            <div class="seo-metric">
+                                <div class="metric-value">156</div>
+                                <div class="metric-label">Words</div>
+                            </div>
+                            <div class="seo-metric">
+                                <div class="metric-value">1.2m</div>
+                                <div class="metric-label">Read Time</div>
+                            </div>
+                            <div class="seo-metric">
+                                <div class="metric-value">85%</div>
+                                <div class="metric-label">Readability</div>
+                            </div>
+                            <div class="seo-metric">
+                                <div class="metric-value">3/5</div>
+                                <div class="metric-label">Keywords</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <button class="seo-improvement-btn">
+                            View Improvements
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Progress Indicators -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                    <div class="progress-container">
+                        <div class="progress-label">
+                            <span>Title Optimization</span>
+                            <span style="font-weight: 600; color: var(--success-green);">Excellent</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill excellent" style="width: 90%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-container">
+                        <div class="progress-label">
+                            <span>Meta Description</span>
+                            <span style="font-weight: 600; color: var(--warning-amber);">Good</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill good" style="width: 70%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-container">
+                        <div class="progress-label">
+                            <span>Keyword Density</span>
+                            <span style="font-weight: 600; color: var(--danger-red);">Needs Work</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill poor" style="width: 40%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. SEO Fields & Optimization -->
+        <section class="section">
+            <h2 class="section-title">2. SEO Fields & Meta Data</h2>
+            
+            <div style="display: grid; grid-template-columns: 1fr 300px; gap: 2rem;">
+                <div>
+                    <!-- SEO Title -->
+                    <div class="seo-field">
+                        <label class="field-label">
+                            🎯 SEO Title
+                            <span style="font-size: 0.75rem; color: var(--gray-600); font-weight: 400;">(Recommended: 50-60 characters)</span>
+                        </label>
+                        <input class="field-input" type="text" value="The Complete Guide to Cross-Border Travel Planning" placeholder="Custom SEO title (leave empty to use post title)">
+                        <div class="field-feedback">
+                            <span class="char-count good">52/60 characters - Optimal length</span>
+                            <span class="field-suggestion">🔧 Optimize further</span>
+                        </div>
+                    </div>
+
+                    <!-- Meta Description -->
+                    <div class="seo-field">
+                        <label class="field-label">
+                            📝 Meta Description
+                            <span style="font-size: 0.75rem; color: var(--gray-600); font-weight: 400;">(Recommended: 150-160 characters)</span>
+                        </label>
+                        <textarea class="field-input field-textarea" placeholder="Brief description for search engines that appears in search results">Discover essential tips and strategies for planning seamless cross-border travel. From documentation to cultural considerations, master the art of international journey planning.</textarea>
+                        <div class="field-feedback">
+                            <span class="char-count good">158/160 characters - Perfect length</span>
+                            <span class="field-suggestion">✨ Add keywords</span>
+                        </div>
+                    </div>
+
+                    <!-- URL Slug -->
+                    <div class="seo-field">
+                        <label class="field-label">
+                            🔗 URL Slug
+                            <span style="font-size: 0.75rem; color: var(--gray-600); font-weight: 400;">(Auto-generated, can be customized)</span>
+                        </label>
+                        <input class="field-input" type="text" value="complete-guide-cross-border-travel-planning" placeholder="url-friendly-post-title">
+                        <div class="field-feedback">
+                            <span class="char-count">Preview: /blog/complete-guide-cross-border-travel-planning</span>
+                            <span class="field-suggestion" style="color: var(--success-green);">✓ SEO-friendly</span>
+                        </div>
+                    </div>
+
+                    <!-- Focus Keywords -->
+                    <div class="seo-field">
+                        <label class="field-label">
+                            🎯 Focus Keywords
+                            <span style="font-size: 0.75rem; color: var(--gray-600); font-weight: 400;">(3-5 primary keywords)</span>
+                        </label>
+                        <input class="field-input" type="text" value="cross-border travel, international travel planning, travel documentation" placeholder="keyword1, keyword2, keyword3">
+                        <div class="field-feedback">
+                            <span class="char-count">3 keywords - Good balance</span>
+                            <span class="field-suggestion">+ Add related keywords</span>
+                        </div>
+                    </div>
+
+                    <!-- Open Graph Tags -->
+                    <div class="seo-field">
+                        <label class="field-label">
+                            📱 Social Media Title (Open Graph)
+                            <span style="font-size: 0.75rem; color: var(--gray-600); font-weight: 400;">(For social media sharing)</span>
+                        </label>
+                        <input class="field-input" type="text" value="Master Cross-Border Travel Planning: Your Complete Guide" placeholder="Title for social media shares">
+                        <div class="field-feedback">
+                            <span class="char-count good">57 characters - Optimal for social</span>
+                        </div>
+                    </div>
+
+                    <div class="seo-field">
+                        <label class="field-label">
+                            📱 Social Media Description
+                            <span style="font-size: 0.75rem; color: var(--gray-600); font-weight: 400;">(For social media sharing)</span>
+                        </label>
+                        <textarea class="field-input field-textarea" placeholder="Description for social media shares">Everything you need to know about planning successful cross-border trips, from essential documentation to cultural tips that make the difference.</textarea>
+                        <div class="field-feedback">
+                            <span class="char-count good">147 characters - Perfect for social</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SEO Analysis Sidebar -->
+                <div>
+                    <div class="analysis-card">
+                        <div class="analysis-header">
+                            <div class="analysis-icon" style="background: var(--success-green);">✓</div>
+                            <div class="analysis-title">Title Analysis</div>
+                            <div class="analysis-status status-excellent">Excellent</div>
+                        </div>
+                        <div style="font-size: 0.875rem; color: var(--gray-600);">
+                            Your title length is optimal for search engines and includes primary keywords effectively.
+                        </div>
+                    </div>
+
+                    <div class="analysis-card">
+                        <div class="analysis-header">
+                            <div class="analysis-icon" style="background: var(--warning-amber);">⚠</div>
+                            <div class="analysis-title">Meta Description</div>
+                            <div class="analysis-status status-good">Good</div>
+                        </div>
+                        <div style="font-size: 0.875rem; color: var(--gray-600);">
+                            Length is perfect, but consider adding more focus keywords for better optimization.
+                        </div>
+                    </div>
+
+                    <div class="analysis-card">
+                        <div class="analysis-header">
+                            <div class="analysis-icon" style="background: var(--danger-red);">×</div>
+                            <div class="analysis-title">Keyword Density</div>
+                            <div class="analysis-status status-needs-work">Needs Work</div>
+                        </div>
+                        <div style="font-size: 0.875rem; color: var(--gray-600);">
+                            Focus keywords appear too infrequently in your content. Aim for 1-2% density.
+                        </div>
+                    </div>
+
+                    <div class="analysis-card">
+                        <div class="analysis-header">
+                            <div class="analysis-icon" style="background: var(--primary-blue);">📊</div>
+                            <div class="analysis-title">Readability</div>
+                            <div class="analysis-status status-excellent">Excellent</div>
+                        </div>
+                        <div style="font-size: 0.875rem; color: var(--gray-600);">
+                            Content is easy to read with appropriate sentence length and structure.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Issues & Suggestions -->
+        <section class="section">
+            <h2 class="section-title">3. SEO Analysis & Recommendations</h2>
+
+            <div class="analysis-grid">
+                <div>
+                    <h3 style="color: var(--danger-red); font-weight: 600; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                        ⚠️ Issues to Fix (2)
+                    </h3>
+                    <div class="issues-container">
+                        <div class="issue-item">
+                            <div class="item-icon" style="color: var(--danger-red);">🎯</div>
+                            <div class="item-content">
+                                <div class="item-title" style="color: var(--danger-red);">Low keyword density</div>
+                                <div class="item-description">
+                                    Your focus keyword "cross-border travel" appears only 0.8% of the time. Increase to 1.5-2% for better SEO.
+                                </div>
+                                <div class="item-action">
+                                    <button class="action-btn btn-primary">Auto-optimize</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="issue-item">
+                            <div class="item-icon" style="color: var(--danger-red);">🖼️</div>
+                            <div class="item-content">
+                                <div class="item-title" style="color: var(--danger-red);">Missing alt text</div>
+                                <div class="item-description">
+                                    2 images don't have alt text, which impacts accessibility and SEO ranking.
+                                </div>
+                                <div class="item-action">
+                                    <button class="action-btn btn-primary">Add alt text</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 style="color: var(--primary-blue); font-weight: 600; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                        💡 Suggestions (3)
+                    </h3>
+                    <div class="issues-container">
+                        <div class="suggestion-item">
+                            <div class="item-icon" style="color: var(--primary-blue);">🔗</div>
+                            <div class="item-content">
+                                <div class="item-title" style="color: var(--primary-blue);">Add internal links</div>
+                                <div class="item-description">
+                                    Link to 2-3 related posts about travel documentation and planning to improve SEO.
+                                </div>
+                                <div class="item-action">
+                                    <button class="action-btn btn-secondary">Find links</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="suggestion-item">
+                            <div class="item-icon" style="color: var(--primary-blue);">📝</div>
+                            <div class="item-content">
+                                <div class="item-title" style="color: var(--primary-blue);">Expand content length</div>
+                                <div class="item-description">
+                                    Articles over 1,500 words typically rank higher. Consider adding more detailed examples.
+                                </div>
+                                <div class="item-action">
+                                    <button class="action-btn btn-secondary">Get ideas</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="suggestion-item">
+                            <div class="item-icon" style="color: var(--primary-blue);">📊</div>
+                            <div class="item-content">
+                                <div class="item-title" style="color: var(--primary-blue);">Add structured data</div>
+                                <div class="item-description">
+                                    Implement FAQ schema markup to enhance search result appearance.
+                                </div>
+                                <div class="item-action">
+                                    <button class="action-btn btn-secondary">Generate schema</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Keyword Analysis -->
+        <section class="section">
+            <h2 class="section-title">4. Keyword Analysis & Density</h2>
+            
+            <div style="display: grid; grid-template-columns: 1fr 300px; gap: 2rem;">
+                <div>
+                    <div class="keyword-analysis">
+                        <div class="keyword-item">
+                            <div>
+                                <div class="keyword-text">cross-border travel</div>
+                                <div class="keyword-density">Primary keyword</div>
+                            </div>
+                            <div class="keyword-metrics">
+                                <span>0.8%</span>
+                                <div class="keyword-status" style="background: #fee2e2; color: #991b1b;">Too low</div>
+                            </div>
+                        </div>
+
+                        <div class="keyword-item">
+                            <div>
+                                <div class="keyword-text">international travel planning</div>
+                                <div class="keyword-density">Secondary keyword</div>
+                            </div>
+                            <div class="keyword-metrics">
+                                <span>1.2%</span>
+                                <div class="keyword-status" style="background: #dcfce7; color: #166534;">Good</div>
+                            </div>
+                        </div>
+
+                        <div class="keyword-item">
+                            <div>
+                                <div class="keyword-text">travel documentation</div>
+                                <div class="keyword-density">Supporting keyword</div>
+                            </div>
+                            <div class="keyword-metrics">
+                                <span>0.6%</span>
+                                <div class="keyword-status" style="background: #fef3c7; color: #92400e;">Moderate</div>
+                            </div>
+                        </div>
+
+                        <div class="keyword-item">
+                            <div>
+                                <div class="keyword-text">passport requirements</div>
+                                <div class="keyword-density">Long-tail keyword</div>
+                            </div>
+                            <div class="keyword-metrics">
+                                <span>0.3%</span>
+                                <div class="keyword-status" style="background: #e5e7eb; color: #6b7280;">Low</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 1.5rem; padding: 1rem; background: var(--gray-50); border-radius: 8px; border: 1px solid var(--gray-300);">
+                        <h4 style="font-weight: 600; margin-bottom: 0.5rem; color: var(--charcoal);">Keyword Optimization Tips:</h4>
+                        <ul style="font-size: 0.875rem; color: var(--gray-600); line-height: 1.6; margin-left: 1.5rem;">
+                            <li>Primary keywords: 1.5-2.5% density is optimal</li>
+                            <li>Secondary keywords: 0.8-1.5% works well</li>
+                            <li>Use keywords naturally in headings and first paragraph</li>
+                            <li>Include related terms and synonyms for better context</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="analysis-card">
+                        <div class="analysis-header">
+                            <div class="analysis-icon" style="background: var(--electric-blue);">🔍</div>
+                            <div class="analysis-title">Keyword Opportunities</div>
+                        </div>
+                        <div style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 1rem;">
+                            Related keywords you might want to include:
+                        </div>
+                        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                            <span style="padding: 0.25rem 0.5rem; background: var(--primary-blue); color: white; border-radius: 4px; font-size: 0.75rem;">visa requirements</span>
+                            <span style="padding: 0.25rem 0.5rem; background: var(--primary-blue); color: white; border-radius: 4px; font-size: 0.75rem;">border crossing</span>
+                            <span style="padding: 0.25rem 0.5rem; background: var(--primary-blue); color: white; border-radius: 4px; font-size: 0.75rem;">customs declaration</span>
+                            <span style="padding: 0.25rem 0.5rem; background: var(--primary-blue); color: white; border-radius: 4px; font-size: 0.75rem;">travel insurance</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. SERP Preview -->
+        <section class="section">
+            <h2 class="section-title">5. Search Engine Preview</h2>
+            
+            <div class="serp-preview">
+                <div class="serp-title">How your post will appear in search results:</div>
+                
+                <div class="serp-result">
+                    <div class="serp-result-title">The Complete Guide to Cross-Border Travel Planning</div>
+                    <div class="serp-result-url">https://crossborder-app.com › blog › complete-guide-cross-border-travel-planning</div>
+                    <div class="serp-result-description">
+                        Discover essential tips and strategies for planning seamless cross-border travel. From documentation to cultural considerations, master the art of international journey planning.
+                    </div>
+                </div>
+
+                <div style="margin-top: 1rem; padding: 1rem; background: #f0f9ff; border-radius: 8px; border: 1px solid #bfdbfe;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; font-weight: 600; color: var(--primary-blue); margin-bottom: 0.5rem;">
+                        💡 SERP Optimization Tips
+                    </div>
+                    <ul style="font-size: 0.875rem; color: var(--gray-600); line-height: 1.6; margin-left: 1.5rem;">
+                        <li>Title appears exactly as you've written it</li>
+                        <li>Meta description is compelling and includes keywords</li>
+                        <li>URL is clean, readable, and SEO-friendly</li>
+                        <li>Consider adding rich snippets for better visibility</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Social Media Previews -->
+        <section class="section">
+            <h2 class="section-title">6. Social Media Previews</h2>
+            
+            <div class="social-previews">
+                <!-- Facebook Preview -->
+                <div class="social-preview">
+                    <div class="social-header">
+                        📘 Facebook Preview
+                    </div>
+                    <div class="social-content">
+                        <div class="social-image">
+                            <span>Featured Image Preview</span>
+                        </div>
+                        <div class="social-title">Master Cross-Border Travel Planning: Your Complete Guide</div>
+                        <div class="social-description">Everything you need to know about planning successful cross-border trips, from essential documentation to cultural tips that make the difference.</div>
+                        <div class="social-domain">CROSSBORDER-APP.COM</div>
+                    </div>
+                </div>
+
+                <!-- Twitter Preview -->
+                <div class="social-preview">
+                    <div class="social-header">
+                        🐦 Twitter Preview
+                    </div>
+                    <div class="social-content">
+                        <div class="social-image">
+                            <span>Featured Image Preview</span>
+                        </div>
+                        <div class="social-title">The Complete Guide to Cross-Border Travel Planning</div>
+                        <div class="social-description">Discover essential tips and strategies for planning seamless cross-border travel. From documentation to cultural considerations...</div>
+                        <div class="social-domain">crossborder-app.com</div>
+                    </div>
+                </div>
+
+                <!-- LinkedIn Preview -->
+                <div class="social-preview">
+                    <div class="social-header">
+                        💼 LinkedIn Preview
+                    </div>
+                    <div class="social-content">
+                        <div class="social-image">
+                            <span>Featured Image Preview</span>
+                        </div>
+                        <div class="social-title">Master Cross-Border Travel Planning: Your Complete Guide</div>
+                        <div class="social-description">Everything you need to know about planning successful cross-border trips, from essential documentation to cultural tips.</div>
+                        <div class="social-domain">CROSSBORDER-APP.COM</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 1rem; padding: 1rem; background: var(--gray-50); border-radius: 8px; border: 1px solid var(--gray-300);">
+                <h4 style="font-weight: 600; margin-bottom: 0.5rem; color: var(--charcoal);">Social Media Optimization:</h4>
+                <ul style="font-size: 0.875rem; color: var(--gray-600); line-height: 1.6; margin-left: 1.5rem;">
+                    <li>Featured image should be 1200x630px for best results</li>
+                    <li>Social titles can be different from SEO titles for better engagement</li>
+                    <li>Descriptions are automatically truncated on different platforms</li>
+                    <li>Test how your content looks on each platform before publishing</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 7. Advanced SEO Features -->
+        <section class="section">
+            <h2 class="section-title">7. Advanced SEO Features</h2>
+            
+            <div class="analysis-grid">
+                <div class="analysis-card">
+                    <div class="analysis-header">
+                        <div class="analysis-icon" style="background: var(--success-green);">📊</div>
+                        <div class="analysis-title">Content Structure</div>
+                        <div class="analysis-status status-excellent">Excellent</div>
+                    </div>
+                    <div style="font-size: 0.875rem; color: var(--gray-600); line-height: 1.6;">
+                        <div style="margin-bottom: 0.5rem;"><strong>Headings:</strong> H1(1), H2(4), H3(2) ✓</div>
+                        <div style="margin-bottom: 0.5rem;"><strong>Paragraphs:</strong> 8 paragraphs, avg 2.3 sentences ✓</div>
+                        <div><strong>Lists:</strong> 3 lists with proper formatting ✓</div>
+                    </div>
+                </div>
+
+                <div class="analysis-card">
+                    <div class="analysis-header">
+                        <div class="analysis-icon" style="background: var(--warning-amber);">🔗</div>
+                        <div class="analysis-title">Link Analysis</div>
+                        <div class="analysis-status status-good">Good</div>
+                    </div>
+                    <div style="font-size: 0.875rem; color: var(--gray-600); line-height: 1.6;">
+                        <div style="margin-bottom: 0.5rem;"><strong>Internal links:</strong> 2 (recommend 3-5)</div>
+                        <div style="margin-bottom: 0.5rem;"><strong>External links:</strong> 3 authoritative sources ✓</div>
+                        <div><strong>Anchor text:</strong> Well distributed ✓</div>
+                    </div>
+                </div>
+
+                <div class="analysis-card">
+                    <div class="analysis-header">
+                        <div class="analysis-icon" style="background: var(--primary-blue);">📱</div>
+                        <div class="analysis-title">Mobile Optimization</div>
+                        <div class="analysis-status status-excellent">Excellent</div>
+                    </div>
+                    <div style="font-size: 0.875rem; color: var(--gray-600); line-height: 1.6;">
+                        <div style="margin-bottom: 0.5rem;"><strong>Mobile-friendly:</strong> Responsive design ✓</div>
+                        <div style="margin-bottom: 0.5rem;"><strong>Page speed:</strong> 2.1s load time ✓</div>
+                        <div><strong>Touch targets:</strong> Properly sized ✓</div>
+                    </div>
+                </div>
+
+                <div class="analysis-card">
+                    <div class="analysis-header">
+                        <div class="analysis-icon" style="background: var(--electric-blue);">🌐</div>
+                        <div class="analysis-title">Technical SEO</div>
+                        <div class="analysis-status status-good">Good</div>
+                    </div>
+                    <div style="font-size: 0.875rem; color: var(--gray-600); line-height: 1.6;">
+                        <div style="margin-bottom: 0.5rem;"><strong>Schema markup:</strong> Article schema ✓</div>
+                        <div style="margin-bottom: 0.5rem;"><strong>Canonical URL:</strong> Set correctly ✓</div>
+                        <div><strong>XML sitemap:</strong> Auto-generated ✓</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Summary -->
+        <section class="section" style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border: 1px solid #0ea5e9;">
+            <h2 class="section-title" style="color: var(--electric-blue);">SEO Optimization Complete</h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+                <div>
+                    <h4 style="font-weight: 600; color: var(--charcoal); margin-bottom: 0.75rem;">Real-time Features</h4>
+                    <ul style="font-size: 0.875rem; color: var(--gray-600); line-height: 1.8; margin-left: 1.5rem;">
+                        <li>Live SEO scoring as you type</li>
+                        <li>Keyword density monitoring</li>
+                        <li>Readability analysis</li>
+                        <li>Content structure optimization</li>
+                        <li>Meta tag validation</li>
+                        <li>Social media preview updates</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 style="font-weight: 600; color: var(--charcoal); margin-bottom: 0.75rem;">Automated Assistance</h4>
+                    <ul style="font-size: 0.875rem; color: var(--gray-600); line-height: 1.8; margin-left: 1.5rem;">
+                        <li>Auto-generated meta descriptions</li>
+                        <li>SEO-friendly URL suggestions</li>
+                        <li>Keyword opportunity detection</li>
+                        <li>Internal linking recommendations</li>
+                        <li>Image alt text suggestions</li>
+                        <li>Schema markup generation</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 style="font-weight: 600; color: var(--charcoal); margin-bottom: 0.75rem;">Performance Tracking</h4>
+                    <ul style="font-size: 0.875rem; color: var(--gray-600); line-height: 1.8; margin-left: 1.5rem;">
+                        <li>SEO score improvement tracking</li>
+                        <li>Keyword ranking monitoring</li>
+                        <li>Content performance analytics</li>
+                        <li>Social sharing optimization</li>
+                        <li>Technical SEO health checks</li>
+                        <li>Competitor analysis integration</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="background: white; padding: 1.5rem; border-radius: 12px; margin-top: 2rem; border: 1px solid var(--primary-blue);">
+                <h4 style="font-weight: 600; color: var(--primary-blue); margin-bottom: 1rem;">Implementation Ready</h4>
+                <p style="font-size: 0.875rem; color: var(--gray-600); line-height: 1.6;">
+                    This SEO optimization interface provides comprehensive real-time analysis and actionable recommendations to help content creators maximize their search engine visibility. The system continuously monitors content quality, provides instant feedback, and suggests improvements to achieve optimal SEO performance.
+                </p>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

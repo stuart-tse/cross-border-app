@@ -167,7 +167,7 @@ export const EditorProfileTab: React.FC<EditorProfileTabProps> = ({
                 </div>
 
                 <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                  <span className="text-sm text-gray-700">Edit Others' Content</span>
+                  <span className="text-sm text-gray-700">Edit Others&apos; Content</span>
                   <span className={cn(
                     'text-xs px-2 py-1 rounded-full',
                     editorProfile.publishingRights.canEditOthersContent 

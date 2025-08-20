@@ -297,7 +297,7 @@ export default function SecurityActions({ twoFactorEnabled, onTwoFactorToggle }:
       >
         <div className="space-y-4">
           <p className="text-sm text-gray-600">
-            Choose what data you'd like to download:
+            Choose what data you&apos;d like to download:
           </p>
           
           <div className="space-y-3">
@@ -363,7 +363,7 @@ export default function SecurityActions({ twoFactorEnabled, onTwoFactorToggle }:
           <div className="space-y-4 pt-4 border-t">
             <div>
               <label className="block text-sm font-medium text-charcoal mb-2">
-                Type "DELETE MY ACCOUNT" to confirm:
+                Type &ldquo;DELETE MY ACCOUNT&rdquo; to confirm:
               </label>
               <Input
                 value={deleteConfirmation}
