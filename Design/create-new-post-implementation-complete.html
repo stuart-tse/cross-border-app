@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Post - Complete Implementation Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: #1f2937;
+            background: #f8fafc;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 1.875rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #111827;
+            border-bottom: 3px solid #3b82f6;
+            padding-bottom: 0.5rem;
+        }
+
+        .subsection-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem 0;
+            color: #374151;
+        }
+
+        /* Design System Colors */
+        :root {
+            --primary-blue: #3b82f6;
+            --success-green: #10b981;
+            --warning-amber: #f59e0b;
+            --danger-red: #ef4444;
+            --hot-pink: #ec4899;
+            --electric-blue: #0ea5e9;
+            --charcoal: #111827;
+            --gray-600: #4b5563;
+            --gray-300: #d1d5db;
+            --gray-100: #f3f4f6;
+            --gray-50: #f9fafb;
+        }
+
+        .component-spec {
+            border: 1px solid var(--gray-300);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            background: white;
+        }
+
+        .component-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--charcoal);
+            margin-bottom: 1rem;
+        }
+
+        .code-snippet {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .code-snippet .keyword { color: #7c3aed; }
+        .code-snippet .string { color: #10b981; }
+        .code-snippet .comment { color: #6b7280; }
+        .code-snippet .property { color: #f59e0b; }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .feature-card {
+            background: white;
+            border: 1px solid var(--gray-300);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .feature-card:hover {
+            border-color: var(--primary-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--primary-blue);
+            color: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--charcoal);
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-description {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            line-height: 1.6;
+        }
+
+        .flow-step {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: white;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            margin: 0.5rem 0;
+        }
+
+        .flow-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary-blue);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .flow-arrow {
+            margin: 0.5rem 0;
+            text-align: center;
+            color: var(--primary-blue);
+            font-size: 1.5rem;
+        }
+
+        .api-endpoint {
+            background: #f8fafc;
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 0.5rem 0;
+        }
+
+        .method-get { border-left: 4px solid var(--primary-blue); }
+        .method-post { border-left: 4px solid var(--success-green); }
+        .method-put { border-left: 4px solid var(--warning-amber); }
+        .method-delete { border-left: 4px solid var(--danger-red); }
+
+        .endpoint-url {
+            font-family: monospace;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .endpoint-description {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header style="text-align: center; margin-bottom: 3rem;">
+            <h1 style="font-size: 2.5rem; font-weight: 800; color: #111827; margin-bottom: 0.5rem;">
+                Create New Post - Complete Implementation Guide
+            </h1>
+            <p style="font-size: 1.125rem; color: #6b7280; margin-bottom: 1rem;">
+                Database schema, API design, and advanced features for the complete post creation system
+            </p>
+        </header>
+
+        <!-- Database Schema -->
+        <section class="section">
+            <h2 class="section-title">1. Enhanced Database Schema Design</h2>
+            
+            <div class="component-spec">
+                <div class="component-title">Complete Prisma Schema</div>
+                <div class="code-snippet">
+<span class="comment">// Enhanced Prisma Schema for Complete Post Management</span>
+<span class="keyword">model</span> <span class="property">Post</span> {
+  <span class="property">id</span>              <span class="string">String</span>   <span class="keyword">@id</span> <span class="keyword">@default</span>(cuid())
+  <span class="property">title</span>           <span class="string">String</span>
+  <span class="property">slug</span>            <span class="string">String</span>   <span class="keyword">@unique</span>
+  <span class="property">excerpt</span>         <span class="string">String?</span>
+  <span class="property">content</span>         <span class="string">String</span>   <span class="keyword">@db.Text</span>
+  <span class="property">contentHtml</span>     <span class="string">String</span>   <span class="keyword">@db.Text</span> <span class="comment">// Rendered HTML from CKEditor</span>
+  <span class="property">contentJson</span>     <span class="string">Json</span>     <span class="comment">// CKEditor raw JSON data</span>
+  <span class="property">featuredImageId</span> <span class="string">String?</span>
+  <span class="property">featuredImage</span>   <span class="string">Media?</span>   <span class="keyword">@relation</span>(fields: [featuredImageId], references: [id])
+  
+  <span class="comment">// Publishing & Status</span>
+  <span class="property">status</span>          <span class="string">PostStatus</span> <span class="keyword">@default</span>(DRAFT)
+  <span class="property">publishedAt</span>     <span class="string">DateTime?</span>
+  <span class="property">scheduledAt</span>     <span class="string">DateTime?</span>
+  <span class="property">isScheduled</span>     <span class="string">Boolean</span>    <span class="keyword">@default</span>(false)
+  
+  <span class="comment">// Content Metadata</span>
+  <span class="property">wordCount</span>       <span class="string">Int</span>        <span class="keyword">@default</span>(0)
+  <span class="property">readingTime</span>     <span class="string">Int</span>        <span class="keyword">@default</span>(0) <span class="comment">// in minutes</span>
+  <span class="property">language</span>        <span class="string">String</span>     <span class="keyword">@default</span>("en")
+  
+  <span class="comment">// Timestamps</span>
+  <span class="property">createdAt</span>       <span class="string">DateTime</span>   <span class="keyword">@default</span>(now())
+  <span class="property">updatedAt</span>       <span class="string">DateTime</span>   <span class="keyword">@updatedAt</span>
+  <span class="property">lastAutoSave</span>    <span class="string">DateTime?</span>
+  
+  <span class="comment">// Author relationship</span>
+  <span class="property">authorId</span>        <span class="string">String</span>
+  <span class="property">author</span>          <span class="string">User</span>       <span class="keyword">@relation</span>(fields: [authorId], references: [id])
+  
+  <span class="comment">// SEO & Meta</span>
+  <span class="property">seo</span>             <span class="string">PostSEO?</span>
+  <span class="property">seoScore</span>        <span class="string">Int</span>        <span class="keyword">@default</span>(0)
+  
+  <span class="comment">// Organization</span>
+  <span class="property">categoryId</span>      <span class="string">String?</span>
+  <span class="property">category</span>        <span class="string">Category?</span>  <span class="keyword">@relation</span>(fields: [categoryId], references: [id])
+  <span class="property">tags</span>            <span class="string">Tag[]</span>
+  
+  <span class="comment">// Media relationships</span>
+  <span class="property">contentMedia</span>    <span class="string">PostMedia[]</span>
+  
+  <span class="comment">// Analytics & Engagement</span>
+  <span class="property">views</span>           <span class="string">Int</span>        <span class="keyword">@default</span>(0)
+  <span class="property">likes</span>           <span class="string">Int</span>        <span class="keyword">@default</span>(0)
+  <span class="property">shares</span>          <span class="string">Int</span>        <span class="keyword">@default</span>(0)
+  
+  <span class="comment">// Version control</span>
+  <span class="property">version</span>         <span class="string">Int</span>        <span class="keyword">@default</span>(1)
+  <span class="property">revisions</span>       <span class="string">PostRevision[]</span>
+  
+  <span class="comment">// Cross-border specific</span>
+  <span class="property">regions</span>         <span class="string">String[]</span>   <span class="comment">// Target regions/countries</span>
+  <span class="property">translations</span>    <span class="string">PostTranslation[]</span>
+}
+
+<span class="keyword">model</span> <span class="property">PostSEO</span> {
+  <span class="property">id</span>              <span class="string">String</span>   <span class="keyword">@id</span> <span class="keyword">@default</span>(cuid())
+  <span class="property">postId</span>          <span class="string">String</span>   <span class="keyword">@unique</span>
+  <span class="property">post</span>            <span class="string">Post</span>     <span class="keyword">@relation</span>(fields: [postId], references: [id], onDelete: Cascade)
+  
+  <span class="comment">// Basic SEO</span>
+  <span class="property">metaTitle</span>       <span class="string">String?</span>
+  <span class="property">metaDescription</span> <span class="string">String?</span>
+  <span class="property">keywords</span>        <span class="string">String[]</span>
+  <span class="property">focusKeyword</span>    <span class="string">String?</span>
+  
+  <span class="comment">// Open Graph</span>
+  <span class="property">ogTitle</span>         <span class="string">String?</span>
+  <span class="property">ogDescription</span>   <span class="string">String?</span>
+  <span class="property">ogImage</span>         <span class="string">String?</span>
+  <span class="property">ogType</span>          <span class="string">String</span>   <span class="keyword">@default</span>("article")
+  
+  <span class="comment">// Twitter Cards</span>
+  <span class="property">twitterCard</span>     <span class="string">String</span>   <span class="keyword">@default</span>("summary_large_image")
+  <span class="property">twitterTitle</span>    <span class="string">String?</span>
+  <span class="property">twitterDescription</span> <span class="string">String?</span>
+  <span class="property">twitterImage</span>    <span class="string">String?</span>
+  
+  <span class="comment">// Technical SEO</span>
+  <span class="property">canonicalUrl</span>    <span class="string">String?</span>
+  <span class="property">robots</span>          <span class="string">String</span>   <span class="keyword">@default</span>("index,follow")
+  <span class="property">schema</span>          <span class="string">Json?</span>    <span class="comment">// Structured data JSON-LD</span>
+  
+  <span class="comment">// SEO Analysis</span>
+  <span class="property">seoScore</span>        <span class="string">Int</span>      <span class="keyword">@default</span>(0)
+  <span class="property">readabilityScore</span> <span class="string">Int</span>     <span class="keyword">@default</span>(0)
+  <span class="property">keywordDensity</span>  <span class="string">Float</span>   <span class="keyword">@default</span>(0)
+  <span class="property">seoIssues</span>       <span class="string">Json[]</span>  <span class="comment">// Array of SEO issues/suggestions</span>
+  
+  <span class="property">createdAt</span>       <span class="string">DateTime</span> <span class="keyword">@default</span>(now())
+  <span class="property">updatedAt</span>       <span class="string">DateTime</span> <span class="keyword">@updatedAt</span>
+}
+
+<span class="keyword">model</span> <span class="property">Media</span> {
+  <span class="property">id</span>              <span class="string">String</span>   <span class="keyword">@id</span> <span class="keyword">@default</span>(cuid())
+  <span class="property">filename</span>        <span class="string">String</span>
+  <span class="property">originalName</span>    <span class="string">String</span>
+  <span class="property">mimeType</span>        <span class="string">String</span>
+  <span class="property">size</span>            <span class="string">Int</span>
+  <span class="property">width</span>           <span class="string">Int?</span>
+  <span class="property">height</span>          <span class="string">Int?</span>
+  
+  <span class="comment">// Storage URLs</span>
+  <span class="property">url</span>             <span class="string">String</span>
+  <span class="property">thumbnailUrl</span>    <span class="string">String?</span>
+  <span class="property">cdnUrl</span>          <span class="string">String?</span>
+  <span class="property">optimizedUrl</span>    <span class="string">String?</span>
+  
+  <span class="comment">// Accessibility & SEO</span>
+  <span class="property">altText</span>         <span class="string">String?</span>
+  <span class="property">caption</span>         <span class="string">String?</span>
+  <span class="property">description</span>     <span class="string">String?</span>
+  
+  <span class="comment">// Processing status</span>
+  <span class="property">isProcessed</span>     <span class="string">Boolean</span>  <span class="keyword">@default</span>(false)
+  <span class="property">isOptimized</span>     <span class="string">Boolean</span>  <span class="keyword">@default</span>(false)
+  
+  <span class="property">uploadedBy</span>      <span class="string">String</span>
+  <span class="property">uploader</span>        <span class="string">User</span>     <span class="keyword">@relation</span>(fields: [uploadedBy], references: [id])
+  
+  <span class="property">createdAt</span>       <span class="string">DateTime</span> <span class="keyword">@default</span>(now())
+  <span class="property">updatedAt</span>       <span class="string">DateTime</span> <span class="keyword">@updatedAt</span>
+  
+  <span class="comment">// Relations</span>
+  <span class="property">featuredInPosts</span> <span class="string">Post[]</span>
+  <span class="property">postMedia</span>       <span class="string">PostMedia[]</span>
+}
+
+<span class="keyword">model</span> <span class="property">PostMedia</span> {
+  <span class="property">id</span>              <span class="string">String</span>   <span class="keyword">@id</span> <span class="keyword">@default</span>(cuid())
+  <span class="property">postId</span>          <span class="string">String</span>
+  <span class="property">post</span>            <span class="string">Post</span>     <span class="keyword">@relation</span>(fields: [postId], references: [id], onDelete: Cascade)
+  <span class="property">mediaId</span>         <span class="string">String</span>
+  <span class="property">media</span>           <span class="string">Media</span>    <span class="keyword">@relation</span>(fields: [mediaId], references: [id])
+  <span class="property">order</span>           <span class="string">Int</span>      <span class="keyword">@default</span>(0)
+  <span class="property">caption</span>         <span class="string">String?</span>
+  
+  <span class="keyword">@@unique</span>([postId, mediaId])
+}
+
+<span class="keyword">model</span> <span class="property">PostRevision</span> {
+  <span class="property">id</span>              <span class="string">String</span>   <span class="keyword">@id</span> <span class="keyword">@default</span>(cuid())
+  <span class="property">postId</span>          <span class="string">String</span>
+  <span class="property">post</span>            <span class="string">Post</span>     <span class="keyword">@relation</span>(fields: [postId], references: [id], onDelete: Cascade)
+  
+  <span class="comment">// Snapshot data</span>
+  <span class="property">title</span>           <span class="string">String</span>
+  <span class="property">content</span>         <span class="string">String</span>   <span class="keyword">@db.Text</span>
+  <span class="property">contentJson</span>     <span class="string">Json</span>
+  <span class="property">excerpt</span>         <span class="string">String?</span>
+  
+  <span class="comment">// Metadata</span>
+  <span class="property">version</span>         <span class="string">Int</span>
+  <span class="property">changeType</span>      <span class="string">String</span>   <span class="comment">// manual, auto-save, scheduled</span>
+  <span class="property">changeDescription</span> <span class="string">String?</span>
+  
+  <span class="property">createdBy</span>       <span class="string">String</span>
+  <span class="property">author</span>          <span class="string">User</span>     <span class="keyword">@relation</span>(fields: [createdBy], references: [id])
+  <span class="property">createdAt</span>       <span class="string">DateTime</span> <span class="keyword">@default</span>(now())
+}
+
+<span class="keyword">model</span> <span class="property">PostTranslation</span> {
+  <span class="property">id</span>              <span class="string">String</span>   <span class="keyword">@id</span> <span class="keyword">@default</span>(cuid())
+  <span class="property">postId</span>          <span class="string">String</span>
+  <span class="property">post</span>            <span class="string">Post</span>     <span class="keyword">@relation</span>(fields: [postId], references: [id], onDelete: Cascade)
+  
+  <span class="property">language</span>        <span class="string">String</span>   <span class="comment">// ISO language code</span>
+  <span class="property">title</span>           <span class="string">String</span>
+  <span class="property">content</span>         <span class="string">String</span>   <span class="keyword">@db.Text</span>
+  <span class="property">excerpt</span>         <span class="string">String?</span>
+  <span class="property">slug</span>            <span class="string">String</span>
+  
+  <span class="comment">// Translation metadata</span>
+  <span class="property">isComplete</span>      <span class="string">Boolean</span>  <span class="keyword">@default</span>(false)
+  <span class="property">translatedBy</span>    <span class="string">String?</span>
+  <span class="property">translator</span>      <span class="string">User?</span>    <span class="keyword">@relation</span>(fields: [translatedBy], references: [id])
+  
+  <span class="property">createdAt</span>       <span class="string">DateTime</span> <span class="keyword">@default</span>(now())
+  <span class="property">updatedAt</span>       <span class="string">DateTime</span> <span class="keyword">@updatedAt</span>
+  
+  <span class="keyword">@@unique</span>([postId, language])
+}
+
+<span class="keyword">model</span> <span class="property">Category</span> {
+  <span class="property">id</span>              <span class="string">String</span>   <span class="keyword">@id</span> <span class="keyword">@default</span>(cuid())
+  <span class="property">name</span>            <span class="string">String</span>   <span class="keyword">@unique</span>
+  <span class="property">slug</span>            <span class="string">String</span>   <span class="keyword">@unique</span>
+  <span class="property">description</span>     <span class="string">String?</span>
+  <span class="property">color</span>           <span class="string">String?</span>  <span class="comment">// Hex color code</span>
+  <span class="property">icon</span>            <span class="string">String?</span>  <span class="comment">// Icon name or emoji</span>
+  
+  <span class="property">parentId</span>        <span class="string">String?</span>
+  <span class="property">parent</span>          <span class="string">Category?</span> <span class="keyword">@relation</span>("CategoryParent", fields: [parentId], references: [id])
+  <span class="property">children</span>        <span class="string">Category[]</span> <span class="keyword">@relation</span>("CategoryParent")
+  
+  <span class="property">posts</span>           <span class="string">Post[]</span>
+  <span class="property">createdAt</span>       <span class="string">DateTime</span> <span class="keyword">@default</span>(now())
+}
+
+<span class="keyword">model</span> <span class="property">Tag</span> {
+  <span class="property">id</span>              <span class="string">String</span>   <span class="keyword">@id</span> <span class="keyword">@default</span>(cuid())
+  <span class="property">name</span>            <span class="string">String</span>   <span class="keyword">@unique</span>
+  <span class="property">slug</span>            <span class="string">String</span>   <span class="keyword">@unique</span>
+  <span class="property">description</span>     <span class="string">String?</span>
+  <span class="property">color</span>           <span class="string">String?</span>
+  
+  <span class="property">posts</span>           <span class="string">Post[]</span>
+  <span class="property">createdAt</span>       <span class="string">DateTime</span> <span class="keyword">@default</span>(now())
+}
+
+<span class="keyword">enum</span> <span class="property">PostStatus</span> {
+  <span class="property">DRAFT</span>
+  <span class="property">PUBLISHED</span>
+  <span class="property">SCHEDULED</span>
+  <span class="property">ARCHIVED</span>
+  <span class="property">TRASH</span>
+}
+                </div>
+            </div>
+        </section>
+
+        <!-- API Design -->
+        <section class="section">
+            <h2 class="section-title">2. Complete API Design</h2>
+            
+            <div class="component-spec">
+                <div class="component-title">Core Post Management Endpoints</div>
+                
+                <div class="api-endpoint method-post">
+                    <div class="endpoint-url">POST /api/posts</div>
+                    <div class="endpoint-description">Create a new post with full validation and SEO analysis</div>
+                </div>
+                
+                <div class="api-endpoint method-get">
+                    <div class="endpoint-url">GET /api/posts/[id]</div>
+                    <div class="endpoint-description">Retrieve complete post data including SEO, media, and revisions</div>
+                </div>
+                
+                <div class="api-endpoint method-put">
+                    <div class="endpoint-url">PUT /api/posts/[id]</div>
+                    <div class="endpoint-description">Update post with automatic revision creation and SEO re-analysis</div>
+                </div>
+                
+                <div class="api-endpoint method-delete">
+                    <div class="endpoint-url">DELETE /api/posts/[id]</div>
+                    <div class="endpoint-description">Soft delete post (move to trash) with cleanup options</div>
+                </div>
+            </div>
+
+            <div class="component-spec">
+                <div class="component-title">Auto-save & Draft Management</div>
+                
+                <div class="api-endpoint method-post">
+                    <div class="endpoint-url">POST /api/posts/autosave</div>
+                    <div class="endpoint-description">Auto-save draft content with conflict resolution</div>
+                </div>
+                
+                <div class="api-endpoint method-get">
+                    <div class="endpoint-url">GET /api/posts/drafts</div>
+                    <div class="endpoint-description">Retrieve all draft posts with last modified timestamps</div>
+                </div>
+                
+                <div class="api-endpoint method-post">
+                    <div class="endpoint-url">POST /api/posts/[id]/restore</div>
+                    <div class="endpoint-description">Restore from specific revision or auto-save point</div>
+                </div>
+            </div>
+
+            <div class="component-spec">
+                <div class="component-title">SEO Analysis & Optimization</div>
+                
+                <div class="api-endpoint method-post">
+                    <div class="endpoint-url">POST /api/posts/seo-analysis</div>
+                    <div class="endpoint-description">Generate comprehensive SEO analysis and recommendations</div>
+                </div>
+                
+                <div class="api-endpoint method-get">
+                    <div class="endpoint-url">GET /api/posts/[id]/seo-preview</div>
+                    <div class="endpoint-description">Generate SERP and social media previews</div>
+                </div>
+                
+                <div class="api-endpoint method-post">
+                    <div class="endpoint-url">POST /api/keywords/suggestions</div>
+                    <div class="endpoint-description">Get keyword suggestions based on content and industry</div>
+                </div>
+            </div>
+
+            <div class="component-spec">
+                <div class="component-title">Media Management</div>
+                
+                <div class="api-endpoint method-post">
+                    <div class="endpoint-url">POST /api/media/upload</div>
+                    <div class="endpoint-description">Upload and process media files with optimization</div>
+                </div>
+                
+                <div class="api-endpoint method-get">
+                    <div class="endpoint-url">GET /api/media/library</div>
+                    <div class="endpoint-description">Browse media library with filtering and search</div>
+                </div>
+                
+                <div class="api-endpoint method-post">
+                    <div class="endpoint-url">POST /api/media/[id]/optimize</div>
+                    <div class="endpoint-description">Optimize existing media file for performance</div>
+                </div>
+                
+                <div class="api-endpoint method-put">
+                    <div class="endpoint-url">PUT /api/media/[id]</div>
+                    <div class="endpoint-description">Update media metadata (alt text, caption, etc.)</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Advanced Features -->
+        <section class="section">
+            <h2 class="section-title">3. Advanced Features Implementation</h2>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <div class="feature-title">AI-Powered Content Assistant</div>
+                    <div class="feature-description">Integrated AI suggestions for titles, meta descriptions, content improvements, and SEO optimization based on target keywords and audience.</div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🌐</div>
+                    <div class="feature-title">Multi-language Support</div>
+                    <div class="feature-description">Built-in translation management with automatic content detection, translation workflow, and localized SEO optimization for cross-border content.</div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-title">Real-time Analytics</div>
+                    <div class="feature-description">Live content performance metrics, reader engagement tracking, SEO ranking updates, and conversion analytics integrated into the editor.</div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <div class="feature-title">Version Control System</div>
+                    <div class="feature-description">Complete revision history with diff viewing, branch creation for major edits, and collaborative editing with conflict resolution.</div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <div class="feature-title">Progressive Web App</div>
+                    <div class="feature-description">Offline editing capabilities, push notifications for collaboration, mobile-optimized interface, and seamless sync across devices.</div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-title">Content Templates</div>
+                    <div class="feature-description">Pre-built templates for different content types (travel guides, service pages, news articles) with customizable structures and SEO templates.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- User Experience Flows -->
+        <section class="section">
+            <h2 class="section-title">4. Complete User Experience Flows</h2>
+            
+            <div class="component-spec">
+                <div class="component-title">Content Creation Workflow</div>
+                
+                <div style="background: var(--gray-50); padding: 1.5rem; border-radius: 12px;">
+                    <div class="flow-step">
+                        <div class="flow-number">1</div>
+                        <div>
+                            <div style="font-weight: 600;">Content Planning</div>
+                            <div style="font-size: 0.875rem; color: var(--gray-600);">Choose template, select target audience, define content goals, set publication schedule</div>
+                        </div>
+                    </div>
+                    <div class="flow-arrow">↓</div>
+                    
+                    <div class="flow-step">
+                        <div class="flow-number">2</div>
+                        <div>
+                            <div style="font-weight: 600;">Title & Structure</div>
+                            <div style="font-size: 0.875rem; color: var(--gray-600);">Create compelling title with SEO optimization, generate URL slug, outline content structure</div>
+                        </div>
+                    </div>
+                    <div class="flow-arrow">↓</div>
+                    
+                    <div class="flow-step">
+                        <div class="flow-number">3</div>
+                        <div>
+                            <div style="font-weight: 600;">Content Writing</div>
+                            <div style="font-size: 0.875rem; color: var(--gray-600);">Write with CKEditor, real-time auto-save, word count tracking, readability analysis</div>
+                        </div>
+                    </div>
+                    <div class="flow-arrow">↓</div>
+                    
+                    <div class="flow-step">
+                        <div class="flow-number">4</div>
+                        <div>
+                            <div style="font-weight: 600;">Media Enhancement</div>
+                            <div style="font-size: 0.875rem; color: var(--gray-600);">Add featured image, insert media content, optimize images, add alt text for accessibility</div>
+                        </div>
+                    </div>
+                    <div class="flow-arrow">↓</div>
+                    
+                    <div class="flow-step">
+                        <div class="flow-number">5</div>
+                        <div>
+                            <div style="font-weight: 600;">SEO Optimization</div>
+                            <div style="font-size: 0.875rem; color: var(--gray-600);">Complete meta fields, analyze SEO score, fix issues, optimize for target keywords</div>
+                        </div>
+                    </div>
+                    <div class="flow-arrow">↓</div>
+                    
+                    <div class="flow-step">
+                        <div class="flow-number">6</div>
+                        <div>
+                            <div style="font-weight: 600;">Review & Preview</div>
+                            <div style="font-size: 0.875rem; color: var(--gray-600);">Preview in multiple formats, check social media cards, review accessibility, final content check</div>
+                        </div>
+                    </div>
+                    <div class="flow-arrow">↓</div>
+                    
+                    <div class="flow-step">
+                        <div class="flow-number">7</div>
+                        <div>
+                            <div style="font-weight: 600;">Publication</div>
+                            <div style="font-size: 0.875rem; color: var(--gray-600);">Choose publication method (immediate, scheduled, draft), set categories/tags, publish with analytics tracking</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Performance & Accessibility -->
+        <section class="section">
+            <h2 class="section-title">5. Performance & Accessibility Standards</h2>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-title">Performance Optimization</div>
+                    <div class="feature-description">
+                        • Lazy loading for CKEditor plugins<br>
+                        • Image compression and WebP conversion<br>
+                        • CDN integration for global performance<br>
+                        • Code splitting for optimal bundle sizes<br>
+                        • Service worker for offline functionality
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">♿</div>
+                    <div class="feature-title">Accessibility Compliance</div>
+                    <div class="feature-description">
+                        • WCAG 2.1 AA compliance throughout<br>
+                        • Screen reader optimization<br>
+                        • Keyboard navigation support<br>
+                        • High contrast mode support<br>
+                        • Alt text validation and suggestions
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <div class="feature-title">Security & Data Protection</div>
+                    <div class="feature-description">
+                        • CSRF protection for all forms<br>
+                        • Input sanitization and validation<br>
+                        • Secure file upload with virus scanning<br>
+                        • Rate limiting for API endpoints<br>
+                        • GDPR compliant data handling
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <div class="feature-title">Responsive Design</div>
+                    <div class="feature-description">
+                        • Mobile-first approach<br>
+                        • Touch-optimized interface<br>
+                        • Adaptive toolbar for different screens<br>
+                        • Seamless tablet experience<br>
+                        • Cross-browser compatibility
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testing Strategy -->
+        <section class="section">
+            <h2 class="section-title">6. Testing & Quality Assurance</h2>
+            
+            <div class="component-spec">
+                <div class="component-title">Comprehensive Testing Approach</div>
+                
+                <div class="code-snippet">
+<span class="comment">// Testing Strategy Overview</span>
+
+<span class="comment">// 1. Unit Tests</span>
+- Component rendering and props handling
+- Utility functions and validation logic
+- SEO analysis algorithms
+- Auto-save functionality
+- Form validation schemas
+
+<span class="comment">// 2. Integration Tests</span>
+- CKEditor integration and configuration
+- API endpoint functionality
+- Database operations and relationships
+- File upload and processing
+- Authentication and authorization
+
+<span class="comment">// 3. End-to-End Tests</span>
+- Complete post creation workflow
+- Auto-save and recovery scenarios
+- SEO optimization process
+- Media upload and management
+- Publishing and scheduling
+
+<span class="comment">// 4. Performance Tests</span>
+- Page load times under different conditions
+- Large content handling
+- Multiple concurrent users
+- Image optimization processing
+- CDN performance validation
+
+<span class="comment">// 5. Accessibility Tests</span>
+- Screen reader compatibility
+- Keyboard navigation
+- Color contrast validation
+- ARIA labels and roles
+- Focus management
+
+<span class="comment">// 6. Security Tests</span>
+- Input sanitization validation
+- File upload security
+- Authentication bypass attempts
+- CSRF protection
+- Rate limiting effectiveness
+                </div>
+            </div>
+        </section>
+
+        <!-- Deployment & DevOps -->
+        <section class="section">
+            <h2 class="section-title">7. Deployment & DevOps</h2>
+            
+            <div class="component-spec">
+                <div class="component-title">Production Deployment Strategy</div>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🚀</div>
+                        <div class="feature-title">CI/CD Pipeline</div>
+                        <div class="feature-description">Automated testing, building, and deployment with GitHub Actions, staging environment validation, and automated rollback capabilities.</div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <div class="feature-title">Monitoring & Analytics</div>
+                        <div class="feature-description">Application performance monitoring, error tracking with Sentry, user behavior analytics, and SEO performance tracking.</div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">🔄</div>
+                        <div class="feature-title">Backup & Recovery</div>
+                        <div class="feature-description">Automated database backups, media file replication, disaster recovery procedures, and data integrity validation.</div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">⚙️</div>
+                        <div class="feature-title">Environment Management</div>
+                        <div class="feature-description">Development, staging, and production environment parity, configuration management, and feature flag implementation.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Summary -->
+        <section class="section" style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border: 1px solid #0ea5e9;">
+            <h2 class="section-title" style="color: var(--electric-blue);">Implementation Summary</h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+                <div>
+                    <h4 style="font-weight: 600; color: var(--charcoal); margin-bottom: 0.75rem;">Database Features</h4>
+                    <ul style="font-size: 0.875rem; color: var(--gray-600); line-height: 1.8; margin-left: 1.5rem;">
+                        <li>Complete relational schema with optimizations</li>
+                        <li>Version control and revision tracking</li>
+                        <li>Multi-language support infrastructure</li>
+                        <li>Advanced SEO data modeling</li>
+                        <li>Media management with CDN integration</li>
+                        <li>Analytics and engagement tracking</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 style="font-weight: 600; color: var(--charcoal); margin-bottom: 0.75rem;">API Capabilities</h4>
+                    <ul style="font-size: 0.875rem; color: var(--gray-600); line-height: 1.8; margin-left: 1.5rem;">
+                        <li>RESTful endpoints with comprehensive validation</li>
+                        <li>Real-time auto-save with conflict resolution</li>
+                        <li>Advanced SEO analysis and optimization</li>
+                        <li>Intelligent media processing</li>
+                        <li>Performance monitoring and caching</li>
+                        <li>Security hardening and rate limiting</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 style="font-weight: 600; color: var(--charcoal); margin-bottom: 0.75rem;">User Experience</h4>
+                    <ul style="font-size: 0.875rem; color: var(--gray-600); line-height: 1.8; margin-left: 1.5rem;">
+                        <li>Intuitive content creation workflow</li>
+                        <li>Professional CKEditor integration</li>
+                        <li>Real-time SEO guidance and scoring</li>
+                        <li>Responsive design for all devices</li>
+                        <li>Accessibility-first approach</li>
+                        <li>Progressive web app features</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="background: white; padding: 1.5rem; border-radius: 12px; margin-top: 2rem; border: 1px solid var(--primary-blue);">
+                <h4 style="font-weight: 600; color: var(--primary-blue); margin-bottom: 1rem;">Ready for Implementation</h4>
+                <p style="font-size: 0.875rem; color: var(--gray-600); line-height: 1.6;">
+                    This comprehensive specification provides everything needed to implement a world-class content management system. The design prioritizes user experience, SEO optimization, performance, and scalability while maintaining clean architecture and modern development practices. All components are designed to work seamlessly within the existing Next.js 15 application structure.
+                </p>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

@@ -8,7 +8,7 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useParams } from 'next/navigation';
 
 interface EditorLayoutProps {
   children: React.ReactNode;
@@ -17,47 +17,49 @@ interface EditorLayoutProps {
 const EditorLayout: React.FC<EditorLayoutProps> = ({ children }) => {
   const { user } = useAuth();
   const pathname = usePathname();
+  const params = useParams();
+  const locale = params?.locale as string || 'en';
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   const navigationItems = [
     {
-      href: '/dashboard/editor',
+      href: `/${locale}/dashboard/editor`,
       label: 'Dashboard',
       icon: '📊',
       description: 'Overview and stats'
     },
     {
-      href: '/dashboard/editor/posts',
+      href: `/${locale}/dashboard/editor/posts`,
       label: 'Posts',
       icon: '📝',
       description: 'Manage content'
     },
     {
-      href: '/dashboard/editor/create',
+      href: `/${locale}/dashboard/editor/create`,
       label: 'Create Post',
       icon: '✍️',
       description: 'New article'
     },
     {
-      href: '/dashboard/editor/media',
+      href: `/${locale}/dashboard/editor/media`,
       label: 'Media Library',
       icon: '🖼️',
       description: 'Files and images'
     },
     {
-      href: '/dashboard/editor/analytics',
+      href: `/${locale}/dashboard/editor/analytics`,
       label: 'Analytics',
       icon: '📈',
       description: 'Performance insights'
     },
     {
-      href: '/dashboard/editor/profile',
+      href: `/${locale}/dashboard/editor/profile`,
       label: 'Profile',
       icon: '👤',
       description: 'Editor settings'
     },
     {
-      href: '/dashboard/editor/settings',
+      href: `/${locale}/dashboard/editor/settings`,
       label: 'Settings',
       icon: '⚙️',
       description: 'Preferences'
@@ -65,7 +67,7 @@ const EditorLayout: React.FC<EditorLayoutProps> = ({ children }) => {
   ];
 
   const isActiveRoute = (href: string) => {
-    if (href === '/dashboard/editor') {
+    if (href === `/${locale}/dashboard/editor`) {
       return pathname === href;
     }
     return pathname?.startsWith(href);
@@ -230,7 +232,7 @@ const EditorLayout: React.FC<EditorLayoutProps> = ({ children }) => {
                       className="justify-start text-left"
                       asChild
                     >
-                      <Link href="/dashboard/editor/create">
+                      <Link href={`/${locale}/dashboard/editor/create`}>
                         <span className="mr-2">✍️</span>
                         New Post
                       </Link>

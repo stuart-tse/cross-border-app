@@ -6,7 +6,7 @@ import { UserType, LicenseType, DocumentStatus } from '@prisma/client';
 // GET /api/drivers/vehicles/[id]/licenses - Get all licenses for a vehicle
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth();
@@ -14,6 +14,9 @@ export async function GET(
     if (!session?.user?.email) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    // Await params in Next.js 15
+    const { id } = await params;
 
     // Check if user is a driver
     const user = await prisma.user.findUnique({
@@ -35,7 +38,7 @@ export async function GET(
     // Check if vehicle exists and belongs to driver
     const vehicle = await prisma.vehicle.findUnique({
       where: {
-        id: params.id,
+        id: id,
         driverId: user.driverProfile.id,
       },
     });
@@ -47,7 +50,7 @@ export async function GET(
     // Get all licenses for the vehicle
     const licenses = await prisma.vehicleLicense.findMany({
       where: {
-        vehicleId: params.id,
+        vehicleId: id,
       },
       orderBy: { expiryDate: 'asc' },
     });
@@ -76,7 +79,7 @@ export async function GET(
 // POST /api/drivers/vehicles/[id]/licenses - Create a new license
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth();
@@ -84,6 +87,9 @@ export async function POST(
     if (!session?.user?.email) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    // Await params in Next.js 15
+    const { id } = await params;
 
     // Check if user is a driver
     const user = await prisma.user.findUnique({
@@ -105,7 +111,7 @@ export async function POST(
     // Check if vehicle exists and belongs to driver
     const vehicle = await prisma.vehicle.findUnique({
       where: {
-        id: params.id,
+        id: id,
         driverId: user.driverProfile.id,
       },
     });
@@ -150,7 +156,7 @@ export async function POST(
     const existingLicense = await prisma.vehicleLicense.findUnique({
       where: {
         vehicleId_licenseType_licenseNumber: {
-          vehicleId: params.id,
+          vehicleId: id,
           licenseType: licenseType as LicenseType,
           licenseNumber,
         },
@@ -166,7 +172,7 @@ export async function POST(
     // Create the license
     const license = await prisma.vehicleLicense.create({
       data: {
-        vehicleId: params.id,
+        vehicleId: id,
         licenseType: licenseType as LicenseType,
         licenseNumber,
         issuingAuthority,
@@ -190,7 +196,7 @@ export async function POST(
           title: 'License Expiring Soon',
           message: `Your ${licenseType.replace('_', ' ').toLowerCase()} license for ${vehicle.make} ${vehicle.model} (${vehicle.plateNumber}) expires on ${expiryDateObj.toLocaleDateString()}`,
           data: {
-            vehicleId: params.id,
+            vehicleId: id,
             licenseId: license.id,
             licenseType,
             expiryDate: expiryDateObj,

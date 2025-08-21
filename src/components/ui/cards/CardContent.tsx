@@ -117,12 +117,14 @@ export const CardContent: React.FC<CardContentProps> = ({
   body,
   footer,
   actions,
-  className
+  className,
+  children
 }) => {
   return (
     <div className={cn('flex flex-col h-full', className)}>
       {header}
       {body}
+      {children}
       {footer}
       {actions}
     </div>

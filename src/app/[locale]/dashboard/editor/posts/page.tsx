@@ -324,7 +324,7 @@ const PostsManagementPage: React.FC = () => {
           <Button
             variant="primary"
             size="md"
-            asChild
+            // asChild
           >
             <Link href="/dashboard/editor/create">
               <span className="mr-2">+</span>

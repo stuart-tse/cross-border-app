@@ -6,7 +6,7 @@ import { UserType, PermitType, DocumentStatus } from '@prisma/client';
 // GET /api/drivers/vehicles/[id]/permits - Get all permits for a vehicle
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth();
@@ -14,6 +14,9 @@ export async function GET(
     if (!session?.user?.email) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    // Await params in Next.js 15
+    const { id } = await params;
 
     // Check if user is a driver
     const user = await prisma.user.findUnique({
@@ -35,7 +38,7 @@ export async function GET(
     // Check if vehicle exists and belongs to driver
     const vehicle = await prisma.vehicle.findUnique({
       where: {
-        id: params.id,
+        id: id,
         driverId: user.driverProfile.id,
       },
     });
@@ -47,7 +50,7 @@ export async function GET(
     // Get all permits for the vehicle
     const permits = await prisma.vehiclePermit.findMany({
       where: {
-        vehicleId: params.id,
+        vehicleId: id,
       },
       orderBy: { expiryDate: 'asc' },
     });
@@ -76,7 +79,7 @@ export async function GET(
 // POST /api/drivers/vehicles/[id]/permits - Create a new permit
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth();
@@ -84,6 +87,9 @@ export async function POST(
     if (!session?.user?.email) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    // Await params in Next.js 15
+    const { id } = await params;
 
     // Check if user is a driver
     const user = await prisma.user.findUnique({
@@ -105,7 +111,7 @@ export async function POST(
     // Check if vehicle exists and belongs to driver
     const vehicle = await prisma.vehicle.findUnique({
       where: {
-        id: params.id,
+        id: id,
         driverId: user.driverProfile.id,
       },
     });
@@ -150,7 +156,7 @@ export async function POST(
     const existingPermit = await prisma.vehiclePermit.findUnique({
       where: {
         vehicleId_permitType_permitNumber: {
-          vehicleId: params.id,
+          vehicleId: id,
           permitType: permitType as PermitType,
           permitNumber,
         },
@@ -166,7 +172,7 @@ export async function POST(
     // Create the permit
     const permit = await prisma.vehiclePermit.create({
       data: {
-        vehicleId: params.id,
+        vehicleId: id,
         permitType: permitType as PermitType,
         permitNumber,
         issuingAuthority,
@@ -190,7 +196,7 @@ export async function POST(
           title: 'Permit Expiring Soon',
           message: `Your ${permitType.replace('_', ' ').toLowerCase()} permit for ${vehicle.make} ${vehicle.model} (${vehicle.plateNumber}) expires on ${expiryDateObj.toLocaleDateString()}`,
           data: {
-            vehicleId: params.id,
+            vehicleId: id,
             permitId: permit.id,
             permitType,
             expiryDate: expiryDateObj,

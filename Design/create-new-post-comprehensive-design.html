@@ -542,11 +542,17 @@
     <div class="container">
         <header style="text-align: center; margin-bottom: 3rem;">
             <h1 style="font-size: 2.5rem; font-weight: 800; color: #111827; margin-bottom: 0.5rem;">
-                Create New Post - Comprehensive Design
+                Create New Post - Enhanced Design System
             </h1>
-            <p style="font-size: 1.125rem; color: #6b7280;">
-                Professional content creation interface with CKEditor integration, SEO optimization, and media management
+            <p style="font-size: 1.125rem; color: #6b7280; margin-bottom: 1rem;">
+                Professional content creation interface with advanced CKEditor integration, comprehensive SEO optimization, and intelligent media management
             </p>
+            <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+                <span class="badge" style="background: #dcfce7; color: #166534;">✓ CKEditor 5 Integration</span>
+                <span class="badge" style="background: #dbeafe; color: #1e40af;">✓ Real-time SEO Analysis</span>
+                <span class="badge" style="background: #fef3c7; color: #92400e;">✓ Auto-save & Recovery</span>
+                <span class="badge" style="background: #fce7f3; color: #be185d;">✓ Responsive Design</span>
+            </div>
         </header>
 
         <!-- 1. Layout Wireframes -->
@@ -681,82 +687,621 @@
             </div>
         </section>
 
-        <!-- 2. CKEditor Integration Specifications -->
+        <!-- 2. Core Field Specifications -->
         <section class="section">
-            <h2 class="section-title">2. CKEditor 5 Integration & Rich Text Features</h2>
+            <h2 class="section-title">2. Core Field Specifications & Components</h2>
             
             <div class="component-spec">
-                <div class="component-title">CKEditor Configuration</div>
+                <div class="component-title">1. Title Field Component</div>
+                <div class="component-example">
+                    <div class="form-example">
+                        <div class="input-group">
+                            <label class="input-label">Post Title *</label>
+                            <input class="input-field" type="text" placeholder="Enter your compelling post title..." style="font-size: 1.125rem; font-weight: 500;" />
+                            <div style="display: flex; justify-content: between; align-items: center; margin-top: 0.5rem;">
+                                <div style="font-size: 0.75rem; color: var(--gray-600);">
+                                    45/60 characters • <span style="color: var(--success-green);">Optimal for SEO</span>
+                                </div>
+                                <div style="font-size: 0.75rem; color: var(--primary-blue);">
+                                    Auto-generating URL slug...
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="background: #f0f9ff; padding: 1rem; border-radius: 8px; border: 1px solid #bfdbfe; margin-top: 1rem;">
+                    <strong>Features:</strong> Real-time character counting, SEO optimization scoring, automatic URL slug generation, duplicate title checking, save-as-you-type with debouncing
+                </div>
+            </div>
+
+            <div class="component-spec">
+                <div class="component-title">2. Excerpt Field Component</div>
+                <div class="component-example">
+                    <div class="form-example">
+                        <div class="input-group">
+                            <label class="input-label">Post Excerpt</label>
+                            <textarea class="input-field textarea-field" placeholder="Write a compelling summary that will appear in previews and search results..."></textarea>
+                            <div style="display: flex; justify-content: between; align-items: center; margin-top: 0.5rem;">
+                                <div style="font-size: 0.75rem; color: var(--warning-amber);">
+                                    125/160 characters • Add more for better search visibility
+                                </div>
+                                <button class="btn" style="padding: 0.25rem 0.75rem; font-size: 0.75rem;" onclick="generateExcerpt()">Auto-generate from content</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="background: #f0f9ff; padding: 1rem; border-radius: 8px; border: 1px solid #bfdbfe; margin-top: 1rem;">
+                    <strong>Features:</strong> Character count with optimal range guidance, auto-generation from main content, preview how it appears in search results, social media preview integration
+                </div>
+            </div>
+
+            <div class="component-spec">
+                <div class="component-title">3. Featured Photo Component</div>
+                <div class="component-example">
+                    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+                        <!-- Upload Area -->
+                        <div class="media-upload-area" style="padding: 2rem;">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">📸</div>
+                            <div style="font-weight: 600; margin-bottom: 0.5rem;">Upload Featured Image</div>
+                            <div style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 1rem;">
+                                Drag & drop or click to browse<br>
+                                JPG, PNG, WebP • Max 10MB • Recommended: 1200×630px
+                            </div>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button class="btn btn-primary">Choose File</button>
+                                <button class="btn btn-secondary">From Media Library</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Preview & Controls -->
+                        <div>
+                            <div style="aspect-ratio: 16/9; background: var(--gray-100); border-radius: 8px; border: 1px solid var(--gray-300); display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+                                <span style="color: var(--gray-600); font-size: 0.875rem;">Preview</span>
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Alt Text *</label>
+                                <input class="input-field" type="text" placeholder="Describe the image for accessibility" />
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.75rem;">
+                                <button class="btn btn-secondary">✂️ Crop</button>
+                                <button class="btn btn-secondary">📏 Resize</button>
+                                <button class="btn btn-secondary">🎨 Filters</button>
+                                <button class="btn btn-secondary">🔄 Replace</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="background: #f0f9ff; padding: 1rem; border-radius: 8px; border: 1px solid #bfdbfe; margin-top: 1rem;">
+                    <strong>Features:</strong> Drag & drop upload, built-in image editor (crop, resize, filters), automatic optimization and compression, CDN integration, accessibility compliance with alt text validation, multiple format support
+                </div>
+            </div>
+
+            <div class="component-spec">
+                <div class="component-title">4. Meta Fields Component</div>
+                <div class="component-example">
+                    <div class="form-example">
+                        <div class="input-group">
+                            <label class="input-label">SEO Meta Title</label>
+                            <input class="input-field" type="text" placeholder="Custom SEO title (leave empty to use post title)" />
+                            <div style="font-size: 0.75rem; color: var(--success-green); margin-top: 0.25rem;">
+                                52/60 characters • Perfect length for Google
+                            </div>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label class="input-label">Meta Description</label>
+                            <textarea class="input-field" rows="3" placeholder="Compelling description for search engines and social media..."></textarea>
+                            <div style="font-size: 0.75rem; color: var(--danger-red); margin-top: 0.25rem;">
+                                89/160 characters • Too short, add more compelling details
+                            </div>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label class="input-label">Keywords / Tags</label>
+                            <input class="input-field" type="text" placeholder="travel, cross-border, transportation" />
+                            <div style="font-size: 0.75rem; color: var(--gray-600); margin-top: 0.25rem;">
+                                Separate with commas • Use 3-5 relevant keywords • <button style="color: var(--primary-blue); background: none; border: none; padding: 0; font-size: inherit; cursor: pointer;">Get suggestions</button>
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="input-group">
+                                <label class="input-label">Open Graph Title</label>
+                                <input class="input-field" type="text" placeholder="Title for social sharing" />
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Twitter Card Type</label>
+                                <select class="input-field">
+                                    <option>Summary Large Image</option>
+                                    <option>Summary</option>
+                                    <option>App</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label class="input-label">Canonical URL</label>
+                            <input class="input-field" type="url" placeholder="https://example.com/canonical-url" />
+                            <div style="font-size: 0.75rem; color: var(--gray-600); margin-top: 0.25rem;">
+                                Leave empty to use post URL • Prevents duplicate content issues
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="background: #f0f9ff; padding: 1rem; border-radius: 8px; border: 1px solid #bfdbfe; margin-top: 1rem;">
+                    <strong>Features:</strong> Real-time SEO analysis, keyword suggestions, social media preview, Open Graph optimization, Twitter Cards integration, canonical URL management, schema markup generation
+                </div>
+            </div>
+
+            <div class="component-spec">
+                <div class="component-title">5. URL Slug Component</div>
+                <div class="component-example">
+                    <div class="form-example">
+                        <div class="input-group">
+                            <label class="input-label">URL Slug</label>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span style="font-size: 0.875rem; color: var(--gray-600);">yoursite.com/blog/</span>
+                                <input class="input-field" type="text" value="cross-border-travel-guide-2024" style="flex: 1;" />
+                                <button class="btn btn-secondary" style="padding: 0.5rem;">🔄</button>
+                            </div>
+                            <div style="display: flex; justify-content: between; align-items: center; margin-top: 0.5rem;">
+                                <div style="font-size: 0.75rem;">
+                                    <span style="color: var(--success-green);">✓ Available</span> • 
+                                    <span style="color: var(--primary-blue);">SEO-friendly</span> • 
+                                    <span style="color: var(--gray-600);">37 characters</span>
+                                </div>
+                                <button style="color: var(--primary-blue); background: none; border: none; font-size: 0.75rem; cursor: pointer;">Check availability</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="background: #f0f9ff; padding: 1rem; border-radius: 8px; border: 1px solid #bfdbfe; margin-top: 1rem;">
+                    <strong>Features:</strong> Auto-generation from title, duplicate checking, SEO-friendly formatting, real-time availability validation, custom override capability, redirect management for URL changes
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. CKEditor Integration Specifications -->
+        <section class="section">
+            <h2 class="section-title">3. CKEditor 5 Integration & Advanced Rich Text Features</h2>
+            
+            <div class="component-spec">
+                <div class="component-title">Complete CKEditor Component Layout</div>
+                <div class="component-example">
+                    <div class="ckeditor-mockup">
+                        <div class="ckeditor-toolbar" style="display: grid; grid-template-columns: 1fr auto; padding: 1rem;">
+                            <!-- Main Toolbar -->
+                            <div style="display: flex; flex-wrap: wrap; gap: 0.25rem; align-items: center;">
+                                <!-- Text Formatting Group -->
+                                <div style="display: flex; gap: 0.25rem; padding: 0.25rem; background: white; border-radius: 4px; border: 1px solid var(--gray-300);">
+                                    <button class="toolbar-button" title="Bold">B</button>
+                                    <button class="toolbar-button" title="Italic">I</button>
+                                    <button class="toolbar-button" title="Underline">U</button>
+                                    <button class="toolbar-button" title="Strikethrough">S</button>
+                                </div>
+                                
+                                <!-- Heading Group -->
+                                <div style="display: flex; gap: 0.25rem; padding: 0.25rem; background: white; border-radius: 4px; border: 1px solid var(--gray-300);">
+                                    <select style="padding: 0.375rem; border: none; background: none; font-size: 0.75rem;">
+                                        <option>Paragraph</option>
+                                        <option>Heading 1</option>
+                                        <option>Heading 2</option>
+                                        <option>Heading 3</option>
+                                        <option>Heading 4</option>
+                                        <option>Quote</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- Font & Color Group -->
+                                <div style="display: flex; gap: 0.25rem; padding: 0.25rem; background: white; border-radius: 4px; border: 1px solid var(--gray-300);">
+                                    <select style="padding: 0.375rem; border: none; background: none; font-size: 0.75rem;">
+                                        <option>14px</option>
+                                        <option>16px</option>
+                                        <option>18px</option>
+                                        <option>24px</option>
+                                    </select>
+                                    <button class="toolbar-button" title="Text Color">🎨</button>
+                                    <button class="toolbar-button" title="Highlight">🖍️</button>
+                                </div>
+                                
+                                <!-- Media Group -->
+                                <div style="display: flex; gap: 0.25rem; padding: 0.25rem; background: white; border-radius: 4px; border: 1px solid var(--gray-300);">
+                                    <button class="toolbar-button" title="Insert Link">🔗</button>
+                                    <button class="toolbar-button" title="Insert Image">🖼️</button>
+                                    <button class="toolbar-button" title="Insert Video">📹</button>
+                                    <button class="toolbar-button" title="Insert File">📎</button>
+                                </div>
+                                
+                                <!-- Lists & Alignment Group -->
+                                <div style="display: flex; gap: 0.25rem; padding: 0.25rem; background: white; border-radius: 4px; border: 1px solid var(--gray-300);">
+                                    <button class="toolbar-button" title="Bullet List">•</button>
+                                    <button class="toolbar-button" title="Numbered List">1.</button>
+                                    <button class="toolbar-button" title="Align Left">⬅️</button>
+                                    <button class="toolbar-button" title="Align Center">↔️</button>
+                                    <button class="toolbar-button" title="Align Right">➡️</button>
+                                </div>
+                                
+                                <!-- Advanced Tools Group -->
+                                <div style="display: flex; gap: 0.25rem; padding: 0.25rem; background: white; border-radius: 4px; border: 1px solid var(--gray-300);">
+                                    <button class="toolbar-button" title="Insert Table">📊</button>
+                                    <button class="toolbar-button" title="Code Block">{ }</button>
+                                    <button class="toolbar-button" title="Horizontal Rule">—</button>
+                                    <button class="toolbar-button" title="Special Characters">Ω</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Status & Tools -->
+                            <div style="display: flex; gap: 0.75rem; align-items: center;">
+                                <div style="font-size: 0.75rem; color: var(--gray-600);">
+                                    <span id="wordCount">0 words</span> • 
+                                    <span id="readTime">0 min read</span>
+                                </div>
+                                <button class="btn btn-secondary" style="padding: 0.375rem 0.75rem; font-size: 0.75rem;">
+                                    ↖️ Source
+                                </button>
+                                <button class="btn btn-secondary" style="padding: 0.375rem 0.75rem; font-size: 0.75rem;">
+                                    👁️ Preview
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="ckeditor-content" style="min-height: 500px; padding: 2rem; background: white;">
+                            <h2 style="color: var(--charcoal); margin-bottom: 1rem;">Your Content Here</h2>
+                            <p style="color: var(--gray-600); line-height: 1.6; margin-bottom: 1rem;">
+                                Start typing to create amazing content. The editor automatically formats your text and provides real-time feedback on SEO, readability, and word count.
+                            </p>
+                            <p style="color: var(--gray-600); line-height: 1.6;">
+                                Use the toolbar above to format text, add media, create tables, and insert special content. All changes are automatically saved as you type.
+                            </p>
+                            
+                            <!-- Writing Stats Footer -->
+                            <div style="position: absolute; bottom: 1rem; right: 1rem; background: rgba(255,255,255,0.9); padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.75rem; color: var(--gray-600); border: 1px solid var(--gray-200);">
+                                <span style="color: var(--success-green);">✓ Auto-saved</span> • 
+                                <span>Last saved: just now</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="component-spec">
+                <div class="component-title">Enhanced CKEditor 5 Configuration</div>
                 <div class="code-snippet">
-<span class="comment">// CKEditor 5 Custom Configuration</span>
+<span class="comment">// Enhanced CKEditor 5 Configuration for Cross-Border Blog</span>
 <span class="keyword">import</span> { ClassicEditor } <span class="keyword">from</span> <span class="string">'@ckeditor/ckeditor5-editor-classic'</span>;
 <span class="keyword">import</span> {
-    <span class="property">Essentials</span>, <span class="property">Bold</span>, <span class="property">Italic</span>, <span class="property">Underline</span>,
-    <span class="property">Heading</span>, <span class="property">Link</span>, <span class="property">Image</span>, <span class="property">ImageUpload</span>,
-    <span class="property">List</span>, <span class="property">BlockQuote</span>, <span class="property">Table</span>,
-    <span class="property">CodeBlock</span>, <span class="property">MediaEmbed</span>, <span class="property">Paragraph</span>,
-    <span class="property">Alignment</span>, <span class="property">FontSize</span>, <span class="property">FontColor</span>
+    <span class="property">Essentials</span>, <span class="property">Bold</span>, <span class="property">Italic</span>, <span class="property">Underline</span>, <span class="property">Strikethrough</span>,
+    <span class="property">Heading</span>, <span class="property">Paragraph</span>, <span class="property">Link</span>, <span class="property">AutoLink</span>,
+    <span class="property">Image</span>, <span class="property">ImageUpload</span>, <span class="property">ImageResize</span>, <span class="property">ImageCaption</span>,
+    <span class="property">List</span>, <span class="property">TodoList</span>, <span class="property">BlockQuote</span>, <span class="property">Table</span>, <span class="property">TableToolbar</span>,
+    <span class="property">CodeBlock</span>, <span class="property">Code</span>, <span class="property">MediaEmbed</span>, <span class="property">HorizontalLine</span>,
+    <span class="property">Alignment</span>, <span class="property">FontSize</span>, <span class="property">FontColor</span>, <span class="property">FontBackgroundColor</span>,
+    <span class="property">SpecialCharacters</span>, <span class="property">WordCount</span>, <span class="property">Autosave</span>
 } <span class="keyword">from</span> <span class="string">'@ckeditor/ckeditor5-*'</span>;
 
 <span class="keyword">const</span> <span class="property">editorConfig</span> = {
     <span class="property">plugins</span>: [
-        <span class="property">Essentials</span>, <span class="property">Bold</span>, <span class="property">Italic</span>, <span class="property">Underline</span>, <span class="property">Heading</span>,
-        <span class="property">Link</span>, <span class="property">Image</span>, <span class="property">ImageUpload</span>, <span class="property">List</span>,
-        <span class="property">BlockQuote</span>, <span class="property">Table</span>, <span class="property">CodeBlock</span>, <span class="property">MediaEmbed</span>
+        <span class="property">Essentials</span>, <span class="property">Bold</span>, <span class="property">Italic</span>, <span class="property">Underline</span>, <span class="property">Strikethrough</span>,
+        <span class="property">Heading</span>, <span class="property">Paragraph</span>, <span class="property">Link</span>, <span class="property">AutoLink</span>,
+        <span class="property">Image</span>, <span class="property">ImageUpload</span>, <span class="property">ImageResize</span>, <span class="property">ImageCaption</span>,
+        <span class="property">List</span>, <span class="property">TodoList</span>, <span class="property">BlockQuote</span>, <span class="property">Table</span>, <span class="property">TableToolbar</span>,
+        <span class="property">CodeBlock</span>, <span class="property">Code</span>, <span class="property">MediaEmbed</span>, <span class="property">HorizontalLine</span>,
+        <span class="property">Alignment</span>, <span class="property">FontSize</span>, <span class="property">FontColor</span>, <span class="property">FontBackgroundColor</span>,
+        <span class="property">SpecialCharacters</span>, <span class="property">WordCount</span>, <span class="property">Autosave</span>
     ],
+    
     <span class="property">toolbar</span>: {
         <span class="property">items</span>: [
             <span class="string">'heading'</span>, <span class="string">'|'</span>,
-            <span class="string">'bold'</span>, <span class="string">'italic'</span>, <span class="string">'underline'</span>, <span class="string">'|'</span>,
-            <span class="string">'fontSize'</span>, <span class="string">'fontColor'</span>, <span class="string">'|'</span>,
+            <span class="string">'bold'</span>, <span class="string">'italic'</span>, <span class="string">'underline'</span>, <span class="string">'strikethrough'</span>, <span class="string">'|'</span>,
+            <span class="string">'fontSize'</span>, <span class="string">'fontColor'</span>, <span class="string">'fontBackgroundColor'</span>, <span class="string">'|'</span>,
             <span class="string">'link'</span>, <span class="string">'imageUpload'</span>, <span class="string">'mediaEmbed'</span>, <span class="string">'|'</span>,
-            <span class="string">'bulletedList'</span>, <span class="string">'numberedList'</span>, <span class="string">'|'</span>,
-            <span class="string">'blockQuote'</span>, <span class="string">'codeBlock'</span>, <span class="string">'insertTable'</span>, <span class="string">'|'</span>,
-            <span class="string">'alignment'</span>, <span class="string">'undo'</span>, <span class="string">'redo'</span>
+            <span class="string">'bulletedList'</span>, <span class="string">'numberedList'</span>, <span class="string">'todoList'</span>, <span class="string">'|'</span>,
+            <span class="string">'alignment'</span>, <span class="string">'|'</span>,
+            <span class="string">'blockQuote'</span>, <span class="string">'codeBlock'</span>, <span class="string">'insertTable'</span>, <span class="string">'horizontalLine'</span>, <span class="string">'|'</span>,
+            <span class="string">'specialCharacters'</span>, <span class="string">'|'</span>,
+            <span class="string">'undo'</span>, <span class="string">'redo'</span>
+        ],
+        <span class="property">shouldNotGroupWhenFull</span>: <span class="keyword">true</span>
+    },
+    
+    <span class="property">heading</span>: {
+        <span class="property">options</span>: [
+            { <span class="property">model</span>: <span class="string">'paragraph'</span>, <span class="property">title</span>: <span class="string">'Paragraph'</span>, <span class="property">class</span>: <span class="string">'ck-heading_paragraph'</span> },
+            { <span class="property">model</span>: <span class="string">'heading1'</span>, <span class="property">view</span>: <span class="string">'h1'</span>, <span class="property">title</span>: <span class="string">'Heading 1'</span>, <span class="property">class</span>: <span class="string">'ck-heading_heading1'</span> },
+            { <span class="property">model</span>: <span class="string">'heading2'</span>, <span class="property">view</span>: <span class="string">'h2'</span>, <span class="property">title</span>: <span class="string">'Heading 2'</span>, <span class="property">class</span>: <span class="string">'ck-heading_heading2'</span> },
+            { <span class="property">model</span>: <span class="string">'heading3'</span>, <span class="property">view</span>: <span class="string">'h3'</span>, <span class="property">title</span>: <span class="string">'Heading 3'</span>, <span class="property">class</span>: <span class="string">'ck-heading_heading3'</span> },
+            { <span class="property">model</span>: <span class="string">'heading4'</span>, <span class="property">view</span>: <span class="string">'h4'</span>, <span class="property">title</span>: <span class="string">'Heading 4'</span>, <span class="property">class</span>: <span class="string">'ck-heading_heading4'</span> }
         ]
     },
+    
     <span class="property">image</span>: {
-        <span class="property">toolbar</span>: [<span class="string">'imageTextAlternative'</span>, <span class="string">'imageStyle:full'</span>, <span class="string">'imageStyle:side'</span>]
+        <span class="property">toolbar</span>: [
+            <span class="string">'imageTextAlternative'</span>, <span class="string">'toggleImageCaption'</span>, <span class="string">'|'</span>,
+            <span class="string">'imageStyle:inline'</span>, <span class="string">'imageStyle:wrapText'</span>, <span class="string">'imageStyle:breakText'</span>, <span class="string">'|'</span>,
+            <span class="string">'resizeImage'</span>
+        ],
+        <span class="property">resizeOptions</span>: [
+            {
+                <span class="property">name</span>: <span class="string">'resizeImage:original'</span>,
+                <span class="property">label</span>: <span class="string">'Original size'</span>,
+                <span class="property">value</span>: <span class="keyword">null</span>
+            },
+            {
+                <span class="property">name</span>: <span class="string">'resizeImage:50'</span>,
+                <span class="property">label</span>: <span class="string">'50% page width'</span>,
+                <span class="property">value</span>: <span class="string">'50'</span>
+            },
+            {
+                <span class="property">name</span>: <span class="string">'resizeImage:75'</span>,
+                <span class="property">label</span>: <span class="string">'75% page width'</span>,
+                <span class="property">value</span>: <span class="string">'75'</span>
+            }
+        ]
     },
+    
+    <span class="property">table</span>: {
+        <span class="property">contentToolbar</span>: [
+            <span class="string">'tableColumn'</span>, <span class="string">'tableRow'</span>, <span class="string">'mergeTableCells'</span>, <span class="string">'tableProperties'</span>, <span class="string">'tableCellProperties'</span>
+        ]
+    },
+    
+    <span class="property">fontSize</span>: {
+        <span class="property">options</span>: [ 9, 11, 13, <span class="string">'default'</span>, 17, 19, 21, 27, 35 ]
+    },
+    
+    <span class="property">fontColor</span>: {
+        <span class="property">colors</span>: [
+            {
+                <span class="property">color</span>: <span class="string">'hsl(0, 0%, 0%)'</span>,
+                <span class="property">label</span>: <span class="string">'Black'</span>
+            },
+            {
+                <span class="property">color</span>: <span class="string">'hsl(0, 0%, 30%)'</span>,
+                <span class="property">label</span>: <span class="string">'Dark grey'</span>
+            },
+            {
+                <span class="property">color</span>: <span class="string">'hsl(0, 0%, 60%)'</span>,
+                <span class="property">label</span>: <span class="string">'Grey'</span>
+            },
+            <span class="comment">// Brand colors</span>
+            {
+                <span class="property">color</span>: <span class="string">'hsl(218, 91%, 60%)'</span>,
+                <span class="property">label</span>: <span class="string">'Primary Blue'</span>
+            },
+            {
+                <span class="property">color</span>: <span class="string">'hsl(330, 81%, 60%)'</span>,
+                <span class="property">label</span>: <span class="string">'Hot Pink'</span>
+            }
+        ]
+    },
+    
+    <span class="property">link</span>: {
+        <span class="property">decorators</span>: {
+            <span class="property">addTargetToExternalLinks</span>: <span class="keyword">true</span>,
+            <span class="property">defaultProtocol</span>: <span class="string">'https://'</span>,
+            <span class="property">toggleDownloadable</span>: {
+                <span class="property">mode</span>: <span class="string">'manual'</span>,
+                <span class="property">label</span>: <span class="string">'Downloadable'</span>,
+                <span class="property">attributes</span>: {
+                    <span class="property">download</span>: <span class="string">'file'</span>
+                }
+            }
+        }
+    },
+    
     <span class="property">simpleUpload</span>: {
-        <span class="property">uploadUrl</span>: <span class="string">'/api/uploads/images'</span>
+        <span class="property">uploadUrl</span>: <span class="string">'/api/editor/upload'</span>,
+        <span class="property">withCredentials</span>: <span class="keyword">true</span>,
+        <span class="property">headers</span>: {
+            <span class="property">'X-CSRF-TOKEN'</span>: <span class="string">'CSRF-Token'</span>,
+            <span class="property">Authorization</span>: <span class="string">'Bearer token'</span>
+        }
+    },
+    
+    <span class="property">autosave</span>: {
+        <span class="property">save</span>( editor ) {
+            <span class="keyword">return</span> saveData( editor.getData() );
+        },
+        <span class="property">waitingTime</span>: <span class="number">5000</span> <span class="comment">// Save every 5 seconds</span>
+    },
+    
+    <span class="property">wordCount</span>: {
+        <span class="property">onUpdate</span>: stats => {
+            <span class="property">document</span>.<span class="property">getElementById</span>(<span class="string">'wordCount'</span>).<span class="property">innerText</span> = `${stats.<span class="property">words</span>} words`;
+            <span class="property">document</span>.<span class="property">getElementById</span>(<span class="string">'readTime'</span>).<span class="property">innerText</span> = `${<span class="property">Math</span>.<span class="property">ceil</span>(stats.<span class="property">words</span> / 200)} min read`;
+        }
+    },
+    
+    <span class="property">mediaEmbed</span>: {
+        <span class="property">previewsInData</span>: <span class="keyword">true</span>
     }
 };
+
+<span class="keyword">async function</span> <span class="property">saveData</span>( data ) {
+    <span class="keyword">const</span> response = <span class="keyword">await</span> <span class="property">fetch</span>(<span class="string">'/api/posts/autosave'</span>, {
+        <span class="property">method</span>: <span class="string">'POST'</span>,
+        <span class="property">headers</span>: {
+            <span class="string">'Content-Type'</span>: <span class="string">'application/json'</span>,
+        },
+        <span class="property">body</span>: <span class="property">JSON</span>.<span class="property">stringify</span>({ <span class="property">content</span>: data })
+    });
+    
+    <span class="keyword">if</span> ( !response.<span class="property">ok</span> ) {
+        <span class="keyword">throw new</span> <span class="property">Error</span>( <span class="string">'Save failed!'</span> );
+    }
+}
+                </div>
+                
+                <div style="background: #f0f9ff; padding: 1rem; border-radius: 8px; border: 1px solid #bfdbfe; margin-top: 1rem;">
+                    <strong>Key Features:</strong> Auto-save functionality, real-time word count & reading time, comprehensive media support, table creation, code blocks, special characters, custom styling, SEO-friendly link handling, brand color integration
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Complete Implementation Guide -->
+        <section class="section">
+            <h2 class="section-title">4. Next.js 15 Implementation Guide</h2>
+            
+            <div class="component-spec">
+                <div class="component-title">1. Project Structure Setup</div>
+                <div class="code-snippet">
+<span class="comment">// File structure for the Create Post page</span>
+src/
+├── app/
+│   └── [locale]/
+│       └── dashboard/
+│           └── editor/
+│               ├── create/
+│               │   ├── page.tsx                 <span class="comment">// Main create post page</span>
+│               │   ├── components/
+│               │   │   ├── CreatePostForm.tsx   <span class="comment">// Main form component</span>
+│               │   │   ├── TitleField.tsx       <span class="comment">// Title input component</span>
+│               │   │   ├── ExcerptField.tsx     <span class="comment">// Excerpt textarea</span>
+│               │   │   ├── CKEditorField.tsx    <span class="comment">// Rich text editor</span>
+│               │   │   ├── FeaturedImage.tsx    <span class="comment">// Image upload component</span>
+│               │   │   ├── MetaFields.tsx       <span class="comment">// SEO meta fields</span>
+│               │   │   ├── URLSlugField.tsx     <span class="comment">// URL slug component</span>
+│               │   │   ├── PublishingOptions.tsx <span class="comment">// Publish/draft controls</span>
+│               │   │   └── AutoSaveIndicator.tsx <span class="comment">// Save status component</span>
+│               │   └── hooks/
+│               │       ├── useAutoSave.ts       <span class="comment">// Auto-save functionality</span>
+│               │       ├── useSEOAnalysis.ts    <span class="comment">// SEO scoring</span>
+│               │       ├── useImageUpload.ts    <span class="comment">// Image handling</span>
+│               │       └── useFormValidation.ts <span class="comment">// Form validation</span>
+│               └── api/
+│                   ├── posts/
+│                   │   ├── route.ts            <span class="comment">// CRUD operations</span>
+│                   │   └── autosave/
+│                   │       └── route.ts        <span class="comment">// Auto-save endpoint</span>
+│                   ├── upload/
+│                   │   └── route.ts            <span class="comment">// File upload handler</span>
+│                   └── seo-analysis/
+│                       └── route.ts            <span class="comment">// SEO analysis endpoint</span>
+└── lib/
+    ├── validations/
+    │   └── post.ts                             <span class="comment">// Post validation schemas</span>
+    ├── seo/
+    │   └── analyzer.ts                         <span class="comment">// SEO analysis logic</span>
+    └── upload/
+        └── config.ts                           <span class="comment">// Upload configuration</span>
                 </div>
             </div>
 
-            <div class="feature-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">✏️</div>
-                    <div class="feature-title">Rich Text Formatting</div>
-                    <div class="feature-description">Bold, italic, underline, strikethrough, and font styling options with consistent cross-platform rendering.</div>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📝</div>
-                    <div class="feature-title">Structured Content</div>
-                    <div class="feature-description">Headings (H1-H6), paragraphs, lists, and proper document structure for better SEO.</div>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🖼️</div>
-                    <div class="feature-title">Media Integration</div>
-                    <div class="feature-description">Image upload, video embedding, and media management with alt text and captions.</div>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🔗</div>
-                    <div class="feature-title">Smart Linking</div>
-                    <div class="feature-description">Link insertion with SEO attributes, internal linking suggestions, and link validation.</div>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📊</div>
-                    <div class="feature-title">Tables & Data</div>
-                    <div class="feature-description">Responsive table creation, data visualization, and structured content formatting.</div>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">💾</div>
-                    <div class="feature-title">Auto-save</div>
-                    <div class="feature-description">Real-time auto-save every 30 seconds with conflict resolution and version history.</div>
+            <div class="component-spec">
+                <div class="component-title">2. Main Page Component (page.tsx)</div>
+                <div class="code-snippet">
+<span class="comment">// app/[locale]/dashboard/editor/create/page.tsx</span>
+<span class="keyword">import</span> { <span class="property">Suspense</span> } <span class="keyword">from</span> <span class="string">'react'</span>;
+<span class="keyword">import</span> { <span class="property">Metadata</span> } <span class="keyword">from</span> <span class="string">'next'</span>;
+<span class="keyword">import</span> { <span class="property">CreatePostForm</span> } <span class="keyword">from</span> <span class="string">'./components/CreatePostForm'</span>;
+<span class="keyword">import</span> { <span class="property">LoadingSpinner</span> } <span class="keyword">from</span> <span class="string">'@/components/ui/LoadingSpinner'</span>;
+
+<span class="keyword">export const</span> <span class="property">metadata</span>: <span class="property">Metadata</span> = {
+  <span class="property">title</span>: <span class="string">'Create New Post - Editor Dashboard'</span>,
+  <span class="property">description</span>: <span class="string">'Create and publish new blog posts with advanced editing tools'</span>,
+};
+
+<span class="keyword">export default function</span> <span class="property">CreatePostPage</span>() {
+  <span class="keyword">return</span> (
+    &lt;<span class="property">div</span> <span class="property">className</span>=<span class="string">"min-h-screen bg-gray-50"</span>&gt;
+      &lt;<span class="property">div</span> <span class="property">className</span>=<span class="string">"max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"</span>&gt;
+        &lt;<span class="property">div</span> <span class="property">className</span>=<span class="string">"mb-8"</span>&gt;
+          &lt;<span class="property">h1</span> <span class="property">className</span>=<span class="string">"text-3xl font-bold text-gray-900"</span>&gt;
+            Create New Post
+          &lt;/<span class="property">h1</span>&gt;
+          &lt;<span class="property">p</span> <span class="property">className</span>=<span class="string">"mt-2 text-gray-600"</span>&gt;
+            Create engaging content with our advanced editor and SEO tools
+          &lt;/<span class="property">p</span>&gt;
+        &lt;/<span class="property">div</span>&gt;
+
+        &lt;<span class="property">Suspense</span> <span class="property">fallback</span>={&lt;<span class="property">LoadingSpinner</span> /&gt;}&gt;
+          &lt;<span class="property">CreatePostForm</span> /&gt;
+        &lt;/<span class="property">Suspense</span>&gt;
+      &lt;/<span class="property">div</span>&gt;
+    &lt;/<span class="property">div</span>&gt;
+  );
+}
                 </div>
             </div>
+
+            <div class="component-spec">
+                <div class="component-title">3. Main Form Component Architecture</div>
+                <div class="code-snippet">
+<span class="comment">// components/CreatePostForm.tsx</span>
+<span class="string">'use client'</span>;
+
+<span class="keyword">import</span> { <span class="property">useState</span>, <span class="property">useCallback</span> } <span class="keyword">from</span> <span class="string">'react'</span>;
+<span class="keyword">import</span> { <span class="property">useForm</span> } <span class="keyword">from</span> <span class="string">'react-hook-form'</span>;
+<span class="keyword">import</span> { <span class="property">zodResolver</span> } <span class="keyword">from</span> <span class="string">'@hookform/resolvers/zod'</span>;
+<span class="keyword">import</span> { <span class="property">postSchema</span>, <span class="property">PostFormData</span> } <span class="keyword">from</span> <span class="string">'@/lib/validations/post'</span>;
+<span class="keyword">import</span> { <span class="property">useAutoSave</span> } <span class="keyword">from</span> <span class="string">'../hooks/useAutoSave'</span>;
+<span class="keyword">import</span> { <span class="property">useSEOAnalysis</span> } <span class="keyword">from</span> <span class="string">'../hooks/useSEOAnalysis'</span>;
+
+<span class="keyword">export function</span> <span class="property">CreatePostForm</span>() {
+  <span class="keyword">const</span> [<span class="property">activeTab</span>, <span class="property">setActiveTab</span>] = <span class="property">useState</span>(<span class="string">'content'</span>);
+  <span class="keyword">const</span> [<span class="property">isPublishing</span>, <span class="property">setIsPublishing</span>] = <span class="property">useState</span>(<span class="keyword">false</span>);
+
+  <span class="keyword">const</span> <span class="property">form</span> = <span class="property">useForm</span>&lt;<span class="property">PostFormData</span>&gt;({
+    <span class="property">resolver</span>: <span class="property">zodResolver</span>(<span class="property">postSchema</span>),
+    <span class="property">defaultValues</span>: {
+      <span class="property">title</span>: <span class="string">''</span>,
+      <span class="property">content</span>: <span class="string">''</span>,
+      <span class="property">excerpt</span>: <span class="string">''</span>,
+      <span class="property">slug</span>: <span class="string">''</span>,
+      <span class="property">featuredImage</span>: <span class="keyword">null</span>,
+      <span class="property">seo</span>: {
+        <span class="property">metaTitle</span>: <span class="string">''</span>,
+        <span class="property">metaDescription</span>: <span class="string">''</span>,
+        <span class="property">keywords</span>: [],
+        <span class="property">ogTitle</span>: <span class="string">''</span>,
+        <span class="property">ogDescription</span>: <span class="string">''</span>,
+        <span class="property">canonicalUrl</span>: <span class="string">''</span>
+      }
+    }
+  });
+
+  <span class="comment">// Auto-save functionality</span>
+  <span class="keyword">const</span> { <span class="property">saveStatus</span>, <span class="property">lastSaved</span> } = <span class="property">useAutoSave</span>({
+    <span class="property">data</span>: <span class="property">form</span>.<span class="property">watch</span>(),
+    <span class="property">interval</span>: <span class="number">5000</span>
+  });
+
+  <span class="comment">// SEO analysis</span>
+  <span class="keyword">const</span> { <span class="property">seoScore</span>, <span class="property">seoIssues</span>, <span class="property">seoSuggestions</span> } = <span class="property">useSEOAnalysis</span>({
+    <span class="property">title</span>: <span class="property">form</span>.<span class="property">watch</span>(<span class="string">'title'</span>),
+    <span class="property">content</span>: <span class="property">form</span>.<span class="property">watch</span>(<span class="string">'content'</span>),
+    <span class="property">metaDescription</span>: <span class="property">form</span>.<span class="property">watch</span>(<span class="string">'seo.metaDescription'</span>)
+  });
+
+  <span class="keyword">const</span> <span class="property">onSubmit</span> = <span class="property">useCallback</span>(<span class="keyword">async</span> (<span class="property">data</span>: <span class="property">PostFormData</span>) =&gt; {
+    <span class="property">setIsPublishing</span>(<span class="keyword">true</span>);
+    <span class="keyword">try</span> {
+      <span class="keyword">const</span> <span class="property">response</span> = <span class="keyword">await</span> <span class="property">fetch</span>(<span class="string">'/api/posts'</span>, {
+        <span class="property">method</span>: <span class="string">'POST'</span>,
+        <span class="property">headers</span>: { <span class="string">'Content-Type'</span>: <span class="string">'application/json'</span> },
+        <span class="property">body</span>: <span class="property">JSON</span>.<span class="property">stringify</span>(<span class="property">data</span>)
+      });
+      
+      <span class="keyword">if</span> (<span class="property">response</span>.<span class="property">ok</span>) {
+        <span class="comment">// Handle success - redirect or show success message</span>
+        <span class="keyword">const</span> <span class="property">post</span> = <span class="keyword">await</span> <span class="property">response</span>.<span class="property">json</span>();
+        <span class="property">router</span>.<span class="property">push</span>(`/dashboard/editor/posts/${<span class="property">post</span>.<span class="property">id</span>}`);
+      }
+    } <span class="keyword">catch</span> (<span class="property">error</span>) {
+      <span class="property">console</span>.<span class="property">error</span>(<span class="string">'Failed to publish post:'</span>, <span class="property">error</span>);
+    } <span class="keyword">finally</span> {
+      <span class="property">setIsPublishing</span>(<span class="keyword">false</span>);
+    }
+  }, []);
+
+  <span class="keyword">return</span> (
+    <span class="comment">// JSX for the form layout goes here...</span>
+  );
+}
+                </div>
+            </div>
+        </section>
 
             <h3 class="subsection-title">Custom Plugins & Extensions</h3>
             <div class="component-example">

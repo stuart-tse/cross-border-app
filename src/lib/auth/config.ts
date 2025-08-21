@@ -221,9 +221,10 @@ export const authConfig: NextAuthConfig = {
       // Log successful sign-in for security audit
       console.log(`User ${user.email} signed in via ${account?.provider}`);
     },
-    async signOut({ token, session }) {
-      // Log sign-out for security audit
-      console.log(`User ${session?.user?.email || token?.email} signed out`);
+    async signOut(params: any) {
+      // Log sign-out for security audit  
+      const email = params?.token?.email || params?.session?.user?.email || 'unknown user';
+      console.log(`User ${email} signed out`);
     },
   },
   // Security settings

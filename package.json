@@ -22,6 +22,11 @@
   "dependencies": {
     "@amap/amap-jsapi-loader": "^1.0.1",
     "@auth/prisma-adapter": "^2.10.0",
+    "@ckeditor/ckeditor5-build-classic": "^41.4.2",
+    "@ckeditor/ckeditor5-image": "^46.0.2",
+    "@ckeditor/ckeditor5-link": "^46.0.2",
+    "@ckeditor/ckeditor5-react": "^11.0.0",
+    "@ckeditor/ckeditor5-upload": "^46.0.2",
     "@googlemaps/js-api-loader": "^1.16.8",
     "@hookform/resolvers": "^3.10.0",
     "@prisma/client": "^6.14.0",
@@ -65,6 +70,7 @@
     "zod": "^4.0.17"
   },
   "devDependencies": {
+    "@playwright/test": "^1.55.0",
     "@tailwindcss/forms": "^0.5.9",
     "@tailwindcss/typography": "^0.5.15",
     "@testing-library/jest-dom": "^6.6.3",

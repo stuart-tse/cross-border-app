@@ -6,7 +6,7 @@ import { UserType, VehicleType } from '@prisma/client';
 // GET /api/drivers/vehicles/[id] - Get a specific vehicle
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth();
@@ -14,6 +14,9 @@ export async function GET(
     if (!session?.user?.email) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    // Await params in Next.js 15
+    const { id } = await params;
 
     // Check if user is a driver
     const user = await prisma.user.findUnique({
@@ -35,7 +38,7 @@ export async function GET(
     // Get the specific vehicle
     const vehicle = await prisma.vehicle.findUnique({
       where: {
-        id: params.id,
+        id: id,
         driverId: user.driverProfile.id, // Ensure driver owns this vehicle
       },
       include: {
@@ -78,7 +81,7 @@ export async function GET(
 // PUT /api/drivers/vehicles/[id] - Update a vehicle
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth();
@@ -86,6 +89,9 @@ export async function PUT(
     if (!session?.user?.email) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    // Await params in Next.js 15
+    const { id } = await params;
 
     // Check if user is a driver
     const user = await prisma.user.findUnique({
@@ -107,7 +113,7 @@ export async function PUT(
     // Check if vehicle exists and belongs to driver
     const existingVehicle = await prisma.vehicle.findUnique({
       where: {
-        id: params.id,
+        id: id,
         driverId: user.driverProfile.id,
       },
     });
@@ -194,7 +200,7 @@ export async function PUT(
 
     // Update the vehicle
     const vehicle = await prisma.vehicle.update({
-      where: { id: params.id },
+      where: { id: id },
       data: updateData,
       include: {
         permits: true,
@@ -215,7 +221,7 @@ export async function PUT(
 // DELETE /api/drivers/vehicles/[id] - Delete a vehicle
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth();
@@ -223,6 +229,9 @@ export async function DELETE(
     if (!session?.user?.email) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    // Await params in Next.js 15
+    const { id } = await params;
 
     // Check if user is a driver
     const user = await prisma.user.findUnique({
@@ -244,7 +253,7 @@ export async function DELETE(
     // Check if vehicle exists and belongs to driver
     const vehicle = await prisma.vehicle.findUnique({
       where: {
-        id: params.id,
+        id: id,
         driverId: user.driverProfile.id,
       },
       include: {
@@ -271,7 +280,7 @@ export async function DELETE(
 
     // Delete the vehicle (this will cascade delete permits and licenses)
     await prisma.vehicle.delete({
-      where: { id: params.id },
+      where: { id: id },
     });
 
     return NextResponse.json({
