@@ -25,7 +25,8 @@
       "mcp__playwright__browser_type",
       "mcp__playwright__browser_close",
       "mcp__playwright__browser_console_messages",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(node:*)"
     ],
     "deny": [],
     "ask": []

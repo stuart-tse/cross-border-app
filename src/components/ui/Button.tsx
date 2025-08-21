@@ -12,6 +12,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   rightIcon?: React.ReactNode;
   fullWidth?: boolean;
   asMotion?: boolean;
+  asChild?: boolean;
   children?: React.ReactNode;
 }
 
@@ -24,6 +25,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     rightIcon,
     fullWidth = false,
     asMotion = false,
+    asChild = false,
     children,
     className,
     disabled,
@@ -58,6 +60,25 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       sizeClasses[size],
       className
     );
+
+    // Handle asChild prop - clone the child element and apply button styles
+    if (asChild && React.isValidElement(children)) {
+      return React.cloneElement(children, {
+        className: cn(buttonClasses, children.props.className),
+        ref,
+        ...props,
+        ...children.props,
+        // Override any conflicting props from the original component
+        onClick: (e: React.MouseEvent) => {
+          if (children.props && 'onClick' in children.props && children.props.onClick) {
+            children.props.onClick(e);
+          }
+          if (props.onClick) {
+            props.onClick(e);
+          }
+        },
+      });
+    }
 
     const content = (
       <>

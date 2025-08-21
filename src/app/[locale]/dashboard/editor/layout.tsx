@@ -18,7 +18,8 @@ const EditorLayout: React.FC<EditorLayoutProps> = ({ children }) => {
   const { user } = useAuth();
   const pathname = usePathname();
   const params = useParams();
-  const locale = params?.locale as string || 'en';
+  // Safely extract locale from params (Next.js 15 compatibility)
+  const locale = (params?.locale as string) || 'en';
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   const navigationItems = [

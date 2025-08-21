@@ -141,6 +141,7 @@ app/
 5. **Configure proper caching** strategies
 6. **Enable Partial Prerendering** (experimental) when stable
 7. **Monitor Core Web Vitals**
+8. **Always break large components to smaller components** to easy management 
 
 ## Testing Approach
 
