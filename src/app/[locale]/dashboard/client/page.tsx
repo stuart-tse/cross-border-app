@@ -6,7 +6,8 @@ import { useAuth, withAuth } from '@/lib/context/AuthContext';
 import { UserType } from '@prisma/client';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import { Input, Select } from '@/components/ui/Input';
+import { Input } from '@/components/ui/Input';
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { LiveChatSupport } from '@/components/client/LiveChatSupport';
@@ -205,18 +206,42 @@ const ClientDashboard: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-              <Select
-                label="From"
-                options={locationOptions}
-                value={quickBookingData.from}
-                onChange={(e) => setQuickBookingData({ ...quickBookingData, from: e.target.value })}
-              />
-              <Select
-                label="To"
-                options={locationOptions}
-                value={quickBookingData.to}
-                onChange={(e) => setQuickBookingData({ ...quickBookingData, to: e.target.value })}
-              />
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-charcoal">From</label>
+                <Select
+                  value={quickBookingData.from}
+                  onValueChange={(value) => setQuickBookingData({ ...quickBookingData, from: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select departure" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {locationOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-charcoal">To</label>
+                <Select
+                  value={quickBookingData.to}
+                  onValueChange={(value) => setQuickBookingData({ ...quickBookingData, to: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select destination" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {locationOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
               <Input
                 label="Date"
                 type="date"

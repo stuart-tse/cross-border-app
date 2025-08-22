@@ -7,8 +7,8 @@ import { UserType } from '@prisma/client';
 
 // Client Component for fetching initial data
 function DriverDashboard() {
-  const [driverData, setDriverData] = useState(null);
-  const [tripRequests, setTripRequests] = useState([]);
+  const [driverData, setDriverData] = useState<any>(null);
+  const [tripRequests, setTripRequests] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

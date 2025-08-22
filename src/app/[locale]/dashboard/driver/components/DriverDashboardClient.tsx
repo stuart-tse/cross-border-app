@@ -688,17 +688,17 @@ export default function DriverDashboardClient({
                       {/* Availability Status */}
                       <div className={cn(
                         'rounded-lg p-4 text-white',
-                        optimisticOnlineStatus ? 'bg-gradient-to-r from-success-green to-green-600' : 'bg-gradient-to-r from-gray-500 to-gray-600'
+                        isOnline ? 'bg-gradient-to-r from-success-green to-green-600' : 'bg-gradient-to-r from-gray-500 to-gray-600'
                       )}>
                         <div className="flex items-center justify-between">
                           <div>
                             <h4 className="text-title-md font-semibold mb-1">Current Status</h4>
-                            <div className="text-body-md">{optimisticOnlineStatus ? 'Online and available for trips' : 'Currently offline'}</div>
+                            <div className="text-body-md">{isOnline ? 'Online and available for trips' : 'Currently offline'}</div>
                           </div>
                           <label className="relative inline-flex items-center cursor-pointer">
                             <input 
                               type="checkbox" 
-                              checked={optimisticOnlineStatus}
+                              checked={isOnline}
                               onChange={handleToggleOnline}
                               className="sr-only peer"
                             />
@@ -882,7 +882,7 @@ export default function DriverDashboardClient({
                               <div className="text-body-md font-medium">Delete account</div>
                               <div className="text-body-sm text-gray-600">Permanently delete your account</div>
                             </div>
-                            <Button variant="destructive" size="sm">Delete</Button>
+                            <Button variant="danger" size="sm">Delete</Button>
                           </div>
                         </div>
                       </div>

@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth, withAuth } from '@/lib/context/AuthContext';
 import { UserType } from '@prisma/client';
 import Link from 'next/link';
-import { ArrowLeft, Bell, Shield, Eye, Globe, Moon, Sun, Smartphone, Mail } from 'lucide-react';
+import { ArrowLeft, Bell, Shield, Eye, Globe, Moon, Sun, Smartphone, Mail, Settings } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -320,7 +320,7 @@ const ProfileSettingsPage: React.FC = () => {
                   <div className="flex items-center justify-between mb-3">
                     <div>
                       <div className="font-medium text-charcoal">Quiet Hours</div>
-                      <div className="text-sm text-gray-600">Don't disturb during these hours</div>
+                      <div className="text-sm text-gray-600">Don&apos;t disturb during these hours</div>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
                       <input
@@ -666,7 +666,7 @@ const ProfileSettingsPage: React.FC = () => {
                       <span className="text-warning-amber text-xl">⚠️</span>
                       <div>
                         <h4 className="text-sm font-medium text-warning-amber">Unsaved Changes</h4>
-                        <p className="text-xs text-gray-600">You have unsaved changes. Don't forget to save them.</p>
+                        <p className="text-xs text-gray-600">You have unsaved changes. Don&apos;t forget to save them.</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">

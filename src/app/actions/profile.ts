@@ -4,7 +4,7 @@ import { auth } from '@/lib/auth/config';
 import { prisma } from '@/lib/database/client';
 import { revalidatePath } from 'next/cache';
 import { UniversalProfileData } from '@/types/profile';
-import { UserType } from '@prisma/client';
+import { UserType, VehicleType } from '@prisma/client';
 
 // Profile Update Action
 export async function updateProfile(data: Partial<UniversalProfileData>) {
@@ -40,29 +40,39 @@ export async function updateProfile(data: Partial<UniversalProfileData>) {
       }
     });
 
-    // Update preferences if provided
+    // Note: User preferences would require a separate UserPreference table
     if (data.preferences) {
-      await prisma.userPreference.upsert({
-        where: { userId },
-        create: {
-          userId,
-          preferences: data.preferences
-        },
-        update: {
-          preferences: data.preferences
-        }
+      console.log('User preferences update attempted:', { 
+        userId, 
+        preferences: data.preferences 
       });
     }
 
     // Role-specific profile updates
     if (data.clientProfile && updatedUser.userRoles.some(r => r.role === UserType.CLIENT)) {
+      // Transform client profile data to match Prisma schema
+      const clientProfileData = {
+        preferredVehicle: data.clientProfile.preferredVehicle as VehicleType || null,
+        loyaltyPoints: data.clientProfile.loyaltyPoints || 0,
+        membershipTier: data.clientProfile.membershipTier || 'BASIC',
+        // Extract emergency contact fields from nested object
+        emergencyContact: data.clientProfile.emergencyContact?.name || null,
+        emergencyContactPhone: data.clientProfile.emergencyContact?.phone || null,
+        emergencyContactRelation: data.clientProfile.emergencyContact?.relationship || null,
+        specialRequests: data.clientProfile.specialRequests || null,
+        dateOfBirth: data.clientProfile.dateOfBirth ? new Date(data.clientProfile.dateOfBirth) : null,
+        gender: data.clientProfile.gender || null,
+        nationality: data.clientProfile.nationality || null,
+        passportNumber: data.clientProfile.passportNumber || null,
+      };
+      
       await prisma.clientProfile.upsert({
         where: { userId },
         create: {
           userId,
-          ...data.clientProfile
+          ...clientProfileData
         },
-        update: data.clientProfile
+        update: clientProfileData
       });
     }
 

@@ -130,7 +130,7 @@ export async function createPostAction(
   } catch (error) {
     if (error instanceof z.ZodError) {
       const errors: { [key: string]: string[] } = {};
-      error.errors.forEach((err) => {
+      error.issues.forEach((err) => {
         const path = err.path.join('.');
         if (!errors[path]) {
           errors[path] = [];

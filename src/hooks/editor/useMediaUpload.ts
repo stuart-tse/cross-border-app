@@ -44,7 +44,7 @@ export const useMediaUpload = ({
           const altTextSuggestion = await generateAiAltText(file.name, result.url);
           setAiAltTextSuggestions(prev => ({
             ...prev,
-            [result.url]: altTextSuggestion
+            [result.url as string]: altTextSuggestion
           }));
           
           const newMediaItem: MediaItem = {

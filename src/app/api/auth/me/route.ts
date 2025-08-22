@@ -36,41 +36,30 @@ interface UserProfileResponse {
   blogEditorProfile?: any;
 }
 
-// Get current user info
+// DEPRECATED: Get current user info
+// This endpoint is deprecated. Use NextAuth session directly on client-side.
 export async function GET(request: NextRequest): Promise<NextResponse<APIResponse<UserProfileResponse>>> {
   const startTime = Date.now();
   const requestId = `req_${startTime}_${Math.random().toString(36).substr(2, 9)}`;
+  
+  console.warn('⚠️ DEPRECATED: /api/auth/me endpoint is deprecated. Use NextAuth useSession() hook instead.');
 
   try {
-    // Use NextAuth session from the session endpoint
-    const sessionResponse = await fetch(`${request.nextUrl.origin}/api/auth/session`, {
-      headers: {
-        cookie: request.headers.get('cookie') || '',
-      },
-    });
-    
-    const session = await sessionResponse.json();
+    // Use NextAuth v5 auth function directly
+    const session = await auth();
     
     if (!session?.user) {
-      // Clear potentially invalid auth cookies
-      const response = NextResponse.json({
+      return NextResponse.json({
         success: false,
         error: {
           code: 'NOT_AUTHENTICATED',
-          message: 'No valid authentication found',
+          message: 'No valid NextAuth session found',
         },
         meta: {
           timestamp: new Date().toISOString(),
           requestId,
         },
       }, { status: 401 });
-      
-      // Clear invalid cookies
-      response.cookies.delete('auth-token');
-      response.cookies.delete('refresh-token');
-      response.cookies.delete('selected-role');
-      
-      return response;
     }
 
     // Get fresh user data from database
@@ -80,7 +69,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<APIRespons
         success: false,
         error: {
           code: 'USER_NOT_FOUND',
-          message: 'User not found',
+          message: 'User not found in database',
         },
         meta: {
           timestamp: new Date().toISOString(),
@@ -105,6 +94,8 @@ export async function GET(request: NextRequest): Promise<NextResponse<APIRespons
       meta: {
         timestamp: new Date().toISOString(),
         requestId,
+        deprecated: true,
+        message: 'This endpoint is deprecated. Use NextAuth useSession() hook instead.'
       },
     }, { status: 200 });
 
@@ -287,7 +278,7 @@ export async function PUT(request: NextRequest): Promise<NextResponse<APIRespons
     }
 
     // Get user with password
-    const userWithPassword = await findUserByEmail(user.email);
+    const userWithPassword = await findUserByEmail(session.user.email!);
     if (!userWithPassword || !userWithPassword.passwords.length) {
       return NextResponse.json({
         success: false,
@@ -354,7 +345,7 @@ export async function PUT(request: NextRequest): Promise<NextResponse<APIRespons
 
     // Update user timestamp
     await prisma.user.update({
-      where: { id: user.id },
+      where: { id: session.user.id },
       data: { updatedAt: new Date() },
     });
 
@@ -428,7 +419,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse<APIResp
     }
 
     // Get user with password
-    const userWithPassword = await findUserByEmail(user.email);
+    const userWithPassword = await findUserByEmail(session.user.email!);
     if (!userWithPassword || !userWithPassword.passwords.length) {
       return NextResponse.json({
         success: false,
@@ -461,17 +452,17 @@ export async function DELETE(request: NextRequest): Promise<NextResponse<APIResp
 
     // Soft delete user account
     await prisma.user.update({
-      where: { id: user.id },
+      where: { id: session.user.id },
       data: {
         isActive: false,
-        email: `deleted_${Date.now()}_${user.email}`, // Prevent email conflicts
+        email: `deleted_${Date.now()}_${session.user.email}`, // Prevent email conflicts
         updatedAt: new Date(),
       },
     });
 
     // Deactivate all user roles
     await prisma.userRole.updateMany({
-      where: { userId: user.id },
+      where: { userId: session.user.id },
       data: { isActive: false },
     });
 

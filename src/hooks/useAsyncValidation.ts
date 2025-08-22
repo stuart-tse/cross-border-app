@@ -44,8 +44,8 @@ export function useAsyncValidation(
   const [message, setMessage] = useState<string | null>(null);
   const [lastValidatedValue, setLastValidatedValue] = useState<any>(null);
   
-  const timeoutRef = useRef<NodeJS.Timeout>();
-  const validationCounterRef = useRef(0);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const validationCounterRef = useRef<number>(0);
 
   // Reset state
   const reset = useCallback(() => {

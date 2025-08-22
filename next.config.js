@@ -2,6 +2,21 @@ const withNextIntl = require('next-intl/plugin')('./src/i18n.ts');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Server external packages for Next.js 15
+  serverExternalPackages: ['jsonwebtoken', 'bcryptjs'],
+  
+  // Server-side configuration
+  serverRuntimeConfig: {
+    // Private config that's only available on the server side
+    JWT_SECRET: process.env.JWT_SECRET,
+    JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET,
+  },
+  
+  // Public runtime configuration
+  publicRuntimeConfig: {
+    // Available on both server and client
+    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+  },
   // Disable Turbo temporarily to fix runtime issues
   // experimental: {
   //   turbo: {
@@ -130,6 +145,22 @@ const nextConfig = {
 
   // Webpack optimizations
   webpack: (config, { isServer, dev }) => {
+    // Handle Node.js modules that don't work in Edge Runtime
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        crypto: false,
+        stream: false,
+        buffer: false,
+        process: false,
+      };
+    }
+    
+    // External packages that should not be bundled
+    config.externals = config.externals || [];
+    if (isServer) {
+      config.externals.push('jsonwebtoken', 'bcryptjs');
+    }
     // Optimize bundle size
     if (!dev && !isServer) {
       config.optimization.splitChunks = {

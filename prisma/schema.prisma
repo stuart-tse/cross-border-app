@@ -648,6 +648,307 @@ model TripAnalytics {
   @@map("trip_analytics")
 }
 
+// Content Management System
+model ContentItem {
+  id            String          @id @default(cuid())
+  key           String          @unique // Unique identifier for the content
+  type          ContentType
+  category      String?         // Group related content
+  
+  // Content data
+  title         String
+  content       String?         @db.Text
+  metadata      Json?           // Additional structured data
+  
+  // Localization
+  locale        String          @default("en")
+  
+  // Status
+  isActive      Boolean         @default(true)
+  sortOrder     Int?            @default(0)
+  
+  // SEO
+  slug          String?
+  metaTitle     String?
+  metaDescription String?
+  
+  // Audit
+  createdBy     String
+  updatedBy     String
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  // Relations
+  translations  ContentTranslation[]
+  
+  @@unique([key, locale])
+  @@map("content_items")
+}
+
+// Content Translations
+model ContentTranslation {
+  id              String      @id @default(cuid())
+  contentId       String
+  locale          String
+  title           String
+  content         String?     @db.Text
+  metadata        Json?
+  
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  contentItem     ContentItem @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  
+  @@unique([contentId, locale])
+  @@map("content_translations")
+}
+
+// Dynamic Lists (Vehicle features, equipment, etc.)
+model ListItem {
+  id            String      @id @default(cuid())
+  listType      ListType
+  key           String      // Unique key within the list type
+  label         String      // Display label
+  value         String?     // Optional value (if different from key)
+  description   String?
+  icon          String?     // Icon name or URL
+  color         String?     // Color code for styling
+  
+  // Hierarchy support
+  parentId      String?
+  sortOrder     Int         @default(0)
+  
+  // Status
+  isActive      Boolean     @default(true)
+  isDefault     Boolean     @default(false)
+  
+  // Localization
+  locale        String      @default("en")
+  
+  // Metadata
+  metadata      Json?
+  
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  // Self-referencing for hierarchy
+  parent        ListItem?   @relation("ListItemHierarchy", fields: [parentId], references: [id])
+  children      ListItem[]  @relation("ListItemHierarchy")
+  
+  @@unique([listType, key, locale])
+  @@map("list_items")
+}
+
+// Application Settings
+model AppSetting {
+  id            String      @id @default(cuid())
+  section       String      // e.g., 'pricing', 'features', 'general'
+  key           String      // Setting key
+  value         String      @db.Text // JSON string for complex values
+  type          SettingType // Type of the setting value
+  description   String?
+  
+  // Validation
+  validation    Json?       // Validation rules
+  
+  // Environment
+  environment   String      @default("production") // production, staging, development
+  
+  // Status
+  isActive      Boolean     @default(true)
+  isEncrypted   Boolean     @default(false) // For sensitive data
+  
+  // Audit
+  createdBy     String
+  updatedBy     String
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@unique([section, key, environment])
+  @@map("app_settings")
+}
+
+// Pricing Rules
+model PricingRule {
+  id              String        @id @default(cuid())
+  name            String
+  description     String?
+  ruleType        PricingRuleType
+  
+  // Rule conditions
+  conditions      Json          // Complex conditions as JSON
+  
+  // Pricing logic
+  basePrice       Float?
+  multiplier      Float?        @default(1.0)
+  fixedAmount     Float?
+  percentage      Float?
+  
+  // Validity
+  validFrom       DateTime
+  validTo         DateTime?
+  
+  // Geographic scope
+  fromLocations   String[]      @default([])
+  toLocations     String[]      @default([])
+  
+  // Vehicle and service restrictions
+  vehicleTypes    VehicleType[] @default([])
+  
+  // Priority and stacking
+  priority        Int           @default(0)
+  canStack        Boolean       @default(false)
+  
+  // Status
+  isActive        Boolean       @default(true)
+  
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@map("pricing_rules")
+}
+
+// Locations and Routes
+model Location {
+  id              String      @id @default(cuid())
+  name            String
+  type            LocationType
+  
+  // Geographic data
+  address         String?
+  city            String
+  state           String?
+  country         String
+  postalCode      String?
+  latitude        Float?
+  longitude       Float?
+  
+  // Hierarchy
+  parentId        String?
+  
+  // Border crossing info
+  isBorderCrossing Boolean     @default(false)
+  borderInfo      Json?       // Crossing requirements, hours, etc.
+  
+  // Service availability
+  isActive        Boolean     @default(true)
+  serviceTypes    String[]    @default([]) // Types of services available
+  
+  // Metadata
+  description     String?
+  timezone        String?
+  metadata        Json?
+  
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  // Relations
+  parent          Location?   @relation("LocationHierarchy", fields: [parentId], references: [id])
+  children        Location[]  @relation("LocationHierarchy")
+  
+  // Route connections
+  routesFrom      Route[]     @relation("RouteFrom")
+  routesTo        Route[]     @relation("RouteTo")
+  
+  @@map("locations")
+}
+
+// Predefined Routes
+model Route {
+  id              String      @id @default(cuid())
+  name            String
+  description     String?
+  
+  // Route points
+  fromLocationId  String
+  toLocationId    String
+  
+  // Route details
+  distance        Float       // in kilometers
+  estimatedTime   Int         // in minutes
+  routeType       RouteType
+  
+  // Border crossing
+  hasBorderCrossing Boolean   @default(false)
+  crossingPoints  Json?       // Border crossing details
+  
+  // Pricing
+  basePrice       Float?
+  currency        String      @default("HKD")
+  
+  // Service options
+  availableVehicleTypes VehicleType[] @default([])
+  
+  // Status
+  isActive        Boolean     @default(true)
+  isPopular       Boolean     @default(false)
+  
+  // Schedule
+  operatingHours  Json?       // Operating hours by day
+  
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  // Relations
+  fromLocation    Location    @relation("RouteFrom", fields: [fromLocationId], references: [id])
+  toLocation      Location    @relation("RouteTo", fields: [toLocationId], references: [id])
+  
+  @@unique([fromLocationId, toLocationId])
+  @@map("routes")
+}
+
+// Feature Flags
+model FeatureFlag {
+  id              String          @id @default(cuid())
+  name            String          @unique
+  description     String?
+  
+  // Flag configuration
+  isEnabled       Boolean         @default(false)
+  rolloutPercentage Float         @default(0) // 0-100
+  
+  // Targeting
+  userTypes       UserType[]      @default([])
+  environments    String[]        @default(["production"])
+  
+  // Conditions
+  conditions      Json?           // Complex targeting conditions
+  
+  // Metadata
+  metadata        Json?
+  
+  createdBy       String
+  updatedBy       String
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@map("feature_flags")
+}
+
+// Audit Log
+model AuditLog {
+  id              String      @id @default(cuid())
+  userId          String?
+  action          String      // CREATE, UPDATE, DELETE, LOGIN, etc.
+  entity          String      // Table/model name
+  entityId        String?     // ID of the affected record
+  
+  // Change details
+  oldValues       Json?       // Previous values
+  newValues       Json?       // New values
+  
+  // Request context
+  ipAddress       String?
+  userAgent       String?
+  
+  // Additional metadata
+  metadata        Json?
+  
+  createdAt       DateTime    @default(now())
+
+  @@map("audit_logs")
+}
+
 // Enums
 enum UserType {
   CLIENT
@@ -809,4 +1110,81 @@ enum DocumentStatus {
   REVOKED
   PENDING_RENEWAL
   UNDER_REVIEW
+}
+
+// New enums for content management
+enum ContentType {
+  TEXT
+  HTML
+  MARKDOWN
+  JSON
+  LIST
+  SETTING
+  PAGE_CONTENT
+  EMAIL_TEMPLATE
+  NOTIFICATION_TEMPLATE
+}
+
+enum ListType {
+  VEHICLE_FEATURES
+  SPECIAL_EQUIPMENT
+  COLORS
+  FUEL_TYPES
+  VEHICLE_MAKES
+  VEHICLE_MODELS
+  COUNTRIES
+  CITIES
+  LANGUAGES
+  CURRENCIES
+  DOCUMENT_TYPES
+  NOTIFICATION_TYPES
+  SUPPORT_CATEGORIES
+  PAYMENT_METHODS
+}
+
+enum SettingType {
+  STRING
+  NUMBER
+  BOOLEAN
+  JSON
+  EMAIL
+  URL
+  PASSWORD
+  TEXT
+}
+
+enum PricingRuleType {
+  BASE_PRICE
+  DISTANCE_MULTIPLIER
+  TIME_SURCHARGE
+  BORDER_FEE
+  PEAK_HOUR_SURCHARGE
+  VEHICLE_TYPE_SURCHARGE
+  SEASONAL_ADJUSTMENT
+  DISCOUNT
+  PROMOTION
+}
+
+enum LocationType {
+  COUNTRY
+  STATE
+  CITY
+  DISTRICT
+  AIRPORT
+  HOTEL
+  LANDMARK
+  BORDER_CROSSING
+  CUSTOMS
+  PICKUP_POINT
+  DROPOFF_POINT
+}
+
+enum RouteType {
+  DOMESTIC
+  CROSS_BORDER
+  INTERNATIONAL
+  AIRPORT_TRANSFER
+  CITY_TO_CITY
+  TOURIST
+  BUSINESS
 }

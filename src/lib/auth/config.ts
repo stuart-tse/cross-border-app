@@ -1,15 +1,19 @@
 import NextAuth, { NextAuthConfig } from 'next-auth';
+
+// Force Node.js runtime for auth configuration
+export const runtime = 'nodejs';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import Google from 'next-auth/providers/google';
 import Credentials from 'next-auth/providers/credentials';
 import { prisma } from '@/lib/database/client';
 import { UserType } from '@prisma/client';
+// Import only the database-related functions we need
+// DO NOT import bcrypt/jwt functions here as they break Edge Runtime
 import { 
-  verifyPassword, 
-  findUserByEmail, 
+  findUserByEmail,
   sanitizeUserData,
   getActiveRoles 
-} from './utils';
+} from './node-utils';
 
 export const authConfig: NextAuthConfig = {
   adapter: PrismaAdapter(prisma),
@@ -36,8 +40,9 @@ export const authConfig: NextAuthConfig = {
           return null;
         }
 
-        // Verify password
-        const isPasswordValid = await verifyPassword(
+        // Verify password using bcrypt directly to avoid Edge Runtime issues
+        const bcrypt = await import('bcryptjs');
+        const isPasswordValid = await bcrypt.compare(
           credentials.password as string,
           user.passwords[0].hash
         );
@@ -206,10 +211,24 @@ export const authConfig: NextAuthConfig = {
       return true;
     },
     async redirect({ url, baseUrl }) {
-      // Redirect to dashboard after login based on role
-      if (url.startsWith('/')) return `${baseUrl}${url}`;
-      else if (new URL(url).origin === baseUrl) return url;
-      return `${baseUrl}/dashboard`;
+      // Handle relative URLs
+      if (url.startsWith('/')) {
+        // If it already includes a locale, return as-is
+        if (url.match(/^\/(en|zh-CN)\//)) {
+          return `${baseUrl}${url}`;
+        }
+        // If it's a dashboard route without locale, add default locale
+        if (url.startsWith('/dashboard')) {
+          return `${baseUrl}/en${url}`;
+        }
+        return `${baseUrl}${url}`;
+      }
+      // Handle absolute URLs from the same origin
+      else if (new URL(url).origin === baseUrl) {
+        return url;
+      }
+      // Default fallback to dashboard with locale
+      return `${baseUrl}/en/dashboard`;
     },
   },
   pages: {

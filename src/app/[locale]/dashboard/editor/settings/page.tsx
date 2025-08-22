@@ -4,7 +4,7 @@ import React, { useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth, withAuth } from '@/lib/context/AuthContext';
 import { UserType } from '@prisma/client';
-import { Card, CardHeader, CardContent } from '@/components/ui/Card';
+import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { cn } from '@/lib/utils';
@@ -179,7 +179,7 @@ const EditorSettingsPage: React.FC = () => {
       ...prev,
       [category]: {
         ...prev[category],
-        [nested]: { ...prev[category][nested], [field]: value }
+        [nested]: { ...(prev[category] as any)[nested], [field]: value }
       }
     }));
     setHasChanges(true);
@@ -313,10 +313,10 @@ const EditorSettingsPage: React.FC = () => {
           {activeTab === 'general' && (
             <>
               <Card>
-                <CardHeader>
+                <div>
                   <h3 className="text-title-lg font-semibold">Site Information</h3>
-                </CardHeader>
-                <CardContent className="space-y-4">
+                </div>
+                <div className="space-y-4">
                   <div>
                     <label className="block text-body-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
                       Site Name
@@ -366,14 +366,14 @@ const EditorSettingsPage: React.FC = () => {
                       max="50"
                     />
                   </div>
-                </CardContent>
+                </div>
               </Card>
 
               <Card>
-                <CardHeader>
+                <div>
                   <h3 className="text-title-lg font-semibold">Comment Settings</h3>
-                </CardHeader>
-                <CardContent className="space-y-4">
+                </div>
+                <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
                       <label className="text-body-md text-charcoal dark:text-white font-medium">
@@ -435,7 +435,7 @@ const EditorSettingsPage: React.FC = () => {
                       <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-hot-pink/20 dark:peer-focus:ring-hot-pink/30 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-hot-pink peer-disabled:opacity-50"></div>
                     </label>
                   </div>
-                </CardContent>
+                </div>
               </Card>
             </>
           )}
@@ -444,10 +444,10 @@ const EditorSettingsPage: React.FC = () => {
           {activeTab === 'publishing' && (
             <>
               <Card>
-                <CardHeader>
+                <div>
                   <h3 className="text-title-lg font-semibold">Default Publishing Options</h3>
-                </CardHeader>
-                <CardContent className="space-y-4">
+                </div>
+                <div className="space-y-4">
                   <div>
                     <label className="block text-body-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
                       Default Status
@@ -486,14 +486,14 @@ const EditorSettingsPage: React.FC = () => {
                       max="10000"
                     />
                   </div>
-                </CardContent>
+                </div>
               </Card>
 
               <Card>
-                <CardHeader>
+                <div>
                   <h3 className="text-title-lg font-semibold">Publishing Workflow</h3>
-                </CardHeader>
-                <CardContent className="space-y-4">
+                </div>
+                <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
                       <label className="text-body-md text-charcoal dark:text-white font-medium">
@@ -553,7 +553,7 @@ const EditorSettingsPage: React.FC = () => {
                       <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-hot-pink/20 dark:peer-focus:ring-hot-pink/30 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-hot-pink"></div>
                     </label>
                   </div>
-                </CardContent>
+                </div>
               </Card>
             </>
           )}
@@ -562,10 +562,10 @@ const EditorSettingsPage: React.FC = () => {
           {activeTab === 'media' && (
             <>
               <Card>
-                <CardHeader>
+                <div>
                   <h3 className="text-title-lg font-semibold">File Upload Settings</h3>
-                </CardHeader>
-                <CardContent className="space-y-4">
+                </div>
+                <div className="space-y-4">
                   <div>
                     <label className="block text-body-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
                       Max File Size (MB)
@@ -620,14 +620,14 @@ const EditorSettingsPage: React.FC = () => {
                       </span>
                     </div>
                   </div>
-                </CardContent>
+                </div>
               </Card>
 
               <Card>
-                <CardHeader>
+                <div>
                   <h3 className="text-title-lg font-semibold">Media Processing</h3>
-                </CardHeader>
-                <CardContent className="space-y-4">
+                </div>
+                <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
                       <label className="text-body-md text-charcoal dark:text-white font-medium">
@@ -687,7 +687,7 @@ const EditorSettingsPage: React.FC = () => {
                       <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-hot-pink/20 dark:peer-focus:ring-hot-pink/30 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-hot-pink"></div>
                     </label>
                   </div>
-                </CardContent>
+                </div>
               </Card>
             </>
           )}
@@ -696,10 +696,10 @@ const EditorSettingsPage: React.FC = () => {
           {activeTab === 'seo' && (
             <>
               <Card>
-                <CardHeader>
+                <div>
                   <h3 className="text-title-lg font-semibold">Meta Information</h3>
-                </CardHeader>
-                <CardContent className="space-y-4">
+                </div>
+                <div className="space-y-4">
                   <div>
                     <label className="block text-body-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
                       Meta Title
@@ -762,14 +762,14 @@ const EditorSettingsPage: React.FC = () => {
                       }}
                     />
                   </div>
-                </CardContent>
+                </div>
               </Card>
 
               <Card>
-                <CardHeader>
+                <div>
                   <h3 className="text-title-lg font-semibold">Analytics & Tracking</h3>
-                </CardHeader>
-                <CardContent className="space-y-4">
+                </div>
+                <div className="space-y-4">
                   <div>
                     <label className="block text-body-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
                       Google Analytics ID
@@ -822,7 +822,7 @@ const EditorSettingsPage: React.FC = () => {
                       <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-hot-pink/20 dark:peer-focus:ring-hot-pink/30 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-hot-pink"></div>
                     </label>
                   </div>
-                </CardContent>
+                </div>
               </Card>
             </>
           )}
@@ -831,10 +831,10 @@ const EditorSettingsPage: React.FC = () => {
           {activeTab === 'integrations' && (
             <>
               <Card>
-                <CardHeader>
+                <div>
                   <h3 className="text-title-lg font-semibold">Social Media</h3>
-                </CardHeader>
-                <CardContent className="space-y-4">
+                </div>
+                <div className="space-y-4">
                   {Object.entries(settings.integrations.socialMedia).map(([platform, url]) => (
                     <div key={platform}>
                       <label className="block text-body-sm font-medium text-gray-600 dark:text-gray-400 mb-1 capitalize">
@@ -847,14 +847,14 @@ const EditorSettingsPage: React.FC = () => {
                       />
                     </div>
                   ))}
-                </CardContent>
+                </div>
               </Card>
 
               <Card>
-                <CardHeader>
+                <div>
                   <h3 className="text-title-lg font-semibold">Newsletter & Backup</h3>
-                </CardHeader>
-                <CardContent className="space-y-4">
+                </div>
+                <div className="space-y-4">
                   <div>
                     <label className="block text-body-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
                       Newsletter Provider
@@ -904,7 +904,7 @@ const EditorSettingsPage: React.FC = () => {
                       <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-hot-pink/20 dark:peer-focus:ring-hot-pink/30 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-hot-pink"></div>
                     </label>
                   </div>
-                </CardContent>
+                </div>
               </Card>
             </>
           )}
@@ -913,10 +913,10 @@ const EditorSettingsPage: React.FC = () => {
           {activeTab === 'advanced' && (
             <>
               <Card className="lg:col-span-2">
-                <CardHeader>
+                <div>
                   <h3 className="text-title-lg font-semibold">Custom Code</h3>
-                </CardHeader>
-                <CardContent className="space-y-4">
+                </div>
+                <div className="space-y-4">
                   <div>
                     <label className="block text-body-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
                       Custom CSS
@@ -942,14 +942,14 @@ const EditorSettingsPage: React.FC = () => {
                       placeholder="// Add your custom JavaScript here"
                     />
                   </div>
-                </CardContent>
+                </div>
               </Card>
 
               <Card>
-                <CardHeader>
+                <div>
                   <h3 className="text-title-lg font-semibold">System Settings</h3>
-                </CardHeader>
-                <CardContent className="space-y-4">
+                </div>
+                <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
                       <label className="text-body-md text-charcoal dark:text-white font-medium">
@@ -1029,14 +1029,14 @@ const EditorSettingsPage: React.FC = () => {
                       <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-hot-pink/20 dark:peer-focus:ring-hot-pink/30 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-hot-pink"></div>
                     </label>
                   </div>
-                </CardContent>
+                </div>
               </Card>
 
               <Card>
-                <CardHeader>
+                <div>
                   <h3 className="text-title-lg font-semibold">Danger Zone</h3>
-                </CardHeader>
-                <CardContent className="space-y-4">
+                </div>
+                <div className="space-y-4">
                   <div className="p-4 bg-error-red/5 border border-error-red/20 rounded-lg">
                     <h4 className="text-body-md font-semibold text-error-red mb-2">
                       Reset All Settings
@@ -1060,7 +1060,7 @@ const EditorSettingsPage: React.FC = () => {
                       Export Settings
                     </Button>
                   </div>
-                </CardContent>
+                </div>
               </Card>
             </>
           )}

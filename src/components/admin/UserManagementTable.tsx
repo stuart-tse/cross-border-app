@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { UserType, User, ClientProfile, DriverProfile, BlogEditorProfile } from '@prisma/client';
+import { UserType } from '@prisma/client';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -10,13 +10,9 @@ import UserStatusBadge from './UserStatusBadge';
 import UserActionMenu from './UserActionMenu';
 import UserDetailModal from './UserDetailModal';
 import { cn } from '@/lib/utils';
+import { ExtendedUser } from '@/lib/data/user-service';
+import { UserDisplayService } from '@/lib/data/user-display-service';
 
-interface ExtendedUser extends User {
-  clientProfile?: ClientProfile | null;
-  driverProfile?: DriverProfile | null;
-  blogEditorProfile?: BlogEditorProfile | null;
-  userRoles?: { role: UserType }[];
-}
 
 interface UserFilters {
   search: string;
@@ -46,7 +42,7 @@ interface UserManagementTableProps {
   loading?: boolean;
   onUserUpdate: (userId: string, updates: Partial<ExtendedUser>) => Promise<void>;
   onUserSelect: (userId: string) => void;
-  onBulkAction: (action: string, userIds: string[]) => void;
+  onBulkAction: (action: string, userIds: string[]) => Promise<void>;
   className?: string;
 }
 
@@ -77,7 +73,7 @@ const UserManagementTable: React.FC<UserManagementTableProps> = ({
     total: 0
   });
 
-  const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
+  const [internalSelectedUsers, setInternalSelectedUsers] = useState<string[]>([]);
   const [selectedUser, setSelectedUser] = useState<ExtendedUser | null>(null);
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'table' | 'cards'>('table');
@@ -196,7 +192,7 @@ const UserManagementTable: React.FC<UserManagementTableProps> = ({
   }, []);
 
   const handleUserSelect = useCallback((userId: string, selected: boolean) => {
-    setSelectedUsers(prev => 
+    setInternalSelectedUsers(prev => 
       selected 
         ? [...prev, userId]
         : prev.filter(id => id !== userId)
@@ -204,7 +200,7 @@ const UserManagementTable: React.FC<UserManagementTableProps> = ({
   }, []);
 
   const handleSelectAll = useCallback((selected: boolean) => {
-    setSelectedUsers(selected ? paginatedUsers.map(user => user.id) : []);
+    setInternalSelectedUsers(selected ? paginatedUsers.map(user => user.id) : []);
   }, [paginatedUsers]);
 
   const handleUserClick = useCallback((user: ExtendedUser) => {
@@ -213,39 +209,12 @@ const UserManagementTable: React.FC<UserManagementTableProps> = ({
     onUserSelect(user.id);
   }, [onUserSelect]);
 
-  const getPrimaryRole = useCallback((user: ExtendedUser): UserType => {
-    if (!user.userRoles || user.userRoles.length === 0) return 'CLIENT';
-    return user.userRoles[0].role;
-  }, []);
-
-  const getUserAvatar = useCallback((user: ExtendedUser) => {
-    return user.name?.charAt(0)?.toUpperCase() || 'U';
-  }, []);
 
   const getSortIcon = useCallback((field: string) => {
     if (sortConfig.field !== field) return '↕️';
     return sortConfig.direction === 'asc' ? '↑' : '↓';
   }, [sortConfig]);
 
-  const getDisplayValue = useCallback((user: ExtendedUser, field: string) => {
-    switch (field) {
-      case 'trips':
-        if (user.clientProfile?.loyaltyPoints) {
-          return Math.floor(user.clientProfile.loyaltyPoints / 20);
-        }
-        return user.driverProfile?.totalTrips || 0;
-      case 'rating':
-        return user.driverProfile?.rating || 'N/A';
-      case 'loyaltyPoints':
-        return user.clientProfile?.loyaltyPoints || 0;
-      case 'membershipTier':
-        return user.clientProfile?.membershipTier || 'N/A';
-      case 'licenseNumber':
-        return user.driverProfile?.licenseNumber || 'N/A';
-      default:
-        return 'N/A';
-    }
-  }, []);
 
   const totalPages = Math.ceil(pagination.total / pagination.pageSize);
 
@@ -377,7 +346,7 @@ const UserManagementTable: React.FC<UserManagementTableProps> = ({
           </div>
 
           {/* Bulk Actions */}
-          {selectedUsers.length > 0 && (
+          {internalSelectedUsers.length > 0 && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
@@ -385,25 +354,25 @@ const UserManagementTable: React.FC<UserManagementTableProps> = ({
               className="flex items-center justify-between p-3 bg-[#FF69B4]/10 border border-[#FF69B4]/20 rounded-lg"
             >
               <span className="text-sm font-medium text-gray-700">
-                {selectedUsers.length} user{selectedUsers.length > 1 ? 's' : ''} selected
+                {internalSelectedUsers.length} user{internalSelectedUsers.length > 1 ? 's' : ''} selected
               </span>
               <div className="flex items-center space-x-2">
                 <Button
-                  onClick={() => onBulkAction('export', selectedUsers)}
+                  onClick={() => onBulkAction('export', internalSelectedUsers)}
                   variant="secondary"
                   size="sm"
                 >
                   📥 Export
                 </Button>
                 <Button
-                  onClick={() => onBulkAction('notify', selectedUsers)}
+                  onClick={() => onBulkAction('notify', internalSelectedUsers)}
                   variant="secondary"
                   size="sm"
                 >
                   📧 Send Message
                 </Button>
                 <Button
-                  onClick={() => onBulkAction('deactivate', selectedUsers)}
+                  onClick={() => onBulkAction('deactivate', internalSelectedUsers)}
                   variant="secondary"
                   size="sm"
                   className="text-red-600 hover:text-red-700"
@@ -422,7 +391,7 @@ const UserManagementTable: React.FC<UserManagementTableProps> = ({
           Showing {((pagination.page - 1) * pagination.pageSize) + 1}-{Math.min(pagination.page * pagination.pageSize, pagination.total)} of {pagination.total} users
         </span>
         <span>
-          {selectedUsers.length > 0 && `${selectedUsers.length} selected`}
+          {internalSelectedUsers.length > 0 && `${internalSelectedUsers.length} selected`}
         </span>
       </div>
 
@@ -437,7 +406,7 @@ const UserManagementTable: React.FC<UserManagementTableProps> = ({
                   <th className="w-12 px-4 py-3 text-left">
                     <input
                       type="checkbox"
-                      checked={paginatedUsers.length > 0 && selectedUsers.length === paginatedUsers.length}
+                      checked={paginatedUsers.length > 0 && internalSelectedUsers.length === paginatedUsers.length}
                       onChange={(e) => handleSelectAll(e.target.checked)}
                       className="rounded border-gray-300 text-[#FF69B4] focus:ring-[#FF69B4]"
                     />
@@ -492,8 +461,9 @@ const UserManagementTable: React.FC<UserManagementTableProps> = ({
               <tbody className="divide-y divide-gray-200">
                 <AnimatePresence>
                   {paginatedUsers.map((user, index) => {
-                    const primaryRole = getPrimaryRole(user);
-                    const isSelected = selectedUsers.includes(user.id);
+                    const displayInfo = UserDisplayService.getUserDisplayInfo(user);
+                    const primaryRole = UserDisplayService.getPrimaryRole(user);
+                    const isSelected = internalSelectedUsers.includes(user.id);
 
                     return (
                       <motion.tr
@@ -519,30 +489,27 @@ const UserManagementTable: React.FC<UserManagementTableProps> = ({
                         <td className="px-4 py-4">
                           <div className="flex items-center space-x-3">
                             <div className="w-10 h-10 bg-gradient-to-br from-[#FF69B4] to-[#FF1493] rounded-full flex items-center justify-center text-white text-sm font-bold">
-                              {getUserAvatar(user)}
+                              {displayInfo.avatar}
                             </div>
                             <div>
-                              <div className="font-medium text-gray-900">{user.name}</div>
-                              <div className="text-sm text-gray-500">{user.phone || 'No phone'}</div>
+                              <div className="font-medium text-gray-900">{displayInfo.name}</div>
+                              <div className="text-sm text-gray-500">{displayInfo.phone}</div>
                             </div>
                           </div>
                         </td>
                         <td className="px-4 py-4 text-sm text-gray-900">
-                          {user.email}
+                          {displayInfo.email}
                         </td>
                         <td className="px-4 py-4">
                           <span className={cn(
                             'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
-                            primaryRole === 'CLIENT' && 'bg-blue-100 text-blue-800',
-                            primaryRole === 'DRIVER' && 'bg-green-100 text-green-800',
-                            primaryRole === 'BLOG_EDITOR' && 'bg-purple-100 text-purple-800',
-                            primaryRole === 'ADMIN' && 'bg-red-100 text-red-800'
+                            UserDisplayService.getRoleBadgeStyle(primaryRole)
                           )}>
-                            {primaryRole === 'BLOG_EDITOR' ? 'Blog Editor' : primaryRole}
+                            {displayInfo.roleDisplayName}
                           </span>
                         </td>
                         <td className="px-4 py-4 text-sm text-gray-900">
-                          {getDisplayValue(user, 'trips')}
+                          {UserDisplayService.getTableDisplayValue(user, 'trips')}
                         </td>
                         <td className="px-4 py-4">
                           <UserStatusBadge
@@ -551,7 +518,7 @@ const UserManagementTable: React.FC<UserManagementTableProps> = ({
                           />
                         </td>
                         <td className="px-4 py-4 text-sm text-gray-500">
-                          {new Date(user.createdAt).toLocaleDateString()}
+                          {UserDisplayService.getTableDisplayValue(user, 'createdDate')}
                         </td>
                         <td className="px-4 py-4 text-right" onClick={(e) => e.stopPropagation()}>
                           <UserActionMenu
@@ -578,8 +545,9 @@ const UserManagementTable: React.FC<UserManagementTableProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
             <AnimatePresence>
               {paginatedUsers.map((user, index) => {
-                const primaryRole = getPrimaryRole(user);
-                const isSelected = selectedUsers.includes(user.id);
+                const displayInfo = UserDisplayService.getUserDisplayInfo(user);
+                const primaryRole = UserDisplayService.getPrimaryRole(user);
+                const isSelected = internalSelectedUsers.includes(user.id);
 
                 return (
                   <motion.div
@@ -619,11 +587,11 @@ const UserManagementTable: React.FC<UserManagementTableProps> = ({
 
                     <div className="flex items-start space-x-3 mb-4">
                       <div className="w-12 h-12 bg-gradient-to-br from-[#FF69B4] to-[#FF1493] rounded-full flex items-center justify-center text-white text-lg font-bold">
-                        {getUserAvatar(user)}
+                        {displayInfo.avatar}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-medium text-gray-900 truncate">{user.name}</h3>
-                        <p className="text-sm text-gray-500 truncate">{user.email}</p>
+                        <h3 className="font-medium text-gray-900 truncate">{displayInfo.name}</h3>
+                        <p className="text-sm text-gray-500 truncate">{displayInfo.email}</p>
                       </div>
                     </div>
 
@@ -632,12 +600,9 @@ const UserManagementTable: React.FC<UserManagementTableProps> = ({
                         <span className="text-sm text-gray-500">Role</span>
                         <span className={cn(
                           'inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium',
-                          primaryRole === 'CLIENT' && 'bg-blue-100 text-blue-800',
-                          primaryRole === 'DRIVER' && 'bg-green-100 text-green-800',
-                          primaryRole === 'BLOG_EDITOR' && 'bg-purple-100 text-purple-800',
-                          primaryRole === 'ADMIN' && 'bg-red-100 text-red-800'
+                          UserDisplayService.getRoleBadgeStyle(primaryRole)
                         )}>
-                          {primaryRole === 'BLOG_EDITOR' ? 'Editor' : primaryRole}
+                          {displayInfo.roleDisplayName}
                         </span>
                       </div>
 
@@ -647,7 +612,7 @@ const UserManagementTable: React.FC<UserManagementTableProps> = ({
                            primaryRole === 'DRIVER' ? 'Trips' : 'Articles'}
                         </span>
                         <span className="text-sm font-medium text-gray-900">
-                          {getDisplayValue(user, 'trips')}
+                          {UserDisplayService.getTableDisplayValue(user, 'trips')}
                         </span>
                       </div>
 
@@ -662,9 +627,21 @@ const UserManagementTable: React.FC<UserManagementTableProps> = ({
                       <div className="flex items-center justify-between">
                         <span className="text-sm text-gray-500">Joined</span>
                         <span className="text-sm text-gray-900">
-                          {new Date(user.createdAt).toLocaleDateString()}
+                          {UserDisplayService.getTableDisplayValue(user, 'createdDate')}
                         </span>
                       </div>
+
+                      {user.clientProfile?.membershipTier && (
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-gray-500">Tier</span>
+                          <span className={cn(
+                            'inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border',
+                            UserDisplayService.getMembershipTierStyle(user.clientProfile.membershipTier)
+                          )}>
+                            {user.clientProfile.membershipTier}
+                          </span>
+                        </div>
+                      )}
                     </div>
                   </motion.div>
                 );

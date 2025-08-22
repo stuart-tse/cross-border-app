@@ -2,20 +2,15 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { UserType, User, ClientProfile, DriverProfile, BlogEditorProfile } from '@prisma/client';
+import { UserType } from '@prisma/client';
 import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card } from '@/components/ui/Card';
 import UserStatusBadge from './UserStatusBadge';
 import { cn } from '@/lib/utils';
-
-interface ExtendedUser extends User {
-  clientProfile?: ClientProfile | null;
-  driverProfile?: DriverProfile | null;
-  blogEditorProfile?: BlogEditorProfile | null;
-  userRoles?: { role: UserType }[];
-}
+import { ExtendedUser } from '@/lib/data/user-service';
+import { UserDisplayService } from '@/lib/data/user-display-service';
 
 interface UserDetailModalProps {
   user: ExtendedUser | null;
@@ -24,15 +19,6 @@ interface UserDetailModalProps {
   onSave: (updates: Partial<ExtendedUser>) => Promise<void>;
   readonly?: boolean;
   className?: string;
-}
-
-interface ActivityItem {
-  id: string;
-  type: 'trip' | 'payment' | 'review' | 'document' | 'article';
-  description: string;
-  timestamp: string;
-  status: 'success' | 'pending' | 'warning' | 'error';
-  amount?: string;
 }
 
 const UserDetailModal: React.FC<UserDetailModalProps> = ({
@@ -48,39 +34,12 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({
   const [formData, setFormData] = useState<Partial<ExtendedUser>>({});
   const [activeTab, setActiveTab] = useState<'profile' | 'activity' | 'stats'>('profile');
 
-  // Mock activity data - in real app this would come from API
-  const [recentActivity] = useState<ActivityItem[]>([
-    {
-      id: '1',
-      type: 'trip',
-      description: 'Trip to Shenzhen completed',
-      timestamp: '2 hours ago',
-      status: 'success',
-      amount: 'HK$450'
-    },
-    {
-      id: '2',
-      type: 'payment',
-      description: 'Payment processed successfully',
-      timestamp: '2 hours ago',
-      status: 'success',
-      amount: 'HK$450'
-    },
-    {
-      id: '3',
-      type: 'review',
-      description: 'Left 5-star review for driver',
-      timestamp: '3 hours ago',
-      status: 'success'
-    },
-    {
-      id: '4',
-      type: 'document',
-      description: 'Driver license verified',
-      timestamp: '1 day ago',
-      status: 'success'
-    }
-  ]);
+  // Generate display data using the display service
+  const displayInfo = user ? UserDisplayService.getUserDisplayInfo(user) : null;
+  const userStats = user ? UserDisplayService.getUserStatsDisplay(user) : [];
+  const performanceMetrics = user ? UserDisplayService.getPerformanceMetrics(user) : [];
+  const accountSummary = user ? UserDisplayService.getAccountSummary(user) : [];
+  const recentActivity = user ? UserDisplayService.getFormattedActivity(user) : [];
 
   useEffect(() => {
     if (user) {
@@ -120,65 +79,9 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({
     }));
   };
 
-  const getUserPrimaryRole = (): UserType => {
-    if (!user?.userRoles || user.userRoles.length === 0) return 'CLIENT';
-    return user.userRoles[0].role;
-  };
+  const primaryRole = user ? UserDisplayService.getPrimaryRole(user) : 'CLIENT';
 
-  const getActivityIcon = (type: ActivityItem['type']) => {
-    switch (type) {
-      case 'trip': return '🚗';
-      case 'payment': return '💳';
-      case 'review': return '⭐';
-      case 'document': return '📋';
-      case 'article': return '📝';
-      default: return '📋';
-    }
-  };
-
-  const getStatusColor = (status: ActivityItem['status']) => {
-    switch (status) {
-      case 'success': return 'text-green-600 bg-green-50';
-      case 'pending': return 'text-yellow-600 bg-yellow-50';
-      case 'warning': return 'text-orange-600 bg-orange-50';
-      case 'error': return 'text-red-600 bg-red-50';
-      default: return 'text-gray-600 bg-gray-50';
-    }
-  };
-
-  const getUserStats = () => {
-    const role = getUserPrimaryRole();
-    switch (role) {
-      case 'CLIENT':
-        return [
-          { label: 'Total Trips', value: user?.clientProfile?.loyaltyPoints ? Math.floor(user.clientProfile.loyaltyPoints / 20) : 0 },
-          { label: 'Loyalty Points', value: user?.clientProfile?.loyaltyPoints || 0 },
-          { label: 'Total Spent', value: 'HK$45,000' },
-          { label: 'Member Since', value: new Date(user?.createdAt || Date.now()).getFullYear() }
-        ];
-      case 'DRIVER':
-        return [
-          { label: 'Total Trips', value: user?.driverProfile?.totalTrips || 0 },
-          { label: 'Rating', value: user?.driverProfile?.rating || 0 },
-          { label: 'Earnings', value: 'HK$28,500' },
-          { label: 'Active Since', value: new Date(user?.createdAt || Date.now()).getFullYear() }
-        ];
-      case 'BLOG_EDITOR':
-        return [
-          { label: 'Articles Published', value: 24 },
-          { label: 'Total Views', value: '12.5K' },
-          { label: 'Avg Rating', value: 4.8 },
-          { label: 'Editor Since', value: new Date(user?.createdAt || Date.now()).getFullYear() }
-        ];
-      default:
-        return [];
-    }
-  };
-
-  if (!user) return null;
-
-  const primaryRole = getUserPrimaryRole();
-  const userStats = getUserStats();
+  if (!user || !displayInfo) return null;
 
   return (
     <Modal 
@@ -191,12 +94,12 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({
         {/* User Header */}
         <div className="flex items-start space-x-6 p-6 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg">
           <div className="w-20 h-20 bg-gradient-to-br from-[#FF69B4] to-[#FF1493] rounded-full flex items-center justify-center text-white text-2xl font-bold">
-            {user.name?.charAt(0)?.toUpperCase() || 'U'}
+            {displayInfo.avatar}
           </div>
           
           <div className="flex-1">
             <div className="flex items-center space-x-4 mb-2">
-              <h3 className="text-2xl font-bold text-gray-900">{user.name}</h3>
+              <h3 className="text-2xl font-bold text-gray-900">{displayInfo.name}</h3>
               <UserStatusBadge 
                 status={user.isActive ? 'active' : 'inactive'} 
                 verified={user.isVerified}
@@ -204,27 +107,26 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({
             </div>
             
             <div className="space-y-1 text-gray-600">
-              <p>{user.email}</p>
-              {user.phone && <p>{user.phone}</p>}
+              <p>{displayInfo.email}</p>
+              {displayInfo.phone !== 'No phone' && <p>{displayInfo.phone}</p>}
               <p className="text-sm">
-                {primaryRole.charAt(0) + primaryRole.slice(1).toLowerCase()} • 
-                Member since {new Date(user.createdAt).toLocaleDateString()}
+                {displayInfo.roleDisplayName} • Member since {displayInfo.memberSince}
               </p>
             </div>
 
             <div className="flex items-center space-x-4 mt-4">
               <span className={cn(
                 'px-3 py-1 rounded-full text-sm font-medium',
-                primaryRole === 'CLIENT' && 'bg-blue-100 text-blue-800',
-                primaryRole === 'DRIVER' && 'bg-green-100 text-green-800',
-                primaryRole === 'BLOG_EDITOR' && 'bg-purple-100 text-purple-800',
-                primaryRole === 'ADMIN' && 'bg-red-100 text-red-800'
+                UserDisplayService.getRoleBadgeStyle(primaryRole)
               )}>
-                {primaryRole === 'BLOG_EDITOR' ? 'Blog Editor' : primaryRole}
+                {displayInfo.roleDisplayName}
               </span>
               
               {user.clientProfile?.membershipTier && (
-                <span className="px-3 py-1 rounded-full text-sm font-medium bg-[#FF69B4]/10 text-[#FF69B4]">
+                <span className={cn(
+                  'px-3 py-1 rounded-full text-sm font-medium border',
+                  UserDisplayService.getMembershipTierStyle(user.clientProfile.membershipTier)
+                )}>
                   {user.clientProfile.membershipTier} Member
                 </span>
               )}
@@ -232,6 +134,8 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({
           </div>
 
           <div className="text-right">
+            <div className="text-sm text-gray-500 mb-1">Profile Completion</div>
+            <div className="text-2xl font-bold text-[#FF69B4] mb-2">{displayInfo.profileCompletion}%</div>
             {!readonly && (
               <Button
                 onClick={() => setIsEditing(!isEditing)}
@@ -249,7 +153,7 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({
           {userStats.map((stat, index) => (
             <Card key={index} className="text-center">
               <div className="text-2xl font-bold text-[#FF69B4] mb-1">
-                {stat.value}
+                {stat.formatted}
               </div>
               <div className="text-sm text-gray-600">{stat.label}</div>
             </Card>
@@ -473,18 +377,18 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({
               <Card>
                 <h4 className="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h4>
                 <div className="space-y-4">
-                  {recentActivity.map((activity) => (
-                    <div key={activity.id} className="flex items-center space-x-4 p-4 hover:bg-gray-50 rounded-lg transition-colors duration-150">
+                  {recentActivity.map((activity, index) => (
+                    <div key={index} className="flex items-center space-x-4 p-4 hover:bg-gray-50 rounded-lg transition-colors duration-150">
                       <div className={cn(
                         'w-10 h-10 rounded-full flex items-center justify-center text-white text-lg',
-                        getStatusColor(activity.status)
+                        activity.statusColor
                       )}>
-                        {getActivityIcon(activity.type)}
+                        {activity.icon}
                       </div>
                       
                       <div className="flex-1">
                         <p className="text-gray-900 font-medium">{activity.description}</p>
-                        <p className="text-sm text-gray-500">{activity.timestamp}</p>
+                        <p className="text-sm text-gray-500">{activity.timeAgo}</p>
                       </div>
                       
                       {activity.amount && (
@@ -500,62 +404,29 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({
 
             {activeTab === 'stats' && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Card>
-                  <h4 className="text-lg font-semibold text-gray-900 mb-4">Performance Metrics</h4>
-                  <div className="space-y-4">
-                    {primaryRole === 'CLIENT' && (
-                      <>
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-600">Average Trip Rating</span>
-                          <span className="font-semibold">4.9 ⭐</span>
+                {performanceMetrics.length > 0 && (
+                  <Card>
+                    <h4 className="text-lg font-semibold text-gray-900 mb-4">Performance Metrics</h4>
+                    <div className="space-y-4">
+                      {performanceMetrics.map((metric, index) => (
+                        <div key={index} className="flex justify-between items-center">
+                          <span className="text-gray-600">{metric.label}</span>
+                          <span className="font-semibold">{metric.formatted}</span>
                         </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-600">Booking Frequency</span>
-                          <span className="font-semibold">2.3 trips/month</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-600">Preferred Route</span>
-                          <span className="font-semibold">HK ↔ Shenzhen</span>
-                        </div>
-                      </>
-                    )}
-                    
-                    {primaryRole === 'DRIVER' && (
-                      <>
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-600">Acceptance Rate</span>
-                          <span className="font-semibold">94%</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-600">Completion Rate</span>
-                          <span className="font-semibold">98%</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-600">On-time Rate</span>
-                          <span className="font-semibold">96%</span>
-                        </div>
-                      </>
-                    )}
-                  </div>
-                </Card>
+                      ))}
+                    </div>
+                  </Card>
+                )}
 
                 <Card>
                   <h4 className="text-lg font-semibold text-gray-900 mb-4">Account Summary</h4>
                   <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-600">Account Age</span>
-                      <span className="font-semibold">
-                        {Math.floor((Date.now() - new Date(user.createdAt).getTime()) / (1000 * 60 * 60 * 24))} days
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-600">Last Login</span>
-                      <span className="font-semibold">2 hours ago</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-600">Profile Completion</span>
-                      <span className="font-semibold">85%</span>
-                    </div>
+                    {accountSummary.map((summary, index) => (
+                      <div key={index} className="flex justify-between items-center">
+                        <span className="text-gray-600">{summary.label}</span>
+                        <span className="font-semibold">{summary.formatted}</span>
+                      </div>
+                    ))}
                   </div>
                 </Card>
               </div>

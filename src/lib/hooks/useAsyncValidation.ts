@@ -31,8 +31,8 @@ export function useAsyncValidation<T = any>(
   config: AsyncValidationConfig = {}
 ) {
   const mergedConfig = { ...DEFAULT_CONFIG, ...config };
-  const debounceTimer = useRef<NodeJS.Timeout>();
-  const validationCounter = useRef(0);
+  const debounceTimer = useRef<NodeJS.Timeout | null>(null);
+  const validationCounter = useRef<number>(0);
 
   const [state, setState] = useState<AsyncValidationResult>({
     isValid: false,

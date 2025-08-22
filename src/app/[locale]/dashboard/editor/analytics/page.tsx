@@ -4,7 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth, withAuth } from '@/lib/context/AuthContext';
 import { UserType } from '@prisma/client';
-import { Card, CardHeader, CardContent } from '@/components/ui/Card';
+import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
 
@@ -357,10 +357,10 @@ const AnalyticsPage: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Views Chart */}
             <Card className="lg:col-span-2">
-              <CardHeader>
+              <div>
                 <h3 className="text-title-lg font-semibold">Views Over Time</h3>
-              </CardHeader>
-              <CardContent>
+              </div>
+              <div>
                 <div className="h-64 bg-gray-50 dark:bg-gray-800 rounded-lg flex items-center justify-center">
                   <div className="text-center">
                     <div className="text-4xl mb-2">📈</div>
@@ -372,15 +372,15 @@ const AnalyticsPage: React.FC = () => {
                     </div>
                   </div>
                 </div>
-              </CardContent>
+              </div>
             </Card>
 
             {/* Top Posts */}
             <Card>
-              <CardHeader>
+              <div>
                 <h3 className="text-title-lg font-semibold">Top Performing Posts</h3>
-              </CardHeader>
-              <CardContent className="space-y-4">
+              </div>
+              <div className="space-y-4">
                 {analyticsData.topPosts.slice(0, 5).map((post, index) => (
                   <div key={post.id} className="flex items-start gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
                     <div className="flex-shrink-0 w-8 h-8 bg-hot-pink text-white rounded-full flex items-center justify-center text-sm font-bold">
@@ -404,7 +404,7 @@ const AnalyticsPage: React.FC = () => {
                     </div>
                   </div>
                 ))}
-              </CardContent>
+              </div>
             </Card>
           </div>
         )}
@@ -414,10 +414,10 @@ const AnalyticsPage: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Engagement Metrics */}
             <Card>
-              <CardHeader>
+              <div>
                 <h3 className="text-title-lg font-semibold">Engagement Metrics</h3>
-              </CardHeader>
-              <CardContent className="space-y-6">
+              </div>
+              <div className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="text-center p-4 bg-gradient-to-br from-hot-pink/10 to-deep-pink/10 rounded-lg">
                     <div className="text-3xl font-bold text-hot-pink mb-1">
@@ -451,15 +451,15 @@ const AnalyticsPage: React.FC = () => {
                     <span className="text-body-md font-semibold text-electric-blue">2.4</span>
                   </div>
                 </div>
-              </CardContent>
+              </div>
             </Card>
 
             {/* Social Shares Breakdown */}
             <Card>
-              <CardHeader>
+              <div>
                 <h3 className="text-title-lg font-semibold">Social Media Breakdown</h3>
-              </CardHeader>
-              <CardContent>
+              </div>
+              <div>
                 <div className="space-y-4">
                   {[
                     { platform: 'Facebook', shares: 456, icon: '🔵', color: 'text-blue-600' },
@@ -488,7 +488,7 @@ const AnalyticsPage: React.FC = () => {
                     </div>
                   ))}
                 </div>
-              </CardContent>
+              </div>
             </Card>
           </div>
         )}
@@ -498,10 +498,10 @@ const AnalyticsPage: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* SEO Overview */}
             <Card>
-              <CardHeader>
+              <div>
                 <h3 className="text-title-lg font-semibold">SEO Overview</h3>
-              </CardHeader>
-              <CardContent className="space-y-6">
+              </div>
+              <div className="space-y-6">
                 <div className="text-center">
                   <div className="text-4xl font-bold text-success-green mb-2">
                     {analyticsData.seoMetrics.avgSeoScore}%
@@ -524,15 +524,15 @@ const AnalyticsPage: React.FC = () => {
                     <span className="text-body-md font-semibold">{analyticsData.seoMetrics.keywordsRanking.length}</span>
                   </div>
                 </div>
-              </CardContent>
+              </div>
             </Card>
 
             {/* Keyword Rankings */}
             <Card className="lg:col-span-2">
-              <CardHeader>
+              <div>
                 <h3 className="text-title-lg font-semibold">Keyword Rankings</h3>
-              </CardHeader>
-              <CardContent>
+              </div>
+              <div>
                 <div className="space-y-3">
                   {analyticsData.seoMetrics.keywordsRanking.map((keyword, index) => (
                     <div key={index} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
@@ -559,7 +559,7 @@ const AnalyticsPage: React.FC = () => {
                     </div>
                   ))}
                 </div>
-              </CardContent>
+              </div>
             </Card>
           </div>
         )}
@@ -569,10 +569,10 @@ const AnalyticsPage: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Traffic Sources */}
             <Card>
-              <CardHeader>
+              <div>
                 <h3 className="text-title-lg font-semibold">Traffic Sources</h3>
-              </CardHeader>
-              <CardContent>
+              </div>
+              <div>
                 <div className="space-y-4">
                   {analyticsData.trafficSources.map((source, index) => (
                     <div key={index} className="flex items-center justify-between">
@@ -597,15 +597,15 @@ const AnalyticsPage: React.FC = () => {
                     </div>
                   ))}
                 </div>
-              </CardContent>
+              </div>
             </Card>
 
             {/* Demographics */}
             <Card>
-              <CardHeader>
+              <div>
                 <h3 className="text-title-lg font-semibold">Audience Demographics</h3>
-              </CardHeader>
-              <CardContent className="space-y-6">
+              </div>
+              <div className="space-y-6">
                 {/* Countries */}
                 <div>
                   <h4 className="text-body-md font-semibold text-charcoal dark:text-white mb-3">Top Countries</h4>
@@ -654,7 +654,7 @@ const AnalyticsPage: React.FC = () => {
                     ))}
                   </div>
                 </div>
-              </CardContent>
+              </div>
             </Card>
           </div>
         )}
@@ -669,13 +669,13 @@ const AnalyticsPage: React.FC = () => {
       >
         {/* AI Insights */}
         <Card className="bg-gradient-to-br from-electric-blue/10 to-hot-pink/10 border-electric-blue/20">
-          <CardHeader>
+          <div>
             <h3 className="text-title-lg font-semibold text-electric-blue flex items-center gap-2">
               <span>🤖</span>
               AI Insights & Recommendations
             </h3>
-          </CardHeader>
-          <CardContent className="space-y-4">
+          </div>
+          <div className="space-y-4">
             <div className="p-4 bg-white/50 dark:bg-gray-800/50 rounded-lg">
               <h4 className="font-medium text-charcoal dark:text-white mb-2">📈 Content Performance</h4>
               <p className="text-body-sm text-gray-600 dark:text-gray-400">
@@ -694,15 +694,15 @@ const AnalyticsPage: React.FC = () => {
 &ldquo;Luxury travel Hong Kong&rdquo; has high search volume but low competition. Consider targeting this keyword.
               </p>
             </div>
-          </CardContent>
+          </div>
         </Card>
 
         {/* Quick Actions */}
         <Card>
-          <CardHeader>
+          <div>
             <h3 className="text-title-lg font-semibold">Quick Actions</h3>
-          </CardHeader>
-          <CardContent className="space-y-3">
+          </div>
+          <div className="space-y-3">
             <Button variant="outline" size="md" fullWidth className="justify-start">
               <span className="mr-3">📈</span>
               Generate Monthly Report
@@ -723,7 +723,7 @@ const AnalyticsPage: React.FC = () => {
               <span className="mr-3">🔔</span>
               Setup Alerts & Notifications
             </Button>
-          </CardContent>
+          </div>
         </Card>
       </motion.section>
     </div>

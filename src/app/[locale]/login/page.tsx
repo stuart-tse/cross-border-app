@@ -37,14 +37,14 @@ export default function LoginPage() {
         // Use the callback URL if provided
         window.location.href = decodeURIComponent(callbackUrl);
       } else {
-        // Fallback to role-based dashboard
+        // Fallback to role-based dashboard with locale prefix
         const dashboardRoutes = {
-          'CLIENT': '/dashboard/client',
-          'DRIVER': '/dashboard/driver',
-          'BLOG_EDITOR': '/dashboard/editor',
-          'ADMIN': '/dashboard/admin',
+          'CLIENT': '/en/dashboard/client',
+          'DRIVER': '/en/dashboard/driver',
+          'BLOG_EDITOR': '/en/dashboard/editor',
+          'ADMIN': '/en/dashboard/admin',
         };
-        const defaultRoute = dashboardRoutes[selectedRole as keyof typeof dashboardRoutes] || '/dashboard/client';
+        const defaultRoute = dashboardRoutes[selectedRole as keyof typeof dashboardRoutes] || '/en/dashboard/client';
         window.location.href = defaultRoute;
       }
     }
@@ -71,7 +71,9 @@ export default function LoginPage() {
     setSelectedUserType(null);
   };
 
-  if (isLoading) {
+  // Show loading only if we're loading AND already authenticated
+  // If we're not authenticated, show the login form immediately
+  if (isLoading && isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-tint to-white">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-hot-pink"></div>

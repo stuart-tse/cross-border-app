@@ -63,7 +63,7 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
         error: null,
       };
     case 'AUTH_SUCCESS':
-      const userRoles = action.payload.roles?.map(r => r.role) || [];
+      const userRoles = action.payload.roles?.map(r => typeof r === 'string' ? r : r.role) || [];
       const selectedRole = action.selectedRole || userRoles[0] || UserType.CLIENT;
       return {
         ...state,
@@ -123,29 +123,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       dispatch({ type: 'AUTH_START' });
       
-      // Get both NextAuth session and user data
-      const [sessionResponse, userResponse] = await Promise.all([
-        fetch('/api/auth/session', {
-          method: 'GET',
-          credentials: 'include',
-        }),
-        fetch('/api/auth/me', {
-          method: 'GET',
-          credentials: 'include',
-        })
-      ]);
-
-      const sessionData = await sessionResponse.json();
-      const userData = await userResponse.json();
+      // Get NextAuth session directly (no need for API calls)
+      const sessionData = await getSession();
       
-      console.log('Auth check - session:', sessionData?.user?.selectedRole);
-      console.log('Auth check - user data:', { 
-        success: userData.success, 
-        hasData: !!userData.data
+      console.log('Auth check - NextAuth session:', {
+        hasUser: !!sessionData?.user,
+        selectedRole: sessionData?.user?.selectedRole
       });
       
-      if (sessionData?.user && userData.success && userData.data) {
-        const userRoles = userData.data.roles?.map((r: any) => r.role) || [];
+      if (sessionData?.user) {
+        const userRoles = sessionData.user.roles || [];
         
         // Use NextAuth session selectedRole if available, otherwise fall back to localStorage/default
         let selectedRole = sessionData.user.selectedRole;
@@ -154,16 +141,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           selectedRole = (savedRole && userRoles.includes(savedRole)) ? savedRole : userRoles[0] || UserType.CLIENT;
         }
         
-        console.log('Auth success - setting user:', { 
-          userId: userData.data.id, 
+        console.log('Auth success - setting user from NextAuth:', { 
+          userId: sessionData.user.id, 
           selectedRole, 
           sessionRole: sessionData.user.selectedRole,
           availableRoles: userRoles 
         });
         
-        dispatch({ type: 'AUTH_SUCCESS', payload: userData.data, selectedRole });
+        // Create AuthUser object from NextAuth session
+        const authUser: User = {
+          id: sessionData.user.id,
+          email: sessionData.user.email,
+          name: sessionData.user.name,
+          avatar: sessionData.user.image,
+          isVerified: sessionData.user.isVerified,
+          isActive: true, // Assume active if authenticated
+          roles: userRoles.map(role => ({
+            id: `role-${role}`,
+            role,
+            isActive: true,
+            assignedAt: new Date(),
+          })),
+          userType: selectedRole,
+          selectedRole,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        };
+        
+        dispatch({ type: 'AUTH_SUCCESS', payload: authUser, selectedRole });
       } else {
-        console.log('Auth check failed - logging out user');
+        console.log('Auth check failed - no NextAuth session');
         dispatch({ type: 'LOGOUT' });
       }
     } catch (error) {
@@ -252,25 +259,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // Wait a moment for session to be established
         await new Promise(resolve => setTimeout(resolve, 100));
         
-        // Get the updated session and user data
-        const [sessionData, userResponse] = await Promise.all([
-          getSession(),
-          fetch('/api/auth/me', {
-            method: 'GET',
-            credentials: 'include',
-          })
-        ]);
-
-        const userData = await userResponse.json();
+        // Get the updated session from NextAuth
+        const sessionData = await getSession();
         
-        if (sessionData?.user && userData.success && userData.data) {
-          const userRoles = userData.data.roles?.map((r: any) => r.role) || [];
+        if (sessionData?.user) {
+          const userRoles = sessionData.user.roles || [];
           const selectedRole = sessionData.user.selectedRole || userRoles[0] || UserType.CLIENT;
           
-          console.log('✅ Setting user data:', { 
-            userId: userData.data.id, 
+          console.log('✅ Setting user data from NextAuth session:', { 
+            userId: sessionData.user.id, 
             selectedRole,
-            sessionRole: sessionData.user.selectedRole,
             availableRoles: userRoles 
           });
           
@@ -278,13 +276,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             localStorage.setItem('selectedRole', selectedRole);
           }
           
-          dispatch({ type: 'AUTH_SUCCESS', payload: userData.data, selectedRole });
+          // Create AuthUser object from NextAuth session
+          const authUser: User = {
+            id: sessionData.user.id,
+            email: sessionData.user.email,
+            name: sessionData.user.name,
+            avatar: sessionData.user.image,
+            isVerified: sessionData.user.isVerified,
+            isActive: true, // Assume active if authenticated
+            roles: userRoles.map(role => ({
+              id: `role-${role}`,
+              role,
+              isActive: true,
+              assignedAt: new Date(),
+            })),
+            userType: selectedRole,
+            selectedRole,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          };
+          
+          dispatch({ type: 'AUTH_SUCCESS', payload: authUser, selectedRole });
           
           // Redirect based on selected role
           redirectToDashboard(selectedRole);
         } else {
-          console.error('❌ Failed to fetch user data after successful login');
-          dispatch({ type: 'AUTH_ERROR', payload: 'Failed to load user data. Please try again.' });
+          console.error('❌ Failed to get NextAuth session after login');
+          dispatch({ type: 'AUTH_ERROR', payload: 'Failed to establish session. Please try again.' });
         }
       } else {
         console.error('❌ Login failed: Unknown error');
@@ -300,70 +318,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const register = async (userData: RegisterData) => {
     try {
       dispatch({ type: 'AUTH_START' });
-      console.log('📝 Starting registration process for:', userData.email);
+      console.log('📝 Starting NextAuth v5 registration process for:', userData.email);
 
-      // First create the account via the registration endpoint
-      const response = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(userData),
+      // TODO: Implement proper user registration through NextAuth v5
+      // For now, show error message to use proper registration flow
+      dispatch({ 
+        type: 'AUTH_ERROR', 
+        payload: 'Registration functionality needs to be implemented with NextAuth v5. Please contact support.' 
       });
-
-      const data = await response.json();
-
-      if (response.ok && data.success) {
-        console.log('✅ Registration successful, logging in...');
-        
-        // After successful registration, log the user in via NextAuth
-        const loginResult = await signIn('credentials', {
-          email: userData.email,
-          password: userData.password,
-          selectedRole: UserType.CLIENT,
-          redirect: false,
-        });
-
-        if (loginResult?.ok) {
-          // Wait for session establishment
-          await new Promise(resolve => setTimeout(resolve, 100));
-          
-          // Get session and user data
-          const [sessionData, userResponse] = await Promise.all([
-            getSession(),
-            fetch('/api/auth/me', {
-              method: 'GET',
-              credentials: 'include',
-            })
-          ]);
-
-          const updatedUserData = await userResponse.json();
-          
-          if (sessionData?.user && updatedUserData.success && updatedUserData.data) {
-            const userRoles = updatedUserData.data.roles?.map((r: any) => r.role) || [];
-            const selectedRole = sessionData.user.selectedRole || userRoles[0] || UserType.CLIENT;
-            
-            if (hasHydrated) {
-              localStorage.setItem('selectedRole', selectedRole);
-            }
-            
-            dispatch({ type: 'AUTH_SUCCESS', payload: updatedUserData.data, selectedRole });
-            
-            // Redirect based on selected role
-            redirectToDashboard(selectedRole);
-          } else {
-            dispatch({ type: 'AUTH_ERROR', payload: 'Registration successful but login failed. Please log in manually.' });
-          }
-        } else {
-          dispatch({ type: 'AUTH_ERROR', payload: 'Registration successful but login failed. Please log in manually.' });
-        }
-      } else {
-        dispatch({ type: 'AUTH_ERROR', payload: data.error?.message || 'Registration failed' });
-      }
+      
+      console.warn('⚠️ Registration endpoint needs to be reimplemented for NextAuth v5');
     } catch (error) {
       console.error('Registration error:', error);
-      dispatch({ type: 'AUTH_ERROR', payload: 'Network error. Please try again.' });
+      dispatch({ type: 'AUTH_ERROR', payload: 'Registration system is being updated. Please try again later.' });
     }
   };
 
@@ -424,7 +391,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       throw new Error('User not authenticated');
     }
 
-    const userRoles = state.user.roles?.map(r => r.role) || [];
+    const userRoles = state.user.roles?.map(r => typeof r === 'string' ? r : r.role) || [];
     if (!userRoles.includes(role)) {
       throw new Error('User does not have this role');
     }
@@ -487,7 +454,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const getAvailableRoles = (): UserType[] => {
     if (!state.user) return [];
-    return state.user.roles?.map(r => r.role) || [];
+    return state.user.roles?.map(r => typeof r === 'string' ? r : r.role) || [];
   };
 
   const redirectToDashboard = (userType: UserType) => {
@@ -558,7 +525,7 @@ export function withAuth<P extends object>(
       
       // If authenticated but doesn't have required role, redirect to appropriate dashboard
       if (allowedUserTypes && user) {
-        const userRoles = user.roles?.map(r => r.role) || [];
+        const userRoles = user.roles?.map(r => typeof r === 'string' ? r : r.role) || [];
         const hasAllowedRole = allowedUserTypes.some(allowedType => 
           userRoles.includes(allowedType)
         );
@@ -604,7 +571,7 @@ export function withAuth<P extends object>(
 
     // Check role authorization if user is authenticated
     if (allowedUserTypes && user) {
-      const userRoles = user.roles?.map(r => r.role) || [];
+      const userRoles = user.roles?.map(r => typeof r === 'string' ? r : r.role) || [];
       const hasAllowedRole = allowedUserTypes.some(allowedType => 
         userRoles.includes(allowedType)
       );

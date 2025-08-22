@@ -11,6 +11,7 @@ export interface AuthUser {
   isActive: boolean;
   roles: UserRole[];
   userType: UserType; // Current selected user type for backward compatibility
+  selectedRole?: UserType; // Currently selected role
   createdAt: Date;
   updatedAt: Date;
 }

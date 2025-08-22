@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import createIntlMiddleware from 'next-intl/middleware';
-import { auth } from './lib/auth/config';
 import { locales, defaultLocale } from './i18n';
+import { edgeAuth as auth } from '@/lib/auth/edge-auth';
+import {
+  isProtectedRoute as isProtectedRouteEdge,
+  hasRouteAccess,
+  getDefaultDashboardForRole
+} from '@/lib/auth/edge-utils';
 
 // Create the internationalization middleware
 const intlMiddleware = createIntlMiddleware({
@@ -10,13 +15,6 @@ const intlMiddleware = createIntlMiddleware({
   localePrefix: 'always',
   localeDetection: true,
 });
-
-// Protected routes that require authentication
-const protectedRoutes = [
-  '/dashboard',
-  '/booking',
-  '/profile',
-];
 
 // Public routes that don't require authentication
 const publicRoutes = [
@@ -30,18 +28,6 @@ const publicRoutes = [
   '/register',
 ];
 
-// Role-based route definitions
-const roleRoutes = {
-  ADMIN: ['/dashboard/admin'],
-  DRIVER: ['/dashboard/driver'],
-  BLOG_EDITOR: ['/dashboard/editor'],
-  CLIENT: ['/dashboard/client'],
-};
-
-function isProtectedRoute(pathname: string): boolean {
-  return protectedRoutes.some(route => pathname.startsWith(route));
-}
-
 function isPublicRoute(pathname: string): boolean {
   return publicRoutes.some(route => {
     if (route === '/') {
@@ -49,26 +35,6 @@ function isPublicRoute(pathname: string): boolean {
     }
     return pathname.startsWith(route);
   });
-}
-
-function hasRoleAccess(pathname: string, userRole: string): boolean {
-  // Check if user has access to the specific route based on their role
-  for (const [role, routes] of Object.entries(roleRoutes)) {
-    if (routes.some(route => pathname.startsWith(route))) {
-      return userRole === role || userRole === 'ADMIN'; // Admin can access all routes
-    }
-  }
-  return true; // Allow access to general dashboard routes
-}
-
-function getDefaultDashboardForRole(role: string): string {
-  const dashboardMap: Record<string, string> = {
-    ADMIN: '/dashboard/admin',
-    DRIVER: '/dashboard/driver',
-    BLOG_EDITOR: '/dashboard/editor', 
-    CLIENT: '/dashboard/client',
-  };
-  return dashboardMap[role] || '/dashboard/client';
 }
 
 function getPathnameWithoutLocale(pathname: string): string {
@@ -94,56 +60,49 @@ export default async function middleware(request: NextRequest) {
   const pathnameWithoutLocale = getPathnameWithoutLocale(pathname);
 
   // Check if route requires authentication
-  if (isProtectedRoute(pathnameWithoutLocale)) {
-    try {
-      const session = await auth();
-      
-      if (!session?.user) {
-        // Redirect to login with callback URL
-        const loginUrl = new URL('/login', request.url);
-        loginUrl.searchParams.set('callbackUrl', request.url);
-        return NextResponse.redirect(loginUrl);
-      }
-
-      // Check role-based access
-      const userSelectedRole = session.user.selectedRole;
-      if (!userSelectedRole || !hasRoleAccess(pathnameWithoutLocale, userSelectedRole)) {
-        // If no selected role or unauthorized, redirect to appropriate dashboard for user's role
-        const safeSelectedRole = userSelectedRole || 'CLIENT'; // Default to CLIENT if no role
-        const defaultDashboard = getDefaultDashboardForRole(safeSelectedRole);
-        
-        console.log('🚫 Middleware: Unauthorized access attempt');
-        console.log('🛤️  Path:', pathnameWithoutLocale);
-        console.log('👤 User role:', userSelectedRole);
-        console.log('🔄 Redirecting to:', defaultDashboard);
-        
-        return NextResponse.redirect(new URL(defaultDashboard, request.url));
-      }
-
-      // Redirect bare /dashboard to role-specific dashboard
-      if (pathnameWithoutLocale === '/dashboard') {
-        const defaultDashboard = getDefaultDashboardForRole(userSelectedRole || 'CLIENT');
-        return NextResponse.redirect(new URL(defaultDashboard, request.url));
-      }
-    } catch (error) {
-      console.error('Auth middleware error:', error);
-      // Redirect to login on auth error
-      const loginUrl = new URL('/login', request.url);
+  if (isProtectedRouteEdge(pathnameWithoutLocale)) {
+    // Use NextAuth v5 auth function for proper session verification
+    const session = await auth();
+    
+    if (!session?.user) {
+      // Redirect to login with callback URL, preserving locale
+      const locale = pathname.split('/')[1];
+      const loginPath = locales.includes(locale) 
+        ? `/${locale}/login` 
+        : `/${defaultLocale}/login`;
+      const loginUrl = new URL(loginPath, request.url);
       loginUrl.searchParams.set('callbackUrl', request.url);
       return NextResponse.redirect(loginUrl);
+    }
+
+    // Check role-based access for specific routes
+    const userRoles = session.user.roles || [];
+    const selectedRole = session.user.selectedRole || userRoles[0] || 'CLIENT';
+    
+    if (!hasRouteAccess(pathnameWithoutLocale, selectedRole)) {
+      // Redirect to appropriate dashboard for user's role
+      const locale = pathname.split('/')[1];
+      const dashboardPath = getDefaultDashboardForRole(selectedRole);
+      const redirectPath = locales.includes(locale) 
+        ? `/${locale}${dashboardPath}` 
+        : `/${defaultLocale}${dashboardPath}`;
+      return NextResponse.redirect(new URL(redirectPath, request.url));
     }
   }
 
   // For authenticated users accessing login/register, redirect to dashboard
   if (pathnameWithoutLocale === '/login' || pathnameWithoutLocale === '/register') {
-    try {
-      const session = await auth();
-      if (session?.user) {
-        const defaultDashboard = getDefaultDashboardForRole(session.user.selectedRole || 'CLIENT');
-        return NextResponse.redirect(new URL(defaultDashboard, request.url));
-      }
-    } catch (error) {
-      // Continue to login/register page if auth check fails
+    const session = await auth();
+    
+    if (session?.user) {
+      const userRoles = session.user.roles || [];
+      const selectedRole = session.user.selectedRole || userRoles[0] || 'CLIENT';
+      const locale = pathname.split('/')[1];
+      const dashboardPath = getDefaultDashboardForRole(selectedRole);
+      const redirectPath = locales.includes(locale) 
+        ? `/${locale}${dashboardPath}` 
+        : `/${defaultLocale}${dashboardPath}`;
+      return NextResponse.redirect(new URL(redirectPath, request.url));
     }
   }
 

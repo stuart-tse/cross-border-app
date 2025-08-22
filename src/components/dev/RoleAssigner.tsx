@@ -57,7 +57,7 @@ export const RoleAssigner: React.FC = () => {
     }
   };
 
-  const userRoles = user?.roles?.map(r => r.role) || [];
+  const userRoles = user?.roles?.map(r => typeof r === 'string' ? r : r.role) || [];
 
   return (
     <div className="fixed bottom-4 right-4 z-50 bg-white shadow-lg rounded-lg p-4 border border-gray-200 max-w-sm">

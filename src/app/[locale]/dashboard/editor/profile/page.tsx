@@ -4,7 +4,7 @@ import React, { useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth, withAuth } from '@/lib/context/AuthContext';
 import { UserType } from '@prisma/client';
-import { Card, CardHeader, CardContent } from '@/components/ui/Card';
+import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { cn } from '@/lib/utils';
@@ -267,7 +267,7 @@ const EditorProfilePage: React.FC = () => {
         transition={{ delay: 0.1 }}
       >
         <Card className="bg-gradient-to-r from-hot-pink/10 to-deep-pink/10 border-hot-pink/20">
-          <CardContent className="p-6">
+          <div className="p-6">
             <div className="flex flex-col md:flex-row gap-6">
               {/* Profile Image */}
               <div className="flex-shrink-0">
@@ -363,7 +363,7 @@ const EditorProfilePage: React.FC = () => {
                 </div>
               </div>
             </div>
-          </CardContent>
+          </div>
         </Card>
       </motion.section>
 
@@ -424,10 +424,10 @@ const EditorProfilePage: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Contact Information */}
             <Card>
-              <CardHeader>
+              <div>
                 <h3 className="text-title-lg font-semibold">Contact Information</h3>
-              </CardHeader>
-              <CardContent className="space-y-4">
+              </div>
+              <div className="space-y-4">
                 <div>
                   <label className="block text-body-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
                     Email Address
@@ -486,15 +486,15 @@ const EditorProfilePage: React.FC = () => {
                     <option value="10+ years">10+ years</option>
                   </select>
                 </div>
-              </CardContent>
+              </div>
             </Card>
 
             {/* Social Links */}
             <Card>
-              <CardHeader>
+              <div>
                 <h3 className="text-title-lg font-semibold">Social Links</h3>
-              </CardHeader>
-              <CardContent className="space-y-4">
+              </div>
+              <div className="space-y-4">
                 {Object.entries(editorProfile.socialLinks).map(([platform, url]) => (
                   <div key={platform}>
                     <label className="block text-body-sm font-medium text-gray-600 dark:text-gray-400 mb-1 capitalize">
@@ -508,15 +508,15 @@ const EditorProfilePage: React.FC = () => {
                     />
                   </div>
                 ))}
-              </CardContent>
+              </div>
             </Card>
 
             {/* Permissions */}
             <Card className="lg:col-span-2">
-              <CardHeader>
+              <div>
                 <h3 className="text-title-lg font-semibold">Editor Permissions</h3>
-              </CardHeader>
-              <CardContent>
+              </div>
+              <div>
                 <div className="flex flex-wrap gap-2">
                   {editorProfile.permissions.map((permission) => (
                     <span 
@@ -533,7 +533,7 @@ const EditorProfilePage: React.FC = () => {
                 <p className="text-body-sm text-gray-600 dark:text-gray-400 mt-3">
                   These permissions define what actions you can perform in the content management system.
                 </p>
-              </CardContent>
+              </div>
             </Card>
           </div>
         )}
@@ -542,10 +542,10 @@ const EditorProfilePage: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Notifications */}
             <Card>
-              <CardHeader>
+              <div>
                 <h3 className="text-title-lg font-semibold">Notifications</h3>
-              </CardHeader>
-              <CardContent className="space-y-4">
+              </div>
+              <div className="space-y-4">
                 {Object.entries(userSettings.notifications).map(([key, value]) => (
                   <div key={key} className="flex items-center justify-between">
                     <div>
@@ -571,15 +571,15 @@ const EditorProfilePage: React.FC = () => {
                     </label>
                   </div>
                 ))}
-              </CardContent>
+              </div>
             </Card>
 
             {/* Preferences */}
             <Card>
-              <CardHeader>
+              <div>
                 <h3 className="text-title-lg font-semibold">Preferences</h3>
-              </CardHeader>
-              <CardContent className="space-y-4">
+              </div>
+              <div className="space-y-4">
                 <div>
                   <label className="block text-body-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
                     Theme
@@ -644,15 +644,15 @@ const EditorProfilePage: React.FC = () => {
                     <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-hot-pink/20 dark:peer-focus:ring-hot-pink/30 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-hot-pink"></div>
                   </label>
                 </div>
-              </CardContent>
+              </div>
             </Card>
 
             {/* Privacy Settings */}
             <Card className="lg:col-span-2">
-              <CardHeader>
+              <div>
                 <h3 className="text-title-lg font-semibold">Privacy Settings</h3>
-              </CardHeader>
-              <CardContent className="space-y-4">
+              </div>
+              <div className="space-y-4">
                 {Object.entries(userSettings.privacy).map(([key, value]) => (
                   <div key={key} className="flex items-center justify-between">
                     <div>
@@ -676,7 +676,7 @@ const EditorProfilePage: React.FC = () => {
                     </label>
                   </div>
                 ))}
-              </CardContent>
+              </div>
             </Card>
           </div>
         )}
@@ -685,10 +685,10 @@ const EditorProfilePage: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Password */}
             <Card>
-              <CardHeader>
+              <div>
                 <h3 className="text-title-lg font-semibold">Password & Authentication</h3>
-              </CardHeader>
-              <CardContent className="space-y-4">
+              </div>
+              <div className="space-y-4">
                 <Button variant="outline" size="md" fullWidth className="justify-start">
                   <span className="mr-3">🔑</span>
                   Change Password
@@ -701,15 +701,15 @@ const EditorProfilePage: React.FC = () => {
                   <span className="mr-3">🔐</span>
                   View Login History
                 </Button>
-              </CardContent>
+              </div>
             </Card>
 
             {/* Account */}
             <Card>
-              <CardHeader>
+              <div>
                 <h3 className="text-title-lg font-semibold">Account Management</h3>
-              </CardHeader>
-              <CardContent className="space-y-4">
+              </div>
+              <div className="space-y-4">
                 <Button variant="outline" size="md" fullWidth className="justify-start">
                   <span className="mr-3">📧</span>
                   Change Email Address
@@ -722,7 +722,7 @@ const EditorProfilePage: React.FC = () => {
                   <span className="mr-3">🗑️</span>
                   Delete Account
                 </Button>
-              </CardContent>
+              </div>
             </Card>
           </div>
         )}
@@ -749,10 +749,10 @@ const EditorProfilePage: React.FC = () => {
 
             {/* Achievements List */}
             <Card>
-              <CardHeader>
+              <div>
                 <h3 className="text-title-lg font-semibold">Your Achievements</h3>
-              </CardHeader>
-              <CardContent>
+              </div>
+              <div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {editorProfile.achievements.map((achievement) => (
                     <div key={achievement.id} className="p-4 bg-gradient-to-br from-hot-pink/5 to-electric-blue/5 rounded-lg border border-hot-pink/10">
@@ -773,15 +773,15 @@ const EditorProfilePage: React.FC = () => {
                     </div>
                   ))}
                 </div>
-              </CardContent>
+              </div>
             </Card>
 
             {/* Available Achievements */}
             <Card>
-              <CardHeader>
+              <div>
                 <h3 className="text-title-lg font-semibold">Available Achievements</h3>
-              </CardHeader>
-              <CardContent>
+              </div>
+              <div>
                 <div className="space-y-3">
                   {[
                     { title: 'Social Media Master', description: 'Get 100+ shares on a single post', progress: 87, icon: '📱' },
@@ -813,7 +813,7 @@ const EditorProfilePage: React.FC = () => {
                     </div>
                   ))}
                 </div>
-              </CardContent>
+              </div>
             </Card>
           </div>
         )}

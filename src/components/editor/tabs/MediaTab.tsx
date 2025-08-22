@@ -250,7 +250,7 @@ export const MediaTab: React.FC<MediaTabProps> = ({
               />
               {aiAltTextSuggestions[getValues('thumbnailUrl') || ''] && (
                 <p className="text-xs text-electric-blue mt-1">
-                  AI suggests: "{aiAltTextSuggestions[getValues('thumbnailUrl') || '']}"
+                  AI suggests: &ldquo;{aiAltTextSuggestions[getValues('thumbnailUrl') || '']}&rdquo;
                 </p>
               )}
             </div>

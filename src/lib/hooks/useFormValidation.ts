@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { ZodSchema, ZodError } from 'zod';
+import { z, ZodSchema, ZodError } from 'zod';
 
 export interface FormState<T> {
   data: T;
@@ -73,7 +73,7 @@ export function useFormValidation<T extends Record<string, any>>(
           }));
           return true;
         } else {
-          const fieldError = result.error.errors.find(err => err.path[0] === field);
+          const fieldError = result.error.errors.find((err: z.ZodIssue) => err.path[0] === field);
           if (fieldError) {
             setFormState(prev => ({
               ...prev,
@@ -104,7 +104,7 @@ export function useFormValidation<T extends Record<string, any>>(
         return true;
       } else {
         const errors: Partial<Record<keyof T, string>> = {};
-        result.error.errors.forEach((err) => {
+        result.error.errors.forEach((err: z.ZodIssue) => {
           const field = err.path[0] as keyof T;
           if (field && !errors[field]) {
             errors[field] = err.message;

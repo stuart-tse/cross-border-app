@@ -5,7 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useSearchParams } from 'next/navigation';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import { Input, Select } from '@/components/ui/Input';
+import { Input } from '@/components/ui/Input';
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { VEHICLES, ROUTES } from '@/lib/constants';
 import { 
   routeSelectionSchema, 
@@ -305,13 +306,22 @@ export default function BookingPage() {
                           From
                         </label>
                         <Select
-                          options={locationOptions}
                           value={bookingData.route.from?.address || ''}
-                          onChange={(e) => updateBookingData('route', {
-                            from: { address: e.target.value, latitude: 0, longitude: 0 }
+                          onValueChange={(value) => updateBookingData('route', {
+                            from: { address: value, latitude: 0, longitude: 0 }
                           })}
-                          placeholder="Select pickup location"
-                        />
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select pickup location" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {locationOptions.map((option) => (
+                              <SelectItem key={option.value} value={option.value}>
+                                {option.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </div>
                       
                       <div>
@@ -319,13 +329,22 @@ export default function BookingPage() {
                           To
                         </label>
                         <Select
-                          options={locationOptions}
                           value={bookingData.route.to?.address || ''}
-                          onChange={(e) => updateBookingData('route', {
-                            to: { address: e.target.value, latitude: 0, longitude: 0 }
+                          onValueChange={(value) => updateBookingData('route', {
+                            to: { address: value, latitude: 0, longitude: 0 }
                           })}
-                          placeholder="Select destination"
-                        />
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select destination" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {locationOptions.map((option) => (
+                              <SelectItem key={option.value} value={option.value}>
+                                {option.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </div>
                     </div>
 
