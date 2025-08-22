@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useActionState } from 'react';
 import { useFormStatus } from 'react-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
@@ -13,6 +13,8 @@ import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Car, Upload, Plus, X, AlertCircle } from 'lucide-react';
 import { VehicleType } from '@prisma/client';
+import { DynamicDataService } from '@/lib/services/dynamic-data-service';
+import type { DynamicListItem } from '@/lib/services/dynamic-data-service';
 
 interface VehicleFormData {
   make: string;
@@ -57,40 +59,26 @@ const initialFormData: VehicleFormData = {
   photos: [],
 };
 
-const vehicleFeatures = [
-  'Air Conditioning',
-  'GPS Navigation',
-  'Bluetooth',
-  'Wi-Fi',
-  'USB Charging',
-  'Leather Seats',
-  'Sunroof',
-  'Backup Camera',
-  'Lane Assist',
-  'Cruise Control',
-  'Premium Sound',
-  'Child Safety Locks',
-];
+interface DynamicData {
+  vehicleFeatures: DynamicListItem[];
+  specialEquipment: DynamicListItem[];
+  colors: DynamicListItem[];
+  fuelTypes: DynamicListItem[];
+}
 
-const specialEquipmentOptions = [
-  'Wheelchair Accessible',
-  'Child Car Seats',
-  'Cargo Rack',
-  'Bike Rack',
-  'Trailer Hitch',
-  'Snow Chains',
-  'Emergency Kit',
-  'Fire Extinguisher',
-  'First Aid Kit',
-  'Extra Luggage Space',
-];
+const initialDynamicData: DynamicData = {
+  vehicleFeatures: [],
+  specialEquipment: [],
+  colors: [],
+  fuelTypes: [],
+};
 
-function SubmitButton() {
+function SubmitButton({ dataLoading }: { dataLoading: boolean }) {
   const { pending } = useFormStatus();
   
   return (
-    <Button type="submit" className="w-full" disabled={pending}>
-      {pending ? 'Creating Vehicle...' : 'Create Vehicle'}
+    <Button type="submit" className="w-full" disabled={pending || dataLoading}>
+      {pending ? 'Creating Vehicle...' : dataLoading ? 'Loading Data...' : 'Create Vehicle'}
     </Button>
   );
 }
@@ -148,6 +136,37 @@ async function createVehicleAction(prevState: FormState | undefined, formData: F
 export default function VehicleRegistrationForm({ onSuccess }: { onSuccess?: (vehicle: any) => void }) {
   const [formData, setFormData] = useState<VehicleFormData>(initialFormData);
   const [state, formAction, pending] = useActionState(createVehicleAction, undefined);
+  const [dynamicData, setDynamicData] = useState<DynamicData>(initialDynamicData);
+  const [dataLoading, setDataLoading] = useState(true);
+
+  // Load dynamic data on component mount
+  useEffect(() => {
+    const loadDynamicData = async () => {
+      try {
+        setDataLoading(true);
+        
+        const [vehicleFeatures, specialEquipment, colors, fuelTypes] = await Promise.all([
+          DynamicDataService.getListItems('VEHICLE_FEATURES'),
+          DynamicDataService.getListItems('SPECIAL_EQUIPMENT'),
+          DynamicDataService.getListItems('COLORS'),
+          DynamicDataService.getListItems('FUEL_TYPES'),
+        ]);
+        
+        setDynamicData({
+          vehicleFeatures,
+          specialEquipment,
+          colors,
+          fuelTypes,
+        });
+      } catch (error) {
+        console.error('Error loading dynamic data:', error);
+      } finally {
+        setDataLoading(false);
+      }
+    };
+
+    loadDynamicData();
+  }, []);
 
   const handleInputChange = (name: keyof VehicleFormData, value: string) => {
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -236,14 +255,26 @@ export default function VehicleRegistrationForm({ onSuccess }: { onSuccess?: (ve
             </div>
             <div>
               <Label htmlFor="color">Color *</Label>
-              <Input
-                id="color"
-                name="color"
-                value={formData.color}
-                onChange={(e) => handleInputChange('color', e.target.value)}
-                placeholder="e.g., Black, White, Silver"
-                required
-              />
+              <Select name="color" value={formData.color} onValueChange={(value) => handleInputChange('color', value)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select color" />
+                </SelectTrigger>
+                <SelectContent>
+                  {dynamicData.colors.map(color => (
+                    <SelectItem key={color.key} value={color.value || color.key}>
+                      <div className="flex items-center space-x-2">
+                        {color.color && (
+                          <div 
+                            className="w-3 h-3 rounded-full border border-gray-300"
+                            style={{ backgroundColor: color.color }}
+                          />
+                        )}
+                        <span>{color.label}</span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
@@ -311,11 +342,14 @@ export default function VehicleRegistrationForm({ onSuccess }: { onSuccess?: (ve
                 <SelectValue placeholder="Select fuel type" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Gas">Gas</SelectItem>
-                <SelectItem value="Diesel">Diesel</SelectItem>
-                <SelectItem value="Electric">Electric</SelectItem>
-                <SelectItem value="Hybrid">Hybrid</SelectItem>
-                <SelectItem value="Plug-in Hybrid">Plug-in Hybrid</SelectItem>
+                {dynamicData.fuelTypes.map(fuel => (
+                  <SelectItem key={fuel.key} value={fuel.value || fuel.key}>
+                    <div className="flex items-center space-x-2">
+                      {fuel.icon && <span>{fuel.icon}</span>}
+                      <span>{fuel.label}</span>
+                    </div>
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
@@ -328,28 +362,41 @@ export default function VehicleRegistrationForm({ onSuccess }: { onSuccess?: (ve
           <CardTitle>Vehicle Features</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-            {vehicleFeatures.map(feature => (
-              <div
-                key={feature}
-                className={`p-2 rounded-lg border cursor-pointer transition-colors ${
-                  formData.features.includes(feature)
-                    ? 'bg-pink-50 border-pink-500 text-pink-700'
-                    : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
-                }`}
-                onClick={() => toggleArrayItem('features', feature)}
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-sm">{feature}</span>
-                  {formData.features.includes(feature) && (
-                    <div className="w-4 h-4 bg-pink-500 rounded-full flex items-center justify-center">
-                      <div className="w-2 h-2 bg-white rounded-full" />
+          {dataLoading ? (
+            <div className="text-center py-4">
+              <div className="animate-spin h-6 w-6 border-2 border-[#FF69B4] border-t-transparent rounded-full mx-auto mb-2"></div>
+              <p className="text-sm text-gray-600">Loading features...</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+              {dynamicData.vehicleFeatures.map(feature => {
+                const featureValue = feature.value || feature.key;
+                return (
+                  <div
+                    key={feature.key}
+                    className={`p-2 rounded-lg border cursor-pointer transition-colors ${
+                      formData.features.includes(featureValue)
+                        ? 'bg-pink-50 border-pink-500 text-pink-700'
+                        : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
+                    }`}
+                    onClick={() => toggleArrayItem('features', featureValue)}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-1">
+                        {feature.icon && <span className="text-sm">{feature.icon}</span>}
+                        <span className="text-sm">{feature.label}</span>
+                      </div>
+                      {formData.features.includes(featureValue) && (
+                        <div className="w-4 h-4 bg-pink-500 rounded-full flex items-center justify-center">
+                          <div className="w-2 h-2 bg-white rounded-full" />
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -359,28 +406,41 @@ export default function VehicleRegistrationForm({ onSuccess }: { onSuccess?: (ve
           <CardTitle>Special Equipment</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-            {specialEquipmentOptions.map(equipment => (
-              <div
-                key={equipment}
-                className={`p-2 rounded-lg border cursor-pointer transition-colors ${
-                  formData.specialEquipment.includes(equipment)
-                    ? 'bg-blue-50 border-blue-500 text-blue-700'
-                    : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
-                }`}
-                onClick={() => toggleArrayItem('specialEquipment', equipment)}
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-sm">{equipment}</span>
-                  {formData.specialEquipment.includes(equipment) && (
-                    <div className="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
-                      <div className="w-2 h-2 bg-white rounded-full" />
+          {dataLoading ? (
+            <div className="text-center py-4">
+              <div className="animate-spin h-6 w-6 border-2 border-[#FF69B4] border-t-transparent rounded-full mx-auto mb-2"></div>
+              <p className="text-sm text-gray-600">Loading equipment...</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+              {dynamicData.specialEquipment.map(equipment => {
+                const equipmentValue = equipment.value || equipment.key;
+                return (
+                  <div
+                    key={equipment.key}
+                    className={`p-2 rounded-lg border cursor-pointer transition-colors ${
+                      formData.specialEquipment.includes(equipmentValue)
+                        ? 'bg-blue-50 border-blue-500 text-blue-700'
+                        : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
+                    }`}
+                    onClick={() => toggleArrayItem('specialEquipment', equipmentValue)}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-1">
+                        {equipment.icon && <span className="text-sm">{equipment.icon}</span>}
+                        <span className="text-sm">{equipment.label}</span>
+                      </div>
+                      {formData.specialEquipment.includes(equipmentValue) && (
+                        <div className="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
+                          <div className="w-2 h-2 bg-white rounded-full" />
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -419,7 +479,7 @@ export default function VehicleRegistrationForm({ onSuccess }: { onSuccess?: (ve
 
       {/* Submit Button */}
       <div className="flex justify-end">
-        <SubmitButton />
+        <SubmitButton dataLoading={dataLoading} />
       </div>
     </form>
   );

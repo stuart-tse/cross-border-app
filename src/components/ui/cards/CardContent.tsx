@@ -3,18 +3,16 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 
-interface CardHeaderProps {
+interface CardHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   title?: React.ReactNode;
   subtitle?: React.ReactNode;
   actions?: React.ReactNode;
+  children?: React.ReactNode;
   className?: string;
 }
 
 export const CardHeader: React.FC<CardHeaderProps> = ({
-  title,
-  subtitle,
-  actions,
-  className
+  title, subtitle, actions, className, children, ...rest
 }) => {
   return (
     <div className={cn('flex items-start justify-between mb-4', className)}>

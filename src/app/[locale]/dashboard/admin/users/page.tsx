@@ -96,8 +96,6 @@ export default async function AdminUsersPage({
   );
 };
 
-}
-
 /**
  * Loading skeleton for stats
  */

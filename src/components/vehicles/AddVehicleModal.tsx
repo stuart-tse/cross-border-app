@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { useActionState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BaseModal } from '@/components/ui/modals/BaseModal';
@@ -11,8 +11,13 @@ import { ProgressBar } from '@/components/ui/ProgressBar';
 import { cn } from '@/lib/utils';
 import { VehicleType } from '@prisma/client';
 import { addVehicleAction } from '@/app/actions/vehicle';
-import type { AddVehicleState } from '@/app/actions/vehicle';
 import { validateVehiclePhotos } from '@/lib/utils/vehicleValidation';
+import { DynamicDataService } from '@/lib/services/dynamic-data-service';
+import type { DynamicListItem } from '@/lib/services/dynamic-data-service';
+
+interface IconProps {
+    className?: string;
+}
 
 // Icons
 const CarIcon = () => (
@@ -45,7 +50,7 @@ const PhotoIcon = () => (
   </svg>
 );
 
-const UploadIcon = () => (
+const UploadIcon: React.FC<IconProps> = ({className}) => (
   <svg className="h-12 w-12" stroke="currentColor" fill="none" viewBox="0 0 48 48">
     <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
@@ -106,33 +111,20 @@ const STEPS = [
   { id: 5, title: 'Photos', icon: PhotoIcon },
 ];
 
-const VEHICLE_FEATURES = [
-  'Air Conditioning',
-  'WiFi',
-  'GPS Navigation',
-  'Bluetooth',
-  'USB Charging',
-  'Premium Sound',
-  'Leather Seats',
-  'Tinted Windows',
-];
+// Dynamic data will be loaded from API
+interface DynamicData {
+  vehicleFeatures: DynamicListItem[];
+  specialEquipment: DynamicListItem[];
+  colors: DynamicListItem[];
+  fuelTypes: DynamicListItem[];
+}
 
-const SPECIAL_EQUIPMENT = [
-  'Child Safety Seats',
-  'Wheelchair Access',
-  'Cargo Barrier',
-  'Security Camera',
-  'First Aid Kit',
-  'Fire Extinguisher',
-];
-
-const COLORS = [
-  'Black', 'White', 'Silver', 'Gray', 'Blue', 'Red', 'Green', 'Gold', 'Brown', 'Other'
-];
-
-const FUEL_TYPES = [
-  'Gasoline', 'Diesel', 'Hybrid', 'Electric', 'CNG', 'LPG'
-];
+const initialDynamicData: DynamicData = {
+  vehicleFeatures: [],
+  specialEquipment: [],
+  colors: [],
+  fuelTypes: [],
+};
 
 // Initial form data
 const initialFormData: VehicleFormData = {
@@ -153,7 +145,7 @@ const initialFormData: VehicleFormData = {
 };
 
 // Step 1: Basic Information
-function BasicInformationStep({ data, onChange, errors }: StepProps) {
+function BasicInformationStep({ data, onChange, errors, dynamicData }: StepProps & { dynamicData: DynamicData }) {
   return (
     <div className="bg-gray-50 rounded-lg p-4">
       <h3 className="text-lg font-semibold text-charcoal mb-4 flex items-center">
@@ -199,8 +191,18 @@ function BasicInformationStep({ data, onChange, errors }: StepProps) {
               <SelectValue placeholder="Select color" />
             </SelectTrigger>
             <SelectContent>
-              {COLORS.map(color => (
-                <SelectItem key={color} value={color}>{color}</SelectItem>
+              {dynamicData.colors.map(color => (
+                <SelectItem key={color.key} value={color.value || color.key}>
+                  <div className="flex items-center space-x-2">
+                    {color.color && (
+                      <div 
+                        className="w-3 h-3 rounded-full border border-gray-300"
+                        style={{ backgroundColor: color.color }}
+                      />
+                    )}
+                    <span>{color.label}</span>
+                  </div>
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -232,7 +234,7 @@ function BasicInformationStep({ data, onChange, errors }: StepProps) {
 }
 
 // Step 2: Classification
-function ClassificationStep({ data, onChange, errors }: StepProps) {
+function ClassificationStep({ data, onChange, errors, dynamicData }: StepProps & { dynamicData: DynamicData }) {
   return (
     <div className="bg-gray-50 rounded-lg p-4">
       <h3 className="text-lg font-semibold text-charcoal mb-4 flex items-center">
@@ -277,8 +279,13 @@ function ClassificationStep({ data, onChange, errors }: StepProps) {
               <SelectValue placeholder="Select fuel type" />
             </SelectTrigger>
             <SelectContent>
-              {FUEL_TYPES.map(fuel => (
-                <SelectItem key={fuel} value={fuel}>{fuel}</SelectItem>
+              {dynamicData.fuelTypes.map(fuel => (
+                <SelectItem key={fuel.key} value={fuel.value || fuel.key}>
+                  <div className="flex items-center space-x-2">
+                    {fuel.icon && <span>{fuel.icon}</span>}
+                    <span>{fuel.label}</span>
+                  </div>
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -289,7 +296,7 @@ function ClassificationStep({ data, onChange, errors }: StepProps) {
 }
 
 // Step 3: Features & Equipment
-function FeaturesEquipmentStep({ data, onChange }: StepProps) {
+function FeaturesEquipmentStep({ data, onChange, dynamicData }: StepProps & { dynamicData: DynamicData }) {
   const toggleFeature = (feature: string) => {
     const newFeatures = data.features.includes(feature)
       ? data.features.filter(f => f !== feature)
@@ -315,15 +322,18 @@ function FeaturesEquipmentStep({ data, onChange }: StepProps) {
         <div>
           <label className="block text-sm font-medium text-charcoal mb-2">Vehicle Features</label>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-            {VEHICLE_FEATURES.map(feature => (
-              <label key={feature} className="flex items-center space-x-2 text-sm cursor-pointer">
+            {dynamicData.vehicleFeatures.map(feature => (
+              <label key={feature.key} className="flex items-center space-x-2 text-sm cursor-pointer">
                 <input
                   type="checkbox"
-                  checked={data.features.includes(feature)}
-                  onChange={() => toggleFeature(feature)}
+                  checked={data.features.includes(feature.value || feature.key)}
+                  onChange={() => toggleFeature(feature.value || feature.key)}
                   className="w-4 h-4 text-[#FF69B4] border-gray-300 rounded focus:ring-[#FF69B4]"
                 />
-                <span>{feature}</span>
+                <div className="flex items-center space-x-1">
+                  {feature.icon && <span>{feature.icon}</span>}
+                  <span>{feature.label}</span>
+                </div>
               </label>
             ))}
           </div>
@@ -332,15 +342,18 @@ function FeaturesEquipmentStep({ data, onChange }: StepProps) {
         <div>
           <label className="block text-sm font-medium text-charcoal mb-2">Special Equipment</label>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-            {SPECIAL_EQUIPMENT.map(equipment => (
-              <label key={equipment} className="flex items-center space-x-2 text-sm cursor-pointer">
+            {dynamicData.specialEquipment.map(equipment => (
+              <label key={equipment.key} className="flex items-center space-x-2 text-sm cursor-pointer">
                 <input
                   type="checkbox"
-                  checked={data.specialEquipment.includes(equipment)}
-                  onChange={() => toggleEquipment(equipment)}
+                  checked={data.specialEquipment.includes(equipment.value || equipment.key)}
+                  onChange={() => toggleEquipment(equipment.value || equipment.key)}
                   className="w-4 h-4 text-[#FF69B4] border-gray-300 rounded focus:ring-[#FF69B4]"
                 />
-                <span>{equipment}</span>
+                <div className="flex items-center space-x-1">
+                  {equipment.icon && <span>{equipment.icon}</span>}
+                  <span>{equipment.label}</span>
+                </div>
               </label>
             ))}
           </div>
@@ -468,9 +481,42 @@ export default function AddVehicleModal({ isOpen, onClose, onSuccess }: AddVehic
   const [formData, setFormData] = useState<VehicleFormData>(initialFormData);
   const [state, formAction] = useActionState(addVehicleAction, undefined);
   const [isLoading, setIsLoading] = useState(false);
+  const [dynamicData, setDynamicData] = useState<DynamicData>(initialDynamicData);
+  const [dataLoading, setDataLoading] = useState(true);
 
   const totalSteps = STEPS.length;
   const progress = (currentStep / totalSteps) * 100;
+
+  // Load dynamic data on component mount
+  useEffect(() => {
+    const loadDynamicData = async () => {
+      try {
+        setDataLoading(true);
+        
+        const [vehicleFeatures, specialEquipment, colors, fuelTypes] = await Promise.all([
+          DynamicDataService.getListItems('VEHICLE_FEATURES'),
+          DynamicDataService.getListItems('SPECIAL_EQUIPMENT'),
+          DynamicDataService.getListItems('COLORS'),
+          DynamicDataService.getListItems('FUEL_TYPES'),
+        ]);
+        
+        setDynamicData({
+          vehicleFeatures,
+          specialEquipment,
+          colors,
+          fuelTypes,
+        });
+      } catch (error) {
+        console.error('Error loading dynamic data:', error);
+      } finally {
+        setDataLoading(false);
+      }
+    };
+
+    if (isOpen) {
+      loadDynamicData();
+    }
+  }, [isOpen]);
 
   const handleDataChange = useCallback((data: Partial<VehicleFormData>) => {
     setFormData(prev => ({ ...prev, ...data }));
@@ -539,10 +585,20 @@ export default function AddVehicleModal({ isOpen, onClose, onSuccess }: AddVehic
   };
 
   const renderCurrentStep = () => {
+    if (dataLoading) {
+      return (
+        <div className="bg-gray-50 rounded-lg p-8 text-center">
+          <div className="animate-spin h-8 w-8 border-2 border-[#FF69B4] border-t-transparent rounded-full mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading form data...</p>
+        </div>
+      );
+    }
+
     const stepProps = {
       data: formData,
       onChange: handleDataChange,
       errors: state?.errors,
+      dynamicData,
     };
 
     switch (currentStep) {
@@ -639,7 +695,7 @@ export default function AddVehicleModal({ isOpen, onClose, onSuccess }: AddVehic
           <Button
             variant="outline"
             onClick={handleClose}
-            disabled={isLoading}
+            disabled={isLoading || dataLoading}
           >
             Save as Draft
           </Button>
@@ -649,7 +705,7 @@ export default function AddVehicleModal({ isOpen, onClose, onSuccess }: AddVehic
               <Button
                 variant="ghost"
                 onClick={handlePrevious}
-                disabled={isLoading}
+                disabled={isLoading || dataLoading}
               >
                 Previous
               </Button>
@@ -658,14 +714,14 @@ export default function AddVehicleModal({ isOpen, onClose, onSuccess }: AddVehic
             {currentStep < totalSteps ? (
               <Button
                 onClick={handleNext}
-                disabled={!canProceed() || isLoading}
+                disabled={!canProceed() || isLoading || dataLoading}
               >
                 Next
               </Button>
             ) : (
               <Button
                 onClick={handleSubmit}
-                disabled={!canProceed() || isLoading}
+                disabled={!canProceed() || isLoading || dataLoading}
                 isLoading={isLoading}
                 leftIcon={<PlusIcon />}
               >

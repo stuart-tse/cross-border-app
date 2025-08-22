@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management - CrossBorder Admin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Tesla-inspired color palette */
+            --primary-dark: #1a1a1a;
+            --primary-medium: #2a2a2a;
+            --primary-light: #3a3a3a;
+            --accent-blue: #3b82f6;
+            --accent-red: #ef4444;
+            --accent-green: #10b981;
+            --accent-yellow: #f59e0b;
+            --text-primary: #ffffff;
+            --text-secondary: #a3a3a3;
+            --text-muted: #737373;
+            --border-color: #404040;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --info: #3b82f6;
+            
+            /* Role-based colors */
+            --client-color: #3b82f6;
+            --driver-color: #10b981;
+            --editor-color: #f59e0b;
+            
+            /* Spacing */
+            --spacing-xs: 0.25rem;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            --spacing-2xl: 3rem;
+            
+            /* Border radius */
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--primary-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .user-management-container {
+            padding: var(--spacing-xl);
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        /* Filters and Search */
+        .filters-section {
+            background: var(--primary-medium);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .filters-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .filters-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .filters-toggle {
+            background: var(--primary-light);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filters-toggle:hover {
+            background: var(--primary-dark);
+        }
+
+        .search-and-actions {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+            align-items: center;
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: var(--spacing-md) var(--spacing-md) var(--spacing-md) 2.5rem;
+            background: var(--primary-light);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: var(--spacing-md);
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            width: 16px;
+            height: 16px;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .filter-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .filter-select {
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: var(--primary-light);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            cursor: pointer;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+
+        /* Quick Stats */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .stat-card {
+            background: var(--primary-medium);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .stat-card:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+        }
+
+        .stat-number {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        /* User Table */
+        .users-table-container {
+            background: var(--primary-medium);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: var(--spacing-xl);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .table-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .table-actions {
+            display: flex;
+            gap: var(--spacing-md);
+        }
+
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table-head {
+            background: var(--primary-light);
+        }
+
+        .table-head th {
+            padding: var(--spacing-md) var(--spacing-lg);
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .table-body tr {
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.2s ease;
+        }
+
+        .table-body tr:hover {
+            background: var(--primary-light);
+        }
+
+        .table-body td {
+            padding: var(--spacing-lg);
+            vertical-align: middle;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--accent-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+            flex-shrink: 0;
+        }
+
+        .user-details {
+            min-width: 0;
+        }
+
+        .user-name {
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+
+        .user-email {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .role-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .role-badge.client {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--client-color);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .role-badge.driver {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--driver-color);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .role-badge.editor {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--editor-color);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            font-size: 0.875rem;
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-sm);
+        }
+
+        .status-indicator.online {
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--success);
+        }
+
+        .status-indicator.offline {
+            background: rgba(115, 115, 115, 0.1);
+            color: var(--text-muted);
+        }
+
+        .status-indicator.pending {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .status-indicator.suspended {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .verification-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .verification-badge.verified {
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--success);
+        }
+
+        .verification-badge.pending {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .verification-badge.rejected {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+
+        .action-btn {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            background: var(--primary-light);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.75rem;
+        }
+
+        .action-btn:hover {
+            background: var(--primary-dark);
+            color: var(--text-primary);
+        }
+
+        .action-btn.edit {
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        .action-btn.edit:hover {
+            background: var(--accent-blue);
+            color: white;
+        }
+
+        .action-btn.delete {
+            border-color: var(--error);
+            color: var(--error);
+        }
+
+        .action-btn.delete:hover {
+            background: var(--error);
+            color: white;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--radius-md);
+            font-weight: 500;
+            font-size: 0.875rem;
+            text-decoration: none;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: var(--accent-blue);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+
+        .btn-secondary {
+            background: var(--primary-light);
+            color: var(--text-primary);
+            border-color: var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn-error {
+            background: var(--error);
+            color: white;
+        }
+
+        /* Bulk Actions */
+        .bulk-actions {
+            display: none;
+            align-items: center;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md) var(--spacing-lg);
+            background: var(--primary-light);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .bulk-actions.show {
+            display: flex;
+        }
+
+        .bulk-info {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .bulk-buttons {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-left: auto;
+        }
+
+        /* Checkbox styles */
+        .checkbox {
+            position: relative;
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+        }
+
+        .checkbox input {
+            opacity: 0;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            cursor: pointer;
+        }
+
+        .checkbox-custom {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 18px;
+            height: 18px;
+            background: var(--primary-light);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            transition: all 0.2s ease;
+        }
+
+        .checkbox input:checked + .checkbox-custom {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+        }
+
+        .checkbox input:checked + .checkbox-custom:after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        /* Pagination */
+        .pagination-container {
+            padding: var(--spacing-lg) var(--spacing-xl);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .pagination-info {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .pagination {
+            display: flex;
+            gap: var(--spacing-xs);
+        }
+
+        .pagination-btn {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: 1px solid var(--border-color);
+            background: var(--primary-light);
+            color: var(--text-secondary);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.875rem;
+        }
+
+        .pagination-btn:hover:not(.disabled) {
+            background: var(--primary-dark);
+            color: var(--text-primary);
+        }
+
+        .pagination-btn.active {
+            background: var(--accent-blue);
+            color: white;
+            border-color: var(--accent-blue);
+        }
+
+        .pagination-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .search-and-actions {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-md);
+            }
+
+            .filters-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+
+            .quick-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .table-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--spacing-md);
+            }
+
+            .table-actions {
+                width: 100%;
+                justify-content: flex-start;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .user-management-container {
+                padding: var(--spacing-md);
+            }
+
+            .quick-stats {
+                grid-template-columns: 1fr;
+            }
+
+            /* Mobile table - scroll horizontally */
+            .users-table-container {
+                overflow-x: auto;
+            }
+
+            .users-table {
+                min-width: 800px;
+            }
+
+            .pagination-container {
+                flex-direction: column;
+                gap: var(--spacing-md);
+                align-items: flex-start;
+            }
+        }
+
+        /* Focus and accessibility */
+        .search-input:focus,
+        .filter-select:focus,
+        .btn:focus,
+        .action-btn:focus,
+        .pagination-btn:focus {
+            outline: 2px solid var(--accent-blue);
+            outline-offset: 2px;
+        }
+
+        /* Loading states */
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 50%;
+            border-top-color: var(--accent-blue);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="user-management-container">
+        <div class="page-header">
+            <h1 class="page-title">User Management</h1>
+            <p class="page-subtitle">Manage all users across your cross-border transportation platform</p>
+        </div>
+
+        <!-- Filters Section -->
+        <div class="filters-section">
+            <div class="filters-header">
+                <h2 class="filters-title">Search & Filters</h2>
+                <button class="filters-toggle" onclick="toggleAdvancedFilters()">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd"></path>
+                    </svg>
+                    Advanced Filters
+                </button>
+            </div>
+
+            <div class="search-and-actions">
+                <div class="search-container">
+                    <svg class="search-icon" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
+                    </svg>
+                    <input type="text" class="search-input" placeholder="Search users by name, email, or ID..." oninput="searchUsers(this.value)">
+                </div>
+                <button class="btn btn-secondary">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                    </svg>
+                    Export
+                </button>
+                <button class="btn btn-primary">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"></path>
+                    </svg>
+                    Add User
+                </button>
+            </div>
+
+            <div class="filters-grid" id="advancedFilters" style="display: none;">
+                <div class="filter-group">
+                    <label class="filter-label">Role</label>
+                    <select class="filter-select" onchange="filterUsers()">
+                        <option value="">All Roles</option>
+                        <option value="client">Client</option>
+                        <option value="driver">Driver</option>
+                        <option value="editor">Editor</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Status</label>
+                    <select class="filter-select" onchange="filterUsers()">
+                        <option value="">All Statuses</option>
+                        <option value="online">Online</option>
+                        <option value="offline">Offline</option>
+                        <option value="pending">Pending</option>
+                        <option value="suspended">Suspended</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Verification</label>
+                    <select class="filter-select" onchange="filterUsers()">
+                        <option value="">All Verifications</option>
+                        <option value="verified">Verified</option>
+                        <option value="pending">Pending</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Registration Date</label>
+                    <select class="filter-select" onchange="filterUsers()">
+                        <option value="">All Time</option>
+                        <option value="today">Today</option>
+                        <option value="week">This Week</option>
+                        <option value="month">This Month</option>
+                        <option value="quarter">This Quarter</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="quick-stats">
+            <div class="stat-card">
+                <div class="stat-number">1,247</div>
+                <div class="stat-label">Total Users</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">856</div>
+                <div class="stat-label">Clients</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">347</div>
+                <div class="stat-label">Drivers</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">44</div>
+                <div class="stat-label">Editors</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">89</div>
+                <div class="stat-label">Online Now</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">23</div>
+                <div class="stat-label">Pending Verification</div>
+            </div>
+        </div>
+
+        <!-- Users Table -->
+        <div class="users-table-container">
+            <div class="table-header">
+                <h2 class="table-title">All Users</h2>
+                <div class="table-actions">
+                    <button class="btn btn-secondary">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"></path>
+                        </svg>
+                        Refresh
+                    </button>
+                    <button class="btn btn-secondary">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        </svg>
+                        Bulk Actions
+                    </button>
+                </div>
+            </div>
+
+            <!-- Bulk Actions Bar -->
+            <div class="bulk-actions" id="bulkActions">
+                <div class="bulk-info">
+                    <span id="selectedCount">0</span> users selected
+                </div>
+                <div class="bulk-buttons">
+                    <button class="btn btn-success">Verify Selected</button>
+                    <button class="btn btn-warning">Suspend Selected</button>
+                    <button class="btn btn-error">Delete Selected</button>
+                </div>
+            </div>
+
+            <table class="users-table">
+                <thead class="table-head">
+                    <tr>
+                        <th>
+                            <div class="checkbox">
+                                <input type="checkbox" id="selectAll" onchange="toggleSelectAll()">
+                                <div class="checkbox-custom"></div>
+                            </div>
+                        </th>
+                        <th>User</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Verification</th>
+                        <th>Last Active</th>
+                        <th>Registration</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="table-body" id="usersTableBody">
+                    <!-- User rows will be populated by JavaScript -->
+                </tbody>
+            </table>
+
+            <!-- Pagination -->
+            <div class="pagination-container">
+                <div class="pagination-info">
+                    Showing <span id="showingStart">1</span> to <span id="showingEnd">25</span> of <span id="totalUsers">1,247</span> users
+                </div>
+                <div class="pagination">
+                    <button class="pagination-btn disabled">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                        Previous
+                    </button>
+                    <button class="pagination-btn active">1</button>
+                    <button class="pagination-btn">2</button>
+                    <button class="pagination-btn">3</button>
+                    <button class="pagination-btn">...</button>
+                    <button class="pagination-btn">50</button>
+                    <button class="pagination-btn">
+                        Next
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample user data
+        const users = [
+            {
+                id: 1,
+                name: "John Doe",
+                email: "john.doe@email.com",
+                avatar: "JD",
+                role: "client",
+                status: "online",
+                verification: "verified",
+                lastActive: "2 min ago",
+                registration: "2023-12-15",
+                avatarColor: "#3b82f6"
+            },
+            {
+                id: 2,
+                name: "Maria Santos",
+                email: "maria.santos@email.com",
+                avatar: "MS",
+                role: "driver",
+                status: "online",
+                verification: "verified",
+                lastActive: "5 min ago",
+                registration: "2023-11-28",
+                avatarColor: "#10b981"
+            },
+            {
+                id: 3,
+                name: "Alex Kim",
+                email: "alex.kim@email.com",
+                avatar: "AK",
+                role: "editor",
+                status: "offline",
+                verification: "verified",
+                lastActive: "1 hour ago",
+                registration: "2023-10-10",
+                avatarColor: "#f59e0b"
+            },
+            {
+                id: 4,
+                name: "Sarah Johnson",
+                email: "sarah.johnson@email.com",
+                avatar: "SJ",
+                role: "client",
+                status: "pending",
+                verification: "pending",
+                lastActive: "Never",
+                registration: "2024-01-02",
+                avatarColor: "#3b82f6"
+            },
+            {
+                id: 5,
+                name: "Michael Chen",
+                email: "michael.chen@email.com",
+                avatar: "MC",
+                role: "driver",
+                status: "suspended",
+                verification: "rejected",
+                lastActive: "3 days ago",
+                registration: "2023-09-15",
+                avatarColor: "#10b981"
+            },
+            {
+                id: 6,
+                name: "Emma Wilson",
+                email: "emma.wilson@email.com",
+                avatar: "EW",
+                role: "client",
+                status: "online",
+                verification: "verified",
+                lastActive: "Just now",
+                registration: "2023-12-20",
+                avatarColor: "#3b82f6"
+            },
+            {
+                id: 7,
+                name: "David Rodriguez",
+                email: "david.rodriguez@email.com",
+                avatar: "DR",
+                role: "driver",
+                status: "offline",
+                verification: "verified",
+                lastActive: "30 min ago",
+                registration: "2023-08-05",
+                avatarColor: "#10b981"
+            },
+            {
+                id: 8,
+                name: "Lisa Park",
+                email: "lisa.park@email.com",
+                avatar: "LP",
+                role: "editor",
+                status: "online",
+                verification: "verified",
+                lastActive: "15 min ago",
+                registration: "2023-07-12",
+                avatarColor: "#f59e0b"
+            }
+        ];
+
+        let filteredUsers = [...users];
+        let selectedUsers = new Set();
+
+        function renderUsers() {
+            const tbody = document.getElementById('usersTableBody');
+            tbody.innerHTML = '';
+
+            filteredUsers.forEach(user => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <div class="checkbox">
+                            <input type="checkbox" value="${user.id}" onchange="toggleUserSelection(${user.id})">
+                            <div class="checkbox-custom"></div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="user-info">
+                            <div class="user-avatar" style="background: ${user.avatarColor}">${user.avatar}</div>
+                            <div class="user-details">
+                                <div class="user-name">${user.name}</div>
+                                <div class="user-email">${user.email}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="role-badge ${user.role}">
+                            ${getRoleIcon(user.role)}
+                            ${user.role}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="status-indicator ${user.status}">
+                            <div class="status-dot"></div>
+                            ${user.status}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="verification-badge ${user.verification}">
+                            ${getVerificationIcon(user.verification)}
+                            ${user.verification}
+                        </span>
+                    </td>
+                    <td>${user.lastActive}</td>
+                    <td>${formatDate(user.registration)}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="action-btn edit" onclick="editUser(${user.id})">Edit</button>
+                            <button class="action-btn" onclick="viewUser(${user.id})">View</button>
+                            <button class="action-btn delete" onclick="deleteUser(${user.id})">Delete</button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function getRoleIcon(role) {
+            const icons = {
+                client: '<svg width="12" height="12" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>',
+                driver: '<svg width="12" height="12" fill="currentColor" viewBox="0 0 20 20"><path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"></path><path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3z"></path></svg>',
+                editor: '<svg width="12" height="12" fill="currentColor" viewBox="0 0 20 20"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path></svg>'
+            };
+            return icons[role] || '';
+        }
+
+        function getVerificationIcon(verification) {
+            const icons = {
+                verified: '✓',
+                pending: '⏳',
+                rejected: '✗'
+            };
+            return icons[verification] || '';
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric' 
+            });
+        }
+
+        function toggleAdvancedFilters() {
+            const filters = document.getElementById('advancedFilters');
+            filters.style.display = filters.style.display === 'none' ? 'grid' : 'none';
+        }
+
+        function searchUsers(query) {
+            if (!query) {
+                filteredUsers = [...users];
+            } else {
+                filteredUsers = users.filter(user => 
+                    user.name.toLowerCase().includes(query.toLowerCase()) ||
+                    user.email.toLowerCase().includes(query.toLowerCase()) ||
+                    user.id.toString().includes(query)
+                );
+            }
+            renderUsers();
+        }
+
+        function filterUsers() {
+            const roleFilter = document.querySelector('select[onchange="filterUsers()"]').value;
+            const statusFilter = document.querySelectorAll('select[onchange="filterUsers()"]')[1].value;
+            const verificationFilter = document.querySelectorAll('select[onchange="filterUsers()"]')[2].value;
+            
+            filteredUsers = users.filter(user => {
+                return (!roleFilter || user.role === roleFilter) &&
+                       (!statusFilter || user.status === statusFilter) &&
+                       (!verificationFilter || user.verification === verificationFilter);
+            });
+            
+            renderUsers();
+        }
+
+        function toggleUserSelection(userId) {
+            if (selectedUsers.has(userId)) {
+                selectedUsers.delete(userId);
+            } else {
+                selectedUsers.add(userId);
+            }
+            updateBulkActions();
+        }
+
+        function toggleSelectAll() {
+            const selectAllCheckbox = document.getElementById('selectAll');
+            const userCheckboxes = document.querySelectorAll('input[type="checkbox"][value]');
+            
+            if (selectAllCheckbox.checked) {
+                userCheckboxes.forEach(checkbox => {
+                    checkbox.checked = true;
+                    selectedUsers.add(parseInt(checkbox.value));
+                });
+            } else {
+                userCheckboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                    selectedUsers.delete(parseInt(checkbox.value));
+                });
+            }
+            
+            updateBulkActions();
+        }
+
+        function updateBulkActions() {
+            const bulkActions = document.getElementById('bulkActions');
+            const selectedCount = document.getElementById('selectedCount');
+            
+            selectedCount.textContent = selectedUsers.size;
+            
+            if (selectedUsers.size > 0) {
+                bulkActions.classList.add('show');
+            } else {
+                bulkActions.classList.remove('show');
+            }
+        }
+
+        function editUser(userId) {
+            console.log('Edit user:', userId);
+            // Implementation for edit user
+        }
+
+        function viewUser(userId) {
+            console.log('View user:', userId);
+            // Implementation for view user
+        }
+
+        function deleteUser(userId) {
+            console.log('Delete user:', userId);
+            // Implementation for delete user
+        }
+
+        // Initialize the table
+        renderUsers();
+
+        // Simulate real-time updates
+        setInterval(() => {
+            // Update last active times for online users
+            users.forEach(user => {
+                if (user.status === 'online') {
+                    const randomMinutes = Math.floor(Math.random() * 30);
+                    user.lastActive = randomMinutes === 0 ? 'Just now' : `${randomMinutes} min ago`;
+                }
+            });
+            renderUsers();
+        }, 60000); // Update every minute
+    </script>
+</body>
+</html>

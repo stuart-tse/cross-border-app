@@ -8,6 +8,8 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { VEHICLES, ROUTES } from '@/lib/constants';
+import { DynamicDataService } from '@/lib/services/dynamic-data-service';
+import type { DynamicListItem } from '@/lib/services/dynamic-data-service';
 import { 
   routeSelectionSchema, 
   vehicleSelectionSchema, 
@@ -41,6 +43,8 @@ export default function BookingPage() {
   const [currentStep, setCurrentStep] = useState<BookingStep>('route');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [locationOptions, setLocationOptions] = useState<DynamicListItem[]>([]);
+  const [dataLoading, setDataLoading] = useState(true);
   
   const [bookingData, setBookingData] = useState<BookingData>({
     route: {
@@ -80,19 +84,43 @@ export default function BookingPage() {
     { id: 'contact', title: 'Payment & Confirm', description: 'Complete booking and payment' },
   ];
 
-  const locationOptions = [
-    { value: '', label: 'Select location' },
-    { value: 'hong-kong-central', label: 'Hong Kong - Central' },
-    { value: 'hong-kong-airport', label: 'Hong Kong - Airport' },
-    { value: 'hong-kong-tsim-sha-tsui', label: 'Hong Kong - Tsim Sha Tsui' },
-    { value: 'shenzhen-futian', label: 'Shenzhen - Futian' },
-    { value: 'shenzhen-luohu', label: 'Shenzhen - Luohu' },
-    { value: 'shenzhen-nanshan', label: 'Shenzhen - Nanshan' },
-    { value: 'guangzhou-tianhe', label: 'Guangzhou - Tianhe' },
-    { value: 'guangzhou-pazhou', label: 'Guangzhou - Pazhou' },
-  ];
+  // Load dynamic location data
+  useEffect(() => {
+    const loadLocationData = async () => {
+      try {
+        setDataLoading(true);
+        
+        // Load cities from the dynamic data service
+        const cities = await DynamicDataService.getListItems('CITIES');
+        setLocationOptions(cities);
+      } catch (error) {
+        console.error('Error loading location data:', error);
+        // Fallback to hardcoded data
+        const fallbackLocations = [
+          { id: '1', key: 'hong-kong-central', label: 'Hong Kong - Central', value: 'hong-kong-central', sortOrder: 0, isActive: true, isDefault: false },
+          { id: '2', key: 'hong-kong-airport', label: 'Hong Kong - Airport', value: 'hong-kong-airport', sortOrder: 1, isActive: true, isDefault: false },
+          { id: '3', key: 'hong-kong-tsim-sha-tsui', label: 'Hong Kong - Tsim Sha Tsui', value: 'hong-kong-tsim-sha-tsui', sortOrder: 2, isActive: true, isDefault: false },
+          { id: '4', key: 'shenzhen-futian', label: 'Shenzhen - Futian', value: 'shenzhen-futian', sortOrder: 3, isActive: true, isDefault: false },
+          { id: '5', key: 'shenzhen-luohu', label: 'Shenzhen - Luohu', value: 'shenzhen-luohu', sortOrder: 4, isActive: true, isDefault: false },
+          { id: '6', key: 'shenzhen-nanshan', label: 'Shenzhen - Nanshan', value: 'shenzhen-nanshan', sortOrder: 5, isActive: true, isDefault: false },
+          { id: '7', key: 'guangzhou-tianhe', label: 'Guangzhou - Tianhe', value: 'guangzhou-tianhe', sortOrder: 6, isActive: true, isDefault: false },
+          { id: '8', key: 'guangzhou-pazhou', label: 'Guangzhou - Pazhou', value: 'guangzhou-pazhou', sortOrder: 7, isActive: true, isDefault: false },
+        ];
+        setLocationOptions(fallbackLocations);
+      } finally {
+        setDataLoading(false);
+      }
+    };
+
+    loadLocationData();
+  }, []);
 
   const getCurrentStepIndex = () => steps.findIndex(step => step.id === currentStep);
+
+  const formatLocationOptions = () => [
+    { value: '', label: 'Select location' },
+    ...DynamicDataService.listItemsToOptions(locationOptions)
+  ];
 
   const handleStepChange = (step: BookingStep) => {
     setCurrentStep(step);
@@ -315,11 +343,17 @@ export default function BookingPage() {
                             <SelectValue placeholder="Select pickup location" />
                           </SelectTrigger>
                           <SelectContent>
-                            {locationOptions.map((option) => (
-                              <SelectItem key={option.value} value={option.value}>
-                                {option.label}
+                            {dataLoading ? (
+                              <SelectItem value="" disabled>
+                                Loading locations...
                               </SelectItem>
-                            ))}
+                            ) : (
+                              formatLocationOptions().map((option) => (
+                                <SelectItem key={option.value} value={option.value}>
+                                  {option.label}
+                                </SelectItem>
+                              ))
+                            )}
                           </SelectContent>
                         </Select>
                       </div>
@@ -338,11 +372,17 @@ export default function BookingPage() {
                             <SelectValue placeholder="Select destination" />
                           </SelectTrigger>
                           <SelectContent>
-                            {locationOptions.map((option) => (
-                              <SelectItem key={option.value} value={option.value}>
-                                {option.label}
+                            {dataLoading ? (
+                              <SelectItem value="" disabled>
+                                Loading locations...
                               </SelectItem>
-                            ))}
+                            ) : (
+                              formatLocationOptions().map((option) => (
+                                <SelectItem key={option.value} value={option.value}>
+                                  {option.label}
+                                </SelectItem>
+                              ))
+                            )}
                           </SelectContent>
                         </Select>
                       </div>

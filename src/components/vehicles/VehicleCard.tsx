@@ -113,14 +113,14 @@ const licenseTypeLabels = {
 
 export default function VehicleCard({ 
   vehicle, 
-  onEdit, 
-  onDelete, 
-  onRefresh 
+  onEditAction,
+  onDeleteAction,
+  onRefreshAction
 }: { 
   vehicle: Vehicle;
-  onEdit: (vehicle: Vehicle) => void;
-  onDelete: (vehicleId: string) => void;
-  onRefresh: () => void;
+  onEditAction: (vehicle: Vehicle) => void;
+  onDeleteAction: (vehicleId: string) => void;
+  onRefreshAction: () => void;
 }) {
   const [showPermitForm, setShowPermitForm] = useState(false);
   const [showLicenseForm, setShowLicenseForm] = useState(false);
@@ -142,12 +142,12 @@ export default function VehicleCard({
 
   const handlePermitAdded = (permit: VehiclePermit) => {
     setShowPermitForm(false);
-    onRefresh();
+    onRefreshAction();
   };
 
   const handleLicenseAdded = (license: VehicleLicense) => {
     setShowLicenseForm(false);
-    onRefresh();
+    onRefreshAction();
   };
 
   return (
@@ -192,10 +192,10 @@ export default function VehicleCard({
                 <VehicleDetails vehicle={vehicle} />
               </DialogContent>
             </Dialog>
-            <Button variant="ghost" size="sm" onClick={() => onEdit(vehicle)}>
+            <Button variant="ghost" size="sm" onClick={() => onEditAction(vehicle)}>
               <Edit className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => onDelete(vehicle.id)}>
+            <Button variant="ghost" size="sm" onClick={() => onDeleteAction(vehicle.id)}>
               <Trash2 className="h-4 w-4" />
             </Button>
           </div>

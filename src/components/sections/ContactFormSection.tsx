@@ -1,11 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input, Select, Textarea } from '@/components/ui/Input';
+import { DynamicDataService } from '@/lib/services/dynamic-data-service';
+import type { DynamicListItem } from '@/lib/services/dynamic-data-service';
 
 export const ContactFormSection: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -24,6 +26,12 @@ export const ContactFormSection: React.FC = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [dynamicData, setDynamicData] = useState<{
+    inquiryTypes: DynamicListItem[];
+    serviceOptions: DynamicListItem[];
+    locationOptions: DynamicListItem[];
+  }>({ inquiryTypes: [], serviceOptions: [], locationOptions: [] });
+  const [dataLoading, setDataLoading] = useState(true);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -58,32 +66,52 @@ export const ContactFormSection: React.FC = () => {
     }, 3000);
   };
 
-  const inquiryTypes = [
-    { value: '', label: 'Select inquiry type' },
-    { value: 'quote', label: 'Get Quote' },
-    { value: 'booking', label: 'Make Booking' },
-    { value: 'corporate', label: 'Corporate Account' },
-    { value: 'general', label: 'General Inquiry' },
-  ];
+  // Load dynamic data on component mount
+  useEffect(() => {
+    const loadDynamicData = async () => {
+      try {
+        setDataLoading(true);
+        
+        // Note: These list types need to be added to the admin interface
+        // Using fallback hardcoded data for now
+        const inquiryTypes = [
+          { id: '1', key: 'quote', label: 'Get Quote', value: 'quote', sortOrder: 0, isActive: true, isDefault: false },
+          { id: '2', key: 'booking', label: 'Make Booking', value: 'booking', sortOrder: 1, isActive: true, isDefault: false },
+          { id: '3', key: 'corporate', label: 'Corporate Account', value: 'corporate', sortOrder: 2, isActive: true, isDefault: false },
+          { id: '4', key: 'general', label: 'General Inquiry', value: 'general', sortOrder: 3, isActive: true, isDefault: false },
+        ];
 
-  const serviceOptions = [
-    { value: '', label: 'Select service' },
-    { value: 'cross-border', label: 'Cross-Border Transfer' },
-    { value: 'corporate', label: 'Corporate Solutions' },
-    { value: 'airport', label: 'Airport Service' },
-    { value: 'logistics', label: 'Logistics Support' },
-    { value: 'custom', label: 'Custom Service' },
-  ];
+        const serviceOptions = [
+          { id: '1', key: 'cross-border', label: 'Cross-Border Transfer', value: 'cross-border', sortOrder: 0, isActive: true, isDefault: false },
+          { id: '2', key: 'corporate', label: 'Corporate Solutions', value: 'corporate', sortOrder: 1, isActive: true, isDefault: false },
+          { id: '3', key: 'airport', label: 'Airport Service', value: 'airport', sortOrder: 2, isActive: true, isDefault: false },
+          { id: '4', key: 'logistics', label: 'Logistics Support', value: 'logistics', sortOrder: 3, isActive: true, isDefault: false },
+          { id: '5', key: 'custom', label: 'Custom Service', value: 'custom', sortOrder: 4, isActive: true, isDefault: false },
+        ];
 
-  const locationOptions = [
-    { value: '', label: 'Select location' },
-    { value: 'hk-central', label: 'Hong Kong Central' },
-    { value: 'hk-airport', label: 'Hong Kong Airport' },
-    { value: 'hk-tsim', label: 'Tsim Sha Tsui' },
-    { value: 'sz-futian', label: 'Shenzhen Futian' },
-    { value: 'gz-center', label: 'Guangzhou Center' },
-    { value: 'custom', label: 'Other Location' },
-  ];
+        const locationOptions = [
+          { id: '1', key: 'hk-central', label: 'Hong Kong Central', value: 'hk-central', sortOrder: 0, isActive: true, isDefault: false },
+          { id: '2', key: 'hk-airport', label: 'Hong Kong Airport', value: 'hk-airport', sortOrder: 1, isActive: true, isDefault: false },
+          { id: '3', key: 'hk-tsim', label: 'Tsim Sha Tsui', value: 'hk-tsim', sortOrder: 2, isActive: true, isDefault: false },
+          { id: '4', key: 'sz-futian', label: 'Shenzhen Futian', value: 'sz-futian', sortOrder: 3, isActive: true, isDefault: false },
+          { id: '5', key: 'gz-center', label: 'Guangzhou Center', value: 'gz-center', sortOrder: 4, isActive: true, isDefault: false },
+          { id: '6', key: 'custom', label: 'Other Location', value: 'custom', sortOrder: 5, isActive: true, isDefault: false },
+        ];
+        
+        setDynamicData({
+          inquiryTypes,
+          serviceOptions,
+          locationOptions,
+        });
+      } catch (error) {
+        console.error('Error loading dynamic data:', error);
+      } finally {
+        setDataLoading(false);
+      }
+    };
+
+    loadDynamicData();
+  }, []);
 
   if (isSubmitted) {
     return (
@@ -143,13 +171,23 @@ export const ContactFormSection: React.FC = () => {
           <Card className="p-8">
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Inquiry Type */}
-              <Select
-                label="Inquiry Type"
-                options={inquiryTypes}
-                value={formData.inquiryType}
-                onChange={(e) => handleInputChange('inquiryType', e.target.value)}
-                required
-              />
+              {dataLoading ? (
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700">Inquiry Type</label>
+                  <div className="animate-pulse h-10 bg-gray-200 rounded"></div>
+                </div>
+              ) : (
+                <Select
+                  label="Inquiry Type"
+                  options={[
+                    { value: '', label: 'Select inquiry type' },
+                    ...DynamicDataService.listItemsToOptions(dynamicData.inquiryTypes)
+                  ]}
+                  value={formData.inquiryType}
+                  onChange={(e) => handleInputChange('inquiryType', e.target.value)}
+                  required
+                />
+              )}
 
               {/* Personal Information */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -190,29 +228,60 @@ export const ContactFormSection: React.FC = () => {
                 <div className="space-y-6 p-6 bg-gray-50 rounded-lg">
                   <h4 className="text-body-lg font-semibold text-charcoal">Service Details</h4>
                   
-                  <Select
-                    label="Service Type"
-                    options={serviceOptions}
-                    value={formData.service}
-                    onChange={(e) => handleInputChange('service', e.target.value)}
-                    required
-                  />
+                  {dataLoading ? (
+                    <div className="space-y-2">
+                      <label className="block text-sm font-medium text-gray-700">Service Type</label>
+                      <div className="animate-pulse h-10 bg-gray-200 rounded"></div>
+                    </div>
+                  ) : (
+                    <Select
+                      label="Service Type"
+                      options={[
+                        { value: '', label: 'Select service' },
+                        ...DynamicDataService.listItemsToOptions(dynamicData.serviceOptions)
+                      ]}
+                      value={formData.service}
+                      onChange={(e) => handleInputChange('service', e.target.value)}
+                      required
+                    />
+                  )}
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <Select
-                      label="Pickup Location"
-                      options={locationOptions}
-                      value={formData.from}
-                      onChange={(e) => handleInputChange('from', e.target.value)}
-                      required
-                    />
-                    <Select
-                      label="Destination"
-                      options={locationOptions}
-                      value={formData.to}
-                      onChange={(e) => handleInputChange('to', e.target.value)}
-                      required
-                    />
+                    {dataLoading ? (
+                      <>
+                        <div className="space-y-2">
+                          <label className="block text-sm font-medium text-gray-700">Pickup Location</label>
+                          <div className="animate-pulse h-10 bg-gray-200 rounded"></div>
+                        </div>
+                        <div className="space-y-2">
+                          <label className="block text-sm font-medium text-gray-700">Destination</label>
+                          <div className="animate-pulse h-10 bg-gray-200 rounded"></div>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <Select
+                          label="Pickup Location"
+                          options={[
+                            { value: '', label: 'Select location' },
+                            ...DynamicDataService.listItemsToOptions(dynamicData.locationOptions)
+                          ]}
+                          value={formData.from}
+                          onChange={(e) => handleInputChange('from', e.target.value)}
+                          required
+                        />
+                        <Select
+                          label="Destination"
+                          options={[
+                            { value: '', label: 'Select location' },
+                            ...DynamicDataService.listItemsToOptions(dynamicData.locationOptions)
+                          ]}
+                          value={formData.to}
+                          onChange={(e) => handleInputChange('to', e.target.value)}
+                          required
+                        />
+                      </>
+                    )}
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -268,9 +337,10 @@ export const ContactFormSection: React.FC = () => {
                   variant="primary"
                   size="lg"
                   isLoading={isSubmitting}
+                  disabled={isSubmitting || dataLoading}
                   className="px-12"
                 >
-                  {isSubmitting ? 'Sending Message...' : 'Send Message'}
+                  {isSubmitting ? 'Sending Message...' : dataLoading ? 'Loading Form...' : 'Send Message'}
                 </Button>
               </div>
             </form>
